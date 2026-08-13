@@ -1,0 +1,46 @@
+# Pinned to versions actually installed in research/.venv (Python 3.11.9, Windows, CUDA 12.1)
+# Selected for compatibility with baseline/LegalSeg/code/RhetoricLLaMA/{inference.py,instruction_fine-tune.py}:
+#   - BitsAndBytesConfig(load_in_4bit, bnb_4bit_use_double_quant, bnb_4bit_quant_type, bnb_4bit_compute_dtype)
+#   - peft.AutoPeftModelForCausalLM / LoraConfig / prepare_model_for_kbit_training
+#   - trl.SFTTrainer with the pre-SFTConfig kwargs API (dataset_text_field, max_seq_length, tokenizer=)
+#   - numpy pinned <2.0 for compatibility with this torch/transformers generation
+
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.2.2+cu121
+numpy==1.26.4
+pandas==2.2.2
+tqdm==4.66.4
+transformers==4.40.2
+peft==0.10.0
+trl==0.8.6
+datasets==2.19.1
+bitsandbytes==0.43.1
+
+# Not requested explicitly but required by transformers for device_map="auto"
+# used in the original inference.py / instruction_fine-tune.py.
+# Pinned to 0.29.3 (contemporary with transformers==4.40.2) instead of latest:
+# accelerate's dispatch_model() gates the 4-bit/8-bit force-hooks path on
+# model.is_loaded_in_4bit, which transformers 4.40.2 only sets *after*
+# dispatch_model() runs inside from_pretrained(). With newer accelerate this
+# causes dispatch_model() to fall through to model.to(device) on a device_map
+# that resolves to a single GPU, which transformers' own PreTrainedModel.to()
+# then rejects for bitsandbytes-quantized models
+# (ValueError: `.to` is not supported for `4-bit` or `8-bit` bitsandbytes models).
+# accelerate 0.29.3 instead gates on model.is_quantized, which transformers
+# 4.40.2 sets earlier (before dispatch_model()), so the force-hooks path is
+# taken correctly and .to() is never called.
+accelerate==0.29.3
+
+# Added for research/prototype/ (field-level statute-claim verification).
+# DeBERTa-v3's tokenizer (MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli) is
+# SentencePiece-based; transformers cannot load it without this package.
+sentencepiece==0.2.2
+
+# PyYAML was already present in the venv (pulled in transitively); pinning
+# it explicitly here since research/prototype/config/prototype.yaml depends
+# on it directly via PyYAML's `yaml` module.
+PyYAML==6.0.3
+
+# Dev-only: runs research/prototype/tests/ (deterministic, no-GPU unit
+# tests). Not needed to run the pipeline itself.
+pytest==9.1.1

@@ -1,0 +1,30 @@
+# See Dockerfile and README "Docker" section for build/run commands.
+#
+# GPU: requires NVIDIA Container Toolkit on the host (and, on Windows, a
+# GPU-passthrough-enabled Docker Desktop/WSL2 backend). `gpus: all` exposes
+# the RTX 4050 to the container the same way `--gpus all` would on the CLI.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nyayamind-verification-research:latest
+    working_dir: /app
+    gpus: all
+    environment:
+      # Passed through only if set on the host; never baked into the image.
+      # Only required for research/baseline/scripts/run_baseline.py (gated
+      # meta-llama/Llama-2-7b-chat-hf) — not needed for prototype Mode A/B/C.
+      - HF_TOKEN=${HF_TOKEN:-}
+      - HF_HOME=/root/.cache/huggingface
+    volumes:
+      # Persistent Hugging Face cache so Qwen2.5-7B-Instruct (and the
+      # DeBERTa-v3 verifier) are downloaded once, not on every `run --rm`.
+      - hf-cache:/root/.cache/huggingface
+      # Persistent, host-visible run outputs.
+      - ./research/prototype/outputs:/app/research/prototype/outputs
+    # No ports exposed — this is a CLI/batch pipeline, not a server.
+    command: ["python", "research/prototype/scripts/run_mvp.py", "--check"]
+
+volumes:
+  hf-cache:

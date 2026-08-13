@@ -1,0 +1,3 @@
+[submodule "baseline/LegalSeg"]
+	path = baseline/LegalSeg
+	url = https://github.com/ShubhamKumarNigam/LegalSeg.git

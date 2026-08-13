@@ -1,0 +1,41 @@
+# Frozen reproducibility parameters for the RhetoricLLaMA baseline.
+# See ../BASELINE.md for the full environment/record this was captured under.
+# This file is a record of parameters, not consumed by run_baseline.py.
+
+model:
+  base_model_id: meta-llama/Llama-2-7b-chat-hf
+  adapter_id: L-NLProc/LegalSeg_RhetoricLLaMA
+  adapter_local_path: baseline/LegalSeg/saved_models/RhetoricLLaMA
+  loader: peft.AutoPeftModelForCausalLM.from_pretrained
+  device_map: auto
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_compute_dtype: bfloat16
+
+generation:
+  max_new_tokens: 100
+  # all other generation parameters left at Hugging Face greedy defaults
+  # (no sampling parameters set)
+
+preprocessing:
+  method: last_n_whitespace_tokens
+  max_tokens: 1000
+  token_split: whitespace
+  rejoin_separator: " "
+
+prompt_template: |
+   ### Instructions:
+      Analyze the given legal sentence and predict its rhetorical role as a number: None-0, Facts-1, Issue-2, Arguments of Petitioner-3, Arguments of Respondent-4, Reasoning-5, Decision-6.
+      Note: The response must only contain a number between 0 and 6 representing the label of sentence.     ### Input:
+    case_proceeding: <{text}>
+
+    ### Response:
+
+paths:
+  inference_script: research/baseline/scripts/run_baseline.py
+  input_csv_default: baseline/LegalSeg/Data/test.csv
+  output_csv_default: research/baseline/outputs/RhetoricLLaMA_predictions.csv
+  model_id_default: baseline/LegalSeg/saved_models/RhetoricLLaMA

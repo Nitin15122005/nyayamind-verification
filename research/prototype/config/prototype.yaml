@@ -1,0 +1,95 @@
+# Prototype v0 configuration — field-level statutory-claim verification +
+# selective correction. See research/prototype/README.md for the full
+# design this implements.
+#
+# Nothing in this file is a validated/tuned value except where noted "fixed
+# by design" — thresholds and generation params are the v0 defaults from
+# the approved design doc, not results of any calibration run.
+
+seed: 42
+
+paths:
+  # Evidence files are READ-ONLY inputs. Never write to these.
+  canonical_statutes: "research/data/evidence/canonical_statutes.jsonl"
+  evidence_audit: "research/data/evidence/evidence_audit.jsonl"
+
+  # NyayaRAG CaseText_Statutes data (L-NLProc/NyayaRAG on Hugging Face,
+  # 3.CaseText_Statutes.zip), copied from an earlier session's scratch
+  # extraction into this stable, project-relative location. See README
+  # "Known limitations / data provenance" for details.
+  nyayarag_case_files:
+    - "research/data/nyayarag/CaseText_Statutes/SCI_56k_multi_5k_summarised_w_sections.json"
+    - "research/data/nyayarag/CaseText_Statutes/SCI_56k_single_5k_summarised_w_sections.json"
+
+  output_dir: "research/prototype/outputs"
+
+# Which evidence_audit.jsonl verdicts are trusted as usable evidence.
+# SOURCE_ONLY / INVALID / UNRESOLVED are excluded by design (see audit
+# README) — they are not "gold" and must not be used as verifier premises.
+usable_evidence_verdicts:
+  - "VERIFIED_EXACT"
+  - "VERIFIED_CONTENT"
+
+generation:
+  model_id: "Qwen/Qwen2.5-7B-Instruct"
+  quantization:
+    load_in_4bit: true
+    bnb_4bit_use_double_quant: true
+    bnb_4bit_quant_type: "nf4"
+    bnb_4bit_compute_dtype: "bfloat16"
+  device_map: {"": 0}
+  max_new_tokens: 200
+  do_sample: false          # greedy — deterministic given fixed seed/model
+  temperature: 1.0          # inert under do_sample=false; recorded for completeness
+  top_p: 1.0                # inert under do_sample=false; recorded for completeness
+  # Instructs the model to emit ONLY the statutory_grounding field — no
+  # issue/argument/decision/explanation fields, no preamble, no markdown.
+  system_prompt: >
+    You are drafting only the "Statutory Grounding" section of an Indian
+    court judgment summary. Given the case facts, write ONE short paragraph
+    (3-6 sentences) naming the specific statutes, sections, or articles that
+    apply to this case and briefly stating what each one requires. Output
+    ONLY that paragraph. Do not include an issue, arguments, decision, or
+    explanation. Do not use markdown or headings.
+  user_prompt_template: "Case facts:\n{case_text}\n\nStatutory Grounding:"
+
+claim_parsing:
+  # INFORMATIONAL ONLY — not read at runtime. The authoritative,
+  # unit-tested pattern (plus the act-name trimming heuristics it needs;
+  # see _trim_act_name() in src/claim_parser.py) lives in code, not YAML,
+  # to avoid YAML-escaping drift between this string and what actually
+  # runs. Shown here so the pattern is visible without opening the source.
+  citation_regex: '(Section|Article|Order|Rule|Regulation|Clause|Schedule)\s+(\d+[A-Za-z\-]*)(\s*\(([^)]+)\))?\s+(in|of)\s+(.+?)(?=[.;]|$)'
+  stopwords: ["the", "of", "and", "in", "for", "to", "a", "an", "this", "that", "act", "constitution", "india"]
+
+evidence_matching:
+  top_k: 1
+  fuzzy_token_overlap_threshold: 0.8   # fixed by design, not calibrated
+
+verification:
+  model_id: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  confidence_threshold: 0.70           # fixed by design (approved design doc), not calibrated
+  # This model's label order (id2label) is read from its own config at load
+  # time rather than hardcoded here — see src/verifier.py.
+  max_sequence_length: 512
+
+correction:
+  max_attempts: 1
+  max_reverifications: 1
+  model_id: "Qwen/Qwen2.5-7B-Instruct"   # reuses the generation model; no second model loaded
+  max_new_tokens: 220
+  do_sample: false
+  system_prompt: >
+    You are revising a single sentence in the "Statutory Grounding" section
+    of an Indian court judgment summary. You will be given the full
+    original paragraph, one flagged sentence that is unsupported or
+    contradicted by the cited law, and (if available) the actual text of
+    the relevant statute. Rewrite ONLY the flagged sentence so it is
+    consistent with the statute text provided. Return the FULL paragraph
+    with every other sentence copied verbatim/unchanged, and only the
+    flagged sentence modified. Output only the paragraph, nothing else.
+
+modes:
+  - "A"   # generation only
+  - "B"   # generation + verification (diagnostic; final_field == generated_field)
+  - "C"   # generation + verification + selective correction
