@@ -1,0 +1,3134 @@
+{
+  "totals": {
+    "old_claims": 88,
+    "new_claims": 93,
+    "old_with_evidence": 38,
+    "new_with_evidence": 51,
+    "old_unresolved_act": 7,
+    "new_unresolved_act": 1,
+    "act_norm_changed": 33
+  },
+  "cases": [
+    {
+      "document_id": "1992_534",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 2,
+      "new_evidence_count": 2,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case was governed by Sections 302 and 34 of the Indian Penal Code, 1860, which define the offence of murder and criminal liability respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case was governed by Sections 302 and 34 of the Indian Penal Code, 1860, which define the offence of murder and criminal liability respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 506 of the same code deals with the offence of criminal intimidation.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "506",
+            "subsection": null,
+            "act_raw": "the same code",
+            "act_norm": "same code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The court also considered Section 309 of the Indian Penal Code, which pertains to attempts to commit suicide.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "309",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case was governed by Sections 302 and 34 of the Indian Penal Code, 1860, which define the offence of murder and criminal liability respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case was governed by Sections 302 and 34 of the Indian Penal Code, 1860, which define the offence of murder and criminal liability respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 506 of the same code deals with the offence of criminal intimidation.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "506",
+            "subsection": null,
+            "act_raw": "the same code",
+            "act_norm": "same code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The court also considered Section 309 of the Indian Penal Code, which pertains to attempts to commit suicide.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "309",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2009_1385",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case is Section 302 of the Indian Penal Code (IPC), which defines murder as causing the death of a person with the intention to cause death or with the knowledge that such act is likely to cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC), which",
+            "act_norm": "indian penal code (ipc) which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case is Section 302 of the Indian Penal Code (IPC), which defines murder as causing the death of a person with the intention to cause death or with the knowledge that such act is likely to cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC)",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        }
+      ]
+    },
+    {
+      "document_id": "2007_1517",
+      "old_claim_count": 5,
+      "new_claim_count": 7,
+      "old_evidence_count": 0,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Regulation",
+            "provision_number": "15",
+            "subsection": "2",
+            "act_raw": "the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947",
+            "act_norm": "indian penal code and section 5(2) read with section 1(d) of the prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Clause",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947",
+            "act_norm": "indian penal code and section 5(2) read with section 1(d) of the prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120-B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947",
+            "act_norm": "indian penal code and section 5(2) read with section 1(d) of the prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "471",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947",
+            "act_norm": "indian penal code and section 5(2) read with section 1(d) of the prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "477",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947",
+            "act_norm": "indian penal code and section 5(2) read with section 1(d) of the prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Regulation",
+            "provision_number": "15",
+            "subsection": "2",
+            "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+            "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Clause",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+            "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120-B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "471",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 471 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "477",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "5",
+            "subsection": "2",
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c7",
+          "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "1",
+            "subsection": "d",
+            "act_raw": "the Prevention of Corruption Act, 1947",
+            "act_norm": "prevention of corruption act 1947"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2024_244",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The Industrial Disputes Act, 1947 (ID Act) governs the dispute, specifically Sections 2(s) defining a workman, and 10(1)(c) referring disputes to the Labour Court.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "2",
+            "subsection": "s",
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Section 2(s) requires that a workman performs manual, unskilled, skilled, technical, operational, clerical, or supervisory work for hire or reward, while Section 10(1)(c) provides for the referral of disputes to the Labour Court for adjudication.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "2",
+            "subsection": "s",
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 2(s) requires that a workman performs manual, unskilled, skilled, technical, operational, clerical, or supervisory work for hire or reward, while Section 10(1)(c) provides for the referral of disputes to the Labour Court for adjudication.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "10",
+            "subsection": "1",
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The Industrial Disputes Act, 1947 (ID Act) governs the dispute, specifically Sections 2(s) defining a workman, and 10(1)(c) referring disputes to the Labour Court.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "2",
+            "subsection": "s",
+            "act_raw": "ID Act",
+            "act_norm": "id act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Section 2(s) requires that a workman performs manual, unskilled, skilled, technical, operational, clerical, or supervisory work for hire or reward, while Section 10(1)(c) provides for the referral of disputes to the Labour Court for adjudication.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "2",
+            "subsection": "s",
+            "act_raw": "ID Act",
+            "act_norm": "id act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 2(s) requires that a workman performs manual, unskilled, skilled, technical, operational, clerical, or supervisory work for hire or reward, while Section 10(1)(c) provides for the referral of disputes to the Labour Court for adjudication.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "10",
+            "subsection": "1",
+            "act_raw": "ID Act",
+            "act_norm": "id act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1987_609",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Forest Service (Recruitment) Rules, 1966, specifically rule 4(2), govern the initial recruitment of officers to the IFS and require that such recruitment be conducted in a manner consistent with the provisions of the said rule, ensuring that the process is transparent and fair.",
+          "citation_extracted": {
+            "provision_type": "Rule",
+            "provision_number": "4",
+            "subsection": "2",
+            "act_raw": "The Indian Forest Service (Recruitment) Rules, 1966",
+            "act_norm": "indian forest service (recruitment) rules 1966"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Forest Service (Recruitment) Rules, 1966, specifically rule 4(2), govern the initial recruitment of officers to the IFS and require that such recruitment be conducted in a manner consistent with the provisions of the said rule, ensuring that the process is transparent and fair.",
+          "citation_extracted": {
+            "provision_type": "Rule",
+            "provision_number": "4",
+            "subsection": "2",
+            "act_raw": "The Indian Forest Service (Recruitment) Rules, 1966",
+            "act_norm": "indian forest service (recruitment) rules 1966"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1954_7",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Section 82 of the Act mandates the inclusion of all candidates in the list of respondents in an election petition, and its non-compliance is not fatal to the maintainability of the petition unless such non-compliance is made penal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "82",
+            "subsection": null,
+            "act_raw": "the Act",
+            "act_norm": "act"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Section 82 of the Act mandates the inclusion of all candidates in the list of respondents in an election petition, and its non-compliance is not fatal to the maintainability of the petition unless such non-compliance is made penal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "82",
+            "subsection": null,
+            "act_raw": "the Act",
+            "act_norm": "act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1996_772",
+      "old_claim_count": 3,
+      "new_claim_count": 4,
+      "old_evidence_count": 0,
+      "new_evidence_count": 2,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of certain statements made by a deceased person.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC), which",
+            "act_norm": "indian penal code (ipc) which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Section 302 IPC requires that the accused be found guilty of murder if it is proved that he caused the death of another person with the intention to cause death or with the knowledge that such act will cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 32 of the Indian Evidence Act allows the statement made by a deceased person regarding the cause of his death to be admissible as evidence in any proceeding in which such death is relevant.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "32",
+            "subsection": null,
+            "act_raw": "the Indian Evidence Act",
+            "act_norm": "indian evidence act"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of certain statements made by a deceased person.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC)",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of certain statements made by a deceased person.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "32",
+            "subsection": null,
+            "act_raw": "the Indian Evidence Act",
+            "act_norm": "indian evidence act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 302 IPC requires that the accused be found guilty of murder if it is proved that he caused the death of another person with the intention to cause death or with the knowledge that such act will cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC)",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 32 of the Indian Evidence Act allows the statement made by a deceased person regarding the cause of his death to be admissible as evidence in any proceeding in which such death is relevant.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "32",
+            "subsection": null,
+            "act_raw": "the Indian Evidence Act",
+            "act_norm": "indian evidence act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1992_31",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "8",
+            "subsection": "2-A",
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "5",
+            "subsection": null,
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "8",
+            "subsection": "2-A",
+            "act_raw": "the Central Sales Tax Act, 1956",
+            "act_norm": "central sales tax act 1956"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "5",
+            "subsection": null,
+            "act_raw": "the Jammu Kashmir General Sales Tax Act, 1962",
+            "act_norm": "jammu kashmir general sales tax act 1962"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1994_650",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [],
+      "new_claims": []
+    },
+    {
+      "document_id": "2005_360",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 4,
+      "new_evidence_count": 4,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, specifically Sections 302 and 34, apply to this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, specifically Sections 302 and 34, apply to this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Section 34 deals with criminal liability for an act done by more than one person in furtherance of the common intention or common object.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Section 34 deals with criminal liability for an act done by more than one person in furtherance of the common intention or common object.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, specifically Sections 302 and 34, apply to this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, specifically Sections 302 and 34, apply to this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Section 34 deals with criminal liability for an act done by more than one person in furtherance of the common intention or common object.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Section 34 deals with criminal liability for an act done by more than one person in furtherance of the common intention or common object.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        }
+      ]
+    },
+    {
+      "document_id": "2005_128",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding includes Article 341 of the Constitution of India, which mandates that the President may, with respect to any Union territory, specify the castes, races, or tribes, or parts of or groups within castes, races, or tribes, which shall be deemed to be Scheduled Castes for the purposes of the Constitution in relation to that Union territory.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "341",
+            "subsection": null,
+            "act_raw": "the Constitution of India, which",
+            "act_norm": "constitution of india which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding includes Article 341 of the Constitution of India, which mandates that the President may, with respect to any Union territory, specify the castes, races, or tribes, or parts of or groups within castes, races, or tribes, which shall be deemed to be Scheduled Castes for the purposes of the Constitution in relation to that Union territory.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "341",
+            "subsection": null,
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1971_200",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_evidence_count": 4,
+      "new_evidence_count": 4,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 120B in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever is a party to a criminal conspiracy to commit an offence punishable with death, imprisonment for life or rigorous imprisonment for a term of two years or upwards... shall, where no express provision is made for the punishment of such a conspiracy, be punished in the same manner as if he had abetted such offence.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security... shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "467",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 120B in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever is a party to a criminal conspiracy to commit an offence punishable with death, imprisonment for life or rigorous imprisonment for a term of two years or upwards... shall, where no express provision is made for the punishment of such a conspiracy, be punished in the same manner as if he had abetted such offence.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security... shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "467",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 120B in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "467",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "120B",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 120B in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "467",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1982_43",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "21",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "21",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "21",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "21",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "22",
+            "subsection": null,
+            "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+            "act_norm": "maharashtra agricultural lands (ceiling on holdings) act 1961"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2008_1494",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes Section 4 of the Customs Act, 1962, which mandates the provision of necessary information in the prescribed format for the import of goods, and the guidelines issued by the Ministry on 10th August 1993, which specify the requirements for the import of medical equipment under the exemption notification.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "4",
+            "subsection": null,
+            "act_raw": "the Customs Act, 1962",
+            "act_norm": "customs act 1962"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding for this case includes Section 4 of the Customs Act, 1962, which mandates the provision of necessary information in the prescribed format for the import of goods, and the guidelines issued by the Ministry on 10th August 1993, which specify the requirements for the import of medical equipment under the exemption notification.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "4",
+            "subsection": null,
+            "act_raw": "the Customs Act, 1962",
+            "act_norm": "customs act 1962"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1970_250",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 3,
+      "new_evidence_count": 3,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "in the Indian Penal Code, 1860",
+            "act_norm": "in the indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "in the Indian Penal Code, 1860",
+            "act_norm": "in the indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "201",
+            "subsection": null,
+            "act_raw": "in the Indian Penal Code, 1860",
+            "act_norm": "in the indian penal code 1860"
+          },
+          "evidence_id": "Section 201 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever, knowing or having reason to believe that an offence has been committed, causes any evidence of the commission of that offence to disappear, with the intention of screening the offender from legal punishment, or with that intention gives any information respecting the offence which he knows or believes to be false.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "511",
+            "subsection": null,
+            "act_raw": "in the Indian Penal Code, 1860",
+            "act_norm": "in the indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "201",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 201 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "511",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1971_379",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_evidence_count": 2,
+      "new_evidence_count": 2,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by Sections 302 and 34 of the Indian Penal Code, 1860, which respectively provide that anyone who causes the death of another person by deliberate act shall be guilty of murder and that where the act causing death is done by more than one person acting in concert, each person shall be deemed to be guilty of the same offense as if he had caused the death by his own act.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by Sections 302 and 34 of the Indian Penal Code, 1860, which respectively provide that anyone who causes the death of another person by deliberate act shall be guilty of murder and that where the act causing death is done by more than one person acting in concert, each person shall be deemed to be guilty of the same offense as if he had caused the death by his own act.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by Sections 302 and 34 of the Indian Penal Code, 1860, which respectively provide that anyone who causes the death of another person by deliberate act shall be guilty of murder and that where the act causing death is done by more than one person acting in concert, each person shall be deemed to be guilty of the same offense as if he had caused the death by his own act.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by Sections 302 and 34 of the Indian Penal Code, 1860, which respectively provide that anyone who causes the death of another person by deliberate act shall be guilty of murder and that where the act causing death is done by more than one person acting in concert, each person shall be deemed to be guilty of the same offense as if he had caused the death by his own act.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "1996_439",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_evidence_count": 3,
+      "new_evidence_count": 3,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "324",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 324 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever, except in cases provided for by section 334, voluntarily causes hurt by means of any instrument for shooting, stabbing or cutting... or by means of fire or any heated substance, or by means of any poison... shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 324 dealing with voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "324",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 324 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "1987_597",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The decision in this case is grounded in Article 16 of the Constitution of India, which mandates equal pay for equal work.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "16",
+            "subsection": null,
+            "act_raw": "the Constitution of India, which",
+            "act_norm": "constitution of india which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: The decision in this case is grounded in Article 16 of the Constitution of India, which mandates equal pay for equal work.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "16",
+            "subsection": null,
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": "Article 16 in Constitution of India",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "2006_650",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_evidence_count": 1,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable, which",
+            "act_norm": "evidence act is applicable which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable",
+            "act_norm": "evidence act is applicable"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2003_967",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_evidence_count": 1,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by the Indian Medical Council Act, 1956, which sets out the regulatory framework for medical education and practice in India, and the Post Graduate Medical Education Regulations 2000, which provide specific rules for postgraduate medical education, including the criteria for admission.",
+          "citation_extracted": {
+            "provision_type": "Regulation",
+            "provision_number": "2000",
+            "subsection": null,
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Article 15(4) allows the state to make provisions for reserving educational facilities or appointments in favor of any backward class of citizens.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "14",
+            "subsection": null,
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": "Article 14 in Constitution of India",
+          "evidence_text": "The State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Article 15(4) allows the state to make provisions for reserving educational facilities or appointments in favor of any backward class of citizens.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "14",
+            "subsection": null,
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": "Article 14 in Constitution of India",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Article 15(4) allows the state to make provisions for reserving educational facilities or appointments in favor of any backward class of citizens.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "15",
+            "subsection": "4",
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1962_184",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Income Tax Act, 1922, Section 8(2) requires that the character of the payment as dividend cannot be altered by a subsequent resolution, and that such payments are liable to be taxed as dividend income at the time they are credited to the shareholders' accounts.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "8",
+            "subsection": "2",
+            "act_raw": "The Indian Income Tax Act, 1922",
+            "act_norm": "indian income tax act 1922"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Income Tax Act, 1922, Section 8(2) requires that the character of the payment as dividend cannot be altered by a subsequent resolution, and that such payments are liable to be taxed as dividend income at the time they are credited to the shareholders' accounts.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "8",
+            "subsection": "2",
+            "act_raw": "The Indian Income Tax Act, 1922",
+            "act_norm": "indian income tax act 1922"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1989_184",
+      "old_claim_count": 4,
+      "new_claim_count": 6,
+      "old_evidence_count": 0,
+      "new_evidence_count": 4,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC), which",
+            "act_norm": "indian penal code (ipc) which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "Section 302 requires that the accused must have caused the death of the victim with the intention to cause death or with the knowledge that such act will cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "25",
+            "subsection": null,
+            "act_raw": "the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use",
+            "act_norm": "arms act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "27",
+            "subsection": null,
+            "act_raw": "the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use",
+            "act_norm": "arms act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC)",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "25",
+            "subsection": null,
+            "act_raw": "the Arms Act",
+            "act_norm": "arms act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "27",
+            "subsection": null,
+            "act_raw": "the Arms Act",
+            "act_norm": "arms act"
+          },
+          "evidence_id": "Section 27 in The Arms Act, 1959",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 302 requires that the accused must have caused the death of the victim with the intention to cause death or with the knowledge that such act will cause death.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code (IPC)",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "25",
+            "subsection": null,
+            "act_raw": "the Arms Act",
+            "act_norm": "arms act"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "27",
+            "subsection": null,
+            "act_raw": "the Arms Act",
+            "act_norm": "arms act"
+          },
+          "evidence_id": "Section 27 in The Arms Act, 1959",
+          "evidence_match_method": "fuzzy"
+        }
+      ]
+    },
+    {
+      "document_id": "1998_229",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_evidence_count": 1,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable, which",
+            "act_norm": "evidence act is applicable which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable",
+            "act_norm": "evidence act is applicable"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1952_17",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 3,
+      "new_evidence_count": 3,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "143",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "147",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 147 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever is guilty of rioting, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "325",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 325 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever, except in the case provided for by section 335, voluntarily causes grievous hurt, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "143",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "147",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 147 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "325",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 325 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "1965_377",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_evidence_count": 1,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: Article 311(2) of the Constitution of India governs the conditions under which a reduction in rank can be made for a government servant, requiring that such a reduction must be accompanied by a penal consequence or loss of seniority.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "311",
+            "subsection": "2",
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": "Article 311 in Constitution of India",
+          "evidence_text": "No person who is a member of a civil service of the Union or an all-India service or a civil service of a State or holds a civil post under the Union or a State shall be dismissed or removed by an authority subordinate to that by which he was appointed, nor without an inquiry giving a reasonable opportunity of being heard.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "Statutory Grounding: Article 311(2) of the Constitution of India governs the conditions under which a reduction in rank can be made for a government servant, requiring that such a reduction must be accompanied by a penal consequence or loss of seniority.",
+          "citation_extracted": {
+            "provision_type": "Article",
+            "provision_number": "311",
+            "subsection": "2",
+            "act_raw": "the Constitution of India",
+            "act_norm": "constitution of india"
+          },
+          "evidence_id": "Article 311 in Constitution of India",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "2008_2662",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_evidence_count": 0,
+      "new_evidence_count": 0,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "112",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "113",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "112",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "113",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2004_632",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_evidence_count": 6,
+      "new_evidence_count": 6,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "109",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 109 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever abets any offence shall, if the act abetted is committed in consequence of the abetment, and no express provision is made by this Code for the punishment of such abetment, be punished with the punishment provided for the offence.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_text": "When a criminal act is done by several persons in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "109",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 109 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever abets any offence shall, if the act abetted is committed in consequence of the abetment, and no express provision is made by this Code for the punishment of such abetment, be punished with the punishment provided for the offence.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The statutory grounding of this case includes the Indian Penal Code, 1860, specifically Sections 302 and 34, which deal with murder and criminal liability respectively, and Section 109, which pertains to the liability of an abetter.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "109",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 109 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "34",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 302 prescribes the punishment for murder, while Sections 34 and 109 address the criminal liability of an accomplice or abettor in the commission of a crime.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "109",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 109 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    },
+    {
+      "document_id": "2023_26",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_evidence_count": 2,
+      "new_evidence_count": 6,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "148",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": "Section 302 in The Code of Criminal Procedure, 1973",
+          "evidence_text": "Permission to conduct prosecution. Any Magistrate inquiring into or trying a case may permit the prosecution to be conducted by any person other than a police officer below the rank of Inspector.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "149",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "148",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": "Section 302 in The Code of Criminal Procedure, 1973",
+          "evidence_text": "Permission to conduct prosecution. Any Magistrate inquiring into or trying a case may permit the prosecution to be conducted by any person other than a police officer below the rank of Inspector.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c7",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c8",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "324",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c9",
+          "claim_text": "Section 149 of the Code of Criminal Procedure, 1973, deals with the procedure for trial of persons accused of offences committed in furtherance of the common intention of two or more persons.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "149",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "148",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 304 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "149",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c5",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "148",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c6",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c7",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304",
+            "subsection": null,
+            "act_raw": "The Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 304 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c8",
+          "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "324",
+            "subsection": null,
+            "act_raw": null,
+            "act_norm": ""
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c9",
+          "claim_text": "Section 149 of the Code of Criminal Procedure, 1973, deals with the procedure for trial of persons accused of offences committed in furtherance of the common intention of two or more persons.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "149",
+            "subsection": null,
+            "act_raw": "the Code of Criminal Procedure, 1973",
+            "act_norm": "code of criminal procedure 1973"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "1991_582",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_evidence_count": 1,
+      "new_evidence_count": 1,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+          "evidence_match_method": "fuzzy",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable, which",
+            "act_norm": "evidence act is applicable which"
+          },
+          "evidence_id": null,
+          "evidence_text": null,
+          "evidence_match_method": "no_evidence",
+          "verdict": "NO_EVIDENCE",
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "302",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+          "evidence_match_method": "fuzzy"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "304A",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code",
+            "act_norm": "indian penal code"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Additionally, Section 114 of the Evidence Act is applicable, which prescribes the onus of proof resting on the prosecution to establish the guilt of the accused beyond a reasonable doubt.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "114",
+            "subsection": null,
+            "act_raw": "the Evidence Act is applicable",
+            "act_norm": "evidence act is applicable"
+          },
+          "evidence_id": null,
+          "evidence_match_method": "no_evidence"
+        }
+      ]
+    },
+    {
+      "document_id": "2008_2648",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_evidence_count": 4,
+      "new_evidence_count": 4,
+      "old_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by sections 406 and 420 of the Indian Penal Code, 1860.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "406",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 406 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits criminal breach of trust shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by sections 406 and 420 of the Indian Penal Code, 1860.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security... shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 406 requires the prosecution to prove that the accused dishonestly misappropriated or converted to his use or to the use of any other person, property knowing it to be the property of another, with the intention of permanently depriving the owner thereof.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "406",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 406 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever commits criminal breach of trust shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 420 mandates the proof that the accused made a contract with the intention to deceive or cheat the other party, leading to the other party suffering a loss.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_text": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security... shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
+          "evidence_match_method": "exact_normalized",
+          "verdict": null,
+          "confidence": null,
+          "sub_reason": null,
+          "verifier_model": null
+        }
+      ],
+      "new_claims": [
+        {
+          "claim_id": "c1",
+          "claim_text": "The case is governed by sections 406 and 420 of the Indian Penal Code, 1860.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "406",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 406 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c2",
+          "claim_text": "The case is governed by sections 406 and 420 of the Indian Penal Code, 1860.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c3",
+          "claim_text": "Section 406 requires the prosecution to prove that the accused dishonestly misappropriated or converted to his use or to the use of any other person, property knowing it to be the property of another, with the intention of permanently depriving the owner thereof.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "406",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 406 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        },
+        {
+          "claim_id": "c4",
+          "claim_text": "Section 420 mandates the proof that the accused made a contract with the intention to deceive or cheat the other party, leading to the other party suffering a loss.",
+          "citation_extracted": {
+            "provision_type": "Section",
+            "provision_number": "420",
+            "subsection": null,
+            "act_raw": "the Indian Penal Code, 1860",
+            "act_norm": "indian penal code 1860"
+          },
+          "evidence_id": "Section 420 in The Indian Penal Code, 1860",
+          "evidence_match_method": "exact_normalized"
+        }
+      ]
+    }
+  ]
+}

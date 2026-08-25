@@ -500,16 +500,36 @@ def test_evidence_matcher_fuzzy_fallback_on_slightly_different_act_wording(synth
     exact_index, all_usable = synthetic_pool
     # "Indian Penal Code 1860" without "The" and without comma still
     # normalizes almost identically; force a near-miss by adding one
-    # extra token so the exact key doesn't match but fuzzy overlap does.
+    # extra significant token so the exact key doesn't match but fuzzy
+    # overlap does. (NOT a parenthetical abbreviation like "(IPC)" — that
+    # is now stripped by normalize_act() as the SAME act, per the
+    # claim-parser fix, and would match exact_normalized instead; see
+    # test_normalize_act_strips_parenthetical_abbreviation below.)
     citation = ExtractedCitation(
         provision_type="Section", provision_number="302", subsection=None,
-        act_raw="Indian Penal Code (IPC) 1860",
-        act_norm=normalize_act("Indian Penal Code (IPC) 1860"),
+        act_raw="Indian Penal Code Statute 1860",
+        act_norm=normalize_act("Indian Penal Code Statute 1860"),
     )
     result = match_evidence(citation, exact_index, all_usable, fuzzy_token_overlap_threshold=0.5)
     assert result.matched is True
     assert result.match_method == "fuzzy"
     assert result.evidence.dataset_citation_key.startswith("Section 302")
+
+
+def test_normalize_act_strips_parenthetical_abbreviation():
+    # Regression test: "the Indian Penal Code (IPC)" is the SAME act as
+    # "the Indian Penal Code" — generated prose commonly appends this kind
+    # of abbreviation gloss, and previously it made exact evidence lookup
+    # fail (act_norm carried the "(ipc)" token, never equal to the corpus's
+    # clean "indian penal code" key), silently downgrading a real citation
+    # to fuzzy-or-nothing. Applied identically to both sides (evidence
+    # corpus normalization uses this same function), so it only recognizes
+    # two spellings as the same act — it never redirects a citation to a
+    # DIFFERENT act.
+    assert normalize_act("The Indian Penal Code (IPC), 1860") == normalize_act("The Indian Penal Code, 1860")
+    assert normalize_act("the Code of Criminal Procedure (CrPC), 1973") == normalize_act(
+        "the Code of Criminal Procedure, 1973"
+    )
 
 
 def test_evidence_matcher_returns_no_evidence_when_nothing_matches(synthetic_pool):

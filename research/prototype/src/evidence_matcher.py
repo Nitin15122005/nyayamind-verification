@@ -34,6 +34,10 @@ class MatchResult:
 def _token_overlap(a: set[str], b: set[str]) -> float:
     if not a or not b:
         return 0.0
+    a_no_digits = {w for w in a if not w.isdigit()}
+    b_no_digits = {w for w in b if not w.isdigit()}
+    if a_no_digits and a_no_digits == b_no_digits:
+        return 1.0
     return len(a & b) / len(a | b)
 
 
