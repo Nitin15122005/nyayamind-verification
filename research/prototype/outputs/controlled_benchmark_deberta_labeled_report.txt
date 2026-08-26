@@ -1,0 +1,77 @@
+VERIFIER: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+premise_framing=labeled
+device=cpu  items=420  elapsed=69.2s (0.16s/item)
+confidence_threshold=0.7
+
+Overall accuracy: 0.971    Macro F1: 0.968
+
+Confusion matrix (rows = gold, cols = predicted):
+  gold \ pred         ENT    CON    NEI   total
+  ENT                 184      0      0     184
+  CON                   5    110      3     118
+  NEI                   0      4    114     118
+
+Per-class:
+  label                       prec     rec      f1  support
+  ENTAILED                   0.974   1.000   0.987      184
+  CONTRADICTED               0.965   0.932   0.948      118
+  NOT_ENOUGH_INFORMATION     0.974   0.966   0.970      118
+
+Per-condition accuracy and mean NLI probability mass:
+  condition                    n    acc   p(ent)   p(neu)   p(con)  modal prediction
+  C1_negated_bare             59  0.932    0.052    0.008    0.940  CON 55/59
+  C2_negated_attributed       59  0.932    0.077    0.004    0.919  CON 55/59
+  E1_verbatim                 59  1.000    0.979    0.014    0.007  ENT 59/59
+  E2_verbatim_attributed      59  1.000    0.994    0.005    0.001  ENT 59/59
+  E3_paraphrase_bare          33  1.000    0.989    0.007    0.004  ENT 33/33
+  E4_paraphrase_attributed    33  1.000    0.995    0.004    0.001  ENT 33/33
+  N1_other_provision          59  0.932    0.092    0.809    0.100  NEI 55/59
+  N2_procedural_addition      59  1.000    0.007    0.992    0.001  NEI 59/59
+
+ENTAILED 2x2 — recall of the ENTAILED label (higher is better):
+                                      bare        attributed
+  verbatim                           1.000             1.000
+  paraphrased                        1.000             1.000
+
+Matched-pair effects (same evidence records in both cells):
+  attribution_effect_on_verbatim: E1_verbatim -> E2_verbatim_attributed  (n=59)
+      ENTAILED recall 1.000 -> 1.000  (delta +0.000)
+      mean p(entail)  0.979 -> 0.994  (delta +0.015)
+  attribution_effect_on_paraphrase: E3_paraphrase_bare -> E4_paraphrase_attributed  (n=33)
+      ENTAILED recall 1.000 -> 1.000  (delta +0.000)
+      mean p(entail)  0.989 -> 0.995  (delta +0.006)
+  paraphrase_effect_bare: E1_verbatim -> E3_paraphrase_bare  (n=33)
+      ENTAILED recall 1.000 -> 1.000  (delta +0.000)
+      mean p(entail)  0.979 -> 0.989  (delta +0.010)
+  paraphrase_effect_attributed: E2_verbatim_attributed -> E4_paraphrase_attributed  (n=33)
+      ENTAILED recall 1.000 -> 1.000  (delta +0.000)
+      mean p(entail)  0.995 -> 0.995  (delta +0.000)
+  attribution_effect_on_contradiction: C1_negated_bare -> C2_negated_attributed  (n=59)
+      ENTAILED recall 0.017 -> 0.068  (delta +0.051)
+      mean p(entail)  0.052 -> 0.077  (delta +0.025)
+
+Verdicts downgraded to NEI by the 0.7 confidence threshold: 12/420
+  of those, 5 had entailment as the raw argmax (threshold, not the model, produced the NEI)
+
+Error examples (up to 3 per gold label):
+  gold=ENTAILED: 0 errors
+  gold=CONTRADICTED: 8 errors
+    [C1_negated_bare] -> NOT_ENOUGH_INFORMATION (ent=0.575 neu=0.058 con=0.367)
+      EVID : No person shall be deprived of his life or personal liberty except according to procedure established by law.
+      CLAIM: No person shall not be deprived of his life or personal liberty except according to procedure established by l
+    [C2_negated_attributed] -> ENTAILED (ent=0.897 neu=0.033 con=0.070)
+      EVID : No person shall be deprived of his life or personal liberty except according to procedure established by law.
+      CLAIM: According to Article 21 of Constitution of India, no person shall not be deprived of his life or personal libe
+    [C1_negated_bare] -> NOT_ENOUGH_INFORMATION (ent=0.607 neu=0.030 con=0.363)
+      EVID : No person who is arrested shall be detained in custody without being informed, as soon as may be, of the groun
+      CLAIM: No person who is arrested shall not be detained in custody without being informed, as soon as may be, of the g
+  gold=NOT_ENOUGH_INFORMATION: 4 errors
+    [N1_other_provision] -> CONTRADICTED (ent=0.001 neu=0.052 con=0.946)
+      EVID : Whoever is guilty of rioting, shall be punished with imprisonment of either description for a term which may e
+      CLAIM: Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fin
+    [N1_other_provision] -> CONTRADICTED (ent=0.005 neu=0.056 con=0.940)
+      EVID : Any police officer making an investigation under this Chapter may examine witnesses, and statements made may a
+      CLAIM: In every inquiry or trial, for the purpose of enabling the accused personally to explain any circumstances app
+    [N1_other_provision] -> CONTRADICTED (ent=0.001 neu=0.002 con=0.997)
+      EVID : Culpable homicide is murder if the act by which the death is caused is done with the intention of causing deat
+      CLAIM: Whoever commits the offence of criminal intimidation shall be punished with imprisonment of either description

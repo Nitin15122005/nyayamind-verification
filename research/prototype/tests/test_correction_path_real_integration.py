@@ -112,11 +112,21 @@ def real_evidence_pool():
 def real_verifier(real_config):
     """The real, unmodified NLIVerifier — same model_id/threshold as
     production config. Loaded once per test module (small CPU-friendly
-    model, not the 7B generator)."""
+    model, not the 7B generator).
+
+    Device is chosen explicitly rather than left to the default: this fixture
+    only needs the ~184M NLI model with no generator co-resident, so it runs
+    fine on CPU. The default "cuda" exists to stop the PIPELINE from silently
+    falling back to CPU while sharing a 6GB card with the 4-bit 7B generator —
+    a constraint that does not apply here, and which otherwise makes these
+    tests error out on any machine without an NVIDIA GPU instead of running.
+    """
+    torch = pytest.importorskip("torch")
     v = NLIVerifier(
         model_id=real_config["verification"]["model_id"],
         confidence_threshold=real_config["verification"]["confidence_threshold"],
         max_sequence_length=real_config["verification"]["max_sequence_length"],
+        device="cuda" if torch.cuda.is_available() else "cpu",
     )
     v.load()
     return v

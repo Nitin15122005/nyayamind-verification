@@ -28,6 +28,12 @@ from src.corrector import SelectiveCorrector
 from src import pipeline, claim_parser
 
 
+def _public(claims: list[dict]) -> list[dict]:
+    """Drop underscore-prefixed internal bookkeeping before serialisation, the
+    same convention run_case()/run_eval_30.py already use."""
+    return [{k: v for k, v in c.items() if not k.startswith("_")} for c in claims]
+
+
 def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index, all_usable, config):
     # Construct a synthetic case environment for this claim
     case_id = f"synth_{synth_claim.claim_id}_{synth_claim.provision_number}"
@@ -59,6 +65,14 @@ def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index,
             "citation_extracted": citation_dict,
             "evidence_id": match.evidence.dataset_citation_key if match.evidence else None,
             "evidence_text": match.evidence.canonical_text if match.evidence else None,
+            # Underscore-prefixed internal bookkeeping for premise framing;
+            # stripped from the output record below, so the emitted schema is
+            # unchanged and new runs stay diffable against run_synthetic_stress.jsonl.
+            "_evidence_provision": {
+                "provision_type": match.evidence.provision_type,
+                "provision_number": match.evidence.provision_number,
+                "act": match.evidence.act,
+            } if match.matched else None,
             "evidence_match_method": match.match_method,
             "verdict": NO_EVIDENCE if not match.matched else NOT_ENOUGH_INFORMATION,
             "confidence": None,
@@ -88,11 +102,11 @@ def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index,
 
     # Condition B: Verification only
     rec_B = copy.deepcopy(baseline)
-    pipeline.apply_verification(rec_B, verifier)
+    pipeline.apply_verification(rec_B, verifier, pipeline.resolve_premise_framing(config))
 
     # Condition C: Verification + Selective Correction with Real Qwen
     rec_C = copy.deepcopy(baseline)
-    pipeline.apply_verification(rec_C, verifier)
+    pipeline.apply_verification(rec_C, verifier, pipeline.resolve_premise_framing(config))
     correction_summary = pipeline.apply_selective_correction(rec_C, case_obj, corrector, config)
 
     final_field = {"text": rec_C["generated_field"]["text"], "source": "original"}
@@ -112,11 +126,11 @@ def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index,
         "original_synthetic_text": synth_claim.claim_text,
         "condition_A": {
             "text": full_paragraph,
-            "claims": rec_A["claims"],
+            "claims": _public(rec_A["claims"]),
         },
         "condition_B": {
             "text": full_paragraph,
-            "claims": rec_B["claims"],
+            "claims": _public(rec_B["claims"]),
             "verification_summary": pipeline._summarize_verification(
                 rec_B["claims"], "B", verifier_model_id, config["verification"]["confidence_threshold"]
             ),
@@ -125,7 +139,7 @@ def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index,
             "final_text": final_field["text"],
             "source": final_field["source"],
             "correction": {k: v for k, v in correction_summary.items() if not k.startswith("_")},
-            "claims": rec_C["claims"],
+            "claims": _public(rec_C["claims"]),
             "verification_summary": pipeline._summarize_verification(
                 rec_C["claims"], "C", verifier_model_id, config["verification"]["confidence_threshold"]
             ),
@@ -135,6 +149,7 @@ def run_synthetic_case(synth_claim, generator, verifier, corrector, exact_index,
             "seed": config["seed"],
             "generation_model": config["generation"]["model_id"],
             "verification_model": config["verification"]["model_id"],
+            "premise_framing": pipeline.resolve_premise_framing(config),
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "software_versions": pipeline._software_versions(),
         },

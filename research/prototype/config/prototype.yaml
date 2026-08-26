@@ -73,6 +73,31 @@ verification:
   # time rather than hardcoded here — see src/verifier.py.
   max_sequence_length: 512
 
+  # How the NLI premise is built from a matched canonical evidence record.
+  #
+  #   bare    — premise is the statute text alone. This is what produced every
+  #             committed result in outputs/ (run_A/B/C_n30, run_natural_targeted,
+  #             run_synthetic_stress).
+  #   labeled — premise is "<Provision> <N> of <Act>: <statute text>", i.e. the
+  #             provision label the audited evidence record already carries is
+  #             prepended. No statute text is edited and no legal content is
+  #             invented.
+  #
+  # Why this option exists: generated claims are almost always attributed
+  # ("According to Section 302 of the IPC, ..."), and a bare premise never
+  # mentions Section 302, so that half of the claim is genuinely unsupported and
+  # the model correctly answers neutral. On the 420-item controlled benchmark,
+  # switching to "labeled" moves macro F1 0.749 -> 0.968 and ENTAILED recall
+  # 0.500 -> 1.000 with no per-condition regression
+  # (see outputs/verifier_correction_diagnosis.md).
+  #
+  # DEFAULT IS DELIBERATELY "bare": every committed evaluation output was
+  # produced under it, so flipping the default would silently make new runs
+  # non-comparable with the existing A/B/C and synthetic baselines. "labeled"
+  # has not yet been validated on the real production path end-to-end. Change
+  # this only as an explicit, recorded ablation.
+  premise_framing: "bare"      # bare | labeled
+
 correction:
   max_attempts: 1
   max_reverifications: 1

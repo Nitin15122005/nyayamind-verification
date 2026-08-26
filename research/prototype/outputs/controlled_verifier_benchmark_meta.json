@@ -1,0 +1,284 @@
+{
+  "benchmark_tag": "CONTROLLED_VERIFIER_BENCHMARK",
+  "benchmark_version": "v2",
+  "construction": "deterministic rule-based transformation of canonical statute text; no LLM used",
+  "gold_label_source": "construction rule (never a model prediction)",
+  "source_evidence_records": 59,
+  "usable_evidence_verdicts": [
+    "VERIFIED_CONTENT",
+    "VERIFIED_EXACT"
+  ],
+  "total_items": 420,
+  "items_by_condition": {
+    "E1_verbatim": 59,
+    "E2_verbatim_attributed": 59,
+    "E3_paraphrase_bare": 33,
+    "E4_paraphrase_attributed": 33,
+    "C1_negated_bare": 59,
+    "C2_negated_attributed": 59,
+    "N1_other_provision": 59,
+    "N2_procedural_addition": 59
+  },
+  "items_by_expected_label": {
+    "ENTAILED": 184,
+    "CONTRADICTED": 118,
+    "NOT_ENOUGH_INFORMATION": 118
+  },
+  "dropped_conditions": [
+    {
+      "evidence_key": "Article 133 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 136 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 141 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 142 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 16 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 19 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 309 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Article 31 in Constitution of India",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 11 in The Land Acquisition Act, 1894",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 114 in The Indian Evidence Act, 1872",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 115 in The Code of Civil Procedure, 1908",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 149 in The Indian Penal Code, 1860",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 151 in The Code of Civil Procedure, 1908",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 161 in The Code of Criminal Procedure, 1973",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 164 in The Code of Criminal Procedure, 1973",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 18 in The Land Acquisition Act, 1894",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 2 in The Industrial Disputes Act, 1947",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 23 in The Land Acquisition Act, 1894",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 256 in The Income Tax Act, 1961",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 27 in The Indian Evidence Act, 1872",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 300 in The Indian Penal Code, 1860",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 302 in The Code of Criminal Procedure, 1973",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 313 in The Code of Criminal Procedure, 1973",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 482 in The Code of Criminal Procedure, 1973",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 6 in The Land Acquisition Act, 1894",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    },
+    {
+      "evidence_key": "Section 66 in The Income Tax Act, 1961",
+      "conditions": [
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed"
+      ],
+      "reason": "no meaning-preserving paraphrase rule matched this text"
+    }
+  ],
+  "paraphrase_rules": [
+    "whoever_to_any_person_who",
+    "whoever_lc_to_any_person_who",
+    "punished_with_to_liable_to_punishment_of",
+    "also_liable_fine_to_also_liable_a_fine",
+    "shall_also_be_liable_to_is_also_liable_to",
+    "shall_be_liable_to_is_liable",
+    "imprisonment_for_life_to_life_imprisonment",
+    "may_extend_to_to_may_go_up_to",
+    "punishable_with_to_carrying_punishment_of",
+    "shall_have_power_to_is_empowered",
+    "shall_have_powers_to_is_empowered",
+    "shall_be_deemed_to_be_to_is_to_be_regarded_as",
+    "shall_not_to_is_not_to",
+    "notwithstanding_to_despite",
+    "subject_to_provisions_of_to_subject_to_what_is_provided_in",
+    "in_accordance_with_to_in_conformity_with",
+    "in_relation_to_to_with_respect_to",
+    "by_reason_of_to_because_of",
+    "for_the_purposes_of_to_for_the_purpose_of",
+    "as_the_case_may_be_to_whichever_applies",
+    "not_less_than_to_at_least",
+    "not_exceeding_to_no_more_than",
+    "in_the_opinion_of_to_in_the_view_of",
+    "it_appears_to_to_it_seems_to",
+    "aggrieved_by_to_adversely_affected_by",
+    "unless_context_otherwise_requires_to_except_where",
+    "in_furtherance_of_to_in_pursuance_of",
+    "every_to_each",
+    "no_person_to_no_individual",
+    "each_of_such_persons_to_every_one_of_those_persons",
+    "the_said_to_that",
+    "at_any_time_to_at_any_point"
+  ],
+  "negation_rules": [
+    "prohibition_lifted",
+    "punishment_negated",
+    "power_negated",
+    "obligation_negated_shall_be",
+    "obligation_negated_shall",
+    "permission_negated_may",
+    "entitlement_negated_is_entitled",
+    "liability_negated_is_liable",
+    "definition_inverted_includes",
+    "classification_negated_is_murder"
+  ],
+  "validation": "passed (420 items, 0 errors)"
+}

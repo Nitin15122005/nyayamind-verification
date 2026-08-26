@@ -60,7 +60,7 @@ def run_one_case_all_modes(case, generator, verifier, corrector, exact_index, al
 
         if mode in ("B", "C"):
             t0 = time.time()
-            pipeline.apply_verification(mb, verifier)
+            pipeline.apply_verification(mb, verifier, pipeline.resolve_premise_framing(config))
             verification_seconds = time.time() - t0
 
         correction_summary = {
@@ -106,6 +106,7 @@ def run_one_case_all_modes(case, generator, verifier, corrector, exact_index, al
                 "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
                 "quantization": config["generation"]["quantization"],
                 "confidence_threshold": config["verification"]["confidence_threshold"],
+                "premise_framing": pipeline.resolve_premise_framing(config) if mode in ("B", "C") else None,
                 "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 "software_versions": pipeline._software_versions(),
             },

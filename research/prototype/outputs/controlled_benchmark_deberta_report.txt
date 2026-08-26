@@ -1,0 +1,85 @@
+VERIFIER: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+device=cpu  items=420  elapsed=65.3s (0.16s/item)
+confidence_threshold=0.7
+
+Overall accuracy: 0.733    Macro F1: 0.749
+
+Confusion matrix (rows = gold, cols = predicted):
+  gold \ pred         ENT    CON    NEI   total
+  ENT                  92      0     92     184
+  CON                   2    103     13     118
+  NEI                   0      5    113     118
+
+Per-class:
+  label                       prec     rec      f1  support
+  ENTAILED                   0.979   0.500   0.662      184
+  CONTRADICTED               0.954   0.873   0.912      118
+  NOT_ENOUGH_INFORMATION     0.518   0.958   0.673      118
+
+Per-condition accuracy and mean NLI probability mass:
+  condition                    n    acc   p(ent)   p(neu)   p(con)  modal prediction
+  C1_negated_bare             59  0.932    0.056    0.008    0.935  CON 55/59
+  C2_negated_attributed       59  0.814    0.007    0.149    0.844  CON 48/59
+  E1_verbatim                 59  1.000    0.982    0.013    0.006  ENT 59/59
+  E2_verbatim_attributed      59  0.000    0.017    0.981    0.002  NEI 59/59
+  E3_paraphrase_bare          33  1.000    0.990    0.007    0.003  ENT 33/33
+  E4_paraphrase_attributed    33  0.000    0.057    0.942    0.001  NEI 33/33
+  N1_other_provision          59  0.915    0.065    0.824    0.111  NEI 54/59
+  N2_procedural_addition      59  1.000    0.010    0.989    0.001  NEI 59/59
+
+ENTAILED 2x2 — recall of the ENTAILED label (higher is better):
+                                      bare        attributed
+  verbatim                           1.000             0.000
+  paraphrased                        1.000             0.000
+
+Matched-pair effects (same evidence records in both cells):
+  attribution_effect_on_verbatim: E1_verbatim -> E2_verbatim_attributed  (n=59)
+      ENTAILED recall 1.000 -> 0.000  (delta -1.000)
+      mean p(entail)  0.982 -> 0.017  (delta -0.965)
+  attribution_effect_on_paraphrase: E3_paraphrase_bare -> E4_paraphrase_attributed  (n=33)
+      ENTAILED recall 1.000 -> 0.000  (delta -1.000)
+      mean p(entail)  0.990 -> 0.057  (delta -0.932)
+  paraphrase_effect_bare: E1_verbatim -> E3_paraphrase_bare  (n=33)
+      ENTAILED recall 1.000 -> 1.000  (delta +0.000)
+      mean p(entail)  0.982 -> 0.990  (delta +0.007)
+  paraphrase_effect_attributed: E2_verbatim_attributed -> E4_paraphrase_attributed  (n=33)
+      ENTAILED recall 0.000 -> 0.000  (delta +0.000)
+      mean p(entail)  0.010 -> 0.057  (delta +0.047)
+  attribution_effect_on_contradiction: C1_negated_bare -> C2_negated_attributed  (n=59)
+      ENTAILED recall 0.034 -> 0.000  (delta -0.034)
+      mean p(entail)  0.056 -> 0.007  (delta -0.049)
+
+Verdicts downgraded to NEI by the 0.7 confidence threshold: 14/420
+  of those, 3 had entailment as the raw argmax (threshold, not the model, produced the NEI)
+
+Error examples (up to 3 per gold label):
+  gold=ENTAILED: 92 errors
+    [E2_verbatim_attributed] -> NOT_ENOUGH_INFORMATION (ent=0.003 neu=0.996 con=0.001)
+      EVID : In this part, unless the context otherwise requires, 'the State' includes the Government and Parliament of Ind
+      CLAIM: According to Article 12 of Constitution of India, in this part, unless the context otherwise requires, 'the St
+    [E4_paraphrase_attributed] -> NOT_ENOUGH_INFORMATION (ent=0.003 neu=0.997 con=0.000)
+      EVID : In this part, unless the context otherwise requires, 'the State' includes the Government and Parliament of Ind
+      CLAIM: According to Article 12 of Constitution of India, in this part, except where the context requires otherwise, '
+    [E2_verbatim_attributed] -> NOT_ENOUGH_INFORMATION (ent=0.004 neu=0.995 con=0.001)
+      EVID : An appeal shall lie to the Supreme Court from any judgment, decree or final order in a civil proceeding of a H
+      CLAIM: According to Article 133 of Constitution of India, an appeal shall lie to the Supreme Court from any judgment,
+  gold=CONTRADICTED: 15 errors
+    [C1_negated_bare] -> ENTAILED (ent=0.825 neu=0.052 con=0.123)
+      EVID : No person shall be deprived of his life or personal liberty except according to procedure established by law.
+      CLAIM: No person shall not be deprived of his life or personal liberty except according to procedure established by l
+    [C2_negated_attributed] -> NOT_ENOUGH_INFORMATION (ent=0.002 neu=0.997 con=0.001)
+      EVID : No person shall be deprived of his life or personal liberty except according to procedure established by law.
+      CLAIM: According to Article 21 of Constitution of India, no person shall not be deprived of his life or personal libe
+    [C1_negated_bare] -> NOT_ENOUGH_INFORMATION (ent=0.675 neu=0.035 con=0.290)
+      EVID : No person who is arrested shall be detained in custody without being informed, as soon as may be, of the groun
+      CLAIM: No person who is arrested shall not be detained in custody without being informed, as soon as may be, of the g
+  gold=NOT_ENOUGH_INFORMATION: 5 errors
+    [N1_other_provision] -> CONTRADICTED (ent=0.001 neu=0.028 con=0.971)
+      EVID : Whoever is guilty of rioting, shall be punished with imprisonment of either description for a term which may e
+      CLAIM: Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fin
+    [N1_other_provision] -> CONTRADICTED (ent=0.002 neu=0.022 con=0.975)
+      EVID : Any police officer making an investigation under this Chapter may examine witnesses, and statements made may a
+      CLAIM: In every inquiry or trial, for the purpose of enabling the accused personally to explain any circumstances app
+    [N1_other_provision] -> CONTRADICTED (ent=0.001 neu=0.002 con=0.997)
+      EVID : Culpable homicide is murder if the act by which the death is caused is done with the intention of causing deat
+      CLAIM: Whoever commits the offence of criminal intimidation shall be punished with imprisonment of either description

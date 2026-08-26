@@ -28,7 +28,47 @@ from typing import Optional
 
 from . import claim_parser
 from .evidence_matcher import match_evidence, NO_EVIDENCE
-from .verifier import ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION
+from .verifier import (
+    ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION,
+    format_premise, PREMISE_FRAMINGS, PREMISE_FRAMING_BARE,
+)
+
+
+def resolve_premise_framing(config: dict) -> str:
+    """Read verification.premise_framing from config, defaulting to "bare".
+
+    Validated here rather than at the point of use so a typo in prototype.yaml
+    fails immediately with the offending value named, instead of silently
+    falling through to bare framing and producing a run that looks like a
+    labeled-framing ablation but is not one.
+    """
+    framing = (config.get("verification") or {}).get("premise_framing", PREMISE_FRAMING_BARE)
+    if framing not in PREMISE_FRAMINGS:
+        raise ValueError(
+            f"verification.premise_framing must be one of {list(PREMISE_FRAMINGS)}, "
+            f"got {framing!r}"
+        )
+    return framing
+
+
+def _premise_for_claim(rec: dict, framing: str) -> str:
+    """Build the NLI premise for one matched claim record.
+
+    The provision label comes from `_evidence_provision`, which carries the
+    MATCHED EVIDENCE RECORD's own identity — deliberately not the claim's
+    `citation_extracted`, which is what the generator wrote and may be wrong or
+    fuzzily matched. The premise must describe the evidence being used as the
+    premise, otherwise a mis-cited claim would be handed a premise labeled with
+    its own error.
+    """
+    prov = rec.get("_evidence_provision") or {}
+    return format_premise(
+        rec["evidence_text"],
+        framing=framing,
+        provision_type=prov.get("provision_type"),
+        provision_number=prov.get("provision_number"),
+        act=prov.get("act"),
+    )
 
 MODES = ("A", "B", "C")
 
@@ -80,6 +120,15 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 else None,
                 "evidence_id": match.evidence.dataset_citation_key if match.matched else None,
                 "evidence_text": match.evidence.canonical_text if match.matched else None,
+                # Underscore-prefixed: internal bookkeeping consumed by
+                # _premise_for_claim() and stripped before output, so enabling
+                # labeled framing does not change the output record schema and
+                # new runs stay diffable against the committed A/B/C baselines.
+                "_evidence_provision": {
+                    "provision_type": match.evidence.provision_type,
+                    "provision_number": match.evidence.provision_number,
+                    "act": match.evidence.act,
+                } if match.matched else None,
                 # NOT underscore-prefixed: this is legitimate reproducibility
                 # metadata (how the evidence was matched: exact/fuzzy/none)
                 # and must survive into the output record's claims list, not
@@ -114,16 +163,27 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     }
 
 
-def apply_verification(baseline: dict, verifier) -> None:
+def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_FRAMING_BARE) -> None:
     """Mutates baseline['claims'] in place, filling verdict/confidence for
     every claim that has matched evidence. Claims with no evidence keep
     their NO_EVIDENCE verdict untouched — the verifier is never called for
     them, by design (an NLI verdict would be meaningless without a
-    premise)."""
+    premise).
+
+    `premise_framing` defaults to bare so that any caller not yet passing it
+    keeps the exact behaviour that produced the committed outputs; callers opt
+    into the ablation by threading resolve_premise_framing(config) through.
+    """
+    if premise_framing not in PREMISE_FRAMINGS:
+        raise ValueError(
+            f"premise_framing must be one of {list(PREMISE_FRAMINGS)}, got {premise_framing!r}"
+        )
     for rec in baseline["claims"]:
         if rec["evidence_text"] is None:
             continue  # already NO_EVIDENCE, verifier not invoked
-        result = verifier.verify(premise=rec["evidence_text"], hypothesis=rec["claim_text"])
+        result = verifier.verify(
+            premise=_premise_for_claim(rec, premise_framing), hypothesis=rec["claim_text"]
+        )
         rec["verdict"] = result.label
         rec["confidence"] = result.confidence
         rec["sub_reason"] = result.sub_reason
@@ -228,8 +288,19 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
         )
         if match.matched:
+            # Re-verification must use the SAME premise framing as the original
+            # verdict. Verifying under one framing and re-verifying under
+            # another would compare a correction against a different standard
+            # than the one that flagged it.
             result = baseline["_verifier"].verify(
-                premise=match.evidence.canonical_text, hypothesis=replacement.claim_text
+                premise=format_premise(
+                    match.evidence.canonical_text,
+                    framing=resolve_premise_framing(config),
+                    provision_type=match.evidence.provision_type,
+                    provision_number=match.evidence.provision_number,
+                    act=match.evidence.act,
+                ),
+                hypothesis=replacement.claim_text,
             )
             reverification = {
                 "claim_text": replacement.claim_text,
@@ -317,7 +388,7 @@ def run_case(
     baseline["_verifier"] = verifier
 
     if mode in ("B", "C"):
-        apply_verification(baseline, verifier)
+        apply_verification(baseline, verifier, resolve_premise_framing(config))
 
     correction_summary = {
         "triggered_for_claim_id": None,
@@ -366,6 +437,10 @@ def run_case(
             "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
             "quantization": config["generation"]["quantization"],
             "confidence_threshold": config["verification"]["confidence_threshold"],
+            # Which premise framing produced these verdicts. Without this a run
+            # cannot be attributed to a framing after the fact, and the bare vs
+            # labeled ablation becomes uninterpretable.
+            "premise_framing": resolve_premise_framing(config) if mode in ("B", "C") else None,
             "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
             "software_versions": _software_versions(),
         },
