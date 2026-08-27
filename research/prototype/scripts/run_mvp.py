@@ -77,13 +77,12 @@ def cmd_check() -> int:
     print(f"  OK: found {canonical_path}")
     print(f"  OK: found {audit_path}")
 
-    from src.data_loader import load_usable_evidence
+    from src.data_loader import load_usable_evidence_from_config
 
-    exact_index, all_usable = load_usable_evidence(
-        canonical_path, audit_path, set(config["usable_evidence_verdicts"])
-    )
+    exact_index, all_usable = load_usable_evidence_from_config(config, repo_root)
     print(f"  OK: loaded {len(all_usable)} usable evidence records "
-          f"(VERIFIED_EXACT + VERIFIED_CONTENT only, per config)")
+          f"(VERIFIED_EXACT + VERIFIED_CONTENT only, per config; "
+          f"use_evidence_v1={config.get('use_evidence_v1', False)})")
 
     print("\nAll checks passed. No model was loaded, nothing was downloaded.")
     return 0
@@ -106,17 +105,13 @@ def cmd_run(args: argparse.Namespace) -> int:
     with config_path.open(encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
-    from src.data_loader import load_usable_evidence, load_nyayarag_cases, select_cases_with_evidence_overlap
+    from src.data_loader import load_usable_evidence_from_config, load_nyayarag_cases, select_cases_with_evidence_overlap
     from src.generator import StatuteGroundingGenerator
     from src.verifier import NLIVerifier
     from src.corrector import SelectiveCorrector
     from src.pipeline import run_case
 
-    canonical_path = repo_root / config["paths"]["canonical_statutes"]
-    audit_path = repo_root / config["paths"]["evidence_audit"]
-    exact_index, all_usable = load_usable_evidence(
-        canonical_path, audit_path, set(config["usable_evidence_verdicts"])
-    )
+    exact_index, all_usable = load_usable_evidence_from_config(config, repo_root)
     print(f"Loaded {len(all_usable)} usable evidence records.")
 
     nyayarag_paths = [repo_root / p for p in config["paths"]["nyayarag_case_files"]]
