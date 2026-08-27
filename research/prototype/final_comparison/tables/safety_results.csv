@@ -1,0 +1,6 @@
+regime,n_correction_attempts,unsafe_shipped,scope_violations,sibling_regressions_checked,notes
+"ORIGINAL (bare, v0, legacy scope, no narrow-reverify) -- pooled natural correction attempts",15,0,see correction_results.csv per-regime,n/a under legacy scope check (mechanism does not exist without atomic_scope_check),n30/mode C bare triggered 0; batch1 bare 5; batch2 bare 5; final-A 5 = 15 attempts under strict ORIGINAL config
+CURRENT (all four levers) -- targeted GPU correction validation,10,0,3,1,"1 correction shipped; sibling-regression safety net fired/checked once (the 1 shipped case), found 0 regressions"
+"cumulative, ALL natural regimes/history (56 attempts)",56,0,18,10 (final_gpu_validation) + 10 (labeled_correction_validation_gpu) triggered corrections independently checked; 0 found,0/56 unsafe shipments across every natural correction attempt in this project's history
+"synthetic stress, bare (calibration only)",30,0,0,n/a (synthetic harness predates atomic_scope_check),unflagged-claim preservation 30/30 (100%)
+"synthetic stress, labeled (calibration only)",36,0,0,n/a (synthetic harness predates atomic_scope_check),unflagged-claim preservation 36/36 (100%)

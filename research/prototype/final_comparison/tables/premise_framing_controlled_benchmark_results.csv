@@ -1,0 +1,2 @@
+comparison,dataset,n_items,original_accuracy,current_accuracy,original_macro_f1,current_macro_f1,original_entailed_recall,current_entailed_recall,mcnemar_chi2,mcnemar_p,measurement_type
+ORIGINAL premise_framing=bare vs CURRENT premise_framing=labeled,"controlled_verifier_benchmark.jsonl, 420 curated items, paired (same items, same gold labels)",420,0.7333333333333333,0.9714285714285714,0.748664658664977,0.9683612674297155,0.5,1.0,98.01,4.1627504389864034e-23,"directly measurable (curated benchmark, real DeBERTa inference, gold labels by construction)"

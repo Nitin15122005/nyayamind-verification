@@ -1,0 +1,6 @@
+measurement,n_cases,runtime_seconds,peak_vram_mib,notes
+"final_gpu_validation Arm A (ORIGINAL: bare, v0, legacy scope), verification+correction only (excl. shared generation)",50,190.95,7547,"generation is shared once per case across both arms (1662.8s total, 81.5% of the 2040.9s grand total) and is NOT part of this arm-only figure"
+"final_gpu_validation Arm B (CURRENT retrieval/scope/narrow-reverify, still bare), verification+correction only",50,187.16,7547,same shared generation as Arm A; larger evidence pool (137 vs 59 records) did not measurably change verification/correction runtime
+"labeled_correction_validation_gpu (CURRENT full config, targeted correction-only validation)",10,84.90598940849304,not separately logged for this targeted run,reuses Arm B's already-generated text; only new work is Qwen correction call + CPU DeBERTa reverification per triggered case
+"synthetic stress, bare framing correction path (calibration only)",59,644.5045371055603,7502,verification 2.9s + correction 641.6s
+"synthetic stress, labeled framing correction path (calibration only)",59,1412.7578926086426,7502,verification 4.2s + correction 1408.5s (more correction calls triggered under labeled framing -> longer total runtime)

@@ -1,0 +1,130 @@
+# RUN_COMPARISON — Reproducing the ORIGINAL vs CURRENT Comparison
+
+This document is the reproduction guide for everything under `research/prototype/final_comparison/`.
+It assumes you have already read `research/prototype/REPRODUCIBILITY.md` (the project-wide
+reproducibility reference) — this file covers only what is specific to this comparison.
+
+**Nothing in this comparison requires a new GPU run.** Every table and figure here is
+computed from experiment artifacts already committed under `research/prototype/outputs/`
+before this comparison was built — see §5 ("Is a new GPU run needed?") for the honest
+answer on whether one would still be worthwhile.
+
+---
+
+## 1. Environment
+
+Same as the project-wide environment (`research/prototype/REPRODUCIBILITY.md` §1):
+Python 3.11.9, `research/.venv`. This comparison's own scripts additionally require
+`matplotlib` (already pinned in `research/requirements.txt`) — no other new dependency.
+No GPU, no network, no model weights are loaded by anything in this directory.
+
+## 2. Exact commands
+
+All commands assume the repo root as the working directory.
+
+```bash
+# 1. Recompute every CSV table directly from research/prototype/outputs/*
+research/.venv/Scripts/python.exe research/prototype/final_comparison/scripts/build_comparison_data.py
+
+# 2. Regenerate every PNG figure from the tables just written
+research/.venv/Scripts/python.exe research/prototype/final_comparison/scripts/generate_figures.py
+```
+
+Both scripts are idempotent and side-effect-free outside `final_comparison/tables/` and
+`final_comparison/figures/` respectively — they never write to `research/prototype/outputs/`
+or to `config/prototype.yaml`, and they load no model.
+
+Expected runtime: a few seconds total (CPU, no model loading — pure JSON/CSV/plotting).
+
+## 3. What each script reads
+
+| Script | Reads (relative to `research/prototype/outputs/`) |
+|---|---|
+| `build_comparison_data.py` | `final_gpu_validation_{A,B}.jsonl`, `final_gpu_validation_metrics.json`, `final_gpu_validation_corrections_detail.jsonl`, `final_validation_bare_vs_labeled_cpu_metrics.json`, `labeled_correction_validation_gpu_metrics.json`, `controlled_benchmark_deberta{,_labeled}_{metrics.json,results.jsonl}`, `evidence_coverage_v0_vs_v1.json`, `parser_fix_before_after_n30.json`, `atomic_scope_check_final_replay.json`, `final_metrics.json` |
+| `generate_figures.py` | every CSV under `final_comparison/tables/` (written by the script above) plus `final_gpu_validation_{A,B}.jsonl` and `final_metrics.json` directly, for the confidence-distribution and cumulative-natural-data figures |
+
+Neither script hand-types any metric value — every number in every table/figure traces to
+one of the files above. See `comparison_config.json` for the full source-file manifest per
+comparison pair.
+
+## 4. Reproducing the full project test suite and MVP check (as instructed)
+
+```bash
+research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
+research/.venv/Scripts/python.exe research/prototype/scripts/run_mvp.py --check
+```
+
+Both were run as part of producing this comparison; results are reported verbatim in
+`FINAL_BASELINE_COMPARISON.md` and were not used to justify any threshold or methodology
+change.
+
+## 5. Is a new GPU run genuinely necessary?
+
+**Not to reproduce anything in this comparison** — every figure/table here is a
+recomputation of already-committed, already-GPU-validated experiment data (or, for the
+controlled benchmark and CPU re-verification pairs, already-committed CPU-only DeBERTa
+results). Re-running `run_final_gpu_validation.py` or `run_labeled_correction_validation_gpu.py`
+would produce a *fresh* batch of natural cases, not a re-check of these numbers — useful for
+extending the evidence base, not for verifying it.
+
+**What a new GPU run WOULD genuinely add** (see `FINAL_BASELINE_COMPARISON.md` for the full
+discussion): a larger (50-100 case), fresh natural batch run under the full CURRENT config
+end-to-end from scratch (not chained across four separate experiments as this comparison's
+strongest evidence currently is) would let the n=1-shipped/n=10-triggered correction result
+be confirmed or revised at a defensible sample size, and would let all four CURRENT levers
+be measured jointly for the first time on genuinely new cases with real generation. This is
+recorded in `FINAL_PRODUCTION_CONFIG.md` §8 as the condition that would justify revisiting
+the `premise_framing` decision, not a gap this comparison itself needed to close.
+
+## 6. If you want to extend this comparison with a fresh batch
+
+```bash
+# Select a new, disjoint natural batch (CPU-only, no GPU)
+research/.venv/Scripts/python.exe research/prototype/scripts/select_natural_candidates.py --out-suffix _comparison_extension
+
+# Run it end-to-end under CURRENT config (GPU, ~15-35 min depending on batch size)
+research/.venv/Scripts/python.exe research/prototype/scripts/run_final_gpu_validation.py --device cuda
+```
+
+Then re-run `build_comparison_data.py` after adding the new output file(s) to the relevant
+section of that script — this comparison's scripts are not written to auto-discover new
+batches, by design, so that every number here stays traceable to an explicit, reviewed
+source-file list.
+
+## 7. Seeds, models, versions (unchanged from the project-wide record)
+
+| | Value |
+|---|---|
+| Seed | 42 |
+| Generation model | `Qwen/Qwen2.5-7B-Instruct`, 4-bit NF4, greedy |
+| Verification model | `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli` |
+| ORIGINAL config | `use_evidence_v1=false, premise_framing=bare, atomic_scope_check=false, narrow_reverification_hypothesis=false` |
+| CURRENT config | `use_evidence_v1=true, premise_framing=labeled, atomic_scope_check=assertion_spans, narrow_reverification_hypothesis=true` |
+| Full definitions | `comparison_config.json` (this directory) |
+
+## 8. Expected artifacts after running both scripts
+
+```
+final_comparison/
+├── comparison_config.json          (hand-authored, not regenerated by scripts)
+├── RUN_COMPARISON.md               (this file)
+├── FINAL_BASELINE_COMPARISON.md    (hand-authored narrative report)
+├── scripts/
+│   ├── build_comparison_data.py
+│   └── generate_figures.py
+├── tables/
+│   ├── comparison_summary.csv / .md
+│   ├── ablation_results.csv
+│   ├── safety_results.csv
+│   ├── correction_results.csv
+│   ├── retrieval_results.csv
+│   ├── efficiency_results.csv
+│   ├── verdict_distribution_results.csv
+│   ├── premise_framing_controlled_benchmark_results.csv
+│   └── statistical_tests.csv
+├── figures/
+│   └── 01..11_*.png
+└── cases/
+    ├── CASES_INDEX.md
+    └── case_01..07_*.md
+```

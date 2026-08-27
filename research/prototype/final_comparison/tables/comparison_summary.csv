@@ -1,0 +1,10 @@
+metric,original,current_retrieval_only,delta,category,significance
+"Evidence coverage (paired, 50 natural cases, bare framing both)",132/209 (63.2%),147/209 (70.3%),+15 claims (+7.2pp),(a) directly measurable,McNemar p<0.001
+"Premise-framing macro F1 (controlled benchmark, n=420)",0.749,0.968,+0.220,(a) directly measurable,McNemar p=4.16e-23
+"ENTAILED reached on natural data, framing-only CPU re-verify (147 matched claims)",0/147 (0%),13/147 (8.8%),+13 claims,(a) directly measurable,"exact sign test, see statistical_tests.csv"
+"CONTRADICTED count (detection), paired 50-case retrieval-only comparison",3/209,3/209,0 (unchanged),(a) directly measurable,"n/a -- identical claims, identical confidences"
+"Correction shipped rate, targeted GPU validation vs ORIGINAL-config trigger set",0/5 (0%),1/10 (10%),"+1 shipped, directional only",(b) provisional / small-sample,n too small for a defensible p-value (see statistical_tests.csv)
+"Cumulative natural correction shipped rate, all history",n/a (ORIGINAL-only subset not separately tracked as its own cumulative rate),1/56 (1.8%) across all regimes to date,n/a,(a) directly measurable (cumulative pool),n/a
+Unsafe corrections shipped (safety),0/15 (ORIGINAL-config natural attempts),0/10 (CURRENT targeted validation),0 vs 0 -- both zero,(a) directly measurable,"n/a -- observed zero-rate, not proof of zero future risk (see safety analysis)"
+"Claim parser evidence coverage, same 30 documents",38/88,51/93,+13 evidence-matched claims (segmentation itself also changed: 88->93 claims),(a) directly measurable,"exact sign test at document level, see statistical_tests.csv"
+Verifier agreement with PROVISIONAL (non-lawyer) assumption labels,20/38 (52.6%),18/38 (47.4%),"-2 (labeled framing agrees LESS on this older, bundled-sentence-heavy set)","(c) requires lawyer ground truth (both are PROVISIONAL machine-vs-machine agreement, not accuracy)","n=38, not tested -- reported as an honest counter-signal, not a regression claim"

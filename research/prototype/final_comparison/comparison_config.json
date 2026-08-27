@@ -1,0 +1,127 @@
+{
+  "_purpose": "Machine-readable definition of ORIGINAL vs CURRENT NyayaMind prototype configurations for the final_comparison evaluation. Both configs run through the IDENTICAL pipeline code (src/pipeline.py etc.) -- this is a configuration A/B, not a code-fork A/B, except for the claim-parser ablation (section parser_ablation) which is a genuine pre-fix/post-fix code diff, documented separately.",
+  "generated": "2026-08-27",
+  "derivation": "Every value below is copied verbatim from research/prototype/config/prototype.yaml (as committed) and cross-checked against FINAL_PRODUCTION_CONFIG.md and REPRODUCIBILITY.md §5. Nothing here was invented for this comparison.",
+
+  "ORIGINAL": {
+    "label": "pre-2026-08-27 production baseline",
+    "description": "The configuration under which every historical output in outputs/ committed before 2026-08-27 was produced (run_A/B/C_n30, run_natural_targeted, run_synthetic_stress, natural_candidates_50_gpu, natural_candidates_batch2_gpu, and Arm A of final_gpu_validation).",
+    "use_evidence_v1": false,
+    "evidence_pool_size": 59,
+    "evidence_pool_files": ["research/data/evidence/canonical_statutes.jsonl"],
+    "premise_framing": "bare",
+    "correction.atomic_scope_check": false,
+    "correction.narrow_reverification_hypothesis": false,
+    "verification.confidence_threshold": 0.70,
+    "claim_parser_version": "current (post commit 223eb9d) for the primary ORIGINAL baseline used in this comparison (final_gpu_validation Arm A, batch1/batch2 bare-v0 runs). IMPORTANT CAVEAT: the very earliest n=30/targeted experiments (run_A/B/C_n30, run_natural_targeted, commit 0e37525) predate commit 223eb9d and DID use the pre-fix parser -- those are NOT used as the primary ORIGINAL baseline here; the claim_parser ablation below (parser_ablation pair) isolates that earlier fix separately.",
+    "citation_identity_preservation_on_correction": "always on -- core pipeline logic, not a toggle, identical in ORIGINAL and CURRENT",
+    "sibling_regression_protection": "not applicable -- only activates when atomic_scope_check is truthy; inactive under ORIGINAL by construction"
+  },
+
+  "CURRENT": {
+    "label": "shipped production config, decided 2026-08-27",
+    "description": "research/prototype/config/prototype.yaml exactly as committed. Decision record: FINAL_PRODUCTION_CONFIG.md.",
+    "use_evidence_v1": true,
+    "evidence_pool_size": 136,
+    "evidence_pool_files": [
+      "research/data/evidence/canonical_statutes.jsonl",
+      "research/data/evidence/canonical_statutes_v1.jsonl"
+    ],
+    "premise_framing": "labeled",
+    "correction.atomic_scope_check": "assertion_spans",
+    "correction.narrow_reverification_hypothesis": true,
+    "verification.confidence_threshold": 0.70,
+    "claim_parser_version": "current (post commit 223eb9d, unchanged since)",
+    "citation_identity_preservation_on_correction": "always on -- core pipeline logic, not a toggle, identical in ORIGINAL and CURRENT",
+    "sibling_regression_protection": "active whenever atomic_scope_check is truthy -- always active under CURRENT"
+  },
+
+  "unchanged_between_ORIGINAL_and_CURRENT": [
+    "generation.model_id (Qwen/Qwen2.5-7B-Instruct, 4-bit NF4)",
+    "generation prompts and decoding (greedy, max_new_tokens=200)",
+    "verification.model_id (MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli)",
+    "verification.confidence_threshold (0.70)",
+    "correction.model_id, correction.max_new_tokens, correction decoding (greedy)",
+    "correction.max_attempts / max_reverifications (1/1)",
+    "seed (42)",
+    "citation-identity preservation on correction (_citation_identity(), always on)",
+    "the ENTAILED-only shipping gate: status=='corrected' iff reverification.verdict=='ENTAILED'"
+  ],
+
+  "isolated_ab_pairs_actually_run_in_this_repo": {
+    "note": "Because premise_framing, use_evidence_v1, atomic_scope_check and narrow_reverification_hypothesis were each validated independently before being combined, the strongest evidence for THIS comparison is a set of controlled pairs, each changing the minimum number of variables needed to isolate one lever. This project has never run a single experiment that flips ALL FOUR levers from ORIGINAL to CURRENT simultaneously on one fresh natural batch with real GPU generation -- that gap is stated explicitly wherever it matters below and in FINAL_BASELINE_COMPARISON.md.",
+    "pairs": [
+      {
+        "name": "retrieval_ablation_paired_gpu",
+        "changes": ["use_evidence_v1: false -> true", "atomic_scope_check: false -> assertion_spans", "narrow_reverification_hypothesis: false -> true"],
+        "held_fixed": ["premise_framing=bare (BOTH arms)", "confidence_threshold=0.70", "same 50 cases", "same shared Qwen generation pass"],
+        "source_files": ["outputs/final_gpu_validation_A.jsonl", "outputs/final_gpu_validation_B.jsonl", "outputs/final_gpu_validation_metrics.json", "outputs/final_gpu_validation_corrections_detail.jsonl"],
+        "n_cases": 50,
+        "n_claims": 209,
+        "real_gpu": true
+      },
+      {
+        "name": "premise_framing_ablation_controlled_benchmark",
+        "changes": ["premise_framing: bare -> labeled"],
+        "held_fixed": ["evidence pool (curated, not v0/v1)", "confidence_threshold=0.70", "same 420 curated benchmark items"],
+        "source_files": ["outputs/controlled_benchmark_deberta_results.jsonl", "outputs/controlled_benchmark_deberta_labeled_results.jsonl", "outputs/controlled_benchmark_deberta_metrics.json", "outputs/controlled_benchmark_deberta_labeled_metrics.json"],
+        "n_items": 420,
+        "real_gpu": false,
+        "note": "Curated adversarial benchmark, not natural NyayaRAG data -- see final_demo_pack for construction methodology."
+      },
+      {
+        "name": "premise_framing_ablation_natural_cpu_reverify",
+        "changes": ["premise_framing: bare -> labeled"],
+        "held_fixed": ["use_evidence_v1=true (both)", "atomic_scope_check=assertion_spans (both)", "narrow_reverification_hypothesis=true (both)", "same 147 already-matched claims from final_gpu_validation Arm B", "verification only, no new generation"],
+        "source_files": ["outputs/final_validation_bare_vs_labeled_cpu_metrics.json", "outputs/final_validation_bare_vs_labeled_cpu_claims.jsonl"],
+        "n_claims": 147,
+        "real_gpu": false
+      },
+      {
+        "name": "correction_shipping_ablation_targeted_gpu",
+        "changes": ["premise_framing: bare -> labeled (correction path only)"],
+        "held_fixed": ["use_evidence_v1=true (both)", "atomic_scope_check=assertion_spans (both)", "narrow_reverification_hypothesis=true (both)", "same underlying 50-case batch (final_gpu_validation)"],
+        "source_files": ["outputs/labeled_correction_validation_gpu_metrics.json", "outputs/labeled_correction_validation_gpu_corrections_detail.jsonl", "outputs/final_gpu_validation_metrics.json"],
+        "n_triggered_bare": 5,
+        "n_triggered_labeled": 10,
+        "real_gpu": true
+      },
+      {
+        "name": "scope_check_ablation_deterministic_replay",
+        "changes": ["atomic_scope_check: false -> assertion_spans"],
+        "held_fixed": ["every other config value", "the actual Qwen-generated correction text (replayed, not regenerated)"],
+        "source_files": ["outputs/atomic_scope_check_final_replay.json", "outputs/atomic_scope_check_final_replay.md"],
+        "n_scope_violations_replayed": 11,
+        "real_gpu": false,
+        "note": "Deterministic re-check of the scope-violation RULE against already-generated correction text -- no new model call."
+      },
+      {
+        "name": "evidence_corpus_ablation_corpuslevel",
+        "changes": ["use_evidence_v1: false -> true"],
+        "held_fixed": ["all 588 already-extracted claims pooled from every natural experiment's generated text"],
+        "source_files": ["outputs/evidence_coverage_v0_vs_v1.json"],
+        "n_claims": 588,
+        "real_gpu": false,
+        "note": "Corpus-level, not paired-arm; complements the paired GPU retrieval_ablation above with a larger claim pool."
+      },
+      {
+        "name": "claim_parser_ablation_n30_reparse",
+        "changes": ["claim_parser: pre-fix -> current (commit 223eb9d)"],
+        "held_fixed": ["same 30 underlying cases/generated texts (n=30 batch)", "same evidence pool version used at time of comparison"],
+        "source_files": ["outputs/parser_fix_before_after_n30.json"],
+        "n_cases": 30,
+        "real_gpu": false,
+        "note": "Claim segmentation itself changes (88 -> 93 claims) because the fix affects what counts as a claim boundary -- not a strict 1:1 paired-claim comparison; compared as coverage-of-claims-extracted-from-same-cases."
+      }
+    ]
+  },
+
+  "never_jointly_measured": [
+    "All four CURRENT levers (v1 evidence + labeled framing + assertion_spans + narrow_reverification) enabled together vs. ORIGINAL, on one fresh, never-before-seen natural GPU batch, in a single paired run. The closest approximation is chaining: final_gpu_validation Arm A (ORIGINAL) -> Arm B (+v1/+scope/+narrow, still bare) -> labeled CPU re-verification of Arm B's claims (+labeled) -> labeled_correction_validation_gpu (+labeled correction path) -- four separate, real, paired/chained experiments on the SAME 50-case batch, not one combined run from a single fresh generation."
+  ],
+
+  "explicitly_out_of_scope": {
+    "baseline/LegalSeg": "A separate git submodule reproducing RhetoricLLaMA for rhetorical-role segmentation -- a different task (sentence-level rhetorical labeling, not statutory-claim verification) on a different dataset. Not a comparable 'original NyayaMind' baseline for this claim-verification prototype and is not touched or compared here.",
+    "lawyer_ground_truth": "Does not exist anywhere in this project. All verdict-agreement numbers against assumption_annotation.jsonl or lawyer_annotation.jsonl are PROVISIONAL (Claude-generated labels) and are kept out of every headline metric in this comparison."
+  }
+}

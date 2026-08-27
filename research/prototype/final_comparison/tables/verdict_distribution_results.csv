@@ -1,0 +1,6 @@
+config,dataset,n_claims,n_matched,NOT_ENOUGH_INFORMATION,NO_EVIDENCE,CONTRADICTED,ENTAILED,entailed_per_matched_pct,measurement_type
+"ORIGINAL (bare, v0, legacy scope) -- pooled",180 disjoint cases: n=30 + batch1 + batch2 + final-A,784,454,447,330,5,2,0.44,directly measurable (pooled real natural-data verdicts)
+"CURRENT framing only (labeled, v0, legacy scope) -- pooled",100 disjoint cases: batch1 + batch2 (evidence pool NOT yet v1 in this pool),487,284,263,203,5,16,5.63,directly measurable (pooled real natural-data verdicts)
+"ORIGINAL (bare, v0, legacy scope) -- paired final-validation batch","final_gpu_validation Arm A, 50 cases (PRE-2026-08-27 PRODUCTION BASELINE)",209,132,129,77,3,0,0.0,"directly measurable (paired, same 50 cases)"
+"+ retrieval + scope + narrow-reverify only, still bare -- paired final-validation batch","final_gpu_validation Arm B, same 50 cases",209,147,144,62,3,0,0.0,"directly measurable (paired, same 50 cases)"
+"CURRENT (all four levers) -- paired final-validation batch, CPU re-verify","final_validation_bare_vs_labeled_cpu, same 147 already-matched claims from Arm B",147,147,131,0,3,13,8.84,"directly measurable (paired, same 147 claims, verification-only re-check)"

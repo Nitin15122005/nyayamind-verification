@@ -1,0 +1,6 @@
+regime,n_triggers,corrected_shipped,correction_failed,correction_scope_violation,unsafe_shipped,shipped_rate_pct
+"ORIGINAL (bare, v0, legacy scope) -- final-validation Arm A",5,0,3,2,0,0.0
+"+retrieval+scope+narrow-reverify, still bare -- final-validation Arm B",5,0,3,2,0,0.0
+CURRENT (all four levers) -- targeted GPU correction validation,10,1,6,3,0,10.0
+"cumulative, ALL natural regimes/history pooled (56 attempts, includes ORIGINAL and CURRENT batches)",56,1,37,18,0,1.8
+"synthetic stress (calibration only, NOT natural data), labeled framing",36,26,10,0,0,72.2
