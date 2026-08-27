@@ -1,0 +1,10 @@
+# Bare vs labeled: correction outcomes (batch1/batch2)
+
+| batch | framing | triggers | correction_failed | scope_violation | corrected | shipped | unsafe_shipped |
+|---|---|---|---|---|---|---|---|
+| batch1 | bare | 5 | 5 | 0 | 0 | 0 | 0 |
+| batch1 | labeled | 16 | 10 | 6 | 0 | 0 | 0 |
+| batch2 | bare | 5 | 3 | 2 | 0 | 0 | 0 |
+| batch2 | labeled | 10 | 7 | 3 | 0 | 0 | 0 |
+
+*Legacy (pre-assertion_spans) scope-check regime. Source: section_B_natural_regimes.*.correction.*

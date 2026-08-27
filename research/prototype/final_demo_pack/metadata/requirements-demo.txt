@@ -1,0 +1,10 @@
+# Additional dependency needed ONLY to regenerate this demo pack's figures
+# (research/prototype/final_demo_pack/figures/generate_figures.py). Not added
+# to the frozen research/requirements.txt because that file is pinned for the
+# research pipeline itself (generation/verification/correction), not for
+# building this presentation pack, and this pack's own instructions say not to
+# modify frozen reproducibility artifacts.
+#
+# Install into the same venv used for the research pipeline:
+#   research/.venv/Scripts/python.exe -m pip install -r research/prototype/final_demo_pack/metadata/requirements-demo.txt
+matplotlib==3.11.1

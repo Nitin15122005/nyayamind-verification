@@ -1,0 +1,184 @@
+{
+  "case_01_contradicted_catch": {
+    "source": "research/prototype/outputs/natural_candidates_batch2_gpu_labeled.jsonl",
+    "document_id": "1997_1306",
+    "claim": {
+      "claim_id": "c6",
+      "claim_text": "Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to murder and voluntary manslaughter respectively, section 323 prescribes punishment for voluntarily causing hurt, and section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly.",
+      "assertion_text": "Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to murder and voluntary manslaughter respectively, section 323 prescribes punishment for voluntarily causing hurt, and section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly.",
+      "assertion_spans": [
+        "Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to murder and voluntary manslaughter respectively, section 323 prescribes punishment for voluntarily causing hurt, and section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."
+      ],
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "148",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+      "evidence_text": "Whoever is guilty of rioting, being armed with a deadly weapon or with anything which, used as a weapon of offence, is likely to cause death, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "CONTRADICTED",
+      "confidence": 0.98681640625,
+      "sub_reason": null,
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    }
+  },
+  "case_02_successful_correction": {
+    "document_id": "2003_760",
+    "triggered_for_claim_id": "c3",
+    "status": "corrected",
+    "original_field_text": "The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 and 34. Section 302 deals with murder, which prescribes that whoever commits the act which causes the death of a human being with the intention to cause death or with the knowledge that such act will cause death, commits murder. Section 34 addresses criminal liability for an act done by more than one person in furtherance of the common intention or common object, thereby holding each person criminally responsible for the acts of others committed in furtherance of the common intention or object.",
+    "regenerated_text": "The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 and 34. Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine. Section 34 addresses criminal liability for an act done by more than one person in furtherance of the common intention or common object, thereby holding each person criminally responsible for the acts of others committed in furtherance of the common intention or object.",
+    "reverification": {
+      "claim_text": "Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+      "reverified_hypothesis": "Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+      "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "ENTAILED",
+      "confidence": 0.9945693016052246,
+      "sub_reason": null
+    },
+    "sibling_regressions": []
+  },
+  "case_03_rejected_unsafe_correction": {
+    "framing": "labeled",
+    "document_id": "2008_2063",
+    "triggered_for_claim_id": "c9",
+    "status": "correction_failed",
+    "original_field_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder, attempt to murder, criminal force to deter public servant from discharging his duty, rioting, unlawful assembly, aggregation of offenders, and criminal trespass, among others. Section 302 requires proof of the intentional killing of a person, while Sections 307 and 143-149 deal with attempts, criminal force, and rioting, which are relevant to the facts of the case.",
+    "regenerated_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder, attempt to murder, criminal force to deter public servant from discharging his duty, rioting, unlawful assembly, aggregation of offenders, and criminal trespass, among others. Section 302 requires proof of the intentional killing of a person, which is the charge in this case, while Sections 307 and 143-149 deal with attempts, criminal force, and rioting, which are relevant to the facts of the case.",
+    "reverification": {
+      "claim_text": "Section 302 requires proof of the intentional killing of a person, which is the charge in this case, while Sections 307 and 143-149 deal with attempts, criminal force, and rioting, which are relevant to the facts of the case.",
+      "evidence_id": "Section 307 in The Indian Penal Code, 1860",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "CONTRADICTED",
+      "confidence": 0.9345703125,
+      "sub_reason": null
+    },
+    "unflagged_checked": 9,
+    "unflagged_preserved": 7
+  },
+  "case_04_scope_violation": {
+    "framing": "labeled",
+    "document_id": "2009_865",
+    "triggered_for_claim_id": "c2",
+    "status": "correction_scope_violation",
+    "original_field_text": "The Indian Penal Code, 1860, specifically Sections 302 and 324 read with Section 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for causing injury leading to death, respectively, while acting in concert with others as provided in Section 34.",
+    "regenerated_text": "The Indian Penal Code, 1860, specifically Sections 302 and 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for acting in concert with others as provided in Section 34, respectively.",
+    "reverification": {},
+    "unflagged_checked": 3,
+    "unflagged_preserved": 0
+  },
+  "case_05_no_evidence": {
+    "source": "final_gpu_validation_B.jsonl",
+    "document_id": "2011_625",
+    "claim": {
+      "claim_id": "c5",
+      "claim_text": "Additionally, Sections 336 and 149 of the IPC are relevant as they pertain to the use of weapons and the liability of persons acting in concert, respectively, though their direct application to the decision is not explicitly mentioned in the provided facts.",
+      "assertion_text": "Sections 336 and 149 of the IPC are relevant as they pertain to the use of weapons and the liability of persons acting in concert, respectively, though their direct application to the decision is not explicitly mentioned in the provided facts.",
+      "assertion_spans": [
+        "Sections 336 and 149 of the IPC are relevant as they pertain to the use of weapons and the liability of persons acting in concert, respectively, though their direct application to the decision is not explicitly mentioned in the provided facts."
+      ],
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "336",
+        "subsection": null,
+        "act_raw": "the IPC",
+        "act_norm": "indian penal code 1860"
+      },
+      "evidence_id": null,
+      "evidence_text": null,
+      "evidence_match_method": "no_evidence",
+      "verdict": "NO_EVIDENCE",
+      "confidence": null,
+      "sub_reason": null,
+      "verifier_model": null
+    }
+  },
+  "case_06_v1_evidence_gain": {
+    "source": "run_A_n30.jsonl",
+    "document_id": "1971_200",
+    "claim_id": "c3",
+    "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+    "citation": {
+      "provision_type": "Section",
+      "provision_number": "467",
+      "subsection": null,
+      "act_raw": "the Indian Penal Code",
+      "act_norm": "indian penal code 1860"
+    },
+    "new_evidence_id": "Section 467 in The Indian Penal Code, 1860"
+  },
+  "case_07_labeled_framing_improvement": {
+    "document_id": "1982_49",
+    "claim_id": "c1",
+    "bare_source": "research/prototype/outputs/natural_candidates_50_gpu_bare.jsonl",
+    "labeled_source": "research/prototype/outputs/natural_candidates_50_gpu_labeled.jsonl",
+    "bare_claim": {
+      "claim_id": "c1",
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Section 25F requires that no workman who has been in continuous service for at least one year can be retrenched without satisfying certain pre-conditions, including providing notice, compensation, and an opportunity to be heard.",
+      "assertion_text": "The Industrial Disputes Act, 1947, specifically Section 25F requires that no workman who has been in continuous service for at least one year can be retrenched without satisfying certain pre-conditions, including providing notice, compensation, and an opportunity to be heard.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "25F",
+        "subsection": null,
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "evidence_id": "Section 25F in The Industrial Disputes Act, 1947",
+      "evidence_text": "No workman employed in any industry who has been in continuous service for not less than one year shall be retrenched until: (a) he has been given one month's notice in writing, or wages in lieu thereof; and (b) he has been paid retrenchment compensation equivalent to fifteen days' average pay for every completed year of continuous service.",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "NOT_ENOUGH_INFORMATION",
+      "confidence": 0.88818359375,
+      "sub_reason": null,
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    },
+    "labeled_claim": {
+      "claim_id": "c1",
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Section 25F requires that no workman who has been in continuous service for at least one year can be retrenched without satisfying certain pre-conditions, including providing notice, compensation, and an opportunity to be heard.",
+      "assertion_text": "The Industrial Disputes Act, 1947, specifically Section 25F requires that no workman who has been in continuous service for at least one year can be retrenched without satisfying certain pre-conditions, including providing notice, compensation, and an opportunity to be heard.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "25F",
+        "subsection": null,
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "evidence_id": "Section 25F in The Industrial Disputes Act, 1947",
+      "evidence_text": "No workman employed in any industry who has been in continuous service for not less than one year shall be retrenched until: (a) he has been given one month's notice in writing, or wages in lieu thereof; and (b) he has been paid retrenchment compensation equivalent to fifteen days' average pay for every completed year of continuous service.",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "ENTAILED",
+      "confidence": 0.97265625,
+      "sub_reason": null,
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    }
+  },
+  "case_08_correctly_declines": {
+    "source": "final_gpu_validation_B.jsonl",
+    "document_id": "2004_1020",
+    "claim": {
+      "claim_id": "c1",
+      "claim_text": "The statutory grounding in this case involves Sections 147, 323, 302, and 34 of the Indian Penal Code (IPC).",
+      "assertion_text": "The statutory grounding in this case involves Sections 147, 323, 302, and 34 of the Indian Penal Code (IPC).",
+      "assertion_spans": [
+        "The statutory grounding in this case involves Sections 147, 323, 302, and 34 of the Indian Penal Code (IPC)."
+      ],
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "147",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "evidence_id": "Section 147 in The Indian Penal Code, 1860",
+      "evidence_text": "Whoever is guilty of rioting, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both.",
+      "evidence_match_method": "exact_normalized",
+      "verdict": "NOT_ENOUGH_INFORMATION",
+      "confidence": 0.99267578125,
+      "sub_reason": null,
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Evidence coverage vs batch size
+
+| batch | n_cases | coverage_pct |
+|---|---|---|
+| n=30 | 30 | 43.2 |
+| batch1 | 50 | 66.9 |
+| batch2 | 50 | 49.2 |
+| final-A | 50 | 63.2 |
+| final-B | 50 | 70.3 |
+
+*5 points -- too few to fit a trend; no regression line computed or implied.*

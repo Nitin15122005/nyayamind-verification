@@ -1,0 +1,5 @@
+framing,basis,contradiction_recall_pct
+bare,overall,35.6
+bare,evidence-matched only,47.7
+labeled,overall,45.8
+labeled,evidence-matched only,61.4

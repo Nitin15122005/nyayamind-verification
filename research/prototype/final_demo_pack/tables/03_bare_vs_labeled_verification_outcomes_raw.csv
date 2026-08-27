@@ -1,0 +1,5 @@
+verdict,bare_pooled_count,labeled_pooled_count
+NO_EVIDENCE,330,203
+NOT_ENOUGH_INFORMATION,447,263
+CONTRADICTED,5,5
+ENTAILED,2,16

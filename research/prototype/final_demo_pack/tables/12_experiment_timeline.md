@@ -1,0 +1,11 @@
+# Project experiment timeline
+
+| date | commit | event |
+|---|---|---|
+| 2026-08-25 | 223eb9d | n=30 baseline batch (run_A/B/C_n30), synthetic stress v1, mvp_assumption_evaluation |
+| 2026-08-26 | 54c98d2 | QwenLLMVerifier, controlled verifier benchmark (420 items), research_evaluation_final |
+| 2026-08-26/27 | fe8b15b | pre-GPU correction validation (labeled framing, 76.7% pass under labeled framing) |
+| 2026-08-27 | 100e263 | Evidence v1 build+audit, natural batch1/batch2 GPU runs, final_gpu_validation paired arms, labeled-framing targeted correction validation, final production config decision, full reproducibility pass |
+| 2026-08-27 | 3e9e09a | Cleanup/consolidation, run_mvp.py evidence-loader fix, repository freeze |
+
+*Illustrates development sequence only -- not a performance metric.*

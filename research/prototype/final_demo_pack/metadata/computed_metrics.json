@@ -1,0 +1,2047 @@
+{
+  "final_metrics_passthrough": {
+    "case_census": {
+      "n30": 30,
+      "targeted": 11,
+      "targeted_subset_of_n30": true,
+      "targeted_new_vs_n30": 0,
+      "batch1": 50,
+      "batch2": 50,
+      "final_validation": 50,
+      "total_distinct_cases_all_batches": 180
+    },
+    "section_A_synthetic": {
+      "source": "framing_comparison_gpu_n59_postfix_results.jsonl (raw per-claim, recomputed this session) + framing_comparison_gpu_n59_postfix_metrics.json (correction stats, real GPU Qwen correction)",
+      "n_cases": 59,
+      "bare": {
+        "n_claims_c1_corrupted": 59,
+        "n_claims_c2_unflagged_true": 59,
+        "c1_verdict_counts": {
+          "NO_EVIDENCE": 15,
+          "CONTRADICTED": 21,
+          "NOT_ENOUGH_INFORMATION": 23
+        },
+        "c2_verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 59
+        },
+        "c1_with_evidence": 44,
+        "contradiction_recall_overall": 0.3559322033898305,
+        "contradiction_recall_with_evidence": 0.4772727272727273,
+        "false_positive_rate_c2": 0.0
+      },
+      "labeled": {
+        "n_claims_c1_corrupted": 59,
+        "n_claims_c2_unflagged_true": 59,
+        "c1_verdict_counts": {
+          "NO_EVIDENCE": 15,
+          "CONTRADICTED": 27,
+          "NOT_ENOUGH_INFORMATION": 17
+        },
+        "c2_verdict_counts": {
+          "ENTAILED": 59
+        },
+        "c1_with_evidence": 44,
+        "contradiction_recall_overall": 0.4576271186440678,
+        "contradiction_recall_with_evidence": 0.6136363636363636,
+        "false_positive_rate_c2": 0.0
+      },
+      "correction_bare": {
+        "n_cases": 59,
+        "c1_verdicts": {
+          "NO_EVIDENCE": 15,
+          "CONTRADICTED": 21,
+          "NOT_ENOUGH_INFORMATION": 23
+        },
+        "c2_verdicts": {
+          "NOT_ENOUGH_INFORMATION": 59
+        },
+        "c1_with_evidence": 44,
+        "contradiction_recall_overall": 0.3559322033898305,
+        "contradiction_recall_with_evidence": 0.4772727272727273,
+        "false_positive_rate_c2": 0.0,
+        "correction_triggers": 30,
+        "correction_attempts": 30,
+        "correction_statuses": {
+          "correction_failed": 30
+        },
+        "corrections_shipped_success": 0,
+        "correction_failed": 30,
+        "correction_scope_violation": 0,
+        "reverification_verdicts": {
+          "NOT_ENOUGH_INFORMATION": 28,
+          "CONTRADICTED": 2
+        },
+        "unsafe_corrections_shipped": 0,
+        "unflagged_claim_checked": 30,
+        "unflagged_claim_preserved": 30,
+        "correction_ran": true,
+        "runtime_seconds_total_arm": 644.5045371055603,
+        "runtime_seconds_verification": 2.9383413791656494,
+        "runtime_seconds_correction": 641.5569548606873,
+        "peak_vram_mib_cumulative": 7502
+      },
+      "correction_labeled": {
+        "n_cases": 59,
+        "c1_verdicts": {
+          "NO_EVIDENCE": 15,
+          "CONTRADICTED": 27,
+          "NOT_ENOUGH_INFORMATION": 17
+        },
+        "c2_verdicts": {
+          "ENTAILED": 59
+        },
+        "c1_with_evidence": 44,
+        "contradiction_recall_overall": 0.4576271186440678,
+        "contradiction_recall_with_evidence": 0.6136363636363636,
+        "false_positive_rate_c2": 0.0,
+        "correction_triggers": 36,
+        "correction_attempts": 36,
+        "correction_statuses": {
+          "corrected": 26,
+          "correction_failed": 10
+        },
+        "corrections_shipped_success": 26,
+        "correction_failed": 10,
+        "correction_scope_violation": 0,
+        "reverification_verdicts": {
+          "ENTAILED": 26,
+          "CONTRADICTED": 5,
+          "NOT_ENOUGH_INFORMATION": 5
+        },
+        "unsafe_corrections_shipped": 0,
+        "unflagged_claim_checked": 36,
+        "unflagged_claim_preserved": 36,
+        "correction_ran": true,
+        "runtime_seconds_total_arm": 1412.7578926086426,
+        "runtime_seconds_verification": 4.22845458984375,
+        "runtime_seconds_correction": 1408.5145461559296,
+        "peak_vram_mib_cumulative": 7502
+      }
+    },
+    "section_B_natural_regimes": {
+      "n30_modeB_bare_v0": {
+        "n_cases": 30,
+        "n_claims": 88,
+        "n_matched": 38,
+        "coverage_pct": 43.2,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 38,
+          "NO_EVIDENCE": 50
+        },
+        "match_methods": {
+          "exact_normalized": 24,
+          "no_evidence": 50,
+          "fuzzy": 14
+        },
+        "confidence_mean": 0.9889,
+        "confidence_median": 0.9932,
+        "correction": null,
+        "config": "bare, v0-pool(59), legacy scope, stale-then-current parser mix",
+        "source": "run_B_n30.jsonl"
+      },
+      "n30_modeC_bare_v0": {
+        "n_cases": 30,
+        "n_claims": 88,
+        "n_matched": 38,
+        "coverage_pct": 43.2,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 38,
+          "NO_EVIDENCE": 50
+        },
+        "match_methods": {
+          "exact_normalized": 24,
+          "no_evidence": 50,
+          "fuzzy": 14
+        },
+        "confidence_mean": 0.9889,
+        "confidence_median": 0.9932,
+        "correction": {
+          "correction_triggers": 0,
+          "statuses": {},
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "bare, v0-pool(59), legacy scope check",
+        "source": "run_C_n30.jsonl"
+      },
+      "targeted_modeB_bare_v0": {
+        "n_cases": 11,
+        "n_claims": 29,
+        "n_matched": 14,
+        "coverage_pct": 48.3,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 14,
+          "NO_EVIDENCE": 15
+        },
+        "match_methods": {
+          "exact_normalized": 14,
+          "no_evidence": 15
+        },
+        "confidence_mean": 0.9765,
+        "confidence_median": 0.9883,
+        "correction": null,
+        "config": "bare, v0-pool(59)",
+        "source": "run_natural_targeted.jsonl"
+      },
+      "batch1_bare_v0": {
+        "n_cases": 50,
+        "n_claims": 251,
+        "n_matched": 168,
+        "coverage_pct": 66.9,
+        "verdict_counts": {
+          "NO_EVIDENCE": 83,
+          "NOT_ENOUGH_INFORMATION": 167,
+          "CONTRADICTED": 1
+        },
+        "match_methods": {
+          "no_evidence": 83,
+          "exact_normalized": 168
+        },
+        "confidence_mean": 0.9299,
+        "confidence_median": 0.9717,
+        "correction": {
+          "correction_triggers": 5,
+          "statuses": {
+            "correction_failed": 5
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "bare, v0-pool(59), legacy scope check",
+        "source": "natural_candidates_50_gpu_bare.jsonl"
+      },
+      "batch1_labeled_v0": {
+        "n_cases": 50,
+        "n_claims": 251,
+        "n_matched": 168,
+        "coverage_pct": 66.9,
+        "verdict_counts": {
+          "NO_EVIDENCE": 83,
+          "NOT_ENOUGH_INFORMATION": 161,
+          "ENTAILED": 5,
+          "CONTRADICTED": 2
+        },
+        "match_methods": {
+          "no_evidence": 83,
+          "exact_normalized": 168
+        },
+        "confidence_mean": 0.8407,
+        "confidence_median": 0.9102,
+        "correction": {
+          "correction_triggers": 16,
+          "statuses": {
+            "correction_failed": 10,
+            "correction_scope_violation": 6
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "labeled, v0-pool(59), legacy scope check",
+        "source": "natural_candidates_50_gpu_labeled.jsonl"
+      },
+      "batch2_bare_v0": {
+        "n_cases": 50,
+        "n_claims": 236,
+        "n_matched": 116,
+        "coverage_pct": 49.2,
+        "verdict_counts": {
+          "NO_EVIDENCE": 120,
+          "NOT_ENOUGH_INFORMATION": 113,
+          "ENTAILED": 2,
+          "CONTRADICTED": 1
+        },
+        "match_methods": {
+          "no_evidence": 120,
+          "exact_normalized": 115,
+          "fuzzy": 1
+        },
+        "confidence_mean": 0.9359,
+        "confidence_median": 0.9863,
+        "correction": {
+          "correction_triggers": 5,
+          "statuses": {
+            "correction_failed": 3,
+            "correction_scope_violation": 2
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "bare, v0-pool(59), legacy scope check",
+        "source": "natural_candidates_batch2_gpu_bare.jsonl"
+      },
+      "batch2_labeled_v0": {
+        "n_cases": 50,
+        "n_claims": 236,
+        "n_matched": 116,
+        "coverage_pct": 49.2,
+        "verdict_counts": {
+          "NO_EVIDENCE": 120,
+          "NOT_ENOUGH_INFORMATION": 102,
+          "CONTRADICTED": 3,
+          "ENTAILED": 11
+        },
+        "match_methods": {
+          "no_evidence": 120,
+          "exact_normalized": 115,
+          "fuzzy": 1
+        },
+        "confidence_mean": 0.8932,
+        "confidence_median": 0.9624,
+        "correction": {
+          "correction_triggers": 10,
+          "statuses": {
+            "correction_failed": 7,
+            "correction_scope_violation": 3
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "labeled, v0-pool(59), legacy scope check",
+        "source": "natural_candidates_batch2_gpu_labeled.jsonl"
+      },
+      "final_A_bare_v0_baseline": {
+        "n_cases": 50,
+        "n_claims": 209,
+        "n_matched": 132,
+        "coverage_pct": 63.2,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 129,
+          "NO_EVIDENCE": 77,
+          "CONTRADICTED": 3
+        },
+        "match_methods": {
+          "exact_normalized": 130,
+          "no_evidence": 77,
+          "fuzzy": 2
+        },
+        "confidence_mean": 0.9603,
+        "confidence_median": 0.9893,
+        "correction": {
+          "correction_triggers": 5,
+          "statuses": {
+            "correction_failed": 3,
+            "correction_scope_violation": 2
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "bare, v0-pool(59), legacy scope check [PRE-2026-08-27 PRODUCTION BASELINE]",
+        "source": "final_gpu_validation_A.jsonl"
+      },
+      "final_B_bare_v1_assertionspans_narrow": {
+        "n_cases": 50,
+        "n_claims": 209,
+        "n_matched": 147,
+        "coverage_pct": 70.3,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 144,
+          "NO_EVIDENCE": 62,
+          "CONTRADICTED": 3
+        },
+        "match_methods": {
+          "exact_normalized": 145,
+          "no_evidence": 62,
+          "fuzzy": 2
+        },
+        "confidence_mean": 0.9619,
+        "confidence_median": 0.9893,
+        "correction": {
+          "correction_triggers": 5,
+          "statuses": {
+            "correction_failed": 3,
+            "correction_scope_violation": 2
+          },
+          "shipped": 0,
+          "unsafe_shipped": 0
+        },
+        "config": "bare, v0+v1-pool(137, pre-audit-fix), assertion_spans, narrow_reverification",
+        "source": "final_gpu_validation_B.jsonl"
+      },
+      "final_labeled_v1_assertionspans_narrow_CPUVERIFY": {
+        "n_cases": 50,
+        "n_claims": 147,
+        "n_matched": 147,
+        "coverage_pct": null,
+        "verdict_counts": {
+          "NOT_ENOUGH_INFORMATION": 131,
+          "ENTAILED": 13,
+          "CONTRADICTED": 3
+        },
+        "config": "labeled, v0+v1-pool(136, post-audit-fix), assertion_spans, narrow_reverification [VERIFICATION-ONLY CPU re-check of Arm B's already-matched claims -- FINAL PRODUCTION REGIME]",
+        "source": "final_validation_bare_vs_labeled_cpu_metrics.json",
+        "correction": null
+      },
+      "final_labeled_v1_assertionspans_narrow_CORRECTION_GPU": {
+        "n_cases": 10,
+        "config": "labeled, v0+v1-pool(136), assertion_spans, narrow_reverification [TARGETED GPU correction-only validation, n=10 triggered cases -- FINAL PRODUCTION REGIME]",
+        "source": "labeled_correction_validation_gpu_metrics.json",
+        "correction": {
+          "correction_triggers": 10,
+          "statuses": {
+            "correction_scope_violation": 3,
+            "correction_failed": 6,
+            "corrected": 1
+          },
+          "shipped": 1,
+          "unsafe_shipped": 0
+        }
+      }
+    },
+    "section_B_pooled_bare_v0": {
+      "n_claims": 784,
+      "n_matched": 454,
+      "coverage_pct": 57.9,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 447,
+        "NO_EVIDENCE": 330,
+        "CONTRADICTED": 5,
+        "ENTAILED": 2
+      }
+    },
+    "section_B_pooled_labeled_v0": {
+      "n_claims": 487,
+      "n_matched": 284,
+      "coverage_pct": 58.3,
+      "verdict_counts": {
+        "NO_EVIDENCE": 203,
+        "NOT_ENOUGH_INFORMATION": 263,
+        "ENTAILED": 16,
+        "CONTRADICTED": 5
+      }
+    },
+    "section_C_parser_retrieval": {
+      "n_claims": 797,
+      "n_matched": 537,
+      "n_no_citation": 0,
+      "n_no_evidence_with_citation": 260,
+      "taxonomy": {
+        "genuinely_absent_wrong_act_or_edition": 78,
+        "genuinely_absent_no_such_provision_any_act": 140,
+        "unresolved_act": 40,
+        "parser_or_matcher_defect_candidate": 2
+      },
+      "full_detail": "see outputs/no_evidence_taxonomy_v3.json for the full per-claim breakdown (260 rows) this summary is computed from"
+    },
+    "section_D_correction_safety_cumulative": {
+      "total_correction_attempts": 56,
+      "total_shipped": 1,
+      "total_unsafe_shipped": 0,
+      "status_breakdown": {
+        "correction_failed": 37,
+        "correction_scope_violation": 18,
+        "corrected": 1
+      },
+      "shipped_rate_pct": 1.8
+    },
+    "section_E_verifier_vs_provisional_assumption_gold": {
+      "caveat": "PROVISIONAL/ASSUMPTION-BASED. assumption_annotation.jsonl is Claude-generated provisional labeling of 88 claims (29 document_ids, subset of n30/targeted), NOT lawyer-verified ground truth. None of these numbers may be cited as validated system accuracy -- they describe agreement between two machine-produced label sets.",
+      "experiment": "assumption_gold_bare_vs_labeled_agreement",
+      "scope": "PROVISIONAL/ASSUMPTION-BASED -- assumption_annotation.jsonl is Claude-generated provisional labeling, NOT lawyer-verified ground truth. Describes agreement between two machine-produced label sets. bare_verdict reused verbatim from assumption_annotation.jsonl (not recomputed); labeled_verdict is a fresh CPU DeBERTa call against the same stored evidence text, this session.",
+      "n_evidence_matched_claims": 38,
+      "n_unresolved_for_labeled": 0,
+      "bare_agreement_with_assumption": {
+        "agree": 20,
+        "total": 38,
+        "pct": 52.6
+      },
+      "labeled_agreement_with_assumption": {
+        "agree": 18,
+        "total": 38,
+        "pct": 47.4
+      },
+      "bare_verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 38
+      },
+      "labeled_verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 36,
+        "ENTAILED": 2
+      }
+    },
+    "synthetic_vs_natural_correction_transfer_gap": {
+      "synthetic_labeled_shipped_rate_pct": 72.2,
+      "natural_all_regimes_shipped_rate_pct": 1.8,
+      "natural_final_production_regime_shipped_rate_pct": 10.0
+    },
+    "source_files": [
+      "research/prototype/outputs/final_metrics.json"
+    ],
+    "methodology": "Verbatim pass-through of final_metrics.json, itself computed directly from raw outputs/*.jsonl experiment artifacts (see that file's own 'provenance' field) -- not re-derived here to avoid a second, possibly-diverging computation of the same historical numbers.",
+    "defensible": true,
+    "notes": "This is the project's single canonical results computation. Reused, not recomputed."
+  },
+  "evidence_coverage_v0_v1": {
+    "n_claims": 588,
+    "n_matched_v0": 354,
+    "n_matched_v1": 390,
+    "coverage_v0_pct": 60.2,
+    "coverage_v1_pct": 66.3,
+    "n_newly_covered_by_v1": 36,
+    "n_still_no_evidence_with_v1": 198,
+    "remaining_taxonomy": {
+      "genuinely_absent_wrong_act_or_edition": 50,
+      "genuinely_absent_no_such_provision_any_act": 111,
+      "unresolved_act": 37
+    },
+    "newly_covered_examples": [
+      {
+        "source": "run_A_n30.jsonl",
+        "document_id": "1971_200",
+        "claim_id": "c3",
+        "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "467",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 467 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "run_A_n30.jsonl",
+        "document_id": "1971_200",
+        "claim_id": "c6",
+        "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "467",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 467 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "run_A_n30.jsonl",
+        "document_id": "2003_967",
+        "claim_id": "c2",
+        "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Ar",
+        "citation": {
+          "provision_type": "Article",
+          "provision_number": "15",
+          "subsection": "4",
+          "act_raw": "the Constitution of India",
+          "act_norm": "constitution of india"
+        },
+        "new_evidence_id": "Article 15 in Constitution of India"
+      },
+      {
+        "source": "run_A_n30.jsonl",
+        "document_id": "1952_17",
+        "claim_id": "c1",
+        "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a re",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2006_48",
+        "claim_id": "c7",
+        "claim_text": "Statutory Grounding: The case involves the application of Sections 147, 148, 149, 323, 324, 302, and 326 of the Indian Penal Code.",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "326",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2006_48",
+        "claim_id": "c14",
+        "claim_text": "Section 147 requires the prevention of a public nuisance, Section 148 mandates the dispersal of unlawful assemblies, Section 149 provides for the puni",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "326",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2020_379",
+        "claim_id": "c7",
+        "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and ac",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "504",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 504 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2024_299",
+        "claim_id": "c1",
+        "claim_text": "The case was tried under the Indian Penal Code, 1860, which requires the prosecution to prove the charges against the accused beyond all reasonable do",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2005_441",
+        "claim_id": "c4",
+        "claim_text": "Section 106 of the Indian Evidence Act provides the rule of presumption that can be used by the prosecution in certain circumstances to establish the ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "106",
+          "subsection": null,
+          "act_raw": "the Indian Evidence Act",
+          "act_norm": "indian evidence act"
+        },
+        "new_evidence_id": "Section 106 in The Indian Evidence Act, 1872"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2020_51",
+        "claim_id": "c1",
+        "claim_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Pen",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "498A",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 498A in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2010_1270",
+        "claim_id": "c1",
+        "claim_text": "The Land Acquisition Act, 1894, specifically Sections 17(1), 24, and the Amendment Act of 1984, Section 3, require the government to provide just and ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "17",
+          "subsection": "1",
+          "act_raw": "The Land Acquisition Act, 1894",
+          "act_norm": "land acquisition act 1894"
+        },
+        "new_evidence_id": "Section 17 in The Land Acquisition Act, 1894"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "1985_364",
+        "claim_id": "c1",
+        "claim_text": "Specifically, Section 4 of the Income Tax Act, 1922, and its corresponding provision in the Income Tax Act, 1961, mandate the assessment of income in ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "4",
+          "subsection": null,
+          "act_raw": "the Income Tax Act, 1922",
+          "act_norm": "income tax act 1922"
+        },
+        "new_evidence_id": "Section 4 in The Income Tax Act, 1961"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2019_544",
+        "claim_id": "c4",
+        "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respec",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "the IPC",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2019_544",
+        "claim_id": "c9",
+        "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respec",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "504",
+          "subsection": null,
+          "act_raw": "the IPC",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 504 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "1978_196",
+        "claim_id": "c6",
+        "claim_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 ( murder ), 34 (common intention), 323 (voluntar",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "326",
+          "subsection": "voluntarily causing hurt by dangerous weapons or dangerous means",
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2007_1006",
+        "claim_id": "c3",
+        "claim_text": "The Indian Penal Code, 1860, Sections 302, 149, 452, and 34 require that for a conviction under Section 302 (punishment for murder), there must be pro",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "452",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2007_1006",
+        "claim_id": "c7",
+        "claim_text": "Section 452 (robbery) and Section 34 (accessory before the fact) pertain to the circumstances under which individuals can be held responsible for the ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "452",
+          "subsection": "robbery",
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2007_1006",
+        "claim_id": "c9",
+        "claim_text": "Section 452 (robbery) and Section 34 (accessory before the fact) pertain to the circumstances under which individuals can be held responsible for the ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "452",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2008_99",
+        "claim_id": "c3",
+        "claim_text": "The Indian Penal Code, 1860, specifically sections 302 read with section 149, 143, 147, 148, 323, 324, 325, and 326 read with section 149 require that",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2008_99",
+        "claim_id": "c9",
+        "claim_text": "The Indian Penal Code, 1860, specifically sections 302 read with section 149, 143, 147, 148, 323, 324, 325, and 326 read with section 149 require that",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "326",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_50_gpu_bare.jsonl",
+        "document_id": "2022_1043",
+        "claim_id": "c3",
+        "claim_text": "The case is governed by Sections 141, 142, and 143 of the Indian Penal Code (IPC), which deal with the composition of an unlawful assembly and the lia",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2002_398",
+        "claim_id": "c5",
+        "claim_text": "Statutory Grounding: The conviction and death sentence of Devender Pal Singh were grounded in Section 3(2)(i) of the Terrorist and Disruptive Activiti",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "326",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2008_2063",
+        "claim_id": "c3",
+        "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder,",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2008_2063",
+        "claim_id": "c7",
+        "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder,",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "452",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2001_160",
+        "claim_id": "c2",
+        "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "394",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 394 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2001_160",
+        "claim_id": "c3",
+        "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "397",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 397 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2001_160",
+        "claim_id": "c5",
+        "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "342",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 342 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2001_160",
+        "claim_id": "c7",
+        "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "411",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 411 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2022_435",
+        "claim_id": "c1",
+        "claim_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for c",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "143",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+      },
+      {
+        "source": "natural_candidates_batch2_gpu_bare.jsonl",
+        "document_id": "2022_435",
+        "claim_id": "c4",
+        "claim_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for c",
+        "citation": {
+          "provision_type": "Section",
+          "provision_number": "341",
+          "subsection": null,
+          "act_raw": "The Indian Penal Code (IPC)",
+          "act_norm": "indian penal code 1860"
+        },
+        "new_evidence_id": "Section 341 in The Indian Penal Code, 1860"
+      }
+    ],
+    "source_files": [
+      "research/prototype/outputs/evidence_coverage_v0_vs_v1.json"
+    ],
+    "methodology": "Same-claims, same-generation comparison: claims extracted from natural GPU generations already on disk, matched once against v0-only pool and once against v0+v1 pool. Not a synthetic corpus.",
+    "defensible": true,
+    "notes": "Paired design (same claims, two evidence pools) -- the strongest evidence-coverage comparison available."
+  },
+  "threshold_sensitivity": {
+    "production_threshold": 0.7,
+    "bare": {
+      "n_items": 420,
+      "sweep": [
+        {
+          "threshold": 0.5,
+          "accuracy": 0.7333333333333333,
+          "macro_f1": 0.7487050297622986,
+          "n_low_confidence_downgrades": 2,
+          "entailed_f1": 0.6571428571428571,
+          "contradicted_f1": 0.9162995594713658,
+          "nei_f1": 0.6726726726726727
+        },
+        {
+          "threshold": 0.55,
+          "accuracy": 0.7357142857142858,
+          "macro_f1": 0.7508148246478322,
+          "n_low_confidence_downgrades": 3,
+          "entailed_f1": 0.6594982078853047,
+          "contradicted_f1": 0.9162995594713658,
+          "nei_f1": 0.6766467065868265
+        },
+        {
+          "threshold": 0.6,
+          "accuracy": 0.7357142857142858,
+          "macro_f1": 0.7508148246478322,
+          "n_low_confidence_downgrades": 5,
+          "entailed_f1": 0.6594982078853047,
+          "contradicted_f1": 0.9162995594713658,
+          "nei_f1": 0.6766467065868265
+        },
+        {
+          "threshold": 0.65,
+          "accuracy": 0.7357142857142858,
+          "macro_f1": 0.7508148246478322,
+          "n_low_confidence_downgrades": 7,
+          "entailed_f1": 0.6594982078853047,
+          "contradicted_f1": 0.9162995594713658,
+          "nei_f1": 0.6766467065868265
+        },
+        {
+          "threshold": 0.7,
+          "accuracy": 0.7333333333333333,
+          "macro_f1": 0.7486646586649771,
+          "n_low_confidence_downgrades": 14,
+          "entailed_f1": 0.6618705035971223,
+          "contradicted_f1": 0.9115044247787611,
+          "nei_f1": 0.6726190476190477
+        },
+        {
+          "threshold": 0.75,
+          "accuracy": 0.7333333333333333,
+          "macro_f1": 0.7486646586649771,
+          "n_low_confidence_downgrades": 17,
+          "entailed_f1": 0.6618705035971223,
+          "contradicted_f1": 0.9115044247787611,
+          "nei_f1": 0.6726190476190477
+        },
+        {
+          "threshold": 0.8,
+          "accuracy": 0.7309523809523809,
+          "macro_f1": 0.7463867718881274,
+          "n_low_confidence_downgrades": 22,
+          "entailed_f1": 0.6618705035971223,
+          "contradicted_f1": 0.9066666666666666,
+          "nei_f1": 0.6706231454005934
+        },
+        {
+          "threshold": 0.85,
+          "accuracy": 0.7261904761904762,
+          "macro_f1": 0.7419422655659534,
+          "n_low_confidence_downgrades": 29,
+          "entailed_f1": 0.6642599277978339,
+          "contradicted_f1": 0.8968609865470851,
+          "nei_f1": 0.6647058823529411
+        },
+        {
+          "threshold": 0.9,
+          "accuracy": 0.7285714285714285,
+          "macro_f1": 0.7445941765261668,
+          "n_low_confidence_downgrades": 40,
+          "entailed_f1": 0.6642599277978339,
+          "contradicted_f1": 0.9009009009009009,
+          "nei_f1": 0.6686217008797655
+        },
+        {
+          "threshold": 0.95,
+          "accuracy": 0.7214285714285714,
+          "macro_f1": 0.7379104911988964,
+          "n_low_confidence_downgrades": 60,
+          "entailed_f1": 0.6569343065693432,
+          "contradicted_f1": 0.8959276018099547,
+          "nei_f1": 0.6608695652173914
+        }
+      ]
+    },
+    "labeled": {
+      "n_items": 420,
+      "sweep": [
+        {
+          "threshold": 0.5,
+          "accuracy": 0.9666666666666667,
+          "macro_f1": 0.9652446263640666,
+          "n_low_confidence_downgrades": 1,
+          "entailed_f1": 0.9735449735449735,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9739130434782608
+        },
+        {
+          "threshold": 0.55,
+          "accuracy": 0.9666666666666667,
+          "macro_f1": 0.9652446263640666,
+          "n_low_confidence_downgrades": 2,
+          "entailed_f1": 0.9735449735449735,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9739130434782608
+        },
+        {
+          "threshold": 0.6,
+          "accuracy": 0.969047619047619,
+          "macro_f1": 0.9665220923157877,
+          "n_low_confidence_downgrades": 7,
+          "entailed_f1": 0.9813333333333333,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9699570815450643
+        },
+        {
+          "threshold": 0.65,
+          "accuracy": 0.9714285714285714,
+          "macro_f1": 0.9683612674297156,
+          "n_low_confidence_downgrades": 11,
+          "entailed_f1": 0.9865951742627346,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9702127659574468
+        },
+        {
+          "threshold": 0.7,
+          "accuracy": 0.9714285714285714,
+          "macro_f1": 0.9683612674297156,
+          "n_low_confidence_downgrades": 12,
+          "entailed_f1": 0.9865951742627346,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9702127659574468
+        },
+        {
+          "threshold": 0.75,
+          "accuracy": 0.9714285714285714,
+          "macro_f1": 0.9683612674297156,
+          "n_low_confidence_downgrades": 13,
+          "entailed_f1": 0.9865951742627346,
+          "contradicted_f1": 0.9482758620689654,
+          "nei_f1": 0.9702127659574468
+        },
+        {
+          "threshold": 0.8,
+          "accuracy": 0.9666666666666667,
+          "macro_f1": 0.96258364183368,
+          "n_low_confidence_downgrades": 17,
+          "entailed_f1": 0.9865951742627346,
+          "contradicted_f1": 0.9391304347826087,
+          "nei_f1": 0.9620253164556962
+        },
+        {
+          "threshold": 0.85,
+          "accuracy": 0.9642857142857143,
+          "macro_f1": 0.9596164041472943,
+          "n_low_confidence_downgrades": 26,
+          "entailed_f1": 0.9865951742627346,
+          "contradicted_f1": 0.9339207048458149,
+          "nei_f1": 0.9583333333333334
+        },
+        {
+          "threshold": 0.9,
+          "accuracy": 0.9547619047619048,
+          "macro_f1": 0.9476070094366884,
+          "n_low_confidence_downgrades": 34,
+          "entailed_f1": 0.989247311827957,
+          "contradicted_f1": 0.9147982062780269,
+          "nei_f1": 0.9387755102040816
+        },
+        {
+          "threshold": 0.95,
+          "accuracy": 0.9476190476190476,
+          "macro_f1": 0.9417195611349425,
+          "n_low_confidence_downgrades": 56,
+          "entailed_f1": 0.9808219178082191,
+          "contradicted_f1": 0.9230769230769231,
+          "nei_f1": 0.9212598425196851
+        }
+      ]
+    },
+    "source_files": [
+      "research/prototype/outputs/threshold_sensitivity_analysis.json"
+    ],
+    "methodology": "Deterministic sweep (0.50-0.95) replayed against the already-computed 420-item controlled benchmark's stored softmax distributions -- no re-inference. n=420 items per framing, both bare and labeled.",
+    "defensible": true,
+    "notes": "Controlled benchmark (curated real legal claims, not synthetic corruption, not natural NyayaRAG)."
+  },
+  "controlled_benchmark_verifier": {
+    "bare": {
+      "benchmark_tag": "CONTROLLED_VERIFIER_BENCHMARK",
+      "benchmark_file": "controlled_verifier_benchmark.jsonl",
+      "verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "verifier_kind": "deberta_nli",
+      "device": "cpu",
+      "confidence_threshold": 0.7,
+      "n_items": 420,
+      "elapsed_seconds": 65.26503443717957,
+      "accuracy": 0.7333333333333333,
+      "macro_f1": 0.748664658664977,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 92,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 92
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 2,
+          "CONTRADICTED": 103,
+          "NOT_ENOUGH_INFORMATION": 13
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 5,
+          "NOT_ENOUGH_INFORMATION": 113
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9787234042553191,
+          "recall": 0.5,
+          "f1": 0.6618705035971223,
+          "support": 184,
+          "tp": 92,
+          "fp": 2,
+          "fn": 92
+        },
+        "CONTRADICTED": {
+          "precision": 0.9537037037037037,
+          "recall": 0.8728813559322034,
+          "f1": 0.9115044247787611,
+          "support": 118,
+          "tp": 103,
+          "fp": 5,
+          "fn": 15
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.518348623853211,
+          "recall": 0.9576271186440678,
+          "f1": 0.6726190476190477,
+          "support": 118,
+          "tp": 113,
+          "fp": 105,
+          "fn": 5
+        }
+      },
+      "per_condition": {
+        "C1_negated_bare": {
+          "n": 59,
+          "accuracy": 0.9322033898305084,
+          "mean_p_entailment": 0.05638702862409646,
+          "mean_p_neutral": 0.008158728968198175,
+          "mean_p_contradiction": 0.9354542411106118,
+          "prediction_counts": {
+            "CONTRADICTED": 55,
+            "ENTAILED": 2,
+            "NOT_ENOUGH_INFORMATION": 2
+          }
+        },
+        "C2_negated_attributed": {
+          "n": 59,
+          "accuracy": 0.8135593220338984,
+          "mean_p_entailment": 0.007293927115516469,
+          "mean_p_neutral": 0.1485602855485059,
+          "mean_p_contradiction": 0.8441457899654348,
+          "prediction_counts": {
+            "CONTRADICTED": 48,
+            "NOT_ENOUGH_INFORMATION": 11
+          }
+        },
+        "E1_verbatim": {
+          "n": 59,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9817509984565993,
+          "mean_p_neutral": 0.01262572055319482,
+          "mean_p_contradiction": 0.005623280097359507,
+          "prediction_counts": {
+            "ENTAILED": 59
+          }
+        },
+        "E2_verbatim_attributed": {
+          "n": 59,
+          "accuracy": 0.0,
+          "mean_p_entailment": 0.0167701300786082,
+          "mean_p_neutral": 0.9807733933804399,
+          "mean_p_contradiction": 0.0024564784563785827,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 59
+          }
+        },
+        "E3_paraphrase_bare": {
+          "n": 33,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9897078817540949,
+          "mean_p_neutral": 0.007337210802220259,
+          "mean_p_contradiction": 0.0029549056304280052,
+          "prediction_counts": {
+            "ENTAILED": 33
+          }
+        },
+        "E4_paraphrase_attributed": {
+          "n": 33,
+          "accuracy": 0.0,
+          "mean_p_entailment": 0.05746944149194116,
+          "mean_p_neutral": 0.941611161737731,
+          "mean_p_contradiction": 0.0009194141739774777,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 33
+          }
+        },
+        "N1_other_provision": {
+          "n": 59,
+          "accuracy": 0.9152542372881356,
+          "mean_p_entailment": 0.06483848873423255,
+          "mean_p_neutral": 0.8236691246255128,
+          "mean_p_contradiction": 0.11149238584902517,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 54,
+            "CONTRADICTED": 5
+          }
+        },
+        "N2_procedural_addition": {
+          "n": 59,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.010346793872501574,
+          "mean_p_neutral": 0.9885884937593492,
+          "mean_p_contradiction": 0.0010647131820698662,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 59
+          }
+        }
+      },
+      "entailed_2x2": {
+        "E1_verbatim": {
+          "attribution": false,
+          "paraphrase": false,
+          "n": 59,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9817509984565993
+        },
+        "E2_verbatim_attributed": {
+          "attribution": true,
+          "paraphrase": false,
+          "n": 59,
+          "entailed_recall": 0.0,
+          "mean_p_entailment": 0.0167701300786082
+        },
+        "E3_paraphrase_bare": {
+          "attribution": false,
+          "paraphrase": true,
+          "n": 33,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9897078817540949
+        },
+        "E4_paraphrase_attributed": {
+          "attribution": true,
+          "paraphrase": true,
+          "n": 33,
+          "entailed_recall": 0.0,
+          "mean_p_entailment": 0.05746944149194116
+        }
+      },
+      "matched_pair_effects": {
+        "attribution_effect_on_verbatim": {
+          "n_matched": 59,
+          "from": "E1_verbatim",
+          "to": "E2_verbatim_attributed",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 0.0,
+          "delta_recall": -1.0,
+          "mean_p_entailment_from": 0.9817509984565993,
+          "mean_p_entailment_to": 0.0167701300786082,
+          "delta_p_entailment": -0.9649808683779911
+        },
+        "attribution_effect_on_paraphrase": {
+          "n_matched": 33,
+          "from": "E3_paraphrase_bare",
+          "to": "E4_paraphrase_attributed",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 0.0,
+          "delta_recall": -1.0,
+          "mean_p_entailment_from": 0.9897078817540949,
+          "mean_p_entailment_to": 0.05746944149194116,
+          "delta_p_entailment": -0.9322384402621537
+        },
+        "paraphrase_effect_bare": {
+          "n_matched": 33,
+          "from": "E1_verbatim",
+          "to": "E3_paraphrase_bare",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 1.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.9824664195378622,
+          "mean_p_entailment_to": 0.9897078817540949,
+          "delta_p_entailment": 0.007241462216232675
+        },
+        "paraphrase_effect_attributed": {
+          "n_matched": 33,
+          "from": "E2_verbatim_attributed",
+          "to": "E4_paraphrase_attributed",
+          "entailed_recall_from": 0.0,
+          "entailed_recall_to": 0.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.010317348501165256,
+          "mean_p_entailment_to": 0.05746944149194116,
+          "delta_p_entailment": 0.0471520929907759
+        },
+        "attribution_effect_on_contradiction": {
+          "n_matched": 59,
+          "from": "C1_negated_bare",
+          "to": "C2_negated_attributed",
+          "entailed_recall_from": 0.03389830508474576,
+          "entailed_recall_to": 0.0,
+          "delta_recall": -0.03389830508474576,
+          "mean_p_entailment_from": 0.05638702862409646,
+          "mean_p_entailment_to": 0.007293927115516469,
+          "delta_p_entailment": -0.04909310150857999
+        }
+      },
+      "threshold_downgrades": 14,
+      "timestamp": "2026-08-26T09:18:22.910308+00:00",
+      "environment": {
+        "python": "3.13.1",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "torch": "2.13.0+cpu",
+        "transformers": "5.15.1"
+      }
+    },
+    "labeled": {
+      "benchmark_tag": "CONTROLLED_VERIFIER_BENCHMARK",
+      "benchmark_file": "controlled_verifier_benchmark.jsonl",
+      "verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "verifier_kind": "deberta_nli",
+      "premise_framing": "labeled",
+      "device": "cpu",
+      "confidence_threshold": 0.7,
+      "n_items": 420,
+      "elapsed_seconds": 69.2010703086853,
+      "accuracy": 0.9714285714285714,
+      "macro_f1": 0.9683612674297155,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 184,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 5,
+          "CONTRADICTED": 110,
+          "NOT_ENOUGH_INFORMATION": 3
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 4,
+          "NOT_ENOUGH_INFORMATION": 114
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9735449735449735,
+          "recall": 1.0,
+          "f1": 0.9865951742627346,
+          "support": 184,
+          "tp": 184,
+          "fp": 5,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 0.9649122807017544,
+          "recall": 0.9322033898305084,
+          "f1": 0.9482758620689654,
+          "support": 118,
+          "tp": 110,
+          "fp": 4,
+          "fn": 8
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9661016949152542,
+          "f1": 0.9702127659574468,
+          "support": 118,
+          "tp": 114,
+          "fp": 3,
+          "fn": 4
+        }
+      },
+      "per_condition": {
+        "C1_negated_bare": {
+          "n": 59,
+          "accuracy": 0.9322033898305084,
+          "mean_p_entailment": 0.0519977743141511,
+          "mean_p_neutral": 0.007510585427260563,
+          "mean_p_contradiction": 0.940491644065764,
+          "prediction_counts": {
+            "CONTRADICTED": 55,
+            "NOT_ENOUGH_INFORMATION": 3,
+            "ENTAILED": 1
+          }
+        },
+        "C2_negated_attributed": {
+          "n": 59,
+          "accuracy": 0.9322033898305084,
+          "mean_p_entailment": 0.0766425578636946,
+          "mean_p_neutral": 0.004223217283991181,
+          "mean_p_contradiction": 0.9191342193585963,
+          "prediction_counts": {
+            "CONTRADICTED": 55,
+            "ENTAILED": 4
+          }
+        },
+        "E1_verbatim": {
+          "n": 59,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9791683110140138,
+          "mean_p_neutral": 0.013594556528822346,
+          "mean_p_contradiction": 0.007237128779228966,
+          "prediction_counts": {
+            "ENTAILED": 59
+          }
+        },
+        "E2_verbatim_attributed": {
+          "n": 59,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9940171676166987,
+          "mean_p_neutral": 0.005078055939274066,
+          "mean_p_contradiction": 0.0009047863225578883,
+          "prediction_counts": {
+            "ENTAILED": 59
+          }
+        },
+        "E3_paraphrase_bare": {
+          "n": 33,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9890642906680251,
+          "mean_p_neutral": 0.007169670245440846,
+          "mean_p_contradiction": 0.0037660474560900843,
+          "prediction_counts": {
+            "ENTAILED": 33
+          }
+        },
+        "E4_paraphrase_attributed": {
+          "n": 33,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.9952969442714344,
+          "mean_p_neutral": 0.0035287459225704274,
+          "mean_p_contradiction": 0.0011743213734448407,
+          "prediction_counts": {
+            "ENTAILED": 33
+          }
+        },
+        "N1_other_provision": {
+          "n": 59,
+          "accuracy": 0.9322033898305084,
+          "mean_p_entailment": 0.09153515345641901,
+          "mean_p_neutral": 0.8088876725947958,
+          "mean_p_contradiction": 0.09957718246387538,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 55,
+            "CONTRADICTED": 4
+          }
+        },
+        "N2_procedural_addition": {
+          "n": 59,
+          "accuracy": 1.0,
+          "mean_p_entailment": 0.006703651627580935,
+          "mean_p_neutral": 0.9923453795707832,
+          "mean_p_contradiction": 0.0009509680599814786,
+          "prediction_counts": {
+            "NOT_ENOUGH_INFORMATION": 59
+          }
+        }
+      },
+      "entailed_2x2": {
+        "E1_verbatim": {
+          "attribution": false,
+          "paraphrase": false,
+          "n": 59,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9791683110140138
+        },
+        "E2_verbatim_attributed": {
+          "attribution": true,
+          "paraphrase": false,
+          "n": 59,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9940171676166987
+        },
+        "E3_paraphrase_bare": {
+          "attribution": false,
+          "paraphrase": true,
+          "n": 33,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9890642906680251
+        },
+        "E4_paraphrase_attributed": {
+          "attribution": true,
+          "paraphrase": true,
+          "n": 33,
+          "entailed_recall": 1.0,
+          "mean_p_entailment": 0.9952969442714344
+        }
+      },
+      "matched_pair_effects": {
+        "attribution_effect_on_verbatim": {
+          "n_matched": 59,
+          "from": "E1_verbatim",
+          "to": "E2_verbatim_attributed",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 1.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.9791683110140138,
+          "mean_p_entailment_to": 0.9940171676166987,
+          "delta_p_entailment": 0.014848856602684868
+        },
+        "attribution_effect_on_paraphrase": {
+          "n_matched": 33,
+          "from": "E3_paraphrase_bare",
+          "to": "E4_paraphrase_attributed",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 1.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.9890642906680251,
+          "mean_p_entailment_to": 0.9952969442714344,
+          "delta_p_entailment": 0.006232653603409299
+        },
+        "paraphrase_effect_bare": {
+          "n_matched": 33,
+          "from": "E1_verbatim",
+          "to": "E3_paraphrase_bare",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 1.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.9789093805081917,
+          "mean_p_entailment_to": 0.9890642906680251,
+          "delta_p_entailment": 0.010154910159833497
+        },
+        "paraphrase_effect_attributed": {
+          "n_matched": 33,
+          "from": "E2_verbatim_attributed",
+          "to": "E4_paraphrase_attributed",
+          "entailed_recall_from": 1.0,
+          "entailed_recall_to": 1.0,
+          "delta_recall": 0.0,
+          "mean_p_entailment_from": 0.9948014309912017,
+          "mean_p_entailment_to": 0.9952969442714344,
+          "delta_p_entailment": 0.0004955132802327844
+        },
+        "attribution_effect_on_contradiction": {
+          "n_matched": 59,
+          "from": "C1_negated_bare",
+          "to": "C2_negated_attributed",
+          "entailed_recall_from": 0.01694915254237288,
+          "entailed_recall_to": 0.06779661016949153,
+          "delta_recall": 0.05084745762711865,
+          "mean_p_entailment_from": 0.0519977743141511,
+          "mean_p_entailment_to": 0.0766425578636946,
+          "delta_p_entailment": 0.024644783549543504
+        }
+      },
+      "threshold_downgrades": 12,
+      "timestamp": "2026-08-26T09:20:53.319108+00:00",
+      "environment": {
+        "python": "3.13.1",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "torch": "2.13.0+cpu",
+        "transformers": "5.15.1"
+      }
+    },
+    "source_files": [
+      "research/prototype/outputs/controlled_benchmark_deberta_metrics.json",
+      "research/prototype/outputs/controlled_benchmark_deberta_labeled_metrics.json"
+    ],
+    "methodology": "420 curated real legal claim/evidence pairs (controlled_verifier_benchmark.jsonl), 8 conditions per claim family (verbatim/paraphrase x attribution, negated variants), real DeBERTa-v3 inference, CPU. Not synthetic stress corruption, not natural NyayaRAG.",
+    "defensible": true,
+    "notes": "Best-available ground truth is the benchmark's own constructed labels (known-correct by construction), not lawyer annotation."
+  },
+  "assumption_gold_provisional": {
+    "experiment": "assumption_gold_bare_vs_labeled_agreement",
+    "scope": "PROVISIONAL/ASSUMPTION-BASED -- assumption_annotation.jsonl is Claude-generated provisional labeling, NOT lawyer-verified ground truth. Describes agreement between two machine-produced label sets. bare_verdict reused verbatim from assumption_annotation.jsonl (not recomputed); labeled_verdict is a fresh CPU DeBERTa call against the same stored evidence text, this session.",
+    "n_evidence_matched_claims": 38,
+    "n_unresolved_for_labeled": 0,
+    "bare_agreement_with_assumption": {
+      "agree": 20,
+      "total": 38,
+      "pct": 52.6
+    },
+    "labeled_agreement_with_assumption": {
+      "agree": 18,
+      "total": 38,
+      "pct": 47.4
+    },
+    "bare_verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 38
+    },
+    "labeled_verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 36,
+      "ENTAILED": 2
+    },
+    "source_files": [
+      "research/prototype/outputs/assumption_gold_bare_vs_labeled_metrics.json"
+    ],
+    "defensible": false,
+    "defensible_reason": "assumption_annotation.jsonl is Claude-generated provisional labeling, NOT lawyer-verified ground truth. These numbers describe agreement between two machine-produced label sets and MUST NOT be presented as validated legal accuracy."
+  },
+  "evidence_corpus_composition": {
+    "v0": {
+      "label": "v0 (63 records)",
+      "n_records": 63,
+      "n_distinct_acts": 11,
+      "top_acts_by_record_count": [
+        [
+          "The Indian Penal Code, 1860",
+          21
+        ],
+        [
+          "Constitution of India",
+          16
+        ],
+        [
+          "The Code of Criminal Procedure, 1973",
+          6
+        ],
+        [
+          "The Land Acquisition Act, 1894",
+          5
+        ],
+        [
+          "The Code of Civil Procedure, 1908",
+          3
+        ],
+        [
+          "The Income Tax Act, 1961",
+          3
+        ],
+        [
+          "The Industrial Disputes Act, 1947",
+          3
+        ],
+        [
+          "The Arms Act, 1959",
+          2
+        ],
+        [
+          "The Indian Evidence Act, 1872",
+          2
+        ],
+        [
+          "The Negotiable Instruments Act, 1881",
+          1
+        ]
+      ],
+      "provision_type_distribution": {
+        "Article": 16,
+        "Section": 47
+      },
+      "source_distribution": {
+        "IndianKanoon.org": 63
+      },
+      "text_provenance_distribution": {
+        "webfetch_verbatim": 4,
+        "websearch_synthesized_summary": 59
+      },
+      "audit_verdict_distribution": {
+        "VERIFIED_EXACT": 25,
+        "VERIFIED_CONTENT": 34,
+        "INVALID": 1,
+        "SOURCE_ONLY": 2,
+        "UNRESOLVED": 1
+      },
+      "n_usable_verified_exact_or_content": 59
+    },
+    "v1_supplement": {
+      "label": "v1 supplement (82 records)",
+      "n_records": 82,
+      "n_distinct_acts": 20,
+      "top_acts_by_record_count": [
+        [
+          "The Indian Penal Code, 1860",
+          22
+        ],
+        [
+          "Constitution of India",
+          12
+        ],
+        [
+          "The Income Tax Act, 1961",
+          8
+        ],
+        [
+          "The Code of Criminal Procedure, 1973",
+          8
+        ],
+        [
+          "The Land Acquisition Act, 1894",
+          4
+        ],
+        [
+          "The Arbitration Act, 1940",
+          4
+        ],
+        [
+          "The Code of Civil Procedure, 1908",
+          3
+        ],
+        [
+          "Income Tax Rules, 1962",
+          3
+        ],
+        [
+          "The Transfer Of Property Act, 1882",
+          2
+        ],
+        [
+          "The Arbitration And Conciliation Act, 1996",
+          2
+        ]
+      ],
+      "provision_type_distribution": {
+        "Section": 67,
+        "Rule": 3,
+        "Article": 12
+      },
+      "source_distribution": {
+        "IndianKanoon.org": 82
+      },
+      "text_provenance_distribution": {
+        "webfetch_verbatim": 78,
+        "webfetch_summarized_not_verbatim": 1,
+        "websearch_synthesized_summary": 3
+      },
+      "audit_verdict_distribution": {
+        "VERIFIED_EXACT": 78,
+        "SOURCE_ONLY": 4
+      },
+      "n_usable_verified_exact_or_content": 78
+    },
+    "combined_v0_plus_v1": {
+      "label": "v0+v1 combined (post-merge, pre-2026-08-27-audit-fix)",
+      "n_records": 142,
+      "n_distinct_acts": 22,
+      "top_acts_by_record_count": [
+        [
+          "The Indian Penal Code, 1860",
+          42
+        ],
+        [
+          "Constitution of India",
+          28
+        ],
+        [
+          "The Code of Criminal Procedure, 1973",
+          14
+        ],
+        [
+          "The Income Tax Act, 1961",
+          10
+        ],
+        [
+          "The Land Acquisition Act, 1894",
+          9
+        ],
+        [
+          "The Code of Civil Procedure, 1908",
+          5
+        ],
+        [
+          "The Industrial Disputes Act, 1947",
+          5
+        ],
+        [
+          "The Indian Evidence Act, 1872",
+          4
+        ],
+        [
+          "The Arbitration Act, 1940",
+          4
+        ],
+        [
+          "The Limitation Act, 1963",
+          3
+        ]
+      ],
+      "provision_type_distribution": {
+        "Article": 28,
+        "Section": 111,
+        "Rule": 3
+      },
+      "source_distribution": {
+        "IndianKanoon.org": 142
+      },
+      "text_provenance_distribution": {
+        "webfetch_verbatim": 82,
+        "websearch_synthesized_summary": 59,
+        "webfetch_summarized_not_verbatim": 1
+      },
+      "audit_verdict_distribution": {
+        "VERIFIED_EXACT": 103,
+        "VERIFIED_CONTENT": 33,
+        "SOURCE_ONLY": 6
+      },
+      "n_usable_verified_exact_or_content": 136
+    },
+    "source_files": [
+      "research/data/evidence/canonical_statutes.jsonl",
+      "research/data/evidence/evidence_audit.jsonl",
+      "research/data/evidence/canonical_statutes_v1.jsonl",
+      "research/data/evidence/evidence_audit_v1.jsonl"
+    ],
+    "methodology": "Direct counting over the committed evidence files, replicating src/data_loader.py's own v0+v1 merge-by-citation-key rule (v1 replaces same-keyed v0 records, adds the rest). No inference.",
+    "defensible": true,
+    "notes": "'combined' count here (145 raw union before verdict filtering) differs from the 136 *usable* (VERIFIED_EXACT+VERIFIED_CONTENT) production pool reported in final_metrics.json -- that number additionally excludes SOURCE_ONLY/INVALID/UNRESOLVED records and reflects the 2026-08-27 independent-audit fix (one record downgraded after this file's audit_verdict snapshot). See research/data/evidence/README_v1.md 'independent audit addendum' for that fix."
+  },
+  "correction_safety_audit": {
+    "natural": {
+      "label": "natural (all historical batches)",
+      "n_correction_attempts": 56,
+      "status_breakdown": {
+        "correction_failed": 37,
+        "correction_scope_violation": 18,
+        "corrected": 1
+      },
+      "n_shipped_corrected": 1,
+      "n_unsafe_shipped": 0,
+      "unsafe_shipment_examples": [],
+      "n_attempts_with_sibling_regression_flagged": 0,
+      "invariant_checked": "status=='corrected' <=> reverification.verdict=='ENTAILED'",
+      "invariant_holds": true
+    },
+    "synthetic": {
+      "label": "synthetic stress (framing_comparison_gpu_n59_postfix_metrics.json, real GPU Qwen correction)",
+      "bare": {
+        "n_correction_attempts": 30,
+        "status_breakdown": {
+          "correction_failed": 30
+        },
+        "n_shipped_corrected": 0,
+        "n_unsafe_shipped": 0
+      },
+      "labeled": {
+        "n_correction_attempts": 36,
+        "status_breakdown": {
+          "corrected": 26,
+          "correction_failed": 10
+        },
+        "n_shipped_corrected": 26,
+        "n_unsafe_shipped": 0
+      },
+      "n_correction_attempts": 66,
+      "n_shipped_corrected": 26,
+      "n_unsafe_shipped": 0,
+      "source_files": [
+        "research/prototype/outputs/framing_comparison_gpu_n59_postfix_metrics.json"
+      ]
+    },
+    "combined_total_attempts": 122,
+    "combined_total_unsafe_shipped": 0,
+    "source_files": [
+      "research/prototype/outputs/run_C_n30.jsonl",
+      "research/prototype/outputs/natural_candidates_50_gpu_corrections_detail.jsonl",
+      "research/prototype/outputs/natural_candidates_batch2_gpu_corrections_detail.jsonl",
+      "research/prototype/outputs/final_gpu_validation_A.jsonl",
+      "research/prototype/outputs/final_gpu_validation_B.jsonl",
+      "research/prototype/outputs/labeled_correction_validation_gpu_corrections_detail.jsonl",
+      "research/prototype/outputs/framing_comparison_gpu_n59_postfix_metrics.json"
+    ],
+    "methodology": "Every raw jsonl artifact recording a correction attempt (case-level records with an embedded 'correction' dict, or dedicated *_corrections_detail.jsonl row-per-attempt files) parsed directly; status/reverification/sibling_regressions read verbatim, never re-simulated. The ENTAILED<=>corrected invariant is checked against every single attempt, not sampled.",
+    "defensible": true,
+    "notes": "Natural count here (56, cross-check target) should match final_metrics.json's section_D_correction_safety_cumulative.total_correction_attempts (56) -- see cross_checks in this same computed_metrics.json output."
+  },
+  "confidence_distributions": {
+    "bare_v0_pooled": {
+      "n_matched_claims": 454,
+      "mean": 0.9452,
+      "median": 0.9863,
+      "stdev": 0.095,
+      "min": 0.521,
+      "max": 0.999,
+      "histogram_bins_0.1_wide": {
+        "0.9-1.0": 383,
+        "0.8-0.9": 35,
+        "0.5-0.6": 10,
+        "0.6-0.7": 12,
+        "0.7-0.8": 14
+      },
+      "by_verdict_mean_confidence": {
+        "NOT_ENOUGH_INFORMATION": 0.9458,
+        "CONTRADICTED": 0.9505,
+        "ENTAILED": 0.8018
+      },
+      "source_files": [
+        "research/prototype/outputs/run_B_n30.jsonl",
+        "research/prototype/outputs/natural_candidates_50_gpu_bare.jsonl",
+        "research/prototype/outputs/natural_candidates_batch2_gpu_bare.jsonl",
+        "research/prototype/outputs/final_gpu_validation_A.jsonl"
+      ]
+    },
+    "labeled_v0_pooled": {
+      "n_matched_claims": 284,
+      "mean": 0.8622,
+      "median": 0.9404,
+      "stdev": 0.1584,
+      "min": 0.3699,
+      "max": 0.999,
+      "histogram_bins_0.1_wide": {
+        "0.5-0.6": 23,
+        "0.6-0.7": 23,
+        "0.7-0.8": 23,
+        "0.9-1.0": 173,
+        "0.8-0.9": 34
+      },
+      "by_verdict_mean_confidence": {
+        "NOT_ENOUGH_INFORMATION": 0.8606,
+        "ENTAILED": 0.8933,
+        "CONTRADICTED": 0.8442
+      },
+      "source_files": [
+        "research/prototype/outputs/natural_candidates_50_gpu_labeled.jsonl",
+        "research/prototype/outputs/natural_candidates_batch2_gpu_labeled.jsonl"
+      ]
+    },
+    "methodology": "Confidence values read verbatim from each claim record's 'confidence' field (the verifier's own softmax-derived confidence, post low-confidence-downgrade logic). Only evidence-matched claims counted (NO_EVIDENCE claims carry no verifier confidence). No re-inference performed.",
+    "defensible": true,
+    "notes": "Distributional summary only -- not a claim about verifier calibration against legal ground truth."
+  },
+  "funnel": {
+    "bare_v0_pooled_180_cases": {
+      "regime": "pooled bare + v0(59) + legacy scope check, 180 cases (n=30, batch1, batch2, final-A)",
+      "n_cases": 180,
+      "n_claims": 784,
+      "n_evidence_matched": 454,
+      "n_no_evidence": 330,
+      "n_flagged_for_correction": 5,
+      "n_correction_triggers": null,
+      "n_shipped": null
+    },
+    "final_production_regime": {
+      "regime": "final production regime: labeled + v0+v1(136) + assertion_spans + narrow_reverification",
+      "n_cases_generation_and_matching": 50,
+      "n_claims": 147,
+      "n_evidence_matched": 147,
+      "verdict_counts_on_matched": {
+        "NOT_ENOUGH_INFORMATION": 131,
+        "ENTAILED": 13,
+        "CONTRADICTED": 3
+      },
+      "n_correction_triggers": 10,
+      "n_correction_shipped": 1,
+      "n_unsafe_shipped": 0
+    },
+    "source_files": [
+      "research/prototype/outputs/final_metrics.json"
+    ],
+    "methodology": "Derived arithmetically from final_metrics.json's already-computed section values -- no new counting.",
+    "defensible": true,
+    "notes": "Two funnels shown because correction only actually ran under Mode C on specific batches -- see final_research_results.md B for the full regime table."
+  },
+  "timeline": {
+    "milestones": [
+      {
+        "date": "2026-08-25",
+        "event": "n=30 baseline batch (run_A/B/C_n30), synthetic stress v1, mvp_assumption_evaluation",
+        "commit_tag": "223eb9d"
+      },
+      {
+        "date": "2026-08-26",
+        "event": "QwenLLMVerifier, controlled verifier benchmark (420 items), research_evaluation_final",
+        "commit_tag": "54c98d2"
+      },
+      {
+        "date": "2026-08-26/27",
+        "event": "pre-GPU correction validation (labeled framing, 76.7% pass under labeled framing)",
+        "commit_tag": "fe8b15b"
+      },
+      {
+        "date": "2026-08-27",
+        "event": "Evidence v1 build+audit, natural batch1/batch2 GPU runs, final_gpu_validation paired arms, labeled-framing targeted correction validation, final production config decision, full reproducibility pass",
+        "commit_tag": "100e263"
+      },
+      {
+        "date": "2026-08-27",
+        "event": "Cleanup/consolidation, run_mvp.py evidence-loader fix, repository freeze",
+        "commit_tag": "3e9e09a"
+      }
+    ],
+    "source_files": [
+      "git log (commit dates)",
+      "research/prototype/outputs/research_completion_report.md",
+      "research/prototype/outputs/final_research_results.md"
+    ],
+    "methodology": "Commit-dated project milestones, cross-checked against each artifact family's own stated date and commit history.",
+    "defensible": true,
+    "notes": "Illustrates development sequence only -- not a performance metric."
+  },
+  "cross_checks": {
+    "checks": [
+      {
+        "check": "natural correction attempts: final_metrics.json cumulative vs. fresh recount",
+        "final_metrics_value": 56,
+        "recomputed_value": 56,
+        "match": true
+      },
+      {
+        "check": "total unsafe shipments: final_metrics.json vs. fresh recount (natural+synthetic)",
+        "final_metrics_value": 0,
+        "recomputed_value": 0,
+        "match": true
+      },
+      {
+        "check": "natural shipped (corrected) count: final_metrics.json vs. fresh recount",
+        "final_metrics_value": 1,
+        "recomputed_value": 1,
+        "match": true
+      }
+    ],
+    "all_match": true
+  },
+  "_meta": {
+    "generated_by": "research/prototype/final_demo_pack/metadata/compute_metrics.py",
+    "generated_for": "research/prototype/final_demo_pack/ (demo/evaluation pack)",
+    "does_not_modify": "No file under research/prototype/outputs/ or research/data/evidence/ is written by this script.",
+    "integrity_rule": "Every number in every chart/table/report under final_demo_pack/ must trace to a field in this file (computed_metrics.json) or directly to one of the source_files it cites. No hand-typed numbers."
+  }
+}

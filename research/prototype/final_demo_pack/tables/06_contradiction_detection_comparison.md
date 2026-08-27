@@ -1,0 +1,10 @@
+# Contradiction detection recall (SYNTHETIC, n=59)
+
+| framing | basis | contradiction_recall_pct |
+|---|---|---|
+| bare | overall | 35.6 |
+| bare | evidence-matched only | 47.7 |
+| labeled | overall | 45.8 |
+| labeled | evidence-matched only | 61.4 |
+
+*SYNTHETIC STRESS TEST ONLY -- deliberately-corrupted claims, not natural case text.*

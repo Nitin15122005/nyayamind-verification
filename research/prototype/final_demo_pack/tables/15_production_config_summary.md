@@ -1,0 +1,11 @@
+# Final production configuration changes
+
+| config_option | old_default | new_default_2026_08_27 |
+|---|---|---|
+| premise_framing | bare | labeled |
+| use_evidence_v1 | false | true |
+| correction.atomic_scope_check | false | assertion_spans |
+| correction.narrow_reverification_hypothesis | false | true |
+| verification.confidence_threshold | 0.70 | 0.70 (unchanged) |
+
+*Source: FINAL_PRODUCTION_CONFIG.md, config/prototype.yaml (both frozen documents, transcribed verbatim, not recomputed).*
