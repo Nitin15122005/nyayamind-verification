@@ -115,6 +115,23 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
             {
                 "claim_id": claim.claim_id,
                 "claim_text": claim.claim_text,
+                # Additive field, not read by verification/correction by
+                # default (apply_verification's hypothesis is still
+                # claim_text — see claim_parser.py's Claim docstring). A
+                # conservative, per-citation sub-span of claim_text for
+                # bundled multi-citation sentences where one is safely
+                # identifiable (e.g. "Section 302 prescribes X, while
+                # Section 34 prescribes Y" -> each gets its own clause);
+                # equals claim_text whenever no safe split was found.
+                "assertion_text": claim.assertion_text,
+                # Additive, structured generalization of assertion_text: a
+                # list of independently-required VERBATIM fragments (never
+                # concatenated/reordered/synthesized — see claim_parser.py's
+                # Claim.assertion_spans docstring). Degenerates to
+                # [assertion_text] whenever no richer (e.g. "respectively")
+                # pattern applies, so this is a no-op for every claim not
+                # touched by that new mechanism.
+                "assertion_spans": list(claim.assertion_spans),
                 "citation_extracted": claim.citation_extracted.as_dict()
                 if claim.citation_extracted
                 else None,
@@ -190,27 +207,160 @@ def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_
         rec["verifier_model"] = result.verifier_model
 
 
-def _scope_violation(baseline_claims: list[dict], target_claim_id: str, corrected_text: str) -> bool:
+def _scope_violation(
+    baseline_claims: list[dict],
+    target_claim_id: str,
+    corrected_text: str,
+    use_assertion_text: bool = False,
+    use_assertion_spans: bool = False,
+) -> bool:
     """Programmatic enforcement of selective correction's contract: every
     UNFLAGGED claim (a citation-bearing sentence extracted from the
     original field, other than the one being corrected) must reappear
     verbatim in the corrected text. The correction prompt already asks the
     model for this ("copy verbatim/unchanged"), but a prompt is not an
     enforcement mechanism — this is the actual gate. Returns True
-    (violation) if any unflagged claim's exact original sentence text is
-    no longer present in the corrected text.
+    (violation) if any unflagged claim's required text is no longer
+    present in the corrected text.
 
     Deliberately claim-scoped, not whole-paragraph-sentence-scoped: the
     corrector is only constrained w.r.t. the claims this pipeline already
     tracks. Non-claim prose or newly introduced sentences elsewhere in the
     paragraph are outside what "unflagged claims must remain unchanged"
-    covers here."""
+    covers here.
+
+    `use_assertion_text` (opt-in, default False — legacy behaviour,
+    byte-identical to every prior committed run): when True, an unflagged
+    claim is checked against its own `assertion_text` — a conservative,
+    verbatim, per-citation sub-span of `claim_text` (see
+    claim_parser.py's `_assign_assertion_texts`) that narrows to just this
+    claim's own clause/gloss when one of several safe patterns is found,
+    and falls back to the FULL `claim_text` (identical to legacy) whenever
+    no safe split applies. This directly targets the dominant real
+    scope-violation cause on natural data: many claims sharing one long,
+    bundled multi-citation sentence as their `claim_text`, so any edit
+    ANYWHERE in that sentence — even one confined to the flagged citation's
+    own portion — breaks every other claim's byte-for-byte preservation
+    check under the legacy (claim_text-only) rule. `assertion_text` is
+    never required to exist on a claim record (`.get(...) or claim_text`
+    falls back safely for any baseline built by code that predates this
+    field), so this is safe against any caller, old or new.
+
+    `use_assertion_spans` (opt-in, default False, independent of
+    `use_assertion_text`): checks a LIST of independently-required
+    VERBATIM fragments (`assertion_spans` — see claim_parser.py's Claim
+    docstring) instead of one string — ALL fragments must be present, not
+    just one. This is strictly a superset check compared to
+    `assertion_text` alone: it exists for claims (the "respectively"
+    pattern) whose relevant content is not one contiguous span at all —
+    e.g. a citation's own provision number lives in one place and its
+    paired description lives elsewhere in the same sentence — so no single
+    verbatim substring can represent "this claim's content" without either
+    dragging in unrelated sibling content (the legacy/assertion_text
+    behaviour) or fabricating a combined sentence (never done anywhere in
+    this codebase). Falls back to `[assertion_text or claim_text]` when
+    `assertion_spans` is absent (any caller/claim predating this field),
+    so this degrades safely to the assertion_text (or legacy) check rather
+    than ever silently passing."""
     for rec in baseline_claims:
         if rec["claim_id"] == target_claim_id:
             continue
-        if rec["claim_text"] not in corrected_text:
+        if use_assertion_spans:
+            fragments = rec.get("assertion_spans") or [rec.get("assertion_text") or rec.get("claim_text")]
+            if not all(f and f in corrected_text for f in fragments):
+                return True
+            continue
+        check_text = rec.get("claim_text")
+        if use_assertion_text:
+            check_text = rec.get("assertion_text") or check_text
+        if check_text not in corrected_text:
             return True
     return False
+
+
+def _citation_identity(citation) -> Optional[tuple]:
+    """(provision_type, provision_number, act_norm) — the same three fields
+    the replacement-matching logic below always required, extracted once so
+    both the baseline claim dicts (plain dicts) and freshly re-parsed
+    claim_parser objects (ExtractedCitation instances) can be compared with
+    the same function. Returns None if there is no citation at all (never
+    matches anything, by design — an uncited claim cannot be safely
+    re-verified)."""
+    if citation is None:
+        return None
+    if isinstance(citation, dict):
+        return (citation.get("provision_type"), citation.get("provision_number"), citation.get("act_norm"))
+    return (citation.provision_type, citation.provision_number, citation.act_norm)
+
+
+def _reverify_sibling_regressions(
+    baseline: dict, corrected_text: str, target_claim_id: str, config: dict,
+) -> list[dict]:
+    """Independent safety net for the (opt-in) assertion_text/assertion_spans
+    scope checks: those checks only require a NARROWER, per-citation
+    fragment to survive verbatim, which is deliberately weaker than the
+    legacy full-sentence requirement. That gap could in principle let a
+    correction ship even though it altered a sibling claim's wording enough
+    to change what it entails — the sibling's own required fragment
+    survived, but the sentence around it did not.
+
+    This re-parses the corrected text, finds each OTHER evidence-matched
+    claim's own counterpart (same ordinal-position-among-same-citation-
+    identity technique `apply_selective_correction` already uses for the
+    target), and genuinely re-verifies it against its OWN evidence —
+    exactly as if it were itself being checked. Returns the list of
+    siblings that come back CONTRADICTED (a real, independently-confirmed
+    regression) — empty if none, which is the expected, common case
+    (byte-for-byte preserved siblings can never change verdict, since
+    verification is a deterministic function of premise+hypothesis; this
+    only ever finds something when the sibling's SURROUNDING text, not its
+    required fragment, actually changed).
+
+    Never used to loosen anything — only ever a reason to REJECT a
+    correction that the scope check alone would have allowed."""
+    regressions = []
+    reverify_claims = claim_parser.extract_claims(corrected_text)
+    for rec in baseline["claims"]:
+        if rec["claim_id"] == target_claim_id:
+            continue
+        if rec["evidence_text"] is None:
+            continue  # NO_EVIDENCE claim: nothing to re-verify against
+        identity = _citation_identity(rec["citation_extracted"])
+        if identity is None:
+            continue
+        same_identity_baseline = [
+            r for r in baseline["claims"] if _citation_identity(r["citation_extracted"]) == identity
+        ]
+        ordinal = next(i for i, r in enumerate(same_identity_baseline) if r is rec)
+        same_identity_reextracted = [
+            c for c in reverify_claims if _citation_identity(c.citation_extracted) == identity
+        ]
+        if ordinal >= len(same_identity_reextracted):
+            continue  # structurally missing post-edit; the scope check already rejects this case
+        counterpart = same_identity_reextracted[ordinal]
+        match = match_evidence(
+            counterpart.citation_extracted, baseline["_exact_index"], baseline["_all_usable"],
+            config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+        )
+        if not match.matched:
+            continue
+        result = baseline["_verifier"].verify(
+            premise=format_premise(
+                match.evidence.canonical_text,
+                framing=resolve_premise_framing(config),
+                provision_type=match.evidence.provision_type,
+                provision_number=match.evidence.provision_number,
+                act=match.evidence.act,
+            ),
+            hypothesis=counterpart.claim_text,
+        )
+        if result.label == CONTRADICTED:
+            regressions.append({
+                "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
+                "evidence_id": match.evidence.dataset_citation_key,
+                "verdict": result.label, "confidence": result.confidence,
+            })
+    return regressions
 
 
 def apply_selective_correction(baseline: dict, case, corrector, config: dict) -> dict:
@@ -250,7 +400,17 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         "corrected_at": corr_meta.corrected_at,
     }
 
-    if _scope_violation(baseline["claims"], target["claim_id"], corrected_text):
+    # atomic_scope_check: false (legacy) | true (assertion_text) |
+    # "assertion_spans" (structured, multi-fragment — see _scope_violation).
+    # Both truthy values enable the assertion_text check; only the string
+    # form additionally enables assertion_spans.
+    atomic_scope_check_mode = (config.get("correction") or {}).get("atomic_scope_check", False)
+    use_assertion_text = bool(atomic_scope_check_mode)
+    use_assertion_spans = atomic_scope_check_mode == "assertion_spans"
+    if _scope_violation(
+        baseline["claims"], target["claim_id"], corrected_text,
+        use_assertion_text, use_assertion_spans,
+    ):
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -264,19 +424,36 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
     # Re-parse + re-match + re-verify ONLY the previously-flagged claim's
     # replacement sentence, by finding the sentence in the corrected text
     # whose citation matches the originally-flagged claim's citation.
+    #
+    # A document can contain MULTIPLE claims that cite the exact same
+    # provision (e.g. one sentence lists "sections 406 and 420", and a
+    # later sentence separately asserts something specific about "Section
+    # 420") — citation identity alone is then ambiguous between them.
+    # Matching by ORDINAL POSITION among same-citation claims resolves
+    # this deterministically: `target` is the Nth claim (in document
+    # extraction order) that cites this exact provision, and — because the
+    # scope-violation check above already guarantees every OTHER claim's
+    # text reappears verbatim, in the same order, in the corrected text —
+    # the Nth same-citation claim re-extracted from the corrected text is
+    # the same claim slot, whether or not the corrector actually changed
+    # anything in it.
+    target_identity = _citation_identity(target["citation_extracted"])
+    target_ordinal = None
+    if target_identity is not None:
+        same_identity_baseline = [
+            rec for rec in baseline["claims"]
+            if _citation_identity(rec["citation_extracted"]) == target_identity
+        ]
+        target_ordinal = next(i for i, rec in enumerate(same_identity_baseline) if rec is target)
+
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    orig_citation = target["citation_extracted"]
     replacement = None
-    for c in reverify_claims:
-        if c.citation_extracted is None or orig_citation is None:
-            continue
-        if (
-            c.citation_extracted.provision_type == orig_citation["provision_type"]
-            and c.citation_extracted.provision_number == orig_citation["provision_number"]
-            and c.citation_extracted.act_norm == orig_citation["act_norm"]
-        ):
-            replacement = c
-            break
+    if target_identity is not None:
+        same_identity_reextracted = [
+            c for c in reverify_claims if _citation_identity(c.citation_extracted) == target_identity
+        ]
+        if target_ordinal < len(same_identity_reextracted):
+            replacement = same_identity_reextracted[target_ordinal]
 
     reverification = None
     status = "correction_failed"
@@ -292,6 +469,30 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             # verdict. Verifying under one framing and re-verifying under
             # another would compare a correction against a different standard
             # than the one that flagged it.
+            #
+            # `narrow_reverification_hypothesis` (opt-in, default False):
+            # when True, and the re-extracted replacement claim has its own
+            # narrower `assertion_text` (a verbatim, non-fabricated
+            # per-citation clause/gloss — see claim_parser.py), verify THAT
+            # instead of the full `claim_text`. On a bundled sentence, the
+            # full sentence dilutes the hypothesis with sibling citations'
+            # unrelated content, which can keep a genuinely correct,
+            # narrowly-targeted fix from reaching ENTAILED even though it
+            # is accurate — see outputs/research_completion_report.md §16a
+            # for a real, measured example (0.54 NEI on the full sentence
+            # vs 0.999 ENTAILED on the narrow fragment, same evidence, same
+            # corrected text). This never widens what is accepted as
+            # evidence-consistent — assertion_text is always a genuine
+            # substring of the model's own corrected output, never
+            # synthesized — it only asks a more precisely-targeted
+            # question about the SAME text.
+            narrow_reverification = bool((config.get("correction") or {}).get(
+                "narrow_reverification_hypothesis", False
+            ))
+            reverify_hypothesis = replacement.claim_text
+            if narrow_reverification and replacement.assertion_text != replacement.claim_text:
+                reverify_hypothesis = replacement.assertion_text
+
             result = baseline["_verifier"].verify(
                 premise=format_premise(
                     match.evidence.canonical_text,
@@ -300,10 +501,11 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                     provision_number=match.evidence.provision_number,
                     act=match.evidence.act,
                 ),
-                hypothesis=replacement.claim_text,
+                hypothesis=reverify_hypothesis,
             )
             reverification = {
                 "claim_text": replacement.claim_text,
+                "reverified_hypothesis": reverify_hypothesis,
                 "evidence_id": match.evidence.dataset_citation_key,
                 "evidence_match_method": match.match_method,
                 "verdict": result.label,
@@ -322,6 +524,19 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                 "sub_reason": None,
             }
 
+    # Independent sibling-regression safety net (opt-in, only meaningful
+    # when the scope check itself was relaxed below full-sentence
+    # byte-for-byte preservation — see _reverify_sibling_regressions()).
+    # Runs ONLY when the correction otherwise would ship, and can only ever
+    # turn a "corrected" into a rejection, never the reverse.
+    sibling_regressions: list[dict] = []
+    if status == "corrected" and (use_assertion_text or use_assertion_spans):
+        sibling_regressions = _reverify_sibling_regressions(
+            baseline, corrected_text, target["claim_id"], config
+        )
+        if sibling_regressions:
+            status = "correction_sibling_regression"
+
     return {
         "triggered_for_claim_id": target["claim_id"],
         "attempts": 1,
@@ -329,6 +544,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         "regenerated_text": corrected_text,
         "original_field_text": original_field_text,
         "reverification": reverification,
+        "sibling_regressions": sibling_regressions,
         # NOT underscore-prefixed: run_case()'s underscore-strip is for
         # internal bookkeeping (e.g. baseline["_exact_index"]) only. This is
         # genuine reproducibility data and must survive into the output
@@ -411,6 +627,14 @@ def run_case(
             # both texts are retained in correction_summary for inspection,
             # but the shipped field falls back to the original.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_scope_violation"}
+        elif correction_summary["status"] == "correction_sibling_regression":
+            # The target's own re-verification passed, but an independent
+            # re-check found a sibling claim's counterpart in the corrected
+            # text now genuinely CONTRADICTED its own evidence — a regression
+            # the (opt-in, relaxed) scope check alone would have missed.
+            # Never ship; both texts retained in correction_summary for
+            # inspection, same as scope_violation.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_sibling_regression"}
         # "not_triggered": final_field stays as original (already set above)
 
     verifier_model_id = getattr(verifier, "model_id", None) if verifier is not None else None

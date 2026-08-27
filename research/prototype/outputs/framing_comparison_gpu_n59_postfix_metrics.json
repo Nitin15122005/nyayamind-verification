@@ -1,0 +1,95 @@
+{
+  "experiment": "premise_framing_ablation_synthetic",
+  "data": "SYNTHETIC \u2014 deliberately corrupted statutory claims, not natural NyayaRAG",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "device": "cuda",
+  "correction_ran": true,
+  "n_cases": 59,
+  "seed": 42,
+  "bare_arm_reproduction": {
+    "checked": true,
+    "compared": 59,
+    "agree": 59,
+    "match": true,
+    "sub_reason_mismatches": [],
+    "max_confidence_drift": 0.00341796875,
+    "mean_confidence_drift": 0.00039950284090909093
+  },
+  "per_framing": {
+    "bare": {
+      "n_cases": 59,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 21,
+        "NOT_ENOUGH_INFORMATION": 23
+      },
+      "c2_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.3559322033898305,
+      "contradiction_recall_with_evidence": 0.4772727272727273,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 30,
+      "correction_attempts": 30,
+      "correction_statuses": {
+        "correction_failed": 30
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 30,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 28,
+        "CONTRADICTED": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 30,
+      "unflagged_claim_preserved": 30,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 644.5045371055603,
+      "runtime_seconds_verification": 2.9383413791656494,
+      "runtime_seconds_correction": 641.5569548606873,
+      "peak_vram_mib_cumulative": 7502
+    },
+    "labeled": {
+      "n_cases": 59,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 27,
+        "NOT_ENOUGH_INFORMATION": 17
+      },
+      "c2_verdicts": {
+        "ENTAILED": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.4576271186440678,
+      "contradiction_recall_with_evidence": 0.6136363636363636,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 36,
+      "correction_attempts": 36,
+      "correction_statuses": {
+        "corrected": 26,
+        "correction_failed": 10
+      },
+      "corrections_shipped_success": 26,
+      "correction_failed": 10,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "ENTAILED": 26,
+        "CONTRADICTED": 5,
+        "NOT_ENOUGH_INFORMATION": 5
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 36,
+      "unflagged_claim_preserved": 36,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 1412.7578926086426,
+      "runtime_seconds_verification": 4.22845458984375,
+      "runtime_seconds_correction": 1408.5145461559296,
+      "peak_vram_mib_cumulative": 7502
+    }
+  },
+  "overall_peak_vram_mib": 7502,
+  "timestamp": "2026-08-26T13:36:09.015310+00:00"
+}

@@ -179,17 +179,51 @@ def test_resolve_defaults_to_bare_when_key_absent():
     assert pipeline.resolve_premise_framing({}) == PREMISE_FRAMING_BARE
 
 
-def test_shipped_config_default_is_bare():
-    """Guards the committed prototype.yaml itself: flipping this default would
-    make new runs non-comparable with every committed evaluation output."""
+def test_shipped_config_locks_the_2026_08_27_final_production_decision():
+    """Guards the committed prototype.yaml itself against silent drift from
+    the final production configuration decided in FINAL_PRODUCTION_CONFIG.md
+    (2026-08-27): premise_framing="labeled", use_evidence_v1=true,
+    atomic_scope_check="assertion_spans", narrow_reverification_hypothesis=
+    true, confidence_threshold unchanged at 0.70. See that document for the
+    full, quantitative justification of each value (evidence_v1_independent_
+    audit.md, final_gpu_validation.md, threshold_sensitivity_analysis.md,
+    and the targeted labeled-framing correction validation).
+
+    Formerly named test_shipped_config_default_is_bare and asserted the
+    OPPOSITE of every value below — renamed and rewritten, not just edited,
+    so its git history is honest about this being a deliberate reversal of
+    the prior default, not an accidental relaxation of a safety test."""
     import yaml
     from pathlib import Path
     cfg_path = Path(__file__).resolve().parent.parent / "config" / "prototype.yaml"
     cfg = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
-    assert cfg["verification"]["premise_framing"] == PREMISE_FRAMING_BARE
-    # The ablation must not be achievable by moving the threshold instead.
+    assert cfg["verification"]["premise_framing"] == PREMISE_FRAMING_LABELED
+    assert cfg["use_evidence_v1"] is True
+    assert cfg["correction"]["atomic_scope_check"] == "assertion_spans"
+    assert cfg["correction"]["narrow_reverification_hypothesis"] is True
+    # Threshold explicitly NOT changed — threshold_sensitivity_analysis.md
+    # found 0.70 within 0.002 macro-F1 of optimal under both framings.
     assert cfg["verification"]["confidence_threshold"] == 0.70
     assert cfg["verification"]["model_id"] == "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+
+
+def test_shipped_config_can_still_reproduce_every_pre_2026_08_27_committed_output():
+    """The historical (pre-2026-08-27) production behaviour must remain
+    reachable by explicitly setting every flag back to its old value — this
+    project never deletes the ability to reproduce a prior committed result,
+    it only changes what the DEFAULT is. This test pins that the old
+    combination still parses and resolves exactly as it always did, using
+    the same resolve_premise_framing() production code path."""
+    import yaml
+    from pathlib import Path
+    cfg_path = Path(__file__).resolve().parent.parent / "config" / "prototype.yaml"
+    cfg = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
+    historical = copy.deepcopy(cfg)
+    historical["use_evidence_v1"] = False
+    historical["verification"]["premise_framing"] = "bare"
+    historical["correction"]["atomic_scope_check"] = False
+    historical["correction"]["narrow_reverification_hypothesis"] = False
+    assert pipeline.resolve_premise_framing(historical) == PREMISE_FRAMING_BARE
 
 
 @pytest.mark.parametrize("framing,expect_label", [("bare", False), ("labeled", True)])

@@ -22,12 +22,14 @@ from src.claim_parser import (
     normalize_act,
     split_sentences,
 )
-from src.data_loader import EvidenceRecord, load_usable_evidence
+from src.data_loader import EvidenceRecord, load_usable_evidence, load_usable_evidence_from_config
 from src.evidence_matcher import match_evidence
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 CANONICAL_PATH = REPO_ROOT / "research/data/evidence/canonical_statutes.jsonl"
 AUDIT_PATH = REPO_ROOT / "research/data/evidence/evidence_audit.jsonl"
+CANONICAL_V1_PATH = REPO_ROOT / "research/data/evidence/canonical_statutes_v1.jsonl"
+AUDIT_V1_PATH = REPO_ROOT / "research/data/evidence/evidence_audit_v1.jsonl"
 
 
 # ---------------------------------------------------------------------------
@@ -591,6 +593,59 @@ def test_evidence_matcher_subsection_falls_back_to_base_section(synthetic_pool):
     assert result.evidence.subsection is None
 
 
+def test_evidence_matcher_adjacent_provision_numbers_never_cross_match():
+    """Section 302 and Section 303 of the SAME act must never be confused —
+    match_evidence requires an EXACT provision_number match even in the
+    fuzzy-fallback path (only the Act-name comparison is approximate), so
+    an off-by-one citation number can only ever resolve to its own
+    evidence or to NO_EVIDENCE, never quietly borrow a neighbour's text."""
+    sec302 = _make_evidence("Section", "302", "The Indian Penal Code, 1860", text="Murder punishment text.")
+    sec303 = _make_evidence("Section", "303", "The Indian Penal Code, 1860", text="Murder by life-convict text.")
+    all_usable = [sec302, sec303]
+    exact_index = {(e.provision_type, e.provision_number, e.subsection, e.act_norm): e for e in all_usable}
+
+    citation_303 = ExtractedCitation(
+        provision_type="Section", provision_number="303", subsection=None,
+        act_raw="the Indian Penal Code, 1860", act_norm=normalize_act("The Indian Penal Code, 1860"),
+    )
+    result = match_evidence(citation_303, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
+    assert result.matched is True
+    assert result.evidence.canonical_text == "Murder by life-convict text."  # never sec302's text
+
+    # A number with NO evidence record at all (304) must be NO_EVIDENCE,
+    # never silently fall back to its numeric neighbour.
+    citation_304 = ExtractedCitation(
+        provision_type="Section", provision_number="304", subsection=None,
+        act_raw="the Indian Penal Code, 1860", act_norm=normalize_act("The Indian Penal Code, 1860"),
+    )
+    result_304 = match_evidence(citation_304, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
+    assert result_304.matched is False
+
+
+def test_evidence_matcher_year_edition_collision_stays_unmatched():
+    """Two editions of an Act with the same short name but different years
+    (e.g. Income Tax Act, 1922 vs 1961) are DIFFERENT acts —
+    normalize_act() keeps the year as part of act_norm, so a claim citing
+    the wrong edition's year must not silently fall back to the other
+    edition's text, even though the section number and Act family name
+    otherwise match closely."""
+    itax_1961 = _make_evidence("Section", "8", "The Income Tax Act, 1961", text="1961-edition section 8 text.")
+    all_usable = [itax_1961]
+    exact_index = {(e.provision_type, e.provision_number, e.subsection, e.act_norm): e for e in all_usable}
+
+    citation_1922 = ExtractedCitation(
+        provision_type="Section", provision_number="8", subsection=None,
+        act_raw="The Indian Income Tax Act, 1922", act_norm=normalize_act("The Indian Income Tax Act, 1922"),
+    )
+    result = match_evidence(citation_1922, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
+    # "indian income tax act 1922" (4 significant words: indian/income/tax/act)
+    # vs "income tax act 1961" (3: income/tax/act) -> Jaccard overlap 3/4 =
+    # 0.75, below the 0.8 fuzzy threshold -- correctly stays unmatched. This
+    # is a real, previously-observed case (a genuinely different Act edition,
+    # not a normalization near-miss), not a hypothetical.
+    assert result.matched is False, "a 1922 citation must never resolve to the 1961 edition's text"
+
+
 # ---------------------------------------------------------------------------
 # Real-data checks against the (read-only) evidence files. Skipped if the
 # files aren't present rather than failing the whole suite in an
@@ -623,3 +678,136 @@ def test_real_evidence_known_good_record_is_present_and_correct():
     rec = exact_index[key]
     assert "murder" in rec.canonical_text.lower()
     assert rec.audit_verdict in ("VERIFIED_EXACT", "VERIFIED_CONTENT")
+
+
+# ---------------------------------------------------------------------------
+# v1 evidence supplement (opt-in merge) — Priority 1/6 of the CPU pre-GPU
+# optimization pass. v0-only behaviour (no extra_* args) must be completely
+# unaffected; the merge must be additive, and the 3 known v1 corrections
+# must replace their v0 counterparts, never merely add alongside them.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_v0_only_call_unaffected_by_v1_files_existing():
+    """Merely having v1 files ON DISK must not change v0-only behaviour —
+    load_usable_evidence() without extra_* args is byte-for-byte the same
+    as before v1 was ever built."""
+    exact_index, all_usable = load_usable_evidence(
+        CANONICAL_PATH, AUDIT_PATH, {"VERIFIED_EXACT", "VERIFIED_CONTENT"}
+    )
+    assert len(all_usable) == 59
+
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_v1_merge_expands_pool_and_applies_corrections():
+    exact_index, all_usable = load_usable_evidence(
+        CANONICAL_PATH, AUDIT_PATH, {"VERIFIED_EXACT", "VERIFIED_CONTENT"},
+        extra_canonical_path=CANONICAL_V1_PATH, extra_audit_path=AUDIT_V1_PATH,
+    )
+    # Pool expands substantially (see research/data/evidence/README_v1.md).
+    assert len(all_usable) > 100
+
+    keys = {e.dataset_citation_key for e in all_usable}
+    # The 2 v0 INVALID/UNRESOLVED records are now present via their v1
+    # CORRECTED replacements (different source_url than the old bad one).
+    assert "Section 100 in The Code of Civil Procedure, 1908" in keys
+    assert "Section 161 in The Indian Penal Code, 1860" in keys
+    corrected = exact_index[("Section", "100", None, normalize_act("The Code of Civil Procedure, 1908"))]
+    assert corrected.source_url != "https://indiankanoon.org/doc/143489098/"  # the old INVALID URL
+
+    # A genuinely new v1 citation is present and correctly resolved.
+    assert "Section 498A in The Indian Penal Code, 1860" in keys
+    new_rec = exact_index[("Section", "498A", None, normalize_act("The Indian Penal Code, 1860"))]
+    assert "cruelty" in new_rec.canonical_text.lower()
+
+    # v1's SOURCE_ONLY records must NOT be usable under the default verdict
+    # set, exactly like v0's own SOURCE_ONLY records — the filtering
+    # happens at load time, so a SOURCE_ONLY key never even enters the
+    # index.
+    assert ("Section", "145", None, normalize_act("The Code of Criminal Procedure, 1973")) not in exact_index
+
+
+def test_load_usable_evidence_from_config_defaults_to_v0_only():
+    config = {
+        "paths": {
+            "canonical_statutes": "research/data/evidence/canonical_statutes.jsonl",
+            "evidence_audit": "research/data/evidence/evidence_audit.jsonl",
+            "canonical_statutes_v1": "research/data/evidence/canonical_statutes_v1.jsonl",
+            "evidence_audit_v1": "research/data/evidence/evidence_audit_v1.jsonl",
+        },
+        "usable_evidence_verdicts": ["VERIFIED_EXACT", "VERIFIED_CONTENT"],
+        # "use_evidence_v1" deliberately absent -> must default to False
+    }
+    exact_index, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+    assert len(all_usable) == 59
+
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_load_usable_evidence_from_config_opt_in_expands_pool():
+    config = {
+        "paths": {
+            "canonical_statutes": "research/data/evidence/canonical_statutes.jsonl",
+            "evidence_audit": "research/data/evidence/evidence_audit.jsonl",
+            "canonical_statutes_v1": "research/data/evidence/canonical_statutes_v1.jsonl",
+            "evidence_audit_v1": "research/data/evidence/evidence_audit_v1.jsonl",
+        },
+        "usable_evidence_verdicts": ["VERIFIED_EXACT", "VERIFIED_CONTENT"],
+        "use_evidence_v1": True,
+    }
+    exact_index, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+    assert len(all_usable) > 100
+
+
+# ---------------------------------------------------------------------------
+# Priority 3 (evidence matching robustness): every REAL same-provision-
+# number collision across different Acts in the expanded (v0+v1) corpus —
+# e.g. Section 3 exists under 5 different Acts, Section 302 under both IPC
+# and CrPC — must have act-name token overlap safely below the fuzzy
+# threshold, so the fuzzy fallback can never cross-match the wrong Act's
+# evidence for a shared section number. This is exercised against the
+# REAL corpus (not synthetic examples), because the corpus itself is the
+# actual adversarial surface: a bigger corpus creates more opportunities
+# for this exact failure mode, so the safety property must be checked on
+# the corpus as it actually is, not just a hand-picked example.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_no_cross_act_fuzzy_collision_risk_anywhere_in_expanded_corpus():
+    """For every (provision_type, provision_number) shared by 2+ different
+    Acts in the real v0+v1 corpus, the token overlap between any two of
+    those Acts' names must stay below the fuzzy_token_overlap_threshold —
+    otherwise a citation with an unresolved/ambiguous act_norm could, in
+    principle, fuzzy-match the WRONG Act's evidence for that same number.
+    A single query using the CORRECT act_norm still exact-matches instantly
+    (exact_index lookup, unaffected) — this test is specifically about the
+    fuzzy FALLBACK path's blast radius."""
+    from collections import defaultdict
+    from src.claim_parser import act_significant_words
+    from src.evidence_matcher import _token_overlap
+    import yaml
+
+    config = yaml.safe_load((REPO_ROOT / "research/prototype/config/prototype.yaml").read_text(encoding="utf-8"))
+    config["use_evidence_v1"] = True
+    _, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+    fuzzy_threshold = config["evidence_matching"]["fuzzy_token_overlap_threshold"]
+
+    by_number = defaultdict(set)
+    for e in all_usable:
+        by_number[(e.provision_type, e.provision_number)].add(e.act_norm)
+    collisions = {k: v for k, v in by_number.items() if len(v) > 1}
+    assert len(collisions) >= 10, "expected the expanded corpus to contain real cross-act collisions to test against"
+
+    violations = []
+    for (ptype, pnum), acts in collisions.items():
+        acts = sorted(acts)
+        for i in range(len(acts)):
+            for j in range(i + 1, len(acts)):
+                overlap = _token_overlap(act_significant_words(acts[i]), act_significant_words(acts[j]))
+                if overlap >= fuzzy_threshold:
+                    violations.append((ptype, pnum, acts[i], acts[j], overlap))
+
+    assert violations == [], f"cross-act fuzzy-collision risk found: {violations}"

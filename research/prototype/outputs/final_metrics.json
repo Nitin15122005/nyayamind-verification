@@ -1,0 +1,466 @@
+{
+  "generated": "2026-08-27",
+  "provenance": "Computed by scripts/audit_no_evidence_taxonomy_v2.py (Section C), and this session's build_final_metrics analysis (Sections A/B/D) directly from raw outputs/*.jsonl experiment artifacts -- not copied from prior narrative reports. See outputs/final_research_results.md for the narrative and outputs/final_limitations_and_future_scope.md for the limitations analysis.",
+  "case_census": {
+    "n30": 30,
+    "targeted": 11,
+    "targeted_subset_of_n30": true,
+    "targeted_new_vs_n30": 0,
+    "batch1": 50,
+    "batch2": 50,
+    "final_validation": 50,
+    "total_distinct_cases_all_batches": 180
+  },
+  "section_A_synthetic": {
+    "source": "framing_comparison_gpu_n59_postfix_results.jsonl (raw per-claim, recomputed this session) + framing_comparison_gpu_n59_postfix_metrics.json (correction stats, real GPU Qwen correction)",
+    "n_cases": 59,
+    "bare": {
+      "n_claims_c1_corrupted": 59,
+      "n_claims_c2_unflagged_true": 59,
+      "c1_verdict_counts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 21,
+        "NOT_ENOUGH_INFORMATION": 23
+      },
+      "c2_verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.3559322033898305,
+      "contradiction_recall_with_evidence": 0.4772727272727273,
+      "false_positive_rate_c2": 0.0
+    },
+    "labeled": {
+      "n_claims_c1_corrupted": 59,
+      "n_claims_c2_unflagged_true": 59,
+      "c1_verdict_counts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 27,
+        "NOT_ENOUGH_INFORMATION": 17
+      },
+      "c2_verdict_counts": {
+        "ENTAILED": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.4576271186440678,
+      "contradiction_recall_with_evidence": 0.6136363636363636,
+      "false_positive_rate_c2": 0.0
+    },
+    "correction_bare": {
+      "n_cases": 59,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 21,
+        "NOT_ENOUGH_INFORMATION": 23
+      },
+      "c2_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.3559322033898305,
+      "contradiction_recall_with_evidence": 0.4772727272727273,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 30,
+      "correction_attempts": 30,
+      "correction_statuses": {
+        "correction_failed": 30
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 30,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 28,
+        "CONTRADICTED": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 30,
+      "unflagged_claim_preserved": 30,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 644.5045371055603,
+      "runtime_seconds_verification": 2.9383413791656494,
+      "runtime_seconds_correction": 641.5569548606873,
+      "peak_vram_mib_cumulative": 7502
+    },
+    "correction_labeled": {
+      "n_cases": 59,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 27,
+        "NOT_ENOUGH_INFORMATION": 17
+      },
+      "c2_verdicts": {
+        "ENTAILED": 59
+      },
+      "c1_with_evidence": 44,
+      "contradiction_recall_overall": 0.4576271186440678,
+      "contradiction_recall_with_evidence": 0.6136363636363636,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 36,
+      "correction_attempts": 36,
+      "correction_statuses": {
+        "corrected": 26,
+        "correction_failed": 10
+      },
+      "corrections_shipped_success": 26,
+      "correction_failed": 10,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "ENTAILED": 26,
+        "CONTRADICTED": 5,
+        "NOT_ENOUGH_INFORMATION": 5
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 36,
+      "unflagged_claim_preserved": 36,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 1412.7578926086426,
+      "runtime_seconds_verification": 4.22845458984375,
+      "runtime_seconds_correction": 1408.5145461559296,
+      "peak_vram_mib_cumulative": 7502
+    }
+  },
+  "section_B_natural_regimes": {
+    "n30_modeB_bare_v0": {
+      "n_cases": 30,
+      "n_claims": 88,
+      "n_matched": 38,
+      "coverage_pct": 43.2,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 38,
+        "NO_EVIDENCE": 50
+      },
+      "match_methods": {
+        "exact_normalized": 24,
+        "no_evidence": 50,
+        "fuzzy": 14
+      },
+      "confidence_mean": 0.9889,
+      "confidence_median": 0.9932,
+      "correction": null,
+      "config": "bare, v0-pool(59), legacy scope, stale-then-current parser mix",
+      "source": "run_B_n30.jsonl"
+    },
+    "n30_modeC_bare_v0": {
+      "n_cases": 30,
+      "n_claims": 88,
+      "n_matched": 38,
+      "coverage_pct": 43.2,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 38,
+        "NO_EVIDENCE": 50
+      },
+      "match_methods": {
+        "exact_normalized": 24,
+        "no_evidence": 50,
+        "fuzzy": 14
+      },
+      "confidence_mean": 0.9889,
+      "confidence_median": 0.9932,
+      "correction": {
+        "correction_triggers": 0,
+        "statuses": {},
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "bare, v0-pool(59), legacy scope check",
+      "source": "run_C_n30.jsonl"
+    },
+    "targeted_modeB_bare_v0": {
+      "n_cases": 11,
+      "n_claims": 29,
+      "n_matched": 14,
+      "coverage_pct": 48.3,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 14,
+        "NO_EVIDENCE": 15
+      },
+      "match_methods": {
+        "exact_normalized": 14,
+        "no_evidence": 15
+      },
+      "confidence_mean": 0.9765,
+      "confidence_median": 0.9883,
+      "correction": null,
+      "config": "bare, v0-pool(59)",
+      "source": "run_natural_targeted.jsonl"
+    },
+    "batch1_bare_v0": {
+      "n_cases": 50,
+      "n_claims": 251,
+      "n_matched": 168,
+      "coverage_pct": 66.9,
+      "verdict_counts": {
+        "NO_EVIDENCE": 83,
+        "NOT_ENOUGH_INFORMATION": 167,
+        "CONTRADICTED": 1
+      },
+      "match_methods": {
+        "no_evidence": 83,
+        "exact_normalized": 168
+      },
+      "confidence_mean": 0.9299,
+      "confidence_median": 0.9717,
+      "correction": {
+        "correction_triggers": 5,
+        "statuses": {
+          "correction_failed": 5
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "bare, v0-pool(59), legacy scope check",
+      "source": "natural_candidates_50_gpu_bare.jsonl"
+    },
+    "batch1_labeled_v0": {
+      "n_cases": 50,
+      "n_claims": 251,
+      "n_matched": 168,
+      "coverage_pct": 66.9,
+      "verdict_counts": {
+        "NO_EVIDENCE": 83,
+        "NOT_ENOUGH_INFORMATION": 161,
+        "ENTAILED": 5,
+        "CONTRADICTED": 2
+      },
+      "match_methods": {
+        "no_evidence": 83,
+        "exact_normalized": 168
+      },
+      "confidence_mean": 0.8407,
+      "confidence_median": 0.9102,
+      "correction": {
+        "correction_triggers": 16,
+        "statuses": {
+          "correction_failed": 10,
+          "correction_scope_violation": 6
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "labeled, v0-pool(59), legacy scope check",
+      "source": "natural_candidates_50_gpu_labeled.jsonl"
+    },
+    "batch2_bare_v0": {
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_matched": 116,
+      "coverage_pct": 49.2,
+      "verdict_counts": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 113,
+        "ENTAILED": 2,
+        "CONTRADICTED": 1
+      },
+      "match_methods": {
+        "no_evidence": 120,
+        "exact_normalized": 115,
+        "fuzzy": 1
+      },
+      "confidence_mean": 0.9359,
+      "confidence_median": 0.9863,
+      "correction": {
+        "correction_triggers": 5,
+        "statuses": {
+          "correction_failed": 3,
+          "correction_scope_violation": 2
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "bare, v0-pool(59), legacy scope check",
+      "source": "natural_candidates_batch2_gpu_bare.jsonl"
+    },
+    "batch2_labeled_v0": {
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_matched": 116,
+      "coverage_pct": 49.2,
+      "verdict_counts": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 102,
+        "CONTRADICTED": 3,
+        "ENTAILED": 11
+      },
+      "match_methods": {
+        "no_evidence": 120,
+        "exact_normalized": 115,
+        "fuzzy": 1
+      },
+      "confidence_mean": 0.8932,
+      "confidence_median": 0.9624,
+      "correction": {
+        "correction_triggers": 10,
+        "statuses": {
+          "correction_failed": 7,
+          "correction_scope_violation": 3
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "labeled, v0-pool(59), legacy scope check",
+      "source": "natural_candidates_batch2_gpu_labeled.jsonl"
+    },
+    "final_A_bare_v0_baseline": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_matched": 132,
+      "coverage_pct": 63.2,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 129,
+        "NO_EVIDENCE": 77,
+        "CONTRADICTED": 3
+      },
+      "match_methods": {
+        "exact_normalized": 130,
+        "no_evidence": 77,
+        "fuzzy": 2
+      },
+      "confidence_mean": 0.9603,
+      "confidence_median": 0.9893,
+      "correction": {
+        "correction_triggers": 5,
+        "statuses": {
+          "correction_failed": 3,
+          "correction_scope_violation": 2
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "bare, v0-pool(59), legacy scope check [PRE-2026-08-27 PRODUCTION BASELINE]",
+      "source": "final_gpu_validation_A.jsonl"
+    },
+    "final_B_bare_v1_assertionspans_narrow": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_matched": 147,
+      "coverage_pct": 70.3,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 144,
+        "NO_EVIDENCE": 62,
+        "CONTRADICTED": 3
+      },
+      "match_methods": {
+        "exact_normalized": 145,
+        "no_evidence": 62,
+        "fuzzy": 2
+      },
+      "confidence_mean": 0.9619,
+      "confidence_median": 0.9893,
+      "correction": {
+        "correction_triggers": 5,
+        "statuses": {
+          "correction_failed": 3,
+          "correction_scope_violation": 2
+        },
+        "shipped": 0,
+        "unsafe_shipped": 0
+      },
+      "config": "bare, v0+v1-pool(137, pre-audit-fix), assertion_spans, narrow_reverification",
+      "source": "final_gpu_validation_B.jsonl"
+    },
+    "final_labeled_v1_assertionspans_narrow_CPUVERIFY": {
+      "n_cases": 50,
+      "n_claims": 147,
+      "n_matched": 147,
+      "coverage_pct": null,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 131,
+        "ENTAILED": 13,
+        "CONTRADICTED": 3
+      },
+      "config": "labeled, v0+v1-pool(136, post-audit-fix), assertion_spans, narrow_reverification [VERIFICATION-ONLY CPU re-check of Arm B's already-matched claims -- FINAL PRODUCTION REGIME]",
+      "source": "final_validation_bare_vs_labeled_cpu_metrics.json",
+      "correction": null
+    },
+    "final_labeled_v1_assertionspans_narrow_CORRECTION_GPU": {
+      "n_cases": 10,
+      "config": "labeled, v0+v1-pool(136), assertion_spans, narrow_reverification [TARGETED GPU correction-only validation, n=10 triggered cases -- FINAL PRODUCTION REGIME]",
+      "source": "labeled_correction_validation_gpu_metrics.json",
+      "correction": {
+        "correction_triggers": 10,
+        "statuses": {
+          "correction_scope_violation": 3,
+          "correction_failed": 6,
+          "corrected": 1
+        },
+        "shipped": 1,
+        "unsafe_shipped": 0
+      }
+    }
+  },
+  "section_B_pooled_bare_v0": {
+    "n_claims": 784,
+    "n_matched": 454,
+    "coverage_pct": 57.9,
+    "verdict_counts": {
+      "NOT_ENOUGH_INFORMATION": 447,
+      "NO_EVIDENCE": 330,
+      "CONTRADICTED": 5,
+      "ENTAILED": 2
+    }
+  },
+  "section_B_pooled_labeled_v0": {
+    "n_claims": 487,
+    "n_matched": 284,
+    "coverage_pct": 58.3,
+    "verdict_counts": {
+      "NO_EVIDENCE": 203,
+      "NOT_ENOUGH_INFORMATION": 263,
+      "ENTAILED": 16,
+      "CONTRADICTED": 5
+    }
+  },
+  "section_C_parser_retrieval": {
+    "n_claims": 797,
+    "n_matched": 537,
+    "n_no_citation": 0,
+    "n_no_evidence_with_citation": 260,
+    "taxonomy": {
+      "genuinely_absent_wrong_act_or_edition": 78,
+      "genuinely_absent_no_such_provision_any_act": 140,
+      "unresolved_act": 40,
+      "parser_or_matcher_defect_candidate": 2
+    },
+    "full_detail": "see outputs/no_evidence_taxonomy_v3.json for the full per-claim breakdown (260 rows) this summary is computed from"
+  },
+  "section_D_correction_safety_cumulative": {
+    "total_correction_attempts": 56,
+    "total_shipped": 1,
+    "total_unsafe_shipped": 0,
+    "status_breakdown": {
+      "correction_failed": 37,
+      "correction_scope_violation": 18,
+      "corrected": 1
+    },
+    "shipped_rate_pct": 1.8
+  },
+  "section_E_verifier_vs_provisional_assumption_gold": {
+    "caveat": "PROVISIONAL/ASSUMPTION-BASED. assumption_annotation.jsonl is Claude-generated provisional labeling of 88 claims (29 document_ids, subset of n30/targeted), NOT lawyer-verified ground truth. None of these numbers may be cited as validated system accuracy -- they describe agreement between two machine-produced label sets.",
+    "experiment": "assumption_gold_bare_vs_labeled_agreement",
+    "scope": "PROVISIONAL/ASSUMPTION-BASED -- assumption_annotation.jsonl is Claude-generated provisional labeling, NOT lawyer-verified ground truth. Describes agreement between two machine-produced label sets. bare_verdict reused verbatim from assumption_annotation.jsonl (not recomputed); labeled_verdict is a fresh CPU DeBERTa call against the same stored evidence text, this session.",
+    "n_evidence_matched_claims": 38,
+    "n_unresolved_for_labeled": 0,
+    "bare_agreement_with_assumption": {
+      "agree": 20,
+      "total": 38,
+      "pct": 52.6
+    },
+    "labeled_agreement_with_assumption": {
+      "agree": 18,
+      "total": 38,
+      "pct": 47.4
+    },
+    "bare_verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 38
+    },
+    "labeled_verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 36,
+      "ENTAILED": 2
+    }
+  },
+  "synthetic_vs_natural_correction_transfer_gap": {
+    "synthetic_labeled_shipped_rate_pct": 72.2,
+    "natural_all_regimes_shipped_rate_pct": 1.8,
+    "natural_final_production_regime_shipped_rate_pct": 10.0
+  }
+}

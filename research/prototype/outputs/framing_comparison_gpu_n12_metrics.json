@@ -1,0 +1,88 @@
+{
+  "experiment": "premise_framing_ablation_synthetic",
+  "data": "SYNTHETIC \u2014 deliberately corrupted statutory claims, not natural NyayaRAG",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "device": "cuda",
+  "correction_ran": true,
+  "n_cases": 12,
+  "seed": 42,
+  "bare_arm_reproduction": {
+    "checked": false
+  },
+  "per_framing": {
+    "bare": {
+      "n_cases": 12,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 6,
+        "CONTRADICTED": 5,
+        "NOT_ENOUGH_INFORMATION": 1
+      },
+      "c2_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 12
+      },
+      "c1_with_evidence": 6,
+      "contradiction_recall_overall": 0.4166666666666667,
+      "contradiction_recall_with_evidence": 0.8333333333333334,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 5
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 5,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "NOT_ENOUGH_INFORMATION": 4,
+        "CONTRADICTED": 1
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 5,
+      "unflagged_claim_preserved": 5,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 155.0657501220703,
+      "runtime_seconds_verification": 1.9552772045135498,
+      "runtime_seconds_correction": 153.1035933494568,
+      "peak_vram_mib_cumulative": 7500
+    },
+    "labeled": {
+      "n_cases": 12,
+      "c1_verdicts": {
+        "NO_EVIDENCE": 6,
+        "CONTRADICTED": 5,
+        "NOT_ENOUGH_INFORMATION": 1
+      },
+      "c2_verdicts": {
+        "ENTAILED": 12
+      },
+      "c1_with_evidence": 6,
+      "contradiction_recall_overall": 0.4166666666666667,
+      "contradiction_recall_with_evidence": 0.8333333333333334,
+      "false_positive_rate_c2": 0.0,
+      "correction_triggers": 6,
+      "correction_attempts": 6,
+      "correction_statuses": {
+        "corrected": 5,
+        "correction_failed": 1
+      },
+      "corrections_shipped_success": 5,
+      "correction_failed": 1,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {
+        "ENTAILED": 5,
+        "CONTRADICTED": 1
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 6,
+      "unflagged_claim_preserved": 6,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 300.8673782348633,
+      "runtime_seconds_verification": 2.433466672897339,
+      "runtime_seconds_correction": 298.4261882305145,
+      "peak_vram_mib_cumulative": 7500
+    }
+  },
+  "overall_peak_vram_mib": 7500,
+  "timestamp": "2026-08-26T11:48:47.897155+00:00"
+}

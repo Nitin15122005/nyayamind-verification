@@ -13,6 +13,17 @@ paths:
   canonical_statutes: "research/data/evidence/canonical_statutes.jsonl"
   evidence_audit: "research/data/evidence/evidence_audit.jsonl"
 
+  # v1 evidence supplement (82 records: 3 corrections to known v0
+  # INVALID/UNRESOLVED/wrong-historical_status records, 79 genuinely new
+  # citations — ranked #64-143 by real NyayaRAG corpus citation frequency;
+  # see research/data/evidence/README_v1.md and
+  # scripts/build_evidence_v1.py). Loaded ONLY when `use_evidence_v1: true`
+  # below (default false) — omitting it, or leaving it false, reproduces
+  # v0-only behaviour exactly, byte-for-byte, for every existing committed
+  # output. Also READ-ONLY.
+  canonical_statutes_v1: "research/data/evidence/canonical_statutes_v1.jsonl"
+  evidence_audit_v1: "research/data/evidence/evidence_audit_v1.jsonl"
+
   # NyayaRAG CaseText_Statutes data (L-NLProc/NyayaRAG on Hugging Face,
   # 3.CaseText_Statutes.zip), copied from an earlier session's scratch
   # extraction into this stable, project-relative location. See README
@@ -29,6 +40,25 @@ paths:
 usable_evidence_verdicts:
   - "VERIFIED_EXACT"
   - "VERIFIED_CONTENT"
+
+# Opt-in, DEFAULT CHANGED TO "true" 2026-08-27 (was "false"). Also loads and
+# merges canonical_statutes_v1.jsonl + evidence_audit_v1.jsonl on top of the
+# base v0 corpus (src/data_loader.py, load_usable_evidence's
+# extra_canonical_path/extra_audit_path). Expands the usable evidence pool
+# from 59 to 136 records (78 new VERIFIED_EXACT + the 59 v0 records, with 3
+# v0 corrections applied) — see research/data/evidence/README_v1.md for the
+# full build methodology and outputs/evidence_v1_independent_audit.md for
+# the 2026-08-27 independent audit (50% of v1's 82 records directly
+# re-fetched and content-verified, vs. the original build's 10%; 2 genuine
+# defects found and fixed; 0 fabricated/wrong-provision content found) and
+# outputs/final_gpu_validation.md for the paired-arms GPU experiment this
+# decision is based on (McNemar chi2=13.07, p≈0.0003, +7.1pp evidence
+# coverage on 50 held-out natural cases never seen by evidence_v1's own
+# construction, zero regressions). See FINAL_PRODUCTION_CONFIG.md for the
+# full decision record. Every evaluation output committed BEFORE 2026-08-27
+# was produced against the v0-only 59-record pool with this flag false —
+# set it back to false to exactly reproduce that historical behaviour.
+use_evidence_v1: true
 
 generation:
   model_id: "Qwen/Qwen2.5-7B-Instruct"
@@ -68,6 +98,12 @@ evidence_matching:
 
 verification:
   model_id: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  # UNCHANGED 2026-08-27 review: outputs/threshold_sensitivity_analysis.md's
+  # deterministic sweep (0.50-0.95) over the 420-item controlled benchmark
+  # shows 0.70 sits within 0.002 macro-F1 of the empirical optimum under
+  # BOTH bare (peak 0.751 @0.55-0.65, 0.70 gives 0.749) and labeled (peak
+  # 0.968 @0.65-0.75, 0.70 gives 0.968 -- inside the plateau) framing. No
+  # evidence supports moving it. See FINAL_PRODUCTION_CONFIG.md.
   confidence_threshold: 0.70           # fixed by design (approved design doc), not calibrated
   # This model's label order (id2label) is read from its own config at load
   # time rather than hardcoded here — see src/verifier.py.
@@ -91,12 +127,34 @@ verification:
   # 0.500 -> 1.000 with no per-condition regression
   # (see outputs/verifier_correction_diagnosis.md).
   #
-  # DEFAULT IS DELIBERATELY "bare": every committed evaluation output was
-  # produced under it, so flipping the default would silently make new runs
-  # non-comparable with the existing A/B/C and synthetic baselines. "labeled"
-  # has not yet been validated on the real production path end-to-end. Change
-  # this only as an explicit, recorded ablation.
-  premise_framing: "bare"      # bare | labeled
+  # DEFAULT CHANGED TO "labeled" 2026-08-27 (was "bare"). Now validated on
+  # the real production path end-to-end, on real natural NyayaRAG data, with
+  # the full improved config (use_evidence_v1 + atomic_scope_check=
+  # assertion_spans + narrow_reverification_hypothesis) and genuine Qwen
+  # correction calls -- not just the controlled benchmark above. Three
+  # convergent, non-synthetic lines of evidence (see
+  # FINAL_PRODUCTION_CONFIG.md for the full record):
+  #   1. Controlled benchmark (above): macro F1 0.749 -> 0.968.
+  #   2. CPU-only re-verification of the final_gpu_validation batch's 147
+  #      matched claims under labeled: ENTAILED 0 -> 13, more decisive
+  #      verdicts throughout (outputs/final_validation_bare_vs_labeled_cpu_metrics.json).
+  #   3. Real, targeted GPU correction validation on the same batch: labeled
+  #      framing shipped 1 genuine, safe, substantively-correct correction
+  #      (0.995 ENTAILED, 0 sibling regressions) -- the first ever shipped
+  #      correction on a "final validation"-caliber held-out natural batch
+  #      in this project's history. Bare framing, same cases, same improved
+  #      config: 0 shipped (outputs/labeled_correction_validation_gpu_metrics.json).
+  # Caveat, stated honestly: (3) is n=1 shipped / 10 triggered -- a small
+  # sample. This is the newest and least-repeated of this config's changes;
+  # see FINAL_PRODUCTION_CONFIG.md for the recommended follow-up validation
+  # (a larger fresh batch) before treating this as fully settled. 0 unsafe
+  # shipments observed in any test to date under any framing.
+  # Every evaluation output committed BEFORE 2026-08-27 (run_A/B/C_n30,
+  # run_natural_targeted, run_synthetic_stress, natural_candidates_50_gpu,
+  # natural_candidates_batch2_gpu, and Arm A of final_gpu_validation) was
+  # produced under "bare" -- set this back to "bare" to exactly reproduce
+  # that historical behaviour.
+  premise_framing: "labeled"      # bare | labeled
 
 correction:
   max_attempts: 1
@@ -113,6 +171,101 @@ correction:
     consistent with the statute text provided. Return the FULL paragraph
     with every other sentence copied verbatim/unchanged, and only the
     flagged sentence modified. Output only the paragraph, nothing else.
+
+  # How the selective-correction SCOPE-VIOLATION check decides whether an
+  # unflagged claim survived a correction intact (src/pipeline.py,
+  # _scope_violation()).
+  #
+  #   false — (DEFAULT) legacy behaviour: every unflagged claim's full
+  #           `claim_text` (the whole original sentence) must reappear
+  #           byte-for-byte in the corrected text. This is what produced
+  #           every committed result in outputs/.
+  #   true  — atomic: an unflagged claim is checked against its own
+  #           `assertion_text` instead — a conservative, VERBATIM,
+  #           per-citation sub-span of `claim_text` (claim_parser.py's
+  #           `_assign_assertion_texts`) that narrows to just this claim's
+  #           own clause/gloss when a safe split pattern is found (a
+  #           semicolon-delimited clause, a "while"-delimited clause, or a
+  #           "<number> (<short gloss>)" parenthetical), and falls back to
+  #           the FULL sentence — identical to legacy — whenever no safe
+  #           split applies. Nothing is ever synthesized; every
+  #           `assertion_text` is a contiguous substring of the model's
+  #           own generated text.
+  #   "assertion_spans" — structured: an unflagged claim is checked
+  #           against `assertion_spans`, a LIST of independently-required
+  #           VERBATIM fragments (claim_parser.py's
+  #           `_assign_respectively_spans`) — ALL must survive, not just
+  #           one. Exists specifically for the "respectively" pattern
+  #           ("Sections 406 and 420 ..., which respectively deal with X
+  #           and Y"), where a citation's relevant content is NOT one
+  #           contiguous span (its own provision number sits in one place,
+  #           its paired description elsewhere) — representing that as a
+  #           single assertion_text would require either dragging in
+  #           unrelated sibling content or SYNTHESIZING a combined
+  #           sentence, which this codebase never does anywhere. For every
+  #           claim NOT produced by a "respectively" sentence,
+  #           `assertion_spans` is just `[assertion_text]` (a
+  #           one-fragment list), so the check degrades to exactly the
+  #           `true` behaviour above for those claims automatically.
+  #
+  # Why this option exists: on real NyayaRAG output, one physical sentence
+  # routinely backs MULTIPLE claim records (a single sentence citing
+  # several sections becomes one claim per citation, all sharing that
+  # sentence as claim_text — see claim_parser.extract_claims()'s own
+  # docstring). Under the legacy rule, editing ANY part of that shared
+  # sentence — even a part confined to the flagged citation's own portion
+  # — breaks every OTHER claim's byte-for-byte check, so a substantively
+  # correct, narrowly-scoped edit is rejected as a scope violation purely
+  # because of how many claims happen to share its sentence. Confirmed
+  # against real correction attempts in
+  # outputs/natural_candidates_50_gpu_corrections_detail.jsonl: 4 of 6
+  # genuine (non-no-op) edits blocked as scope violations were
+  # substantively valid fixes (e.g. a wrong provision number corrected),
+  # not the corrector touching unrelated content.
+  #
+  # DEFAULT CHANGED TO "assertion_spans" 2026-08-27 (was "false"). Measured
+  # safe on every real natural-data case tested to date: the independent
+  # sibling-regression safety net (below) exists specifically to cover the
+  # gap this relaxed check opens, and 0 unsafe corrections have ever shipped
+  # under it, across every natural GPU experiment in this project including
+  # the paired-arms final_gpu_validation run (0/10 unsafe) and the targeted
+  # labeled-framing correction validation (see
+  # outputs/labeled_correction_validation_gpu_metrics.json). See
+  # FINAL_PRODUCTION_CONFIG.md for the full decision record, including the
+  # honest caveat that this specific batch's 2 scope-violation cases were
+  # NOT unlocked by the narrower check (both remained correctly rejected
+  # under assertion_spans too) — the earlier batch-1 finding motivating this
+  # default (4/6 genuine edits blocked by the legacy check) is what this
+  # default is based on, not a repeat of that exact result in every run.
+  # Set to "false" to exactly reproduce every evaluation output committed
+  # before 2026-08-27.
+  atomic_scope_check: "assertion_spans"
+
+  # Opt-in (default false): when re-verifying a correction, use the
+  # re-extracted replacement claim's own `assertion_text` (a verbatim,
+  # non-fabricated per-citation clause/gloss) as the NLI hypothesis instead
+  # of the full bundled sentence, whenever a narrower one was found. On a
+  # bundled multi-citation sentence, verifying the FULL sentence dilutes
+  # the hypothesis with sibling citations' unrelated content, which can
+  # keep a genuinely correct, narrowly-targeted fix from reaching ENTAILED
+  # even though it is accurate against its own evidence — measured
+  # directly on a real case: 0.54 NOT_ENOUGH_INFORMATION on the full
+  # sentence vs 0.999 ENTAILED on the narrow fragment, same evidence, same
+  # corrected text (see outputs/research_completion_report.md §16a).
+  # Never widens what counts as evidence-consistent — assertion_text is
+  # always a genuine substring of the model's own corrected output. Most
+  # useful paired with atomic_scope_check, since a claim only has a
+  # narrower assertion_text in the first place when one of that feature's
+  # split patterns applied. DEFAULT CHANGED TO "true" 2026-08-27 (was
+  # "false"), paired with atomic_scope_check above. Measured on the final
+  # pre-paper validation batch to produce more decisive, better-calibrated
+  # re-verification signals on real corrected text (e.g. converting a
+  # diluted, threshold-adjacent low-confidence NEI into a decisive
+  # CONTRADICTED for a genuinely unchanged/no-op correction) without ever
+  # causing an unsafe shipment — see FINAL_PRODUCTION_CONFIG.md. Set to
+  # "false" to exactly reproduce every evaluation output committed before
+  # 2026-08-27.
+  narrow_reverification_hypothesis: true
 
 modes:
   - "A"   # generation only

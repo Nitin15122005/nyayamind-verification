@@ -1,0 +1,23 @@
+{
+  "experiment": "assumption_gold_bare_vs_labeled_agreement",
+  "scope": "PROVISIONAL/ASSUMPTION-BASED -- assumption_annotation.jsonl is Claude-generated provisional labeling, NOT lawyer-verified ground truth. Describes agreement between two machine-produced label sets. bare_verdict reused verbatim from assumption_annotation.jsonl (not recomputed); labeled_verdict is a fresh CPU DeBERTa call against the same stored evidence text, this session.",
+  "n_evidence_matched_claims": 38,
+  "n_unresolved_for_labeled": 0,
+  "bare_agreement_with_assumption": {
+    "agree": 20,
+    "total": 38,
+    "pct": 52.6
+  },
+  "labeled_agreement_with_assumption": {
+    "agree": 18,
+    "total": 38,
+    "pct": 47.4
+  },
+  "bare_verdict_distribution": {
+    "NOT_ENOUGH_INFORMATION": 38
+  },
+  "labeled_verdict_distribution": {
+    "NOT_ENOUGH_INFORMATION": 36,
+    "ENTAILED": 2
+  }
+}

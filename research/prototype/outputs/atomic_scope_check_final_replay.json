@@ -1,0 +1,204 @@
+{
+  "n_scope_violations_replayed": 11,
+  "n_unblocked_final": 1,
+  "results": [
+    {
+      "batch": "batch1",
+      "document_id": "2009_865",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The Indian Penal Code, 1860, specifically Sections 302 and 324 read with Section 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for causing injury leading to death, respectively",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The Indian Penal Code, 1860, specifically Sections 302 and 324 read with Section 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for causing injury leading to death, respectively, while acting in concert with others as provided in Section 34.",
+      "regenerated_text": "The Indian Penal Code, 1860, specifically Sections 302 and 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for acting in concert with others as provided in Section 34, respectively."
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2020_51",
+      "target_claim_id": "c4",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "406",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the Indian Penal Code 1860 (criminal breach of trust), which require the framing of charges based on the material available on record",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the Indian Penal Code 1860 (criminal breach of trust), which require the framing of charges based on the material available on record; and Rule 3 of the Code of Criminal Procedure 1973, which mandates the proper framing of charges by the Trial Court.",
+      "regenerated_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, and Rule 3 of the Code of Criminal Procedure 1973, which mandates the proper framing of charges by the Trial Court."
+    },
+    {
+      "batch": "batch1",
+      "document_id": "1978_196",
+      "target_claim_id": "c4",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": "voluntarily causing hurt by dangerous means",
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "324 (voluntarily causing hurt by dangerous means)",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 ( murder ), 34 (common intention), 323 (voluntarily causing hurt), 324 (voluntarily causing hurt by dangerous means), 325 (voluntarily causing grievous hurt), 326 (voluntarily causing hurt by dangerous weapons or dangerous means), 149 (punishment for riot), 427 (conspiracy), and 147, 148, and 149 (riots). These sections require the proof of an unlawful assembly with a common object to cause harm, the intent to commit a crime, and the commission of specific offenses such as murder, causing hurt, and rioting.",
+      "regenerated_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 (murder), 34 (common intention), 323 (voluntarily causing hurt), 324 (voluntarily causing hurt by dangerous means), 325 (voluntarily causing grievous hurt), 326 (voluntarily causing hurt by dangerous weapons or dangerous means), 149 (punishment for riot), 427 (conspiracy), and 147, 148, and 149 (riots). These sections require the proof of an unlawful assembly with a common object to cause harm, the intent to commit a crime, and the commission of specific offenses such as murder, causing hurt, and rioting."
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2003_924",
+      "target_claim_id": "c5",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "482",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "target_assertion_text": "and Sections 3 and 482 of the Code of Criminal Procedure (CrPC), which deal with the power to grant bail and the jurisdiction of the High Court in such matters, respectively.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provides for the procedure for bail application; and Sections 3 and 482 of the Code of Criminal Procedure (CrPC), which deal with the power to grant bail and the jurisdiction of the High Court in such matters, respectively.",
+      "regenerated_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provides for the procedure for bail application; and Sections 482 of the Code of Criminal Procedure (CrPC), which deals with the power to grant bail and the jurisdiction of the High Court in such matters, respectively."
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2009_431",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The case is governed by Sections 300 and 324 of the Indian Penal Code (IPC), which require that the act must be done with the intention to cause death or injury, and the act must result in causing death or injury, respectively.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The case is governed by Sections 300 and 324 of the Indian Penal Code (IPC), which require that the act must be done with the intention to cause death or injury, and the act must result in causing death or injury, respectively. Additionally, the case is governed by Section 25 of the Arms Act, which prohibits the discharge of a firearm in a public place without lawful excuse, requiring that the discharge of a firearm must be without any lawful justification or excuse.",
+      "regenerated_text": "The case is governed by Sections 302 and 324 of the Indian Penal Code (IPC), which require that the act must be done with the intention to cause death or injury, and the act must result in causing death or injury, respectively. Additionally, the case is governed by Section 25 of the Arms Act, which prohibits the discharge of a firearm in a public place without lawful excuse, requiring that the discharge of a firearm must be without any lawful justification or excuse."
+    },
+    {
+      "batch": "batch1",
+      "document_id": "1991_110",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal Code, 1860, which respectively deal with murder, criminal conspiracy, voluntarily causing hurt, and abetting the commission of a non-cognizable offense.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal Code, 1860, which respectively deal with murder, criminal conspiracy, voluntarily causing hurt, and abetting the commission of a non-cognizable offense. Section 304, Part II of the Indian Penal Code pertains to culpable homicide not amounting to murder, while section 34 deals with the liability of persons aiding, abetting, counseling, or procuring the commission of an offense.",
+      "regenerated_text": "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal Code, 1860, which respectively deal with murder, criminal conspiracy, voluntarily causing hurt, and abetting the commission of an offense. Section 304, Part II of the Indian Penal Code pertains to culpable homicide not amounting to murder, while section 34 deals with the liability of persons aiding, abetting, counseling, or procuring the commission of an offense."
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2022_435",
+      "target_claim_id": "c3",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "148",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for certain criminal acts including rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for certain criminal acts including rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument. The Code of Criminal Procedure (CrPC) governs the process of bail and the conditions under which it may be granted or refused.",
+      "regenerated_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, define various criminal acts such as rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument. The Code of Criminal Procedure (CrPC) governs the process of bail and the conditions under which it may be granted or refused."
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2022_435",
+      "target_claim_id": "c3",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "148",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for certain criminal acts including rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for certain criminal acts including rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument. The Code of Criminal Procedure (CrPC) governs the process of bail and the conditions under which it may be granted or refused.",
+      "regenerated_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, define various criminal acts such as rioting, unlawful assembly to commit violence, culpable homicide not amounting to murder, murder, and causing hurt by dangerous means or by a dangerous instrument. The Code of Criminal Procedure (CrPC) governs the process of bail and the conditions under which it may be granted or refused."
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2024_300",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "506",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The Indian Penal Code, 1860, specifically Sections 498A and 506, require that the code be followed in cases of cruelty by husband or relatives and attempt to murder, respectively.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The Indian Penal Code, 1860, specifically Sections 498A and 506, require that the code be followed in cases of cruelty by husband or relatives and attempt to murder, respectively. The Code of Criminal Procedure, 1973, governs the procedure of criminal trial and registration of FIRs, mandating that a single set of allegations should not lead to multiple FIRs being registered, thereby preventing the abuse of the legal process.",
+      "regenerated_text": "The Indian Penal Code, 1860, governs the offences of cruelty by husband or relatives under Section 498A, and attempt to murder under Section 506, respectively. The Code of Criminal Procedure, 1973, governs the procedure of criminal trial and registration of FIRs, mandating that a single set of allegations should not lead to multiple FIRs being registered, thereby preventing the abuse of the legal process."
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2024_300",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "506",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "The Indian Penal Code, 1860, specifically Sections 498A and 506, require that the code be followed in cases of cruelty by husband or relatives and attempt to murder, respectively.",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false,
+      "original_field_text": "The Indian Penal Code, 1860, specifically Sections 498A and 506, require that the code be followed in cases of cruelty by husband or relatives and attempt to murder, respectively. The Code of Criminal Procedure, 1973, governs the procedure of criminal trial and registration of FIRs, mandating that a single set of allegations should not lead to multiple FIRs being registered, thereby preventing the abuse of the legal process.",
+      "regenerated_text": "The Indian Penal Code, 1860, governs the offences of cruelty by husband or relatives under Section 498A, and attempt to murder under Section 506, respectively. The Code of Criminal Procedure, 1973, governs the procedure of criminal trial and registration of FIRs, mandating that a single set of allegations should not lead to multiple FIRs being registered, thereby preventing the abuse of the legal process."
+    },
+    {
+      "batch": "batch2",
+      "document_id": "1997_1306",
+      "target_claim_id": "c6",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "148",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_assertion_text": "Section 148 mandates punishment for criminal trespass",
+      "legacy_violation": true,
+      "assertion_spans_violation": false,
+      "unblocked": true,
+      "original_field_text": "The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 require that the accused be members of an unlawful assembly with a common intention to commit criminal trespass and assault, and that the assault was carried out in the course of such trespass. Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to murder and voluntary manslaughter respectively, section 323 prescribes punishment for voluntarily causing hurt, and section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly.",
+      "regenerated_text": "The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 require that the accused be members of an unlawful assembly with a common intention to commit criminal trespass and assault, and that the assault was carried out in the course of such trespass. Section 148 mandates punishment for rioting, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to murder and voluntary manslaughter respectively, section 323 prescribes punishment for voluntarily causing hurt, and section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."
+    }
+  ]
+}

@@ -1,0 +1,527 @@
+{
+  "total_claims_current_parser": 93,
+  "total_matched_current_parser": 57,
+  "n_no_evidence": 36,
+  "bucket_counts": {
+    "A": 35,
+    "NEEDS_REVIEW": 1
+  },
+  "corpus_acts": [
+    "arms act 1959",
+    "code of civil procedure 1908",
+    "code of criminal procedure 1973",
+    "constitution of india",
+    "income tax act 1961",
+    "indian evidence act 1872",
+    "indian penal code 1860",
+    "industrial disputes act 1947",
+    "land acquisition act 1894",
+    "negotiable instruments act 1881"
+  ],
+  "rows": [
+    {
+      "document_id": "1992_534",
+      "claim_id": "c3",
+      "claim_text": "Section 506 of the same code deals with the offence of criminal intimidation.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "506",
+        "subsection": null,
+        "act_raw": "the same code",
+        "act_norm": "same code"
+      },
+      "bucket": "A",
+      "reason": "Section 506 exists in corpus only under ['indian penal code 1860'], only 0.25 act-name overlap with claim's act_norm='same code' \u2014 different Act, not a normalization near-miss"
+    },
+    {
+      "document_id": "1992_534",
+      "claim_id": "c4",
+      "claim_text": "The court also considered Section 309 of the Indian Penal Code, which pertains to attempts to commit suicide.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "309",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 309 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c1",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Regulation",
+        "provision_number": "15",
+        "subsection": "2",
+        "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+        "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Regulation 15 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c2",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Clause",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+        "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Clause 22 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c3",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "120-B",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 120-B under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c5",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "477",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 477 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c6",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": "2",
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 5 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2007_1517",
+      "claim_id": "c7",
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "1",
+        "subsection": "d",
+        "act_raw": "the Prevention of Corruption Act, 1947",
+        "act_norm": "prevention of corruption act 1947"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 1 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1987_609",
+      "claim_id": "c1",
+      "claim_text": "The Indian Forest Service (Recruitment) Rules, 1966, specifically rule 4(2), govern the initial recruitment of officers to the IFS and require that such recruitment be conducted in a manner consistent with the provisions of the said rule, ensuring that the process is transparent and fair.",
+      "citation_extracted": {
+        "provision_type": "Rule",
+        "provision_number": "4",
+        "subsection": "2",
+        "act_raw": "The Indian Forest Service (Recruitment) Rules, 1966",
+        "act_norm": "indian forest service rules 1966"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Rule 4 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1954_7",
+      "claim_id": "c1",
+      "claim_text": "Section 82 of the Act mandates the inclusion of all candidates in the list of respondents in an election petition, and its non-compliance is not fatal to the maintainability of the petition unless such non-compliance is made penal.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "82",
+        "subsection": null,
+        "act_raw": "the Act",
+        "act_norm": "act"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 82 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1996_772",
+      "claim_id": "c2",
+      "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of certain statements made by a deceased person.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 32 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1996_772",
+      "claim_id": "c4",
+      "claim_text": "Section 32 of the Indian Evidence Act allows the statement made by a deceased person regarding the cause of his death to be admissible as evidence in any proceeding in which such death is relevant.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 32 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1992_31",
+      "claim_id": "c1",
+      "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "8",
+        "subsection": "2-A",
+        "act_raw": "the Central Sales Tax Act, 1956",
+        "act_norm": "central sales tax act 1956"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 8 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1992_31",
+      "claim_id": "c2",
+      "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Act, 1962, particularly Section 5, which governs the issuance of exemption orders for sales tax purposes.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": null,
+        "act_raw": "the Jammu Kashmir General Sales Tax Act, 1962",
+        "act_norm": "jammu kashmir general sales tax act 1962"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 5 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2005_128",
+      "claim_id": "c1",
+      "claim_text": "The statutory grounding includes Article 341 of the Constitution of India, which mandates that the President may, with respect to any Union territory, specify the castes, races, or tribes, or parts of or groups within castes, races, or tribes, which shall be deemed to be Scheduled Castes for the purposes of the Constitution in relation to that Union territory.",
+      "citation_extracted": {
+        "provision_type": "Article",
+        "provision_number": "341",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Article 341 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1971_200",
+      "claim_id": "c3",
+      "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "467",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 467 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1971_200",
+      "claim_id": "c6",
+      "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when they are old or damaged.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "467",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 467 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1982_43",
+      "claim_id": "c1",
+      "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 21 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1982_43",
+      "claim_id": "c2",
+      "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and the procedure for taking over such land by the authorities.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 22 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1982_43",
+      "claim_id": "c3",
+      "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 21 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1982_43",
+      "claim_id": "c4",
+      "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus land.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 22 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2008_1494",
+      "claim_id": "c1",
+      "claim_text": "The statutory grounding for this case includes Section 4 of the Customs Act, 1962, which mandates the provision of necessary information in the prescribed format for the import of goods, and the guidelines issued by the Ministry on 10th August 1993, which specify the requirements for the import of medical equipment under the exemption notification.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "the Customs Act, 1962",
+        "act_norm": "customs act 1962"
+      },
+      "bucket": "A",
+      "reason": "Section 4 exists in corpus only under ['land acquisition act 1894'], only 0.00 act-name overlap with claim's act_norm='customs act 1962' \u2014 different Act, not a normalization near-miss"
+    },
+    {
+      "document_id": "1970_250",
+      "claim_id": "c4",
+      "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal intent, and Section 201 and 511, which pertain to abetment and provide that any person who abets the commission of a felony is punishable in the same manner as a principal.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "511",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 511 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2006_650",
+      "claim_id": "c2",
+      "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "304A",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 304A under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2003_967",
+      "claim_id": "c2",
+      "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Article 15(4) allows the state to make provisions for reserving educational facilities or appointments in favor of any backward class of citizens.",
+      "citation_extracted": {
+        "provision_type": "Article",
+        "provision_number": "15",
+        "subsection": "4",
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Article 15 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1962_184",
+      "claim_id": "c1",
+      "claim_text": "The Indian Income Tax Act, 1922, Section 8(2) requires that the character of the payment as dividend cannot be altered by a subsequent resolution, and that such payments are liable to be taxed as dividend income at the time they are credited to the shareholders' accounts.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "8",
+        "subsection": "2",
+        "act_raw": "The Indian Income Tax Act, 1922",
+        "act_norm": "indian income tax act 1922"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 8 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1989_184",
+      "claim_id": "c2",
+      "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 25 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1989_184",
+      "claim_id": "c5",
+      "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 25 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1998_229",
+      "claim_id": "c2",
+      "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "304A",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 304A under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "1952_17",
+      "claim_id": "c1",
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a reasonable doubt for the offences of rioting, culpable homicide not amounting to murder, and voluntarily causing hurt, respectively.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 143 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2008_2662",
+      "claim_id": "c1",
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "112",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 112 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2008_2662",
+      "claim_id": "c2",
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly established, and must form a chain of facts that leaves no reasonable alternative explanation other than the guilt of the accused.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "113",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 113 under ANY act \u2014 genuinely absent"
+    },
+    {
+      "document_id": "2023_26",
+      "claim_id": "c4",
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "bucket": "A",
+      "reason": "Section 149 exists in corpus only under ['indian penal code 1860'], only 0.20 act-name overlap with claim's act_norm='code of criminal procedure 1973' \u2014 different Act, not a normalization near-miss"
+    },
+    {
+      "document_id": "2023_26",
+      "claim_id": "c8",
+      "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murder, and Section 324 prescribes the punishment for voluntarily causing hurt.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "bucket": "NEEDS_REVIEW",
+      "reason": "unresolved act_norm, not an ambiguous multi-act case \u2014 needs manual read"
+    },
+    {
+      "document_id": "2023_26",
+      "claim_id": "c9",
+      "claim_text": "Section 149 of the Code of Criminal Procedure, 1973, deals with the procedure for trial of persons accused of offences committed in furtherance of the common intention of two or more persons.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "bucket": "A",
+      "reason": "Section 149 exists in corpus only under ['indian penal code 1860'], only 0.20 act-name overlap with claim's act_norm='code of criminal procedure 1973' \u2014 different Act, not a normalization near-miss"
+    },
+    {
+      "document_id": "1991_582",
+      "claim_id": "c2",
+      "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to cause death or any act done with such intention.",
+      "citation_extracted": {
+        "provision_type": "Section",
+        "provision_number": "304A",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "bucket": "A",
+      "reason": "no corpus record has Section 304A under ANY act \u2014 genuinely absent"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "n_scope_violations_replayed": 6,
+  "n_unblocked_by_assertion_spans_beyond_assertion_text": 0,
+  "n_still_blocked_under_assertion_spans": 6,
+  "results": [
+    {
+      "document_id": "2009_865",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_had_respectively_spans": false,
+      "target_assertion_spans": [
+        "The Indian Penal Code, 1860, specifically Sections 302 and 324 read with Section 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for causing injury leading to death, respectively"
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The Indian Penal Code, 1860, specifically Sections 302 and 324 read with Section 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for causing injury leading to death, respectively, while acting in concert with others as provided in Section 34.",
+      "regenerated_text": "The Indian Penal Code, 1860, specifically Sections 302 and 34, require that an individual be held criminally responsible for causing death of another person through intentional acts or by criminal negligence, and for acting in concert with others as provided in Section 34, respectively."
+    },
+    {
+      "document_id": "2020_51",
+      "target_claim_id": "c4",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "406",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_had_respectively_spans": false,
+      "target_assertion_spans": [
+        "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the Indian Penal Code 1860 (criminal breach of trust), which require the framing of charges based on the material available on record"
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the Indian Penal Code 1860 (criminal breach of trust), which require the framing of charges based on the material available on record; and Rule 3 of the Code of Criminal Procedure 1973, which mandates the proper framing of charges by the Trial Court.",
+      "regenerated_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, and Rule 3 of the Code of Criminal Procedure 1973, which mandates the proper framing of charges by the Trial Court."
+    },
+    {
+      "document_id": "1978_196",
+      "target_claim_id": "c4",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": "voluntarily causing hurt by dangerous means",
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_had_respectively_spans": false,
+      "target_assertion_spans": [
+        "324 (voluntarily causing hurt by dangerous means)"
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 ( murder ), 34 (common intention), 323 (voluntarily causing hurt), 324 (voluntarily causing hurt by dangerous means), 325 (voluntarily causing grievous hurt), 326 (voluntarily causing hurt by dangerous weapons or dangerous means), 149 (punishment for riot), 427 (conspiracy), and 147, 148, and 149 (riots). These sections require the proof of an unlawful assembly with a common object to cause harm, the intent to commit a crime, and the commission of specific offenses such as murder, causing hurt, and rioting.",
+      "regenerated_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 (murder), 34 (common intention), 323 (voluntarily causing hurt), 324 (voluntarily causing hurt by dangerous means), 325 (voluntarily causing grievous hurt), 326 (voluntarily causing hurt by dangerous weapons or dangerous means), 149 (punishment for riot), 427 (conspiracy), and 147, 148, and 149 (riots). These sections require the proof of an unlawful assembly with a common object to cause harm, the intent to commit a crime, and the commission of specific offenses such as murder, causing hurt, and rioting."
+    },
+    {
+      "document_id": "2003_924",
+      "target_claim_id": "c5",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "482",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "target_had_respectively_spans": false,
+      "target_assertion_spans": [
+        "and Sections 3 and 482 of the Code of Criminal Procedure (CrPC), which deal with the power to grant bail and the jurisdiction of the High Court in such matters, respectively."
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provides for the procedure for bail application; and Sections 3 and 482 of the Code of Criminal Procedure (CrPC), which deal with the power to grant bail and the jurisdiction of the High Court in such matters, respectively.",
+      "regenerated_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provides for the procedure for bail application; and Sections 482 of the Code of Criminal Procedure (CrPC), which deals with the power to grant bail and the jurisdiction of the High Court in such matters, respectively."
+    },
+    {
+      "document_id": "2009_431",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_had_respectively_spans": true,
+      "target_assertion_spans": [
+        "324",
+        "the act must result in causing death or injury"
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The case is governed by Sections 300 and 324 of the Indian Penal Code (IPC), which require that the act must be done with the intention to cause death or injury, and the act must result in causing death or injury, respectively. Additionally, the case is governed by Section 25 of the Arms Act, which prohibits the discharge of a firearm in a public place without lawful excuse, requiring that the discharge of a firearm must be without any lawful justification or excuse.",
+      "regenerated_text": "The case is governed by Sections 302 and 324 of the Indian Penal Code (IPC), which require that the act must be done with the intention to cause death or injury, and the act must result in causing death or injury, respectively. Additionally, the case is governed by Section 25 of the Arms Act, which prohibits the discharge of a firearm in a public place without lawful excuse, requiring that the discharge of a firearm must be without any lawful justification or excuse."
+    },
+    {
+      "document_id": "1991_110",
+      "target_claim_id": "c2",
+      "target_citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "target_had_respectively_spans": true,
+      "target_assertion_spans": [
+        "149",
+        "criminal conspiracy"
+      ],
+      "legacy_violation": true,
+      "assertion_text_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked_by_assertion_spans": false,
+      "original_field_text": "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal Code, 1860, which respectively deal with murder, criminal conspiracy, voluntarily causing hurt, and abetting the commission of a non-cognizable offense. Section 304, Part II of the Indian Penal Code pertains to culpable homicide not amounting to murder, while section 34 deals with the liability of persons aiding, abetting, counseling, or procuring the commission of an offense.",
+      "regenerated_text": "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal Code, 1860, which respectively deal with murder, criminal conspiracy, voluntarily causing hurt, and abetting the commission of an offense. Section 304, Part II of the Indian Penal Code pertains to culpable homicide not amounting to murder, while section 34 deals with the liability of persons aiding, abetting, counseling, or procuring the commission of an offense."
+    }
+  ]
+}

@@ -55,7 +55,7 @@ from src.corrector import CorrectionMetadata
 from src.data_loader import Case, load_usable_evidence
 from src.generator import GenerationMetadata
 from src.pipeline import run_case
-from src.verifier import CONTRADICTED, NOT_ENOUGH_INFORMATION, NLIVerifier
+from src.verifier import CONTRADICTED, ENTAILED, NOT_ENOUGH_INFORMATION, NLIVerifier
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PROTOTYPE_ROOT = REPO_ROOT / "research" / "prototype"
@@ -268,20 +268,27 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
     assert reverification is not None
     assert reverification["claim_text"] == _CORRECTED_FLAGGED_SENTENCE
     assert reverification["evidence_id"] == "Section 302 in The Indian Penal Code, 1860"
-    assert reverification["verdict"] in (CONTRADICTED, NOT_ENOUGH_INFORMATION, "ENTAILED")
+    assert reverification["verdict"] in (CONTRADICTED, NOT_ENOUGH_INFORMATION, ENTAILED)
 
-    # Empirically, this small real NLI checkpoint judges the (accurate,
-    # evidence-matching) regenerated sentence as NOT_ENOUGH_INFORMATION
-    # rather than ENTAILED once the citation phrase is present in the same
-    # sentence (verified interactively before writing this test — see PR
-    # discussion). That's a genuine, reproducible property of the real,
-    # unmodified verifier — not a pipeline defect — so correction_failed is
-    # the authentic outcome here, and the safety net (never ship an
-    # unverified "fix") must still hold: final_field reverts to original.
-    assert reverification["verdict"] == NOT_ENOUGH_INFORMATION
-    assert record["correction"]["status"] == "correction_failed"
-    assert record["final_field"]["source"] == "correction_failed"
-    assert record["final_field"]["text"] == corrupted_text  # NOT the unverified regenerated text
+    # UPDATED 2026-08-27 for the production premise_framing default change
+    # (bare -> labeled; see FINAL_PRODUCTION_CONFIG.md). Under the OLD bare
+    # default, this small real NLI checkpoint judged the accurate,
+    # evidence-matching regenerated sentence as NOT_ENOUGH_INFORMATION —
+    # the exact "attributed claim, unlabeled premise" gap labeled framing
+    # exists to close (see config/prototype.yaml's own comment on
+    # premise_framing). Under the current "labeled" default, real_config is
+    # loaded directly from the shipped prototype.yaml, so this genuinely
+    # re-verifies under labeled framing — and the real, unmodified verifier
+    # now correctly judges this accurate correction ENTAILED. This is not a
+    # scripted/asserted-by-construction result: it is the same real model
+    # call as before, against the same real evidence text, only the premise
+    # framing changed. The safety net is exercised the OTHER direction by
+    # test_scope_violation_protection_when_corrector_alters_unflagged_claim
+    # below (an unsafe correction is still never shipped).
+    assert reverification["verdict"] == ENTAILED
+    assert record["correction"]["status"] == "corrected"
+    assert record["final_field"]["source"] == "corrected"
+    assert record["final_field"]["text"] == corrected_text  # the verified, shipped fix
 
     # requirement 5 (text level too): the unflagged sentence survives
     # verbatim in whatever text ships, regardless of correction outcome.

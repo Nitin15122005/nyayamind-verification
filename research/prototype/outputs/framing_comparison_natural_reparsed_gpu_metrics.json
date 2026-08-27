@@ -1,0 +1,72 @@
+{
+  "experiment": "premise_framing_ablation_natural_reparsed",
+  "data": "NATURAL NyayaRAG generations, claims RE-DERIVED with the current claim_parser from run_B_n30.jsonl + run_natural_targeted.jsonl generated_field.text (verbatim, not regenerated)",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "device": "cuda",
+  "correction_ran": true,
+  "n_documents": 41,
+  "n_claims": 122,
+  "n_claims_evidence_matched": 71,
+  "seed": 42,
+  "per_framing": {
+    "bare": {
+      "n_documents": 41,
+      "n_claims": 122,
+      "n_claims_evidence_matched": 71,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 71,
+        "NO_EVIDENCE": 51
+      },
+      "documents_with_trigger": 0,
+      "correction_attempts": 0,
+      "correction_statuses": {},
+      "corrections_shipped_success": 0,
+      "correction_failed": 0,
+      "correction_scope_violation": 0,
+      "reverification_verdicts": {},
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 0,
+      "unflagged_claim_preserved": 0,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 1.5258245468139648,
+      "runtime_seconds_verification": 1.5258245468139648,
+      "runtime_seconds_correction": 0.0,
+      "peak_vram_mib_cumulative": 5408
+    },
+    "labeled": {
+      "n_documents": 41,
+      "n_claims": 122,
+      "n_claims_evidence_matched": 71,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 68,
+        "NO_EVIDENCE": 51,
+        "ENTAILED": 3
+      },
+      "documents_with_trigger": 4,
+      "correction_attempts": 4,
+      "correction_statuses": {
+        "corrected": 1,
+        "correction_scope_violation": 2,
+        "correction_failed": 1
+      },
+      "corrections_shipped_success": 1,
+      "correction_failed": 1,
+      "correction_scope_violation": 2,
+      "reverification_verdicts": {
+        "ENTAILED": 1,
+        "NOT_ENOUGH_INFORMATION": 1
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 16,
+      "unflagged_claim_preserved": 11,
+      "correction_ran": true,
+      "runtime_seconds_total_arm": 113.20441031455994,
+      "runtime_seconds_verification": 1.1143732070922852,
+      "runtime_seconds_correction": 112.0890371799469,
+      "peak_vram_mib_cumulative": 7532
+    }
+  },
+  "overall_peak_vram_mib": 7532,
+  "timestamp": "2026-08-26T13:38:45.288361+00:00"
+}

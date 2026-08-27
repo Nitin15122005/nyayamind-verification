@@ -1,0 +1,169 @@
+{
+  "experiment": "final_validation_bare_vs_labeled_cpu_verification_only",
+  "scope": "VERIFICATION-ONLY. Reuses Arm B's already-generated text and already-matched v0+v1 evidence (post-audit-fix, 136 records); only a second CPU DeBERTa verification pass under labeled framing is new. No new Qwen generation or correction; actual shipped-correction rate under labeled+all-improvements is NOT measured here.",
+  "n_claims_with_evidence": 147,
+  "bare_verdict_counts": {
+    "NOT_ENOUGH_INFORMATION": 144,
+    "CONTRADICTED": 3
+  },
+  "labeled_verdict_counts": {
+    "NOT_ENOUGH_INFORMATION": 131,
+    "ENTAILED": 13,
+    "CONTRADICTED": 3
+  },
+  "bare_correction_triggers": 9,
+  "labeled_correction_triggers": 19,
+  "n_verdict_flips": 15,
+  "flips": [
+    {
+      "document_id": "2004_1020",
+      "claim_id": "c8",
+      "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+      "claim_text": "Section 147 IPC deals with the unlawful assembly with intent to commit a felony or to cause fear or violence, Section 323 IPC pertains to voluntarily causing hurt, Section 302 IPC defines murder, and ",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.52099609375,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.993395984172821
+    },
+    {
+      "document_id": "2005_898",
+      "claim_id": "c3",
+      "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+      "claim_text": "Section 302 of the IPC requires that if any person with the intention to cause death causes such death, he shall be guilty of murder.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.98486328125,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.822996973991394
+    },
+    {
+      "document_id": "2005_898",
+      "claim_id": "c4",
+      "evidence_id": "Section 304 in The Indian Penal Code, 1860",
+      "claim_text": "Section 304 of the IPC states that if the act likely to cause death is done without any intention to cause death but with the intention to cause such hurt as the natural consequence of which death may",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.93408203125,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.9255755543708801
+    },
+    {
+      "document_id": "2006_641",
+      "claim_id": "c6",
+      "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+      "claim_text": "The statutory grounding of this case includes the Indian Penal Code (IPC) sections 147 and 148, which deal with criminal trespass and riot, respectively; section 302, which prescribes the punishment f",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.97705078125,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.9824270009994507
+    },
+    {
+      "document_id": "2003_760",
+      "claim_id": "c4",
+      "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+      "claim_text": "Section 34 addresses criminal liability for an act done by more than one person in furtherance of the common intention or common object, thereby holding each person criminally responsible for the acts",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.99609375,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.9882668852806091
+    },
+    {
+      "document_id": "2006_1150",
+      "claim_id": "c12",
+      "evidence_id": "Section 468 in The Indian Penal Code, 1860",
+      "claim_text": "Section 420 criminalizes cheating, Section 467 and 468 deal with forgery and criminal conspiracy respectively, and Section 471 pertains to the use of a forged document.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.9130859375,
+      "labeled_verdict": "CONTRADICTED",
+      "labeled_confidence": 0.811053454875946
+    },
+    {
+      "document_id": "2006_1150",
+      "claim_id": "c13",
+      "evidence_id": "Section 471 in The Indian Penal Code, 1860",
+      "claim_text": "Section 420 criminalizes cheating, Section 467 and 468 deal with forgery and criminal conspiracy respectively, and Section 471 pertains to the use of a forged document.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.95654296875,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.8266516327857971
+    },
+    {
+      "document_id": "2006_1150",
+      "claim_id": "c14",
+      "evidence_id": "Section 120B in The Indian Penal Code, 1860",
+      "claim_text": "Section 120B criminalizes the act of conspiracy when committed by two or more persons.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.96728515625,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.8639518618583679
+    },
+    {
+      "document_id": "2021_677",
+      "claim_id": "c1",
+      "evidence_id": "Article 32 in Constitution of India",
+      "claim_text": "The case is being heard under Article 32 of the Constitution of India, which grants the Supreme Court the jurisdiction to issue writs, including habeas corpus, mandamus, prohibition, quo warranto, and",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.99609375,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.8233070373535156
+    },
+    {
+      "document_id": "2002_731",
+      "claim_id": "c4",
+      "evidence_id": "Article 14 in Constitution of India",
+      "claim_text": "Article 14 mandates that the state shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.9951171875,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.996174693107605
+    },
+    {
+      "document_id": "2000_152",
+      "claim_id": "c6",
+      "evidence_id": "Section 138 in The Negotiable Instruments Act, 1881",
+      "claim_text": "Section 138 imposes criminal liability for the dishonor of a cheque drawn by a person knowing that there are insufficient funds to pay the amount of the cheque at the time it is presented for payment.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.939453125,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.982657253742218
+    },
+    {
+      "document_id": "2021_11",
+      "claim_id": "c3",
+      "evidence_id": "Section 325 in The Indian Penal Code, 1860",
+      "claim_text": "Section 325 deals with causing grievous hurt, while Section 324 pertains to causing simple hurt.",
+      "bare_verdict": "CONTRADICTED",
+      "bare_confidence": 0.984375,
+      "labeled_verdict": "NOT_ENOUGH_INFORMATION",
+      "labeled_confidence": 0.9649138450622559
+    },
+    {
+      "document_id": "2007_1348",
+      "claim_id": "c8",
+      "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+      "claim_text": "Section 148 mandates punishment for those who, being members of such an unlawful assembly, have arms in consent with others likely to cause fear or hurt to others.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.8359375,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.9718908667564392
+    },
+    {
+      "document_id": "2010_229",
+      "claim_id": "c3",
+      "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+      "claim_text": "Section 302 prescribes the punishment for murder, which is the killing of one human being by another with the intention to cause death.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.9931640625,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.7811711430549622
+    },
+    {
+      "document_id": "2010_229",
+      "claim_id": "c4",
+      "evidence_id": "Section 34 in The Indian Penal Code, 1860",
+      "claim_text": "Section 34 of the IPC deals with criminal liability for acts done by more than one person in furtherance of a common intention or common object, thereby establishing joint liability among the accused.",
+      "bare_verdict": "NOT_ENOUGH_INFORMATION",
+      "bare_confidence": 0.99169921875,
+      "labeled_verdict": "ENTAILED",
+      "labeled_confidence": 0.9243343472480774
+    }
+  ]
+}

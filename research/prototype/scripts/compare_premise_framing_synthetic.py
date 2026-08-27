@@ -34,6 +34,7 @@ import copy
 import datetime
 import json
 import sys
+import time
 from collections import Counter
 from pathlib import Path
 
@@ -128,12 +129,15 @@ def main() -> int:
     print(f"Synthetic stress claims: {len(synth_claims)}", flush=True)
 
     generator = corrector = None
+    vram_available = False
     if args.with_correction:
         import torch
         if not torch.cuda.is_available():
             print("ERROR: --with-correction requires CUDA. Refusing to run the 7B "
                   "corrector on CPU.", file=sys.stderr)
             return 2
+        vram_available = True
+        torch.cuda.reset_peak_memory_stats()
         from src.generator import StatuteGroundingGenerator
         from src.corrector import SelectiveCorrector
         generator = StatuteGroundingGenerator(
@@ -181,13 +185,20 @@ def main() -> int:
         corr_status = Counter()
         reverif = Counter()
         unsafe_shipped = 0
+        unflagged_preserved = 0
+        unflagged_checked = 0
+        verification_seconds = 0.0
+        correction_seconds = 0.0
+        arm_t0 = time.time()
 
         for sc in synth_claims:
             baseline = build_baseline(sc, exact_index, all_usable, arm_config)
             # The real, wired production function.
+            t_v0 = time.time()
             pipeline.apply_verification(
                 baseline, verifier, pipeline.resolve_premise_framing(arm_config)
             )
+            verification_seconds += time.time() - t_v0
 
             by_id = {c["claim_id"]: c for c in baseline["claims"]}
             c1 = by_id.get("c1")
@@ -221,9 +232,11 @@ def main() -> int:
                 baseline["_exact_index"] = exact_index
                 baseline["_all_usable"] = all_usable
                 baseline["_verifier"] = verifier
+                t_c0 = time.time()
                 summary = pipeline.apply_selective_correction(
                     baseline, case_obj, corrector, arm_config
                 )
+                correction_seconds += time.time() - t_c0
                 corr_status[summary["status"]] += 1
                 rv = summary.get("reverification") or {}
                 if rv.get("verdict"):
@@ -231,12 +244,34 @@ def main() -> int:
                 # A correction is unsafe if it shipped while not ENTAILED.
                 if summary["status"] == "corrected" and rv.get("verdict") != ENTAILED:
                     unsafe_shipped += 1
+                # Unflagged-claim preservation: c2 (the only other claim in this
+                # two-claim synthetic baseline, never flagged) must reappear
+                # verbatim in whatever text the corrector produced, for every
+                # case where an attempt was made (regardless of status). This
+                # mirrors pipeline._scope_violation's own check but is measured
+                # here explicitly, independent of the scope-violation status.
+                if summary.get("regenerated_text") is not None and c2 is not None:
+                    unflagged_checked += 1
+                    if c2["claim_text"] in summary["regenerated_text"]:
+                        unflagged_preserved += 1
+                        row["c2_preserved_in_correction"] = True
+                    else:
+                        row["c2_preserved_in_correction"] = False
                 row["correction_status"] = summary["status"]
+                row["correction_attempted"] = summary["status"] != "not_triggered"
                 row["reverification_verdict"] = rv.get("verdict")
                 row["corrected_claim"] = rv.get("claim_text")
             rows.append(row)
 
+        arm_elapsed = time.time() - arm_t0
+        arm_peak_vram_mib = None
+        if vram_available:
+            import torch
+            torch.cuda.synchronize()
+            arm_peak_vram_mib = torch.cuda.max_memory_allocated() // (1024 * 1024)
+
         n = len(synth_claims)
+        correction_attempts = sum(corr_status.values())
         per_framing[framing] = {
             "n_cases": n,
             "c1_verdicts": dict(c1_verdicts),
@@ -247,13 +282,26 @@ def main() -> int:
                 c1_verdicts.get(CONTRADICTED, 0) / c1_with_evidence if c1_with_evidence else 0.0),
             "false_positive_rate_c2": c2_verdicts.get(CONTRADICTED, 0) / n if n else 0.0,
             "correction_triggers": triggers,
+            "correction_attempts": correction_attempts,
             "correction_statuses": dict(corr_status),
+            "corrections_shipped_success": corr_status.get("corrected", 0),
+            "correction_failed": corr_status.get("correction_failed", 0),
+            "correction_scope_violation": corr_status.get("correction_scope_violation", 0),
             "reverification_verdicts": dict(reverif),
             "unsafe_corrections_shipped": unsafe_shipped,
+            "unflagged_claim_checked": unflagged_checked,
+            "unflagged_claim_preserved": unflagged_preserved,
             "correction_ran": args.with_correction,
+            "runtime_seconds_total_arm": arm_elapsed,
+            "runtime_seconds_verification": verification_seconds,
+            "runtime_seconds_correction": correction_seconds,
+            # Cumulative process-wide peak since the last reset_peak_memory_stats
+            # (done once, before model loading) — NOT exclusive to this arm alone,
+            # since both models stay resident across both arms in one process.
+            "peak_vram_mib_cumulative": arm_peak_vram_mib,
         }
-        print(f"[{framing}] c1={dict(c1_verdicts)} c2={dict(c2_verdicts)} triggers={triggers}",
-              flush=True)
+        print(f"[{framing}] c1={dict(c1_verdicts)} c2={dict(c2_verdicts)} triggers={triggers} "
+              f"elapsed={arm_elapsed:.1f}s peak_vram={arm_peak_vram_mib}MiB", flush=True)
 
     # ---- validity gate: bare arm must reproduce the committed run -----------
     committed = outputs / "run_synthetic_stress.jsonl"
@@ -304,6 +352,12 @@ def main() -> int:
               f"sub_reason mismatches {len(sub_mismatch)} "
               f"(max confidence drift {max(drifts) if drifts else 0:.6f})", flush=True)
 
+    overall_peak_vram_mib = None
+    if vram_available:
+        import torch
+        torch.cuda.synchronize()
+        overall_peak_vram_mib = torch.cuda.max_memory_allocated() // (1024 * 1024)
+
     result = {
         "experiment": "premise_framing_ablation_synthetic",
         "data": "SYNTHETIC — deliberately corrupted statutory claims, not natural NyayaRAG",
@@ -315,13 +369,27 @@ def main() -> int:
         "seed": config["seed"],
         "bare_arm_reproduction": reproduction,
         "per_framing": per_framing,
+        # True process-wide peak across both arms (models loaded once, resident
+        # for both). Per-arm peak_vram_mib_cumulative above is a checkpoint of
+        # this same running counter, not an exclusive-to-that-arm figure.
+        "overall_peak_vram_mib": overall_peak_vram_mib,
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
     (outputs / f"{args.out_prefix}_metrics.json").write_text(
         json.dumps(result, indent=2), encoding="utf-8")
+    # Separate per-arm results files, as well as the combined file (kept for
+    # backward compatibility with the bare-arm reproduction gate above, which
+    # reads across both arms' rows).
     with (outputs / f"{args.out_prefix}_results.jsonl").open("w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    for framing in (PREMISE_FRAMING_BARE, PREMISE_FRAMING_LABELED):
+        framing_rows = [r for r in rows if r["framing"] == framing]
+        with (outputs / f"{args.out_prefix}_{framing}_results.jsonl").open(
+            "w", encoding="utf-8"
+        ) as f:
+            for r in framing_rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
     b, l = per_framing[PREMISE_FRAMING_BARE], per_framing[PREMISE_FRAMING_LABELED]
     print("\n" + "=" * 68)
@@ -336,7 +404,9 @@ def main() -> int:
           f"{b['false_positive_rate_c2']:>11.1%}{l['false_positive_rate_c2']:>14.1%}")
     print(f"{'correction triggers':<40}{b['correction_triggers']:>12}{l['correction_triggers']:>14}")
     if args.with_correction:
-        print(f"{'corrections shipped':<40}"
+        print(f"{'correction attempts':<40}"
+              f"{b['correction_attempts']:>12}{l['correction_attempts']:>14}")
+        print(f"{'corrections shipped (SUCCESS)':<40}"
               f"{b['correction_statuses'].get('corrected', 0):>12}"
               f"{l['correction_statuses'].get('corrected', 0):>14}")
         print(f"{'correction_failed':<40}"
@@ -347,11 +417,20 @@ def main() -> int:
               f"{l['correction_statuses'].get('correction_scope_violation', 0):>14}")
         print(f"{'unsafe corrections shipped':<40}"
               f"{b['unsafe_corrections_shipped']:>12}{l['unsafe_corrections_shipped']:>14}")
+        print(f"{'unflagged-claim preserved/checked':<40}"
+              f"{str(b['unflagged_claim_preserved'])+'/'+str(b['unflagged_claim_checked']):>12}"
+              f"{str(l['unflagged_claim_preserved'])+'/'+str(l['unflagged_claim_checked']):>14}")
+        print(f"{'runtime seconds (arm total)':<40}"
+              f"{b['runtime_seconds_total_arm']:>12.1f}{l['runtime_seconds_total_arm']:>14.1f}")
+        print(f"{'peak VRAM MiB (cumulative)':<40}"
+              f"{str(b['peak_vram_mib_cumulative']):>12}{str(l['peak_vram_mib_cumulative']):>14}")
     else:
         print("\ncorrection metrics NOT measured (requires --with-correction on a CUDA machine)")
     print("=" * 68)
     print(f"\nWrote {outputs / (args.out_prefix + '_metrics.json')}")
-    print(f"Wrote {outputs / (args.out_prefix + '_results.jsonl')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_results.jsonl')} (combined)")
+    print(f"Wrote {outputs / (args.out_prefix + '_bare_results.jsonl')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_labeled_results.jsonl')}")
 
     if reproduction.get("checked") and not reproduction.get("match"):
         print("\nERROR: bare arm did not reproduce the committed synthetic run; "

@@ -1,0 +1,63 @@
+{
+  "experiment": "natural_candidates_50_gpu_bare_vs_labeled",
+  "data": "50 deterministically-selected, NEVER-before-evaluated NyayaRAG cases (outputs/natural_candidate_selected_ids_50.json) \u2014 genuine fresh Qwen generation, once per case, shared across both framing arms; genuine DeBERTa verification and Qwen correction per arm.",
+  "n_cases": 50,
+  "seed": 42,
+  "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+  "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "per_framing": {
+    "bare": {
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_claims_evidence_matched": 116,
+      "verdict_counts": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 113,
+        "ENTAILED": 2,
+        "CONTRADICTED": 1
+      },
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 3,
+      "correction_scope_violation": 2,
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 28,
+      "unflagged_claim_preserved": 20
+    },
+    "labeled": {
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_claims_evidence_matched": 116,
+      "verdict_counts": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 102,
+        "CONTRADICTED": 3,
+        "ENTAILED": 11
+      },
+      "correction_triggers": 10,
+      "correction_attempts": 10,
+      "correction_statuses": {
+        "correction_failed": 7,
+        "correction_scope_violation": 3
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 7,
+      "correction_scope_violation": 3,
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 68,
+      "unflagged_claim_preserved": 54
+    }
+  },
+  "n_claims_shared_generation": 236,
+  "n_claims_evidence_matched_shared_generation": 116,
+  "runtime_seconds_total": 3453.930493593216,
+  "runtime_seconds_generation": 2607.2684831619263,
+  "peak_vram_mib": 7566,
+  "timestamp": "2026-08-26T18:57:09.563812+00:00"
+}

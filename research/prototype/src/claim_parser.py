@@ -46,13 +46,30 @@ _NUMBER_LIST_PATTERN = (
     rf"(?:\s*,?\s*(?:and|&)\s*{_NUMBER_ITEM_PATTERN})?"
 )
 
+# Optional trailing "Part <roman-numeral>" annotation directly after a
+# provision number ("Section 304, Part II of the Indian Penal Code") — a
+# standard Indian legal-citation idiom for a section that itself has
+# distinct numbered/lettered "Parts" (e.g. IPC s.304 Part I / Part II).
+# Consumed here (rather than left for the act-name capture) so it never
+# leaks into the act clause — without this, "Part" is Title-Case and
+# satisfies _BARE_ACT_MENTION_RE's own first-word rule, so "Part II of the
+# Indian Penal Code" was being captured as if it were the ACT's own name
+# (found via real natural-data audit, document 1991_110: the Part-qualified
+# citation's own act came back unresolved, and a later bare "Section 34" in
+# the same sentence inherited the polluted "part ii of the indian penal
+# code" pseudo-act instead of the real IPC).
+_PART_QUALIFIER_PATTERN = r"(?:\s*,?\s*Part\s+[IVXLC]+[A-Za-z]?)?"
+
 CITATION_REGEX = re.compile(
     rf"(?P<keyword>{_KEYWORD_PATTERN})\s+"
     rf"(?P<numbers>{_NUMBER_LIST_PATTERN})"
+    rf"(?P<part>{_PART_QUALIFIER_PATTERN})"
     r"\s+(?:in|of)\s+"
     r"(?P<act>.+?)(?=[.;]|$)",
     re.IGNORECASE,
 )
+
+_PART_QUALIFIER_RE = re.compile(r"Part\s+([IVXLC]+[A-Za-z]?)", re.IGNORECASE)
 
 # Citations the generator also naturally produces but that never state an
 # "in X"/"of X" act clause of their own — parenthetical shorthand like
@@ -180,7 +197,7 @@ _ACT_CONTINUATION_VERBS = (
     "prescribes", "states", "provides", "requires", "establishes",
     "outlines", "guarantees", "protects", "empowers", "mandates",
     "defines", "deals", "addresses", "governs", "allows", "permits",
-    "grants", "declares", "penalizes", "punishes", "applies",
+    "grants", "declares", "penalizes", "punishes", "applies", "pertains",
     # ... and their base/plural forms (a citation LIST as subject, e.g.
     # "Sections 25 and 27 of the Arms Act require ..." — plural subject
     # agreement, not a typo). Missing these left the act-name capture
@@ -188,7 +205,14 @@ _ACT_CONTINUATION_VERBS = (
     "prescribe", "state", "provide", "require", "establish",
     "outline", "guarantee", "protect", "empower", "mandate",
     "define", "deal", "address", "govern", "allow", "permit",
-    "grant", "declare", "penalize", "punish", "apply",
+    "grant", "declare", "penalize", "punish", "apply", "pertain",
+    # ... and copula forms, for phrasing like "the Evidence Act is
+    # applicable, which prescribes ..." where the continuation is a
+    # predicate adjective/clause rather than one of the verbs above. Found
+    # via NO_EVIDENCE root-cause diagnosis on real natural output (3 real
+    # occurrences, act_raw capturing "...the Evidence Act is applicable"
+    # instead of stopping at "the Evidence Act").
+    "is", "are", "was", "were",
 )
 _VERB_TRIM_RE = re.compile(
     r"^(.*?)\s+(?:" + "|".join(_ACT_CONTINUATION_VERBS) + r")\b",
@@ -260,6 +284,14 @@ _KNOWN_ACT_ALIASES = {
     "id act": "industrial disputes act 1947",
     "industrial disputes act": "industrial disputes act 1947",
     "constitution": "constitution of india",
+    # "Evidence Act" (no "Indian" prefix) is the common short form — added
+    # via the same NO_EVIDENCE root-cause diagnosis as the copula-verb fix
+    # above (3 real occurrences: fuzzy matching alone falls to 0.5 overlap
+    # here because "indian" is a significant word in the corpus's full
+    # name but absent from the common short form, unlike "IPC"/"the Indian
+    # Penal Code" where the shared "indian"+"penal"+"code" tokens already
+    # clear the 0.8 threshold on their own).
+    "evidence act": "indian evidence act 1872",
 }
 
 
@@ -315,6 +347,39 @@ class Claim:
     claim_id: str
     claim_text: str
     citation_extracted: Optional[ExtractedCitation] = field(default=None)
+    # Additive, opt-in field — ALWAYS populated (falls back to claim_text
+    # when a safe split isn't possible), so nothing reading claim_text
+    # changes behaviour. See _parallel_clause_for_citation()/module
+    # docstring below ("Atomic assertion splitting") for what this is and
+    # is not: a conservative, structural improvement to VERIFICATION
+    # HYPOTHESIS PRECISION for a specific bundled-sentence shape, not a
+    # general clause-splitting NLP feature, and not wired into
+    # apply_verification() as the default hypothesis source — that
+    # remains claim_text unless a caller opts in.
+    assertion_text: str = field(default="")
+    # Additive, opt-in, structured generalization of assertion_text: a LIST
+    # of independently-required VERBATIM fragments (each a contiguous
+    # substring of claim_text — never concatenated, reordered, or
+    # synthesized into new prose) that must ALL still be present for this
+    # claim to be considered unmodified. For every claim assertion_text
+    # already resolves (single clause/gloss, or the unresolved full
+    # sentence), this is just `[assertion_text]` — a degenerate one-element
+    # case, so it changes nothing by itself. It exists specifically for
+    # patterns where a citation's relevant content is not one contiguous
+    # span at all — e.g. a "respectively" list, where a citation's own
+    # provision number lives in one place and its paired description lives
+    # elsewhere in the same sentence (see `_assign_respectively_spans`)
+    # — so representing "this claim's content" ever required inventing a
+    # combined sentence. A list of disjoint required spans instead proves
+    # nothing was fabricated: every element is checkable, individually, as
+    # a `in` substring test against the model's own original text.
+    assertion_spans: list = field(default_factory=list)
+
+    def __post_init__(self):
+        if not self.assertion_text:
+            self.assertion_text = self.claim_text
+        if not self.assertion_spans:
+            self.assertion_spans = [self.assertion_text]
 
 
 def split_sentences(text: str) -> list[str]:
@@ -345,11 +410,13 @@ def _citations_from_numbers(ptype: str, numbers_text: str, act_raw_clean: Option
 
 
 def _iter_full_form_matches(sentence: str):
-    """Yield (start, end, ptype, numbers_text, act_raw_clean, act_norm) for
-    every CITATION_REGEX ("<keyword> <numbers> in/of <act>") match in
-    `sentence`, where (start, end) is the span this citation actually
-    OCCUPIES — i.e. up through the TRIMMED act name, not the full greedy
-    regex match.
+    """Yield (start, end, ptype, numbers_text, part_designation,
+    act_raw_clean, act_norm) for every CITATION_REGEX ("<keyword> <numbers>
+    [, Part <roman>] in/of <act>") match in `sentence`, where (start, end)
+    is the span this citation actually OCCUPIES — i.e. up through the
+    TRIMMED act name, not the full greedy regex match. part_designation is
+    "Part <roman>" (e.g. "Part II") when this citation carried that
+    qualifier, else None.
 
     This is the fix for run-on multi-act sentences (e.g. "... Sections
     120-B, 471, and 477 of the Indian Penal Code and Section 5(2) ... of
@@ -370,8 +437,14 @@ def _iter_full_form_matches(sentence: str):
         trimmed_act, consumed_len = _trim_act_name(m.group("act"))
         consumed_abs_end = act_group_start + consumed_len
         ptype = _normalize_provision_type(m.group("keyword"))
+        part_group = m.group("part")
+        part_designation = None
+        if part_group:
+            part_m = _PART_QUALIFIER_RE.search(part_group)
+            if part_m:
+                part_designation = f"Part {part_m.group(1).upper()}"
         yield (
-            m.start(), consumed_abs_end, ptype, m.group("numbers"),
+            m.start(), consumed_abs_end, ptype, m.group("numbers"), part_designation,
             trimmed_act, normalize_act(trimmed_act),
         )
         # Continue from the end of the TRIMMED act, not m.end(), so a
@@ -386,7 +459,7 @@ def _find_full_form_acts(sentence: str) -> list[tuple[str, str, int, int]]:
     the span this act clause occupies (see _iter_full_form_matches)."""
     return [
         (act_raw, act_norm, start, end)
-        for start, end, _ptype, _numbers, act_raw, act_norm in _iter_full_form_matches(sentence)
+        for start, end, _ptype, _numbers, _part, act_raw, act_norm in _iter_full_form_matches(sentence)
     ]
 
 
@@ -455,9 +528,17 @@ def extract_citations(sentence: str) -> list[ExtractedCitation]:
     results: list[tuple[int, ExtractedCitation]] = []
     full_spans: list[tuple[int, int]] = []
 
-    for start, end, ptype, numbers_text, act_raw_clean, act_norm in _iter_full_form_matches(sentence):
+    for start, end, ptype, numbers_text, part_designation, act_raw_clean, act_norm in _iter_full_form_matches(sentence):
         full_spans.append((start, end))
-        for citation in _citations_from_numbers(ptype, numbers_text, act_raw_clean, act_norm):
+        citations = _citations_from_numbers(ptype, numbers_text, act_raw_clean, act_norm)
+        # Only attach a "Part <roman>" qualifier when it unambiguously
+        # belongs to a single provision number — a bundled list ("Sections
+        # 302, 304, Part II of the IPC") never lets the qualifier be safely
+        # attributed to one specific number, so it is dropped rather than
+        # guessed at.
+        if part_designation and len(citations) == 1 and citations[0].subsection is None:
+            citations[0].subsection = part_designation
+        for citation in citations:
             results.append((start, citation))
 
     for m in BARE_CITATION_REGEX.finditer(sentence):
@@ -501,6 +582,336 @@ def extract_citation(sentence: str) -> Optional[ExtractedCitation]:
     return citations[0] if citations else None
 
 
+_PARALLEL_CLAUSE_SPLIT_RE = re.compile(r"\s*,?\s+while\s+", re.IGNORECASE)
+
+
+def _split_into_parallel_clauses(sentence: str) -> list[str]:
+    """Conservative, single-purpose split of a bundled multi-citation
+    sentence on ' while ' into (at most) two candidate parallel clauses —
+    e.g. "Section 302 prescribes the punishment for murder, while Section
+    34 deals with criminal liability..." -> two clauses, one per citation.
+
+    Deliberately narrow: only the single, unambiguous "X while Y" shape is
+    handled. A sentence with zero or more-than-one "while" returns itself
+    unsplit (safe no-op) rather than guessing a clause boundary — this is
+    a precision aid for one common, real natural-data pattern (found via
+    the claim-granularity survey for this task: 15/33 bundled-citation
+    sentences in the pooled n=30 + targeted n=11 set use this exact
+    connector), not a general sentence-clause parser."""
+    parts = _PARALLEL_CLAUSE_SPLIT_RE.split(sentence)
+    if len(parts) != 2:
+        return [sentence]
+    return [p.strip() for p in parts]
+
+
+def _citation_mentioned_in(clause: str, citation: ExtractedCitation) -> bool:
+    """True if `clause`, independently re-parsed with this module's own
+    `extract_citations()`, contains a citation matching this one's
+    (provision_type, provision_number) — used to decide which clause of a
+    split a given citation's assertion actually lives in. Reuses the real
+    citation grammar (not a narrower ad-hoc regex) specifically so a
+    number that is NOT immediately adjacent to its keyword — e.g. "482" in
+    "Sections 3 and 482" — is still recognized; a naive adjacency regex
+    would only ever match the FIRST number in such a list."""
+    for c in extract_citations(clause):
+        if c.provision_type == citation.provision_type and c.provision_number == citation.provision_number:
+            return True
+    return False
+
+
+_SEMICOLON_SPLIT_RE = re.compile(r"\s*;\s*")
+
+
+def _split_by_semicolons(sentence: str) -> list[str]:
+    """Split on ';' — a much stronger, less ambiguous clause boundary than
+    'while' (semicolons are used almost exclusively to separate distinct,
+    self-contained items in a list, e.g. "...before the Special Judge;
+    Section 4 of POTA, which provides...; and Sections 3 and 482 of
+    CrPC..."), so ANY number of semicolon-delimited parts is accepted (not
+    capped at 2 like the while-split) — each part is still only assigned
+    to a citation via the same unambiguous-single-mention rule below, so
+    an over-split still cannot mis-assign anything, only decline to."""
+    parts = [p.strip() for p in _SEMICOLON_SPLIT_RE.split(sentence) if p.strip()]
+    return parts if len(parts) >= 2 else [sentence]
+
+
+# Splits ONLY right before a comma (optionally "and") that immediately
+# precedes a NEW citation keyword — e.g. "Section 148 mandates X, section
+# 304 deals with Y, and section 149 provides Z" -> 3 clauses, one per
+# citation group. Deliberately narrower than a generic comma/and split
+# (which would also fragment on internal "and"s inside one clause, e.g.
+# "304 (Part-I) and 304 (Part-II)"): the citation-keyword lookahead is the
+# actual structural signal for "a new per-citation clause starts here" in
+# this generated prose, so only genuine clause boundaries are cut.
+_CLAUSE_BOUNDARY_RE = re.compile(
+    rf",\s*(?:and\s+)?(?=(?:{_KEYWORD_PATTERN})\s)", re.IGNORECASE
+)
+
+
+def _split_by_citation_keyword_boundaries(sentence: str) -> list[str]:
+    parts = [p.strip() for p in _CLAUSE_BOUNDARY_RE.split(sentence) if p.strip()]
+    return parts if len(parts) >= 2 else [sentence]
+
+
+def _assign_from_clauses(sentence_claims: list[Claim], clauses: list[str]) -> None:
+    """Shared assignment rule for both the semicolon and while splitters:
+    a citation gets a clause's text as its assertion_text only if its own
+    "<keyword> <number>" mention appears in EXACTLY ONE of the clauses.
+    Ambiguous (multiple clauses) or absent (no clause) citations are left
+    untouched by the caller (still carrying whatever assertion_text they
+    already had — the full sentence, by default)."""
+    for claim in sentence_claims:
+        if claim.assertion_text != claim.claim_text:
+            continue  # already resolved by an earlier, more specific pass
+        citation = claim.citation_extracted
+        if citation is None:
+            continue
+        matches = [c for c in clauses if _citation_mentioned_in(c, citation)]
+        if len(matches) == 1:
+            claim.assertion_text = matches[0]
+        # else: ambiguous (in >=2 clauses) or unmentioned (in 0) — leave
+        # as-is; never guess.
+
+
+_PARENTHETICAL_GLOSS_RE_TEMPLATE = r"\b{number}\b\s*(\([^)]{{1,80}}\))"
+
+
+def _parenthetical_gloss_span(sentence: str, citation: ExtractedCitation) -> Optional[str]:
+    """Verbatim-only, mechanical extraction for lists like "Sections 302
+    (murder), 34 (common intention), 323 (voluntarily causing hurt), ...":
+    each provision number is immediately followed by its own short
+    parenthetical gloss, but (unlike the first item, which reads "Sections
+    302 (murder)") the keyword is usually NOT repeated before each later
+    number — only the number-plus-gloss pair is. Matching on the bare
+    number is therefore deliberately looser than
+    `_citation_mentioned_in()`, so it is used ONLY as a last-resort pass
+    (see `_assign_assertion_texts`) and ONLY when this exact number is
+    followed by a parenthetical exactly once in the whole sentence — if
+    the same bare number appears with a parenthetical more than once (or
+    not at all), this returns None rather than guess. The returned span is
+    a CONTIGUOUS VERBATIM substring of the original sentence — nothing is
+    ever synthesized or reworded."""
+    pattern = re.compile(
+        _PARENTHETICAL_GLOSS_RE_TEMPLATE.format(number=re.escape(citation.provision_number))
+    )
+    matches = list(pattern.finditer(sentence))
+    if len(matches) != 1:
+        return None
+    m = matches[0]
+    # Include the citation's own keyword immediately before the number when
+    # it is right there (e.g. "Sections 302 (murder)"); otherwise the span
+    # is just "<number> (<gloss>)" as written (e.g. the bare "34
+    # (common intention)" items later in the same list).
+    start = m.start()
+    prefix_pattern = re.compile(
+        rf"\b{re.escape(citation.provision_type)}s?\s+$", re.IGNORECASE
+    )
+    prefix_match = prefix_pattern.search(sentence[:start])
+    if prefix_match:
+        start = prefix_match.start()
+    return sentence[start:m.end()].strip().rstrip(",")
+
+
+def _assign_assertion_texts(sentence: str, sentence_claims: list[Claim]) -> None:
+    """Mutates each Claim's assertion_text in place. For a sentence with a
+    single citation, assertion_text is just the sentence itself (no split
+    needed — set by Claim.__post_init__'s default already). For a bundled
+    sentence, three conservative passes are tried IN ORDER, each only
+    filling in claims the previous pass left unresolved (still equal to
+    the full sentence); every pass only ever assigns a CONTIGUOUS VERBATIM
+    substring of the original sentence, never synthesizes new text:
+
+      1. Semicolon split (`_split_by_semicolons`) — any number of clauses.
+      2. ' while ' split (`_split_into_parallel_clauses`) — exactly two
+         clauses (unchanged from the original implementation).
+      3. Citation-keyword-boundary split
+         (`_split_by_citation_keyword_boundaries`) — a comma-separated list
+         of full clauses, each STARTING with its own citation mention
+         ("Section 148 mandates X, section 304 deals with Y, and section
+         149 provides Z") — distinct from pass 1 in that there is no
+         semicolon, and from pass 2 in that there is no "while"; the
+         boundary signal here is "a new citation keyword starts right
+         after this comma."
+      4. Parenthetical-gloss span (`_parenthetical_gloss_span`) — for a
+         citation still unresolved after 1-3, e.g. because it and its
+         sibling citations share one clause with no further separator
+         ("Sections 302 (murder), 34 (common intention), 323 (...), ...").
+
+    Any citation not resolved by any pass keeps the full sentence as its
+    assertion_text — exactly today's existing behaviour for every sentence
+    this doesn't apply to; never a regression, only a possible
+    improvement."""
+    if len(sentence_claims) < 2:
+        return  # single citation: default (full sentence) already correct
+
+    semi_clauses = _split_by_semicolons(sentence)
+    if len(semi_clauses) >= 2:
+        _assign_from_clauses(sentence_claims, semi_clauses)
+
+    while_clauses = _split_into_parallel_clauses(sentence)
+    if len(while_clauses) == 2:
+        _assign_from_clauses(sentence_claims, while_clauses)
+
+    keyword_boundary_clauses = _split_by_citation_keyword_boundaries(sentence)
+    if len(keyword_boundary_clauses) >= 2:
+        _assign_from_clauses(sentence_claims, keyword_boundary_clauses)
+
+    for claim in sentence_claims:
+        if claim.assertion_text != claim.claim_text:
+            continue
+        citation = claim.citation_extracted
+        if citation is None:
+            continue
+        span = _parenthetical_gloss_span(sentence, citation)
+        if span:
+            claim.assertion_text = span
+
+    # assertion_spans defaults to [assertion_text] at Claim construction
+    # time (Claim.__post_init__), which runs BEFORE any of the three
+    # passes above narrow assertion_text — so it must be re-synced here,
+    # after assertion_text reaches its final value for this function, or
+    # assertion_spans would silently keep pointing at the original (wider)
+    # claim_text for every claim these passes resolved.
+    for claim in sentence_claims:
+        claim.assertion_spans = [claim.assertion_text]
+
+
+# ---------------------------------------------------------------------------
+# "Respectively" pattern — structured, multi-fragment assertion_spans.
+#
+# Real generated shape #1 (citation-list, THEN "respectively <verb> list"):
+#   "...sections 302, 149, 323, and 34 of the IPC, 1860, which respectively
+#   deal with murder, criminal conspiracy, voluntarily causing hurt, and
+#   abetting the commission of a non-cognizable offense."
+#
+# Real shape #2 (citation-list, "which <description list>, respectively."):
+#   "Sections 300 and 324 of the IPC, which require that the act must be
+#   done with the intention to cause death or injury, and the act must
+#   result in causing death or injury, respectively."
+#
+# Both promise the SAME thing: the Nth citation (in the order it was
+# written) pairs with the Nth item in a trailing description list. This is
+# never resolved into one combined sentence per citation — see the Claim.
+# assertion_spans docstring — instead each citation gets TWO independently
+# checkable, purely verbatim fragments: its own bare provision number
+# (protects against a sibling citation's number being silently altered)
+# and its own description item (a genuine, disjoint substring of the
+# sentence — no reordering, no concatenation, no synthesis).
+# ---------------------------------------------------------------------------
+
+_RESPECTIVELY_RE = re.compile(r"\brespectively\b", re.IGNORECASE)
+_WHICH_RE = re.compile(r"\bwhich\b", re.IGNORECASE)
+
+# A short, closed list of literal verb-phrases this generated prose is
+# observed to use directly after "respectively" — stripped from the FRONT
+# of an items-zone if present, purely for readability of the extracted
+# fragment (it is still a verbatim slice either way; this does not change
+# whether the result is "fabricated," only how much boilerplate it drags
+# in). Absence of a match here changes nothing except leaving a slightly
+# noisier (but still fully verbatim) fragment.
+_KNOWN_VERB_PREFIX_RE = re.compile(
+    r"^(?:deal(?:s)?\s+with|pertain(?:s)?\s+to|relate(?:s)?\s+to|address(?:es)?|"
+    r"govern(?:s)?|concern(?:s)?|cover(?:s)?|involve(?:s)?|require(?:s)?)\s+",
+    re.IGNORECASE,
+)
+
+# Splits a comma/and-delimited prose list ("murder, criminal conspiracy,
+# voluntarily causing hurt, and abetting an offense") into items, handling
+# the Oxford comma ("X, and Y") as a single boundary rather than two.
+# Longest alternative tried first so ", and " is not first cut at just the
+# comma. Every returned item is a genuine slice of the input string.
+_LIST_ITEM_SPLIT_RE = re.compile(r"\s*,\s+and\s+|\s*,\s*|\s+and\s+")
+
+
+def _split_list_items(text: str) -> list[str]:
+    return [p.strip() for p in _LIST_ITEM_SPLIT_RE.split(text) if p.strip()]
+
+
+def _respectively_items_zone(sentence: str, resp_span: tuple[int, int]) -> Optional[str]:
+    """Locate the verbatim substring most likely to hold the per-citation
+    description list, using "which" as an anchor (every real example
+    observed uses this exact relative-pronoun). Returns None (decline) if
+    "which" doesn't appear exactly once, or if neither candidate zone has
+    enough content to plausibly be a list — never guesses between two
+    ambiguous candidates."""
+    which_matches = list(_WHICH_RE.finditer(sentence))
+    if len(which_matches) != 1:
+        return None
+    which_end = which_matches[0].end()
+    resp_start, resp_end = resp_span
+
+    zone_between = sentence[which_end:resp_start].strip(" ,.;")
+    zone_after = sentence[resp_end:].strip(" ,.;")
+
+    # Shape #2: "which <items>, respectively" — the real list sits between
+    # "which" and "respectively". Preferred when substantial.
+    if len(zone_between.split()) >= 3:
+        return zone_between
+    # Shape #1: "which respectively <verb> <items>" — "which" and
+    # "respectively" are adjacent, so the list is AFTER "respectively"
+    # instead.
+    if len(zone_after.split()) >= 3:
+        prefix_match = _KNOWN_VERB_PREFIX_RE.match(zone_after)
+        return zone_after[prefix_match.end():] if prefix_match else zone_after
+    return None
+
+
+def _bare_number_span(sentence: str, citation: ExtractedCitation) -> Optional[str]:
+    """Verbatim search for this citation's own provision number as a
+    standalone token anywhere in the sentence. Deliberately permissive
+    about WHERE it appears (it may be shared with sibling citations in one
+    list, e.g. "Sections 302, 149, ...") — its only job is to make sure
+    THIS number does not silently vanish or change value between the
+    original and corrected text; it is one of two fragments required for a
+    respectively-resolved claim, not the whole story on its own."""
+    m = re.search(rf"\b{re.escape(citation.provision_number)}\b", sentence)
+    return m.group(0) if m else None
+
+
+def _assign_respectively_spans(sentence: str, sentence_claims: list[Claim]) -> None:
+    """Mutates assertion_spans (NOT assertion_text — see the module-level
+    comment above) for citations resolvable via the "respectively" pattern.
+    Only ever acts on claims _assign_assertion_texts left fully unresolved
+    (assertion_text == claim_text), and only when EVERY citation in the
+    sentence can be assigned exactly one description item, in the exact
+    order both were written — the standard, and only, correct reading of
+    "respectively." Any ambiguity (more than one "respectively", item
+    count not matching citation count, no citations at all) leaves every
+    claim's assertion_spans at its existing (safe, already-set) default —
+    this function only ever narrows, never widens or guesses."""
+    if len(sentence_claims) < 2:
+        return
+    resp_matches = list(_RESPECTIVELY_RE.finditer(sentence))
+    if len(resp_matches) != 1:
+        return  # zero or ambiguous multiple "respectively" -> decline
+
+    unresolved = [c for c in sentence_claims if c.assertion_text == c.claim_text]
+    if len(unresolved) != len(sentence_claims):
+        # Some citations in this sentence were already atomized by another
+        # pass (semicolon/while/parenthetical) — this sentence does not
+        # match the clean "every citation is part of one respectively list"
+        # shape this function requires; decline rather than partially
+        # apply against citations another mechanism already reasoned about.
+        return
+
+    items_zone = _respectively_items_zone(sentence, resp_matches[0].span())
+    if items_zone is None:
+        return
+    items = _split_list_items(items_zone)
+    if len(items) != len(sentence_claims):
+        return  # count mismatch -> mapping cannot be proven; fail closed
+
+    for claim, item in zip(sentence_claims, items):
+        citation = claim.citation_extracted
+        if citation is None:
+            continue
+        number_span = _bare_number_span(sentence, citation)
+        fragments = [f for f in (number_span, item) if f]
+        if not fragments:
+            continue
+        claim.assertion_spans = fragments
+
+
 def extract_claims(generated_text: str) -> list[Claim]:
     """Split into sentences; keep only sentences with an extractable
     citation. A sentence naming several provisions of the same act (e.g.
@@ -527,14 +938,17 @@ def extract_claims(generated_text: str) -> list[Claim]:
     Otherwise the citation is left unresolved. Never invented/guessed."""
     claims: list[Claim] = []
     for sentence in split_sentences(generated_text):
+        sentence_claims: list[Claim] = []
         for citation in extract_citations(sentence):
-            claims.append(
-                Claim(
-                    claim_id=f"c{len(claims) + 1}",
-                    claim_text=sentence,
-                    citation_extracted=citation,
-                )
+            claim = Claim(
+                claim_id=f"c{len(claims) + len(sentence_claims) + 1}",
+                claim_text=sentence,
+                citation_extracted=citation,
             )
+            sentence_claims.append(claim)
+        _assign_assertion_texts(sentence, sentence_claims)
+        _assign_respectively_spans(sentence, sentence_claims)
+        claims.extend(sentence_claims)
 
     resolved = [
         c.citation_extracted for c in claims

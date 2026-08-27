@@ -1,0 +1,117 @@
+{
+  "experiment": "final_gpu_validation_A_vs_B",
+  "data": "50 deterministically-selected, NEVER-before-evaluated NyayaRAG cases (outputs/natural_candidate_selected_ids_50_final_validation.json), disjoint from all 130 document_ids used in run_A_n30/run_natural_targeted/natural_candidates_50_gpu/natural_candidates_batch2_gpu. Genuine fresh Qwen generation (once per case, shared across arms); genuine DeBERTa verification and Qwen correction, run independently per arm against that arm's own evidence pool.",
+  "n_cases": 50,
+  "seed": 42,
+  "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+  "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "arm_definitions": {
+    "A": {
+      "label": "baseline (production defaults, unmodified)",
+      "use_evidence_v1": false,
+      "premise_framing": "bare",
+      "atomic_scope_check": false,
+      "narrow_reverification_hypothesis": false,
+      "confidence_threshold": 0.7,
+      "evidence_pool_size": 59
+    },
+    "B": {
+      "label": "improved (all validated improvements enabled)",
+      "use_evidence_v1": true,
+      "premise_framing": "bare",
+      "atomic_scope_check": "assertion_spans",
+      "narrow_reverification_hypothesis": true,
+      "confidence_threshold": 0.7,
+      "evidence_pool_size": 137
+    }
+  },
+  "per_arm": {
+    "A": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_claims_evidence_matched": 132,
+      "evidence_match_method_counts": {
+        "exact_normalized": 130,
+        "no_evidence": 77,
+        "fuzzy": 2
+      },
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 129,
+        "NO_EVIDENCE": 77,
+        "CONTRADICTED": 3
+      },
+      "confidence_summary": {
+        "n": 132,
+        "mean": 0.9603012547348485,
+        "median": 0.9892578125,
+        "min": 0.52099609375,
+        "max": 0.9990234375
+      },
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 3,
+      "correction_scope_violation": 2,
+      "correction_sibling_regression": 0,
+      "failure_categories": {
+        "reverification_not_entailed": 3,
+        "correction_scope_violation": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claimtext_preserved": 16,
+      "unflagged_assertion_preserved": 18,
+      "unflagged_claim_checked": 21,
+      "runtime_seconds_arm_only": 190.95
+    },
+    "B": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_claims_evidence_matched": 147,
+      "evidence_match_method_counts": {
+        "exact_normalized": 145,
+        "no_evidence": 62,
+        "fuzzy": 2
+      },
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 144,
+        "NO_EVIDENCE": 62,
+        "CONTRADICTED": 3
+      },
+      "confidence_summary": {
+        "n": 147,
+        "mean": 0.9618974542942177,
+        "median": 0.9892578125,
+        "min": 0.52099609375,
+        "max": 0.9990234375
+      },
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 3,
+      "correction_scope_violation": 2,
+      "correction_sibling_regression": 0,
+      "failure_categories": {
+        "reverification_not_entailed": 3,
+        "correction_scope_violation": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claimtext_preserved": 16,
+      "unflagged_assertion_preserved": 18,
+      "unflagged_claim_checked": 21,
+      "runtime_seconds_arm_only": 187.16
+    }
+  },
+  "n_claims_shared_generation": 209,
+  "runtime_seconds_total": 2040.9377949237823,
+  "runtime_seconds_generation": 1662.8286445140839,
+  "peak_vram_mib": 7547,
+  "timestamp": "2026-08-27T06:28:50.739538+00:00"
+}

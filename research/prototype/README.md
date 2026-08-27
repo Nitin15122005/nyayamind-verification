@@ -1,5 +1,10 @@
 # Prototype v0 — Statutory-Claim Verification + Selective Correction
 
+> For exact setup/run/test commands, GPU-vs-CPU requirements, and where final
+> artifacts land, see **`REPRODUCIBILITY.md`**. For the final production
+> configuration and why, see **`FINAL_PRODUCTION_CONFIG.md`** (repo root).
+> For the consolidated final results, see **`outputs/final_research_results.md`**.
+
 Field-level verification and selective correction for the "Statutory
 Grounding" field of a generated Indian court judgment summary: generate the
 field, extract its statutory claims, match each claim against independently
@@ -9,6 +14,11 @@ C only — regenerate just the claims flagged as unsupported or contradicted.
 Nothing in `config/prototype.yaml` is a tuned/calibrated value except where
 the file marks it "fixed by design" — thresholds and generation params are
 v0 defaults from the approved design doc, not results of a calibration run.
+`premise_framing`, `use_evidence_v1`, `correction.atomic_scope_check`, and
+`correction.narrow_reverification_hypothesis` are the exception: as of
+2026-08-27 their defaults were changed based on real experimental evidence
+— see `FINAL_PRODUCTION_CONFIG.md` (repo root) for the full decision record
+and `REPRODUCIBILITY.md` for exact commands to check or reproduce it.
 
 ## Architecture
 
@@ -107,15 +117,15 @@ directory it's invoked from.
 
 ## Known limitations
 
-- **NLI verdict ≠ legal correctness.** The verifier reports a small public NLI model's statistical confidence that the matched statute text entails/contradicts/is neutral toward the claim sentence — not a lawyer-verified legal-accuracy judgment. No gold evaluation of verifier accuracy has been run yet. This disclaimer is repeated in every output record's `verification.disclaimer` field.
-- **59-record evidence pool.** Coverage is the top-100-citation profile from the NyayaRAG corpus, filtered to audit-verified records. Most claims in an arbitrary case will resolve to `NO_EVIDENCE`; case selection (`select_cases_with_evidence_overlap`) filters to cases with ≥1 overlapping citation specifically to avoid trivial all-`NO_EVIDENCE` runs.
+- **NLI verdict ≠ legal correctness.** The verifier reports a small public NLI model's statistical confidence that the matched statute text entails/contradicts/is neutral toward the claim sentence — not a lawyer-verified legal-accuracy judgment. **No lawyer/professional-legal ground-truth evaluation of verifier accuracy has been run as of 2026-08-27** — an independent Claude-generated "assumption" labeling pass exists (`outputs/assumption_annotation.jsonl`) purely as a provisional stand-in and is explicitly marked, throughout every report that uses it, as NOT lawyer-verified and not citable as validated accuracy. This disclaimer is repeated in every output record's `verification.disclaimer` field. See `outputs/final_limitations_and_future_scope.md` for the full, current statement of what is and isn't validated.
+- **59-record (v0-only) or 136-record (v0+v1, production default since 2026-08-27) evidence pool**, depending on `use_evidence_v1`. Coverage is the top-~140-citation profile from the NyayaRAG corpus, filtered to independently audit-verified records (v0: `research/data/evidence/README.md`; v1 supplement: `research/data/evidence/README_v1.md`, including a 2026-08-27 independent re-audit). Most claims in an arbitrary case will still resolve to `NO_EVIDENCE`; case selection (`select_cases_with_evidence_overlap`) filters to cases with ≥1 overlapping citation specifically to avoid trivial all-`NO_EVIDENCE` runs.
 - **Pre-2024-07-01 "canonical" text for IPC/CrPC-heavy citations.** IPC and CrPC (41 of the top-100 citations) are nationally superseded by the Bharatiya Nyaya Sanhita / Bharatiya Nagarik Suraksha Sanhita as of 2024-07-01; canonical text here is the pre-repeal version. See `research/data/evidence/README.md`.
 - **One claim per sentence, first citation only.** A sentence with multiple citations is represented by its first citation only (documented simplification in `claim_parser.extract_citation`).
 - **First flagged claim only drives correction** (Mode C). If a field has more than one flagged claim, only the first one is corrected; the rest keep their original verdicts.
 - **Selective-correction scope is enforced programmatically, not just by prompt.** `pipeline._scope_violation()` checks that every unflagged claim's original sentence text still appears verbatim in the corrected paragraph; if the corrector alters an unflagged claim anyway, the run is marked `correction_scope_violation` and the corrected text is discarded (never shipped as `final_field`), while both texts are retained in the output record for inspection.
 - **`research/data/nyayarag/` was populated by copying files already extracted to local scratch space in an earlier session**, not by a fresh download performed as part of this fix. If those files are ever missing in a new environment, they must be re-obtained from `L-NLProc/NyayaRAG` (`3.CaseText_Statutes.zip`) before Mode A/B/C can run — `scripts/run_mvp.py --check` does not verify their presence (only the evidence files), so a real run is the first point that would surface a missing-file error.
-- **Hard-capped at `MAX_ALLOWED_CASES = 5`** cases per invocation of `scripts/run_mvp.py`, by design — not a performance limit, a "don't run the full dataset yet" guardrail until a deliberate decision to scale up.
-- **No real inference has been run against this prototype.** Everything above the mocked pipeline tests (`tests/test_pipeline_mock.py`) is unexercised — the `--check` command confirms imports/config/evidence-loading only; it loads no model.
+- **Hard-capped at `MAX_ALLOWED_CASES = 5`** cases per invocation of `scripts/run_mvp.py` itself, by design — not a performance limit, a "don't run the full dataset yet" guardrail on that specific entry point (dedicated experiment scripts such as `scripts/run_final_gpu_validation.py` are not subject to this cap and have been run at n=50-59 real GPU cases repeatedly — see `REPRODUCIBILITY.md` and `outputs/final_research_results.md`).
+- **Real inference has been run extensively as of 2026-08-27** — real Qwen2.5-7B generation, real DeBERTa verification, and real Qwen correction across ~180 distinct natural NyayaRAG cases and 59 synthetic stress cases (see `outputs/final_research_results.md` for the full, recomputed-from-raw-artifacts numbers). `run_mvp.py --check` itself still only confirms imports/config/evidence-loading and loads no model — that claim about `--check` specifically remains true; it is the broader "no real inference" claim that is now outdated and is corrected here.
 
 ## First run
 

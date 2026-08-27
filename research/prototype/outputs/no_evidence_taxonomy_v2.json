@@ -1,0 +1,2936 @@
+{
+  "n_claims": 588,
+  "n_matched": 390,
+  "n_no_citation": 0,
+  "n_no_evidence_with_citation": 198,
+  "taxonomy": {
+    "genuinely_absent_wrong_act_or_edition": 48,
+    "genuinely_absent_no_such_provision_any_act": 111,
+    "unresolved_act": 37,
+    "parser_or_matcher_defect_candidate": 2
+  },
+  "rows": [
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1992_534",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "506",
+        "subsection": null,
+        "act_raw": "the same code",
+        "act_norm": "same code"
+      },
+      "claim_text": "Section 506 of the same code deals with the offence of criminal intimidation.",
+      "best_overlap": 0.25,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 506 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1992_534",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "309",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The court also considered Section 309 of the Indian Penal Code, which pertains to attempts to commit suicide.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Regulation",
+        "provision_number": "15",
+        "subsection": "2",
+        "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+        "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Clause",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+        "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "120-B",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "477",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": "2",
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2007_1517",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "1",
+        "subsection": "d",
+        "act_raw": "the Prevention of Corruption Act, 1947",
+        "act_norm": "prevention of corruption act 1947"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and R",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1987_609",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Rule",
+        "provision_number": "4",
+        "subsection": "2",
+        "act_raw": "The Indian Forest Service (Recruitment) Rules, 1966",
+        "act_norm": "indian forest service rules 1966"
+      },
+      "claim_text": "The Indian Forest Service (Recruitment) Rules, 1966, specifically rule 4(2), govern the initial recruitment of officers to the IFS and require that such recruitment be conducted in a manner consistent",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1954_7",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "82",
+        "subsection": null,
+        "act_raw": "the Act",
+        "act_norm": "act"
+      },
+      "claim_text": "Section 82 of the Act mandates the inclusion of all candidates in the list of respondents in an election petition, and its non-compliance is not fatal to the maintainability of the petition unless suc",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1996_772",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of cer",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1996_772",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "Section 32 of the Indian Evidence Act allows the statement made by a deceased person regarding the cause of his death to be admissible as evidence in any proceeding in which such death is relevant.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1992_31",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "8",
+        "subsection": "2-A",
+        "act_raw": "the Central Sales Tax Act, 1956",
+        "act_norm": "central sales tax act 1956"
+      },
+      "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Ac",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1992_31",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": null,
+        "act_raw": "the Jammu Kashmir General Sales Tax Act, 1962",
+        "act_norm": "jammu kashmir general sales tax act 1962"
+      },
+      "claim_text": "The statutory grounding includes the Central Sales Tax Act, 1956, specifically Section 8(2-A), which provides for exemptions in respect of inter-state sales, and the Jammu Kashmir General Sales Tax Ac",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2005_128",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "341",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "The statutory grounding includes Article 341 of the Constitution of India, which mandates that the President may, with respect to any Union territory, specify the castes, races, or tribes, or parts of",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1982_43",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1982_43",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "claim_text": "The statutory grounding for this case includes the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961, specifically sections 21 and 22, which deal with the declaration of surplus land and ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1982_43",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1982_43",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Maharashtra Agricultural Lands (Ceiling on Holdings) Act, 1961",
+        "act_norm": "maharashtra agricultural lands act 1961"
+      },
+      "claim_text": "Section 21 mandates the publication of notifications declaring surplus land and the taking over of such land by the authorities, while section 22 provides the procedure for the disposal of the surplus",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2008_1494",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "the Customs Act, 1962",
+        "act_norm": "customs act 1962"
+      },
+      "claim_text": "The statutory grounding for this case includes Section 4 of the Customs Act, 1962, which mandates the provision of necessary information in the prescribed format for the import of goods, and the guide",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1970_250",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "511",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 34, which require proof of the intentional killing of a person by the accused along with the presence of criminal int",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2006_650",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "304A",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is grounded in Sections 302 and 304A of the Indian Penal Code, which respectively deal with murder and culpable homicide not amounting to murder, requiring proof of the accused's intention to",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1962_184",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "8",
+        "subsection": "2",
+        "act_raw": "The Indian Income Tax Act, 1922",
+        "act_norm": "indian income tax act 1922"
+      },
+      "claim_text": "The Indian Income Tax Act, 1922, Section 8(2) requires that the character of the payment as dividend cannot be altered by a subsequent resolution, and that such payments are liable to be taxed as divi",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1989_184",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "The case is grounded in Sections 302 of the Indian Penal Code (IPC), which deals with murder, and Sections 25 and 27 of the Arms Act, which regulate the possession and use of arms.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1989_184",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "Sections 25 and 27 of the Arms Act require the lawful possession and use of firearms and impose penalties for their unlawful possession or use.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2008_2662",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "112",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2008_2662",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "113",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 112 and 113 require that in cases relying on circumstantial evidence, the circumstances leading to the inference of guilt must be clearly and firmly ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2023_26",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 148, 302, 304 Part II, and 324, along with Section 149 of the Code of Criminal Procedure, 1973, are the statutory grounding for this case.",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 149 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2023_26",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "324",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 148 prescribes the punishment for unlawful assembly, Section 302 prescribes the punishment for murder, Section 304 Part II prescribes the punishment for culpable homicide not amounting to murd",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2023_26",
+      "claim_id": "c9",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "Section 149 of the Code of Criminal Procedure, 1973, deals with the procedure for trial of persons accused of offences committed in furtherance of the common intention of two or more persons.",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 149 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_natural_targeted.jsonl",
+      "document_id": "1992_534",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "506",
+        "subsection": null,
+        "act_raw": "the same code",
+        "act_norm": "same code"
+      },
+      "claim_text": "Section 506 of the same code deals with the offence of criminal intimidation.",
+      "best_overlap": 0.25,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 506 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "run_natural_targeted.jsonl",
+      "document_id": "1992_534",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "309",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Additionally, Section 309 of the Indian Penal Code pertains to the attempt to commit suicide.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_natural_targeted.jsonl",
+      "document_id": "1954_7",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "82",
+        "subsection": null,
+        "act_raw": "The Representation of the People Act, 1951 (XLIII of 1951)",
+        "act_norm": "representation of the people act 1951"
+      },
+      "claim_text": "The Representation of the People Act, 1951 (XLIII of 1951) requires the compliance with its provisions for the conduct of elections, specifically under section 82 which mandates the proper impleading ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_natural_targeted.jsonl",
+      "document_id": "1996_772",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "The statutory grounding of this case includes Section 302 of the Indian Penal Code (IPC), which deals with murder, and Section 32 of the Indian Evidence Act, which pertains to the admissibility of cer",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "run_natural_targeted.jsonl",
+      "document_id": "1996_772",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "32",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "Section 32 of the Indian Evidence Act allows the statement made by a deceased person regarding the cause of his death to be admissible as evidence in any proceeding in which such death is relevant.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2012_506",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "53",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The case is governed by Sections 53 and 230 of the Code of Criminal Procedure, 1973, which require the provision of legal assistance to the accused and the conduct of the trial in accordance with the ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2012_506",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "230",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The case is governed by Sections 53 and 230 of the Code of Criminal Procedure, 1973, which require the provision of legal assistance to the accused and the conduct of the trial in accordance with the ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2012_506",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is governed by Sections 53 and 230 of the Code of Criminal Procedure, 1973, which require the provision of legal assistance to the accused and the conduct of the trial in accordance with the ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2002_587",
+      "claim_id": "c9",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "225",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Additionally, Sections 323 and 324 pertain to the offences of causing hurt and grievous hurt, respectively, and Section 225 deals with the procedure for trial in certain cases.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2002_444",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "129",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "The statutory grounding includes Articles 32, 129, 137, 141, and 142 of the Constitution of India.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2002_444",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "137",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "The statutory grounding includes Articles 32, 129, 137, 141, and 142 of the Constitution of India.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2002_444",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "129",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Article 32 provides the right to move the Supreme Court for enforcement of fundamental rights, while Articles 129 and 137 confer jurisdiction and powers on the Supreme Court.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2002_444",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "137",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Article 32 provides the right to move the Supreme Court for enforcement of fundamental rights, while Articles 129 and 137 confer jurisdiction and powers on the Supreme Court.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "153",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "153-A",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "153-B",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "295-A",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "298",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "500",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "505",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c9",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "120-B",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and actions be proven to have been committed with the in",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c10",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "66A",
+        "subsection": null,
+        "act_raw": "The Information Technology Act 2000",
+        "act_norm": "information technology act 2000"
+      },
+      "claim_text": "The Information Technology Act 2000, particularly Section 66A, mandates that certain online activities, such as sending offensive messages, be proven to have caused annoyance, inconvenience, or danger",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1977_51",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "359",
+        "subsection": null,
+        "act_raw": "the Constitution during the Emergency",
+        "act_norm": "constitution during the emergency"
+      },
+      "claim_text": "Statutory Grounding: The validity of the Maharashtra Conditions of Detention Order, 1974, and the suspension of fundamental rights under Article 359 of the Constitution during the Emergency are ground",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1977_51",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "359",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Statutory Grounding: The validity of the Maharashtra Conditions of Detention Order, 1974, and the suspension of fundamental rights under Article 359 of the Constitution during the Emergency are ground",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1985_367",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "14",
+        "subsection": null,
+        "act_raw": "The Bombay Town Planning Act, 1954",
+        "act_norm": "bombay town planning act 1954"
+      },
+      "claim_text": "The Bombay Town Planning Act, 1954, as well as Articles 14, 19(1)(f), and 31 of the Constitution of India, apply to this case.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1985_367",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "19",
+        "subsection": "1",
+        "act_raw": "The Bombay Town Planning Act, 1954",
+        "act_norm": "bombay town planning act 1954"
+      },
+      "claim_text": "The Bombay Town Planning Act, 1954, as well as Articles 14, 19(1)(f), and 31 of the Constitution of India, apply to this case.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1985_367",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "14",
+        "subsection": null,
+        "act_raw": "The Act",
+        "act_norm": "act"
+      },
+      "claim_text": "The Act requires the preparation of development plans and the allocation of land for various purposes, while Articles 14, 19(1)(f), and 31 guarantee equality before the law, the right to acquire prope",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1985_367",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "19",
+        "subsection": "1",
+        "act_raw": "The Act",
+        "act_norm": "act"
+      },
+      "claim_text": "The Act requires the preparation of development plans and the allocation of land for various purposes, while Articles 14, 19(1)(f), and 31 guarantee equality before the law, the right to acquire prope",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2014_176",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "18",
+        "subsection": null,
+        "act_raw": "the Army Act, 1950",
+        "act_norm": "army act 1950"
+      },
+      "claim_text": "The statutory grounding for this case is provided by Section 18 of the Army Act, 1950, which empowers the President of India to terminate the services of any person subject to the Act at any time, and",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2000_811",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The case is governed by Section 22 of the Code of Criminal Procedure, 1973, which deals with the transfer of cases, and Article 21 of the Indian Constitution, which guarantees the right to life and pe",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2000_811",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "The case is governed by Section 22 of the Code of Criminal Procedure, 1973, which deals with the transfer of cases, and Article 21 of the Indian Constitution, which guarantees the right to life and pe",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2000_811",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "22",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "Section 22 requires the court to consider the convenience of the parties, the witnesses, and the public, as well as the expeditious disposal of cases, while deciding on a transfer petition.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2000_811",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Article 21 mandates that the right to a fair trial includes the right to a trial in a place where the accused can receive a fair and impartial hearing without undue prejudice.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2024_299",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "149C",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case was tried under the Indian Penal Code, 1860, which requires the prosecution to prove the charges against the accused beyond all reasonable doubt for offences punishable under Sections 143, 14",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2005_441",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "120B",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "The case is governed by Sections 120B, 364, 302/34 of the Indian Penal Code (IPC), which respectively deal with criminal conspiracy, abduction, and the penalties for murder and attempt to murder.",
+      "best_overlap": 0.25,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 120B in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2005_441",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "364",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "The case is governed by Sections 120B, 364, 302/34 of the Indian Penal Code (IPC), which respectively deal with criminal conspiracy, abduction, and the penalties for murder and attempt to murder.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2005_441",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "302",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "claim_text": "The case is governed by Sections 120B, 364, 302/34 of the Indian Penal Code (IPC), which respectively deal with criminal conspiracy, abduction, and the penalties for murder and attempt to murder.",
+      "best_overlap": 0.25,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 302 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_51",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "the Dowry Prohibition Act 1961",
+        "act_norm": "dowry prohibition act 1961"
+      },
+      "claim_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the In",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_51",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "the Dowry Prohibition Act 1961",
+        "act_norm": "dowry prohibition act 1961"
+      },
+      "claim_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the In",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_51",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Rule",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Penal Code 1860 (cheating), and Section 420 of the In",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2010_1270",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "24",
+        "subsection": null,
+        "act_raw": "The Land Acquisition Act, 1894",
+        "act_norm": "land acquisition act 1894"
+      },
+      "claim_text": "The Land Acquisition Act, 1894, specifically Sections 17(1), 24, and the Amendment Act of 1984, Section 3, require the government to provide just and reasonable compensation to the displaced landowner",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2010_1270",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "the Amendment Act",
+        "act_norm": "amendment act"
+      },
+      "claim_text": "The Land Acquisition Act, 1894, specifically Sections 17(1), 24, and the Amendment Act of 1984, Section 3, require the government to provide just and reasonable compensation to the displaced landowner",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_299",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "190",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Additionally, the Code of Criminal Procedure, 1974, specifically Sections 190 and 200, govern the continuation of the complaint by the legal heirs of the complainant.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_299",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "200",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Additionally, the Code of Criminal Procedure, 1974, specifically Sections 190 and 200, govern the continuation of the complaint by the legal heirs of the complainant.",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "code of criminal procedure 1973",
+      "best_overlap_candidate_key": "Section 200 in The Code of Criminal Procedure, 1973",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1962_348",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "14",
+        "subsection": null,
+        "act_raw": "the Constitution of India ensures equality before the law",
+        "act_norm": "constitution of india ensures equality before the law"
+      },
+      "claim_text": "Article 14 of the Constitution of India ensures equality before the law, while Articles 10(1)(f) and (g) limit the power of the state to levy taxes on certain types of income.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1962_348",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "10",
+        "subsection": "1",
+        "act_raw": "the Constitution of India ensures equality before the law",
+        "act_norm": "constitution of india ensures equality before the law"
+      },
+      "claim_text": "Article 14 of the Constitution of India ensures equality before the law, while Articles 10(1)(f) and (g) limit the power of the state to levy taxes on certain types of income.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2019_544",
+      "claim_id": "c10",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": "c",
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respectively; Sections 120B, 143, 147, 148, and 149 of t",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2019_544",
+      "claim_id": "c11",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": "1",
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respectively; Sections 120B, 143, 147, 148, and 149 of t",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1978_196",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "427",
+        "subsection": "conspiracy",
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 ( murder ), 34 (common intention), 323 (voluntarily causing hurt), 324 (voluntarily causing hurt b",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1956_41",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "57",
+        "subsection": null,
+        "act_raw": "the Bombay Police Act, 1951",
+        "act_norm": "bombay police act 1951"
+      },
+      "claim_text": "The statutory grounding includes section 57 of the Bombay Police Act, 1951, which authorizes the Commissioner, District Magistrate, or Sub-Divisional Magistrate to direct a person to remove himself ou",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1956_41",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "59",
+        "subsection": null,
+        "act_raw": "the same Act",
+        "act_norm": "same act"
+      },
+      "claim_text": "The statutory grounding includes section 57 of the Bombay Police Act, 1951, which authorizes the Commissioner, District Magistrate, or Sub-Divisional Magistrate to direct a person to remove himself ou",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2023_885",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "203",
+        "subsection": "Grant of bail on condition of good behavior",
+        "act_raw": "The Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, specifically Sections 120B (Conspiracy), 302 (Murder), and 34 (Joint Criminal Enterprise), along with the Code of Criminal Procedure, particularly Sections 203 (Grant of bail on",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2023_885",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "269",
+        "subsection": "Recall of witnesses",
+        "act_raw": "The Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, specifically Sections 120B (Conspiracy), 302 (Murder), and 34 (Joint Criminal Enterprise), along with the Code of Criminal Procedure, particularly Sections 203 (Grant of bail on",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2003_924",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": "2",
+        "act_raw": "the Prevention of Terrorism Act (POTA)",
+        "act_norm": "prevention of terrorism act"
+      },
+      "claim_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provid",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2003_924",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": "3",
+        "act_raw": "the Prevention of Terrorism Act (POTA)",
+        "act_norm": "prevention of terrorism act"
+      },
+      "claim_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provid",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2003_924",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "POTA",
+        "act_norm": "pota"
+      },
+      "claim_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provid",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2003_924",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The statutory grounding includes Sections 3(2) and 3(3) of the Prevention of Terrorism Act (POTA), which require the accused to apply for bail before the Special Judge; Section 4 of POTA, which provid",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_200",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "327",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The statutory grounding for this case includes Sections 148 and 149 of the Indian Penal Code, 1860 (IPC), which deal with criminal conspiracy and punishment for offenses committed by an organized grou",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2009_431",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "Additionally, the case is governed by Section 25 of the Arms Act, which prohibits the discharge of a firearm in a public place without lawful excuse, requiring that the discharge of a firearm must be ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2022_1043",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "141",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is governed by Sections 141, 142, and 143 of the Indian Penal Code (IPC), which deal with the composition of an unlawful assembly and the liability of those present at such an assembly.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2022_1043",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "142",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is governed by Sections 141, 142, and 143 of the Indian Penal Code (IPC), which deal with the composition of an unlawful assembly and the liability of those present at such an assembly.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2022_1043",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "100",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "Additionally, the court applies Sections 100 and 101 of the Code of Criminal Procedure (CrPC), which pertain to the burden of proof and the admissibility of evidence in criminal proceedings.",
+      "best_overlap": 0.5,
+      "best_overlap_candidate_act": "code of civil procedure 1908",
+      "best_overlap_candidate_key": "Section 100 in The Code of Civil Procedure, 1908",
+      "bucket": "parser_or_matcher_defect_candidate"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2022_1043",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "101",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "Additionally, the court applies Sections 100 and 101 of the Code of Criminal Procedure (CrPC), which pertain to the burden of proof and the admissibility of evidence in criminal proceedings.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2001_386",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "450",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, specifically Sections 302, 307, 148, 450, and Sections 120B, along with the Indian Arms Act, require that the accused be found guilty of murder, attempt to murder, unlawful asse",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2010_720",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "190",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure, 1973",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "claim_text": "The case is governed by Section 190 of the Code of Criminal Procedure, 1973, which empowers a magistrate of the first class to direct the police to register an FIR when there are reasonable grounds to",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1963_18",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "426",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, sections 147, 149, 302, 304, 307, 323, and 426 require that for an unlawful assembly to be held liable, there must be a definite number of alleged assailants and all of th",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1963_18",
+      "claim_id": "c14",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "426",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, sections 147, 149, 302, 304, 307, 323, and 426 require that for an unlawful assembly to be held liable, there must be a definite number of alleged assailants and all of th",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1980_424",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "12",
+        "subsection": null,
+        "act_raw": "the Employees Provident Fund and Miscellaneous Provisions Act, 1952",
+        "act_norm": "employees provident fund and miscellaneous provisions act 1952"
+      },
+      "claim_text": "The statutory grounding of this case includes the Employees Provident Fund and Miscellaneous Provisions Act, 1952, which regulates the management and administration of the provident fund and provides ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1980_424",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "14",
+        "subsection": null,
+        "act_raw": "the Employees Provident Fund and Miscellaneous Provisions Act, 1952",
+        "act_norm": "employees provident fund and miscellaneous provisions act 1952"
+      },
+      "claim_text": "The statutory grounding of this case includes the Employees Provident Fund and Miscellaneous Provisions Act, 1952, which regulates the management and administration of the provident fund and provides ",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2002_398",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": "2",
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The conviction and death sentence of Devender Pal Singh were grounded in Section 3(2)(i) of the Terrorist and Disruptive Activities (Prevention) Act, 1987, which prohibits the com",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2002_398",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "436",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The conviction and death sentence of Devender Pal Singh were grounded in Section 3(2)(i) of the Terrorist and Disruptive Activities (Prevention) Act, 1987, which prohibits the com",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2002_398",
+      "claim_id": "c9",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "427",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The conviction and death sentence of Devender Pal Singh were grounded in Section 3(2)(i) of the Terrorist and Disruptive Activities (Prevention) Act, 1987, which prohibits the com",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_854",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": "3",
+        "act_raw": "the Prevention of Terrorism Act, 2002 (POTA)",
+        "act_norm": "prevention of terrorism act 2002"
+      },
+      "claim_text": "The statutory grounding of this case includes the Prevention of Terrorism Act, 2002 (POTA), specifically Sections 3(3) and 4(b), which require the prosecution of individuals involved in terrorist acti",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_854",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": "b",
+        "act_raw": "the Prevention of Terrorism Act, 2002 (POTA)",
+        "act_norm": "prevention of terrorism act 2002"
+      },
+      "claim_text": "The statutory grounding of this case includes the Prevention of Terrorism Act, 2002 (POTA), specifically Sections 3(3) and 4(b), which require the prosecution of individuals involved in terrorist acti",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_919",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "320",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the Indian Penal Code, 1860, specifically Sections 302 and 320.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_919",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "320",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 302 prescribes the punishment for murder, which is imprisonment for life or with fine or both, and Section 320 deals with the definition of culpable homicide not amounting to murder, outlining",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2008_2063",
+      "claim_id": "c10",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143-",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 302 requires proof of the intentional killing of a person, while Sections 307 and 143-149 deal with attempts, criminal force, and rioting, which are relevant to the facts of the case.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "436",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 436, 437, 438, and 439, which deal with the power to grant anticipatory bail, the procedure for granting regular bai",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "437",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 436, 437, 438, and 439, which deal with the power to grant anticipatory bail, the procedure for granting regular bai",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "438",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 436, 437, 438, and 439, which deal with the power to grant anticipatory bail, the procedure for granting regular bai",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "439",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 436, 437, 438, and 439, which deal with the power to grant anticipatory bail, the procedure for granting regular bai",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "436",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 436 empowers the courts to grant anticipatory bail, while sections 437 and 438 provide the procedure for applying for and granting anticipatory bail, including the conditions under which such ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "437",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 436 empowers the courts to grant anticipatory bail, while sections 437 and 438 provide the procedure for applying for and granting anticipatory bail, including the conditions under which such ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "438",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 436 empowers the courts to grant anticipatory bail, while sections 437 and 438 provide the procedure for applying for and granting anticipatory bail, including the conditions under which such ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2010_1301",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "439",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 439 deals with the procedure for the grant of regular bail after the arrest of a person.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "215",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "218",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "221",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "374",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "386",
+        "subsection": "b",
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1988_402",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "464",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure, 1973, specifically sections 215, 218, 221, 374, 386(b), and 464, which require that charges be framed with precision and clarity, avoiding rolle",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_231",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "302",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in Sections 302/149 and 326/149 of the Indian Penal Code (IPC), which respectively provide for murder and causing grievous hurt with the intent to cause death",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "398",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, 27, 54, and 59 of the Arms Act, and Section 5 of t",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, 27, 54, and 59 of the Arms Act, and Section 5 of t",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c10",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "54",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, 27, 54, and 59 of the Arms Act, and Section 5 of t",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c11",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "59",
+        "subsection": null,
+        "act_raw": "the Arms Act",
+        "act_norm": "arms act"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, 27, 54, and 59 of the Arms Act, and Section 5 of t",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c12",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": null,
+        "act_raw": "the Terrorist and Disruption Activities (Prevention) Amendment Act, 1993",
+        "act_norm": "terrorist and disruption activities amendment act 1993"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, 27, 54, and 59 of the Arms Act, and Section 5 of t",
+      "best_overlap": 0.4,
+      "best_overlap_candidate_act": "terrorist and disruptive activities act 1987",
+      "best_overlap_candidate_key": "Section 5 in The Terrorist And Disruptive Activities (Prevention) Act, 1987",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "190",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding for this case includes the Code of Criminal Procedure, 1973, specifically Sections 190, 200, 202, 203, and 482.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "200",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding for this case includes the Code of Criminal Procedure, 1973, specifically Sections 190, 200, 202, 203, and 482.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "202",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding for this case includes the Code of Criminal Procedure, 1973, specifically Sections 190, 200, 202, 203, and 482.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "203",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding for this case includes the Code of Criminal Procedure, 1973, specifically Sections 190, 200, 202, 203, and 482.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "482",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding for this case includes the Code of Criminal Procedure, 1973, specifically Sections 190, 200, 202, 203, and 482.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "190",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 190 deals with the filing of complaints, Section 200 pertains to the jurisdiction of the court to take cognizance of the offence, Section 202 allows the court to take cognizance of the offence",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "200",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 190 deals with the filing of complaints, Section 200 pertains to the jurisdiction of the court to take cognizance of the offence, Section 202 allows the court to take cognizance of the offence",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "202",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 190 deals with the filing of complaints, Section 200 pertains to the jurisdiction of the court to take cognizance of the offence, Section 202 allows the court to take cognizance of the offence",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c9",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "203",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 190 deals with the filing of complaints, Section 200 pertains to the jurisdiction of the court to take cognizance of the offence, Section 202 allows the court to take cognizance of the offence",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2023_242",
+      "claim_id": "c10",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "482",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 190 deals with the filing of complaints, Section 200 pertains to the jurisdiction of the court to take cognizance of the offence, Section 202 allows the court to take cognizance of the offence",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2021_572",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "438",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is governed by the Code of Criminal Procedure 1973, specifically Section 438, which outlines the procedure for granting anticipatory bail, and the Indian Penal Code 1860, which provides the d",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1964_286",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "31A",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the provisions of the Constitution of India, specifically Articles 31A and 31B, which provide for the protection of laws with respect to acquisition and co",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1964_286",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "31B",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the provisions of the Constitution of India, specifically Articles 31A and 31B, which provide for the protection of laws with respect to acquisition and co",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1964_286",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "368",
+        "subsection": null,
+        "act_raw": "the Constitution",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Statutory Grounding: The case is grounded in the provisions of the Constitution of India, specifically Articles 31A and 31B, which provide for the protection of laws with respect to acquisition and co",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_311",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "201",
+        "subsection": null,
+        "act_raw": "the Arms Act, 1959",
+        "act_norm": "arms act 1959"
+      },
+      "claim_text": "The statutory grounding includes the Indian Penal Code, 1860, which requires the proof of the actus reus and mens rea for the commission of offenses such as murder (Section 302), rioting (Sections 147",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_311",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "the Explosives Substances Act, 1908",
+        "act_norm": "explosives substances act 1908"
+      },
+      "claim_text": "The statutory grounding includes the Indian Penal Code, 1860, which requires the proof of the actus reus and mens rea for the commission of offenses such as murder (Section 302), rioting (Sections 147",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_311",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "the Explosives Substances Act, 1908",
+        "act_norm": "explosives substances act 1908"
+      },
+      "claim_text": "The statutory grounding includes the Indian Penal Code, 1860, which requires the proof of the actus reus and mens rea for the commission of offenses such as murder (Section 302), rioting (Sections 147",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_311",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "5",
+        "subsection": null,
+        "act_raw": "the Explosives Substances Act, 1908",
+        "act_norm": "explosives substances act 1908"
+      },
+      "claim_text": "The statutory grounding includes the Indian Penal Code, 1860, which requires the proof of the actus reus and mens rea for the commission of offenses such as murder (Section 302), rioting (Sections 147",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2019_974",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "363",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 363, 376, 377, and 302, require the punishment of kidnapping, rape, unnatural sex, and murder respectively.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2019_974",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "377",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 363, 376, 377, and 302, require the punishment of kidnapping, rape, unnatural sex, and murder respectively.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1974_205",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "11",
+        "subsection": null,
+        "act_raw": "the Mysore Land Acquisition Act",
+        "act_norm": "mysore land acquisition act"
+      },
+      "claim_text": "The statutory grounding includes the Mysore Land Acquisition Act of 1961, specifically the proviso to section 11, which requires the previous approval of the State Government for an award to be made b",
+      "best_overlap": 0.667,
+      "best_overlap_candidate_act": "land acquisition act 1894",
+      "best_overlap_candidate_key": "Section 11 in The Land Acquisition Act, 1894",
+      "bucket": "parser_or_matcher_defect_candidate"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1996_815",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "202",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, Sections 302, 304B, 147, 149, 201, and 202, and the Evidence Act, Section 116B, are relevant to this case.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1996_815",
+      "claim_id": "c7",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "116B",
+        "subsection": null,
+        "act_raw": "the Evidence Act",
+        "act_norm": "indian evidence act 1872"
+      },
+      "claim_text": "The Indian Penal Code, Sections 302, 304B, 147, 149, 201, and 202, and the Evidence Act, Section 116B, are relevant to this case.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1996_815",
+      "claim_id": "c13",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "202",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 201 criminalizes abetment of suicide, and Section 202 provides for the punishment for abetting the commission of an offense.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1996_815",
+      "claim_id": "c14",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "116B",
+        "subsection": null,
+        "act_raw": "the Evidence Act",
+        "act_norm": "indian evidence act 1872"
+      },
+      "claim_text": "Section 116B of the Evidence Act pertains to the admissibility of certain statements made by a deceased person.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_1212",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "25-N",
+        "subsection": null,
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Section 25-N, requires that any retrenchment of workmen in industrial establishments must be carried out in accordance with a prescribed procedure.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_279",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "6",
+        "subsection": "2",
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Sections 6(2), 18, and 21, govern the jurisdiction of the Industrial Tribunal and the process for settling industrial disputes.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_279",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "18",
+        "subsection": null,
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Sections 6(2), 18, and 21, govern the jurisdiction of the Industrial Tribunal and the process for settling industrial disputes.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_279",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "The Industrial Disputes Act, 1947",
+        "act_norm": "industrial disputes act 1947"
+      },
+      "claim_text": "The Industrial Disputes Act, 1947, specifically Sections 6(2), 18, and 21, govern the jurisdiction of the Industrial Tribunal and the process for settling industrial disputes.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2004_279",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "3",
+        "subsection": null,
+        "act_raw": "The Payment of Bonus Act, 1965",
+        "act_norm": "payment of bonus act 1965"
+      },
+      "claim_text": "The Payment of Bonus Act, 1965, under Section 3, mandates the payment of bonuses to workmen, which was a point of contention in the dispute.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1996_109",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "26",
+        "subsection": null,
+        "act_raw": "the Land Acquisition Act, 1894",
+        "act_norm": "land acquisition act 1894"
+      },
+      "claim_text": "The statutory grounding includes the Land Acquisition Act, 1894, Sections 4, 11, 18, and 26, which deal with the acquisition of land, award of compensation, reference for revision of compensation, and",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_344",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "13",
+        "subsection": "1",
+        "act_raw": "The Hindu Marriage Act, 1955",
+        "act_norm": "hindu marriage act 1955"
+      },
+      "claim_text": "Statutory Grounding: The Hindu Marriage Act, 1955, Sections 13(1)(i) and 13(1)(iii), provide grounds for divorce, including where either party has been incurably of unsound mind or has been suffering ",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_344",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Article 21 of the Indian Constitution mandates that no person shall be deprived of any of his rights except according to procedure established by law, and the court must balance the need for a medical",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_697",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "29-A",
+        "subsection": null,
+        "act_raw": "the P",
+        "act_norm": "p"
+      },
+      "claim_text": "The statutory grounding for this case includes Section 29-A of the P.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_697",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "110",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Trade Tax Act, 1947, which mandates the deposit of all amounts collected from customers into the Government Treasury, irrespective of the actual tax liability; and the relevant provisions of the Const",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2005_697",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "111",
+        "subsection": null,
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "Trade Tax Act, 1947, which mandates the deposit of all amounts collected from customers into the Government Treasury, irrespective of the actual tax liability; and the relevant provisions of the Const",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2018_73",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "437",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Statutory Grounding: The decision in this case is grounded in the provisions of the Code of Criminal Procedure, 1973, specifically Sections 437 and 439 which deal with the power of the court to grant ",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2018_73",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "439",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Statutory Grounding: The decision in this case is grounded in the provisions of the Code of Criminal Procedure, 1973, specifically Sections 437 and 439 which deal with the power of the court to grant ",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2018_73",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "437",
+        "subsection": "1",
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Section 437(1) mandates that every person who is arrested without a warrant shall be produced before a Magistrate who may then grant bail if satisfied that there are reasonable grounds for such grant,",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2018_73",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "439",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Section 437(1) mandates that every person who is arrested without a warrant shall be produced before a Magistrate who may then grant bail if satisfied that there are reasonable grounds for such grant,",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2018_73",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "21",
+        "subsection": null,
+        "act_raw": "the Indian Constitution",
+        "act_norm": "indian constitution"
+      },
+      "claim_text": "Additionally, the decision reflects the principles enshrined in Article 21 of the Indian Constitution, which guarantees the right to personal liberty and protection from arbitrary detention.",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1976_51",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "10",
+        "subsection": "26",
+        "act_raw": "the Constitution",
+        "act_norm": "constitution of india"
+      },
+      "claim_text": "The statutory grounding for this case includes Article 366(25) of the Constitution, which defines Scheduled Tribe, Section 10(26)(a) of the Income-tax Act, 1961, which provides tax exemption to member",
+      "best_overlap": 0.0,
+      "best_overlap_candidate_act": null,
+      "best_overlap_candidate_key": null,
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1960_181",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "234A",
+        "subsection": null,
+        "act_raw": "The Income-tax Act, 1961",
+        "act_norm": "income-tax act 1961"
+      },
+      "claim_text": "The Income-tax Act, 1961, Sections 234A and 234B require the Income-tax Officer to carry out the directions given by the Income-tax Appellate Tribunal in the exercise of its appellate powers.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1960_181",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "234B",
+        "subsection": null,
+        "act_raw": "The Income-tax Act, 1961",
+        "act_norm": "income-tax act 1961"
+      },
+      "claim_text": "The Income-tax Act, 1961, Sections 234A and 234B require the Income-tax Officer to carry out the directions given by the Income-tax Appellate Tribunal in the exercise of its appellate powers.",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2009_48",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "304",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding of this case involves Sections 304 Part II and 149 of the Indian Penal Code, 1860.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2009_48",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "304",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 304 Part II requires that the death must have been caused by the act done with the intention to cause hurt, and Section 149 deals with the liability of every member of a company or an associat",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2009_48",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 304 Part II requires that the death must have been caused by the act done with the intention to cause hurt, and Section 149 deals with the liability of every member of a company or an associat",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_1139",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "304",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The case was grounded in Sections 304 Part I, 34, and 148 of the Indian Penal Code, 1860.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_1139",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "304",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 304 Part I deals with culpable homicide not amounting to murder, Section 34 provides for liability where two or more persons act in common intention, and Section 148 prescribes the punishment ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_1139",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "34",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 304 Part I deals with culpable homicide not amounting to murder, Section 34 provides for liability where two or more persons act in common intention, and Section 148 prescribes the punishment ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2003_1139",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "148",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 304 Part I deals with culpable homicide not amounting to murder, Section 34 provides for liability where two or more persons act in common intention, and Section 148 prescribes the punishment ",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2019_432",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "273",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding of the case includes the Code of Criminal Procedure, 1973, specifically Sections 273, which deals with the examination of witnesses in the presence of the accused, Section 299,",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2019_432",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "299",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding of the case includes the Code of Criminal Procedure, 1973, specifically Sections 273, which deals with the examination of witnesses in the presence of the accused, Section 299,",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2019_432",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "317",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "The statutory grounding of the case includes the Code of Criminal Procedure, 1973, specifically Sections 273, which deals with the examination of witnesses in the presence of the accused, Section 299,",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1989_189",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "149",
+        "subsection": null,
+        "act_raw": null,
+        "act_norm": ""
+      },
+      "claim_text": "Section 149 mandates that all members of an unlawful assembly are liable for the acts done by any one of them in furtherance of the common object of the assembly.",
+      "bucket": "unresolved_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1989_189",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "235",
+        "subsection": null,
+        "act_raw": "The Code",
+        "act_norm": "code"
+      },
+      "claim_text": "The Code of Criminal Procedure, 1973, particularly Sections 235 and 354(3), govern the sentencing process and the imposition of the death penalty, requiring adherence to the procedure laid down for th",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1989_189",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "354",
+        "subsection": "3",
+        "act_raw": "The Code",
+        "act_norm": "code"
+      },
+      "claim_text": "The Code of Criminal Procedure, 1973, particularly Sections 235 and 354(3), govern the sentencing process and the imposition of the death penalty, requiring adherence to the procedure laid down for th",
+      "best_overlap": 0.333,
+      "best_overlap_candidate_act": "indian penal code 1860",
+      "best_overlap_candidate_key": "Section 354 in The Indian Penal Code, 1860",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "96",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 96, 97, and 100 require that the use of force must be proportionate to the threat faced, and the person using force must not have any reasonable mean",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "97",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 96, 97, and 100 require that the use of force must be proportionate to the threat faced, and the person using force must not have any reasonable mean",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "100",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 96, 97, and 100 require that the use of force must be proportionate to the threat faced, and the person using force must not have any reasonable mean",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "code of civil procedure 1908",
+      "best_overlap_candidate_key": "Section 100 in The Code of Civil Procedure, 1908",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "96",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 96 deals with the right of private defence, Section 97 outlines the conditions under which such defence can be made, and Section 100 specifies the limits of such defence, ensuring that the for",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "97",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 96 deals with the right of private defence, Section 97 outlines the conditions under which such defence can be made, and Section 100 specifies the limits of such defence, ensuring that the for",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1992_179",
+      "claim_id": "c6",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "100",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "Section 96 deals with the right of private defence, Section 97 outlines the conditions under which such defence can be made, and Section 100 specifies the limits of such defence, ensuring that the for",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "code of civil procedure 1908",
+      "best_overlap_candidate_key": "Section 100 in The Code of Civil Procedure, 1908",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_743",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "110",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The case is grounded in the Indian Penal Code (IPC), specifically Sections 302 and 34 for the conviction of Ramsingh, which deal with murder and criminal liability respectively, and Sections 324 and 1",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c1",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "96",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c2",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "97",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "100",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "best_overlap": 0.2,
+      "best_overlap_candidate_act": "code of civil procedure 1908",
+      "best_overlap_candidate_key": "Section 100 in The Code of Civil Procedure, 1908",
+      "bucket": "genuinely_absent_wrong_act_or_edition"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c4",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "101",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c5",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "102",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "1998_786",
+      "claim_id": "c8",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "447",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The Indian Penal Code (IPC) is the statutory grounding for this case, specifically Sections 96, 97, 100, 101, 102, 302, 149, 447, and 323, which require that the exercise of the right of private defen",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2002_828",
+      "claim_id": "c3",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "19",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "claim_text": "The statutory grounding for the case includes Sections 147 and 148 of the Indian Penal Code (IPC), which deal with the formation and acts done during the formation of an unlawful assembly; Section 19,",
+      "bucket": "genuinely_absent_no_such_provision_any_act"
+    }
+  ]
+}

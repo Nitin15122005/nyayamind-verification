@@ -1,0 +1,61 @@
+{
+  "experiment": "phase2_natural_evaluation_combined_batch1_batch2",
+  "generated": "2026-08-27",
+  "n_total_cases": 100,
+  "n_total_claims": 487,
+  "n_total_evidence_matched": 284,
+  "evidence_coverage_pct": 58.3,
+  "per_framing_combined": {
+    "bare": {
+      "n_cases": 100,
+      "n_claims": 487,
+      "n_claims_evidence_matched": 284,
+      "verdict_counts": {
+        "ENTAILED": 2,
+        "NO_EVIDENCE": 203,
+        "CONTRADICTED": 2,
+        "NOT_ENOUGH_INFORMATION": 280
+      },
+      "correction_triggers": 10,
+      "correction_attempts": 10,
+      "corrections_shipped_success": 0,
+      "correction_failed": 8,
+      "correction_scope_violation": 2,
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 73,
+      "unflagged_claim_preserved": 65
+    },
+    "labeled": {
+      "n_cases": 100,
+      "n_claims": 487,
+      "n_claims_evidence_matched": 284,
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 263,
+        "ENTAILED": 16,
+        "NO_EVIDENCE": 203,
+        "CONTRADICTED": 5
+      },
+      "correction_triggers": 26,
+      "correction_attempts": 26,
+      "corrections_shipped_success": 0,
+      "correction_failed": 17,
+      "correction_scope_violation": 9,
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claim_checked": 175,
+      "unflagged_claim_preserved": 137
+    }
+  },
+  "atomic_claim_scope_check_replay": {
+    "n_real_scope_violations_replayed": 11,
+    "n_unblocked_by_scope_check": 1,
+    "n_unblocked_that_actually_shipped_on_reverification": 0,
+    "note": "The 1 scope-violation genuinely unblocked (1997_1306/c6, IPC Sec.148) still did not ship on re-verification, because re-verification hypothesis remains the full bundled sentence (claim_text), not the narrower assertion_text/spans -- a separate, documented, deliberately out-of-scope limitation. Exploratory check (not a production code path): re-verifying the narrower assertion_text alone scores ENTAILED at 0.999 confidence, vs NOT_ENOUGH_INFORMATION at 0.54 for the full sentence -- suggestive evidence for a future (not implemented) extension, not a claimed result."
+  },
+  "batch_sources": {
+    "batch1_metrics": "natural_candidates_50_gpu_metrics.json",
+    "batch2_metrics": "natural_candidates_batch2_gpu_metrics.json",
+    "batch1_candidate_selection": "natural_candidate_selected_ids_50.json",
+    "batch2_candidate_selection": "natural_candidate_selected_ids_50_batch2.json",
+    "final_scope_check_replay": "atomic_scope_check_final_replay.json"
+  }
+}

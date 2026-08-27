@@ -1,0 +1,436 @@
+{
+  "n_claims": 588,
+  "n_matched_v0": 354,
+  "n_matched_v1": 390,
+  "coverage_v0_pct": 60.2,
+  "coverage_v1_pct": 66.3,
+  "n_newly_covered_by_v1": 36,
+  "n_still_no_evidence_with_v1": 198,
+  "remaining_taxonomy": {
+    "genuinely_absent_wrong_act_or_edition": 50,
+    "genuinely_absent_no_such_provision_any_act": 111,
+    "unresolved_act": 37
+  },
+  "newly_covered_examples": [
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1971_200",
+      "claim_id": "c3",
+      "claim_text": "The statutory grounding for this case includes the Indian Penal Code, specifically Sections 120B, 420, and 467.",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "467",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 467 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1971_200",
+      "claim_id": "c6",
+      "claim_text": "Section 120B deals with criminal conspiracy, Section 420 pertains to cheating, and Section 467 addresses the offence of passing off goods as new when ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "467",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 467 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "2003_967",
+      "claim_id": "c2",
+      "claim_text": "Article 14 of the Constitution of India requires that any law or regulation must not discriminate unreasonably between individuals or groups, while Ar",
+      "citation": {
+        "provision_type": "Article",
+        "provision_number": "15",
+        "subsection": "4",
+        "act_raw": "the Constitution of India",
+        "act_norm": "constitution of india"
+      },
+      "new_evidence_id": "Article 15 in Constitution of India"
+    },
+    {
+      "source": "run_A_n30.jsonl",
+      "document_id": "1952_17",
+      "claim_id": "c1",
+      "claim_text": "The Indian Penal Code, 1860, specifically Sections 143, 147, 302, and 325 require that the prosecution must prove the guilt of the accused beyond a re",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2006_48",
+      "claim_id": "c7",
+      "claim_text": "Statutory Grounding: The case involves the application of Sections 147, 148, 149, 323, 324, 302, and 326 of the Indian Penal Code.",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "326",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2006_48",
+      "claim_id": "c14",
+      "claim_text": "Section 147 requires the prevention of a public nuisance, Section 148 mandates the dispersal of unlawful assemblies, Section 149 provides for the puni",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "326",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_379",
+      "claim_id": "c7",
+      "claim_text": "The Indian Penal Code 1860, specifically Sections 153, 153-A, 153-B, 295-A, 298, 500, 504, 505, and 120-B, require that certain types of speech and ac",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "504",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 504 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2024_299",
+      "claim_id": "c1",
+      "claim_text": "The case was tried under the Indian Penal Code, 1860, which requires the prosecution to prove the charges against the accused beyond all reasonable do",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2005_441",
+      "claim_id": "c4",
+      "claim_text": "Section 106 of the Indian Evidence Act provides the rule of presumption that can be used by the prosecution in certain circumstances to establish the ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "106",
+        "subsection": null,
+        "act_raw": "the Indian Evidence Act",
+        "act_norm": "indian evidence act"
+      },
+      "new_evidence_id": "Section 106 in The Indian Evidence Act, 1872"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2020_51",
+      "claim_id": "c1",
+      "claim_text": "The case is governed by Sections 498A of the Indian Penal Code 1860, Sections 3 and 4 of the Dowry Prohibition Act 1961, Section 406 of the Indian Pen",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "498A",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 498A in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2010_1270",
+      "claim_id": "c1",
+      "claim_text": "The Land Acquisition Act, 1894, specifically Sections 17(1), 24, and the Amendment Act of 1984, Section 3, require the government to provide just and ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "17",
+        "subsection": "1",
+        "act_raw": "The Land Acquisition Act, 1894",
+        "act_norm": "land acquisition act 1894"
+      },
+      "new_evidence_id": "Section 17 in The Land Acquisition Act, 1894"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1985_364",
+      "claim_id": "c1",
+      "claim_text": "Specifically, Section 4 of the Income Tax Act, 1922, and its corresponding provision in the Income Tax Act, 1961, mandate the assessment of income in ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "4",
+        "subsection": null,
+        "act_raw": "the Income Tax Act, 1922",
+        "act_norm": "income tax act 1922"
+      },
+      "new_evidence_id": "Section 4 in The Income Tax Act, 1961"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2019_544",
+      "claim_id": "c4",
+      "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respec",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "the IPC",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2019_544",
+      "claim_id": "c9",
+      "claim_text": "Statutory Grounding: The case is grounded in Sections 302 and 307 of the Indian Penal Code (IPC), which deal with murder and attempt to murder, respec",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "504",
+        "subsection": null,
+        "act_raw": "the IPC",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 504 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "1978_196",
+      "claim_id": "c6",
+      "claim_text": "The statutory grounding for this case includes the Indian Penal Code, 1860, specifically Sections 302 ( murder ), 34 (common intention), 323 (voluntar",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "326",
+        "subsection": "voluntarily causing hurt by dangerous weapons or dangerous means",
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_1006",
+      "claim_id": "c3",
+      "claim_text": "The Indian Penal Code, 1860, Sections 302, 149, 452, and 34 require that for a conviction under Section 302 (punishment for murder), there must be pro",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "452",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_1006",
+      "claim_id": "c7",
+      "claim_text": "Section 452 (robbery) and Section 34 (accessory before the fact) pertain to the circumstances under which individuals can be held responsible for the ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "452",
+        "subsection": "robbery",
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2007_1006",
+      "claim_id": "c9",
+      "claim_text": "Section 452 (robbery) and Section 34 (accessory before the fact) pertain to the circumstances under which individuals can be held responsible for the ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "452",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2008_99",
+      "claim_id": "c3",
+      "claim_text": "The Indian Penal Code, 1860, specifically sections 302 read with section 149, 143, 147, 148, 323, 324, 325, and 326 read with section 149 require that",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2008_99",
+      "claim_id": "c9",
+      "claim_text": "The Indian Penal Code, 1860, specifically sections 302 read with section 149, 143, 147, 148, 323, 324, 325, and 326 read with section 149 require that",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "326",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_50_gpu_bare.jsonl",
+      "document_id": "2022_1043",
+      "claim_id": "c3",
+      "claim_text": "The case is governed by Sections 141, 142, and 143 of the Indian Penal Code (IPC), which deal with the composition of an unlawful assembly and the lia",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2002_398",
+      "claim_id": "c5",
+      "claim_text": "Statutory Grounding: The conviction and death sentence of Devender Pal Singh were grounded in Section 3(2)(i) of the Terrorist and Disruptive Activiti",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "326",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 326 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2008_2063",
+      "claim_id": "c3",
+      "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder,",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2008_2063",
+      "claim_id": "c7",
+      "claim_text": "The case is governed by the Indian Penal Code, 1860, specifically Sections 302, 307, 143, 147, 148, 149, and 452, which respectively deal with murder,",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "452",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code, 1860",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 452 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c2",
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "394",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 394 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c3",
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "397",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 397 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c5",
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "342",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 342 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2001_160",
+      "claim_id": "c7",
+      "claim_text": "The statutory grounding for the case includes Sections 302, 394, 397, 398, 342, 120B, and 411 of the Indian Penal Code (IPC), along with Sections 25, ",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "411",
+        "subsection": null,
+        "act_raw": "the Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 411 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2022_435",
+      "claim_id": "c1",
+      "claim_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for c",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "143",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 143 in The Indian Penal Code, 1860"
+    },
+    {
+      "source": "natural_candidates_batch2_gpu_bare.jsonl",
+      "document_id": "2022_435",
+      "claim_id": "c4",
+      "claim_text": "The Indian Penal Code (IPC) sections 143, 147, 148, 341, 307, 302, and 395, along with section 149, require that the accused be held responsible for c",
+      "citation": {
+        "provision_type": "Section",
+        "provision_number": "341",
+        "subsection": null,
+        "act_raw": "The Indian Penal Code (IPC)",
+        "act_norm": "indian penal code 1860"
+      },
+      "new_evidence_id": "Section 341 in The Indian Penal Code, 1860"
+    }
+  ]
+}

@@ -251,3 +251,121 @@ def test_parenthetical_abbreviation_industrial_disputes_act():
     assert by_num["2"].act_norm == "industrial disputes act 1947"
     assert by_num["10"].act_norm == "industrial disputes act 1947"
 
+
+# ---------------------------------------------------------------------------
+# Bug 5: copula ("is"/"are") not recognized as an act-name-continuation
+# trim point, and "Evidence Act" (no "Indian" prefix) not aliased.
+#
+# Found via the NO_EVIDENCE root-cause diagnosis for this task
+# (research/prototype/outputs/no_evidence_diagnosis.json,
+# research_phase_next_status.md): three real natural claims (documents
+# 2006_650, 1998_229, 1991_582 — all the same generated sentence) captured
+# act_raw="the Evidence Act is applicable" instead of stopping at "the
+# Evidence Act", because none of _ACT_CONTINUATION_VERBS is a copula.
+# Sentence copied verbatim from run_A_n30.jsonl (document_id 2006_650,
+# claim c3).
+# ---------------------------------------------------------------------------
+
+_BUG5_SENTENCE = (
+    "Additionally, Section 114 of the Evidence Act is applicable, which "
+    "prescribes the onus of proof resting on the prosecution to establish "
+    "the guilt of the accused."
+)
+
+
+def test_bug5_copula_trims_act_name_before_predicate():
+    citations = extract_citations(_BUG5_SENTENCE)
+    assert len(citations) == 1
+    assert citations[0].act_raw == "the Evidence Act"
+
+
+def test_bug5_evidence_act_short_form_resolves_to_corpus_act():
+    citations = extract_citations(_BUG5_SENTENCE)
+    assert citations[0].act_norm == "indian evidence act 1872"
+
+
+def test_bug5_other_continuation_verbs_still_trim_correctly():
+    # No regression: an existing continuation-verb sentence (not a copula)
+    # must still trim exactly as before.
+    s = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    citations = extract_citations(s)
+    assert len(citations) == 1
+    assert citations[0].act_raw == "the Indian Penal Code, 1860"
+    assert citations[0].act_norm == "indian penal code 1860"
+
+
+def test_bug5_was_were_also_trim_as_copulas():
+    s = "Section 302 of the Indian Penal Code, 1860 was invoked, which deals with murder."
+    citations = extract_citations(s)
+    assert len(citations) == 1
+    assert citations[0].act_raw == "the Indian Penal Code, 1860"
+
+
+# ---------------------------------------------------------------------------
+# Claim granularity: atomic assertion_text for bundled parallel-clause
+# sentences (see research_phase_next_status.md, "claim granularity").
+# assertion_text is ADDITIVE and always populated — claim_text is never
+# changed, so existing callers reading claim_text see zero behaviour change.
+# Sentence copied verbatim from run_A_n30.jsonl (document_id 2005_360).
+# ---------------------------------------------------------------------------
+
+def test_two_way_parallel_clause_split_gives_each_citation_its_own_clause():
+    s = ("Section 302 prescribes the punishment for murder, while Section 34 "
+         "deals with criminal liability for an act done by more than one "
+         "person in furtherance of the common intention or common object.")
+    claims = extract_claims(s)
+    assert len(claims) == 2
+    by_num = {c.citation_extracted.provision_number: c for c in claims}
+    assert by_num["302"].assertion_text == "Section 302 prescribes the punishment for murder"
+    assert by_num["34"].assertion_text.startswith("Section 34 deals with criminal liability")
+    # claim_text (the full original sentence) is unchanged for both — the
+    # split is additive, not a replacement.
+    assert by_num["302"].claim_text == s
+    assert by_num["34"].claim_text == s
+
+
+def test_three_citation_bundle_both_share_the_second_clause():
+    # "Sections 34 and 109" bundles two citations inside ONE clause after
+    # the while-split. _citation_mentioned_in() re-parses each clause with
+    # extract_citations() itself (not a narrower ad-hoc regex), so BOTH
+    # numbers in "Sections 34 and 109" are recognized, not just the one
+    # immediately adjacent to the keyword — 109 is no longer stuck with
+    # the (wider) full sentence, it correctly isolates to the same
+    # (still-bundled, but narrower) second clause as 34.
+    s = ("Section 302 prescribes the punishment for murder, while Sections "
+         "34 and 109 address the criminal liability of an accomplice or "
+         "abettor in the commission of a crime.")
+    claims = extract_claims(s)
+    by_num = {c.citation_extracted.provision_number: c for c in claims}
+    assert by_num["302"].assertion_text == "Section 302 prescribes the punishment for murder"
+    assert by_num["34"].assertion_text.startswith("Sections 34 and 109 address")
+    assert by_num["109"].assertion_text.startswith("Sections 34 and 109 address")
+    assert by_num["109"].assertion_text == by_num["34"].assertion_text
+
+
+def test_plain_list_sentence_has_no_split_point_every_citation_gets_full_sentence():
+    # A bare listing ("specifically Sections 120B, 420, and 467") has no
+    # per-citation content to split at all — every citation's
+    # assertion_text must stay the full sentence (there is nothing unsafe
+    # here; it is simply not a splittable shape).
+    s = ("The statutory grounding for this case includes the Indian Penal "
+         "Code, specifically Sections 120B, 420, and 467.")
+    claims = extract_claims(s)
+    assert len(claims) == 3
+    assert all(c.assertion_text == s for c in claims)
+
+
+def test_single_citation_sentence_assertion_text_equals_claim_text():
+    s = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    claims = extract_claims(s)
+    assert len(claims) == 1
+    assert claims[0].assertion_text == claims[0].claim_text == s
+
+
+def test_multiple_while_occurrences_is_a_safe_no_split():
+    s = ("Section 5 applies while the accused is in custody, while Section 6 "
+         "applies while the accused is on bail.")
+    claims = extract_claims(s)
+    for c in claims:
+        assert c.assertion_text == s  # ambiguous split point -> full sentence for all
+
