@@ -10,6 +10,8 @@
 > lawyer's real judgments from the annotated PDF, and this report is
 > re-run against that.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 Sources used: `lawyer_annotation.jsonl` (88 rows, assumption labels),
 `assumption_vs_automated_report.md`, `run_A_n30.jsonl`, `run_B_n30.jsonl`,
 `run_C_n30.jsonl` (30 cases each). All figures below were recomputed

@@ -6,6 +6,8 @@ brief). Every field below is copied verbatim from committed raw JSONL/JSON artif
 reader can re-pull the exact record. **No case here has been reviewed by a lawyer.** Read
 every verdict as "what the automated system did," never as "what the law actually says."
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 These are not a random sample and not a rate estimate — see `../tables/*.csv` for the
 actual population-level counts each category is drawn from. Selection criterion for each
 case is stated in its own file header, before the outcome, to keep selection auditable.

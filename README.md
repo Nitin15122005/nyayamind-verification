@@ -5,6 +5,22 @@ LLM-generated Indian court judgment summaries, plus a reproduction of the
 **LegalSeg / RhetoricLLaMA** rhetorical-role-classification baseline it
 builds alongside.
 
+## Project Author Statement — 2026-09-03
+
+**The project author confirms that professional legal review has since been
+incorporated into relevant aspects of the project's legal analysis.
+Reviewer identities and detailed review records are not included in this
+repository.**
+
+This statement reflects the current status communicated by the project
+author and should be treated separately from the historical research
+findings, dated limitations, experimental records, and reproducibility
+documentation contained elsewhere in this repository. It does not modify
+or supersede those documented findings, and it does not indicate that
+individual, automatically-generated pipeline outputs have received
+case-by-case professional legal approval (see "Known limitations" below
+and each output record's own `disclaimer` field).
+
 ## Project purpose
 
 LLMs asked to summarize Indian court judgments will readily name statutes,

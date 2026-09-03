@@ -4,6 +4,8 @@ Every value below is read directly from `research/prototype/final_demo_pack/meta
 
 **Legend — defensible column:** ✅ = numeric, traceable, appropriate to cite as measured; ⚠️PROVISIONAL = real number but source data is not lawyer-verified ground truth, cite only as "agreement between machine-produced label sets"; ❌ = not measurable with current data.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ## 1. Case / claim volume
 
 | Metric | Value | Dataset | n (cases) | Defensible |

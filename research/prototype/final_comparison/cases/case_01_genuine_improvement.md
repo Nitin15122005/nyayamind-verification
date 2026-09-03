@@ -34,6 +34,8 @@ very high confidence (0.996).
   reviewed it. It shows the automated verifier's own behavior changed, not a validated
   accuracy gain.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ## Reproduce
 
 ```

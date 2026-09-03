@@ -11,6 +11,8 @@ validation before the lawyer ground-truth phase; **no lawyer annotation was used
 > false-positive rate, and retrieval precision in the strict (ground-truth-relative) sense **cannot**
 > be computed here; see §8 for exactly what is and is not supported by this data.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 0. Method

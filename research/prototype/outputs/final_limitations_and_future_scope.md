@@ -107,6 +107,8 @@ The dominant blockers, evidenced directly:
 
 ### 3b. No lawyer/professional legal ground truth exists
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 Every number in this project — v0's audit, v1's audit (even at this session's expanded 50%
 coverage), and the "provisional assumption gold" — is machine- or LLM-produced, never
 professionally verified. This means:

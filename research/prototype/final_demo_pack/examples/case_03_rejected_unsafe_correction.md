@@ -51,3 +51,5 @@ attempts fail.
 **What this does NOT establish:** that the *original* sentence (also unverified by a
 lawyer) was itself correct — only that the proposed *edit* did not pass the system's
 own re-verification.
+
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._

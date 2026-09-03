@@ -17,6 +17,8 @@ GPU A/B experiment). **Not** a gold-standard legal corpus — no audit performed
 v0 or v1, substitutes for professional legal review; that remains explicitly out of scope, as the
 corpus's own README has always stated.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 - **0 fabricated or wrong-provision matches found** across 41 independently re-fetched records
   (50% of the 82 — up from the original build's 8/82 ≈ 10%) and a full structural pass over all
   82.

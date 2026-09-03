@@ -14,6 +14,8 @@ implemented and validated in this phase.
 > labels (`annotation_source: "CLAUDE_ASSUMPTION_NOT_LAWYER_VERIFIED"`), and none is
 > fabricated or treated as ground truth here or anywhere in this report.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 1. Research question

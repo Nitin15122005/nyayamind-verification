@@ -118,6 +118,8 @@ lawyer's review happens. `gold_annotation.jsonl`/`_guide.md`/`_summary_template.
 iteration of the same protocol, kept as a methodology record. **No file or report claims validated
 lawyer/legal-professional accuracy anywhere in this repository.**
 
+_See `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ## 7. Evidence versioning — confirmed, both required
 
 `canonical_statutes.jsonl`/`evidence_audit.jsonl` (v0, 63 records) and `canonical_statutes_v1.jsonl`/

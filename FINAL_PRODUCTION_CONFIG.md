@@ -120,7 +120,9 @@ defects fixed — the corpus's own stated blocker for wider use is substantially
 ### What's still true
 
 v1 (like v0) remains explicitly **not** a substitute for professional legal review — no audit
-this project performs changes that. 39% of v1's records (32/82) still rest on build-time
+this project performs changes that.
+
+_See `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._ 39% of v1's records (32/82) still rest on build-time
 provenance only, not independently re-verified this session (rate-limited by the source site,
 not a decision to stop early) — see `evidence_v1_independent_audit.md` §6 for the full,
 honestly-stated list of remaining gaps.

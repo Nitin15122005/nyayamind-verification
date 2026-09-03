@@ -51,3 +51,5 @@ mode this system is built to catch, and it did so with a high-confidence verdict
 model's statistical judgment against a third-party (IndianKanoon), not
 official-India-Code, evidence corpus — not a lawyer-confirmed legal-accuracy ruling.
 No lawyer has reviewed this specific case.
+
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._

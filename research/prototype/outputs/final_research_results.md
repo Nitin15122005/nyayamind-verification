@@ -185,6 +185,8 @@ and what wasn't in every triggered case.
 > of the numbers in this section may be cited as validated system accuracy — they describe
 > agreement between two machine-produced label sets.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 Of 88 assumption-annotated claims, 38 have matched evidence (only these produce a real automated
 NLI call, not a fixed NO_EVIDENCE fallback):
 

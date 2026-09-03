@@ -44,6 +44,8 @@ The synthetic-vs-natural gap (72.2% vs 1.8%/10%) is the single most important nu
 
 ## Metrics that require lawyer ground truth — MUST NOT be presented as established legal accuracy
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 **No lawyer or professional-legal ground-truth evaluation of verifier accuracy has ever been run in this project.** The only "gold"-adjacent artifact, `assumption_annotation.jsonl`, is **Claude-generated provisional labeling of 88 claims** — explicitly not lawyer-verified, and every report and the data file itself carry this disclaimer. Its agreement numbers (bare 52.6%, labeled 47.4% against these provisional labels — `assumption_gold_provisional`, `defensible: false`) describe **agreement between two machine-produced label sets**, nothing more, and the direction (labeled framing showing *worse* agreement here) actively **contradicts** the labeled-framing improvements measured elsewhere in this document — this is reported honestly as a genuine counter-signal, not suppressed (see `FINAL_PRODUCTION_CONFIG.md` §1 and `reports/verifier_analysis.md`).
 
 Any verifier verdict (ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION) reported anywhere in this pack is a small public NLI model's statistical judgment against a third-party-sourced (IndianKanoon, not official India Code) evidence corpus — **never legal truth, never a lawyer's determination.**

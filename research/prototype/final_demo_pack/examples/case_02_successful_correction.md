@@ -64,3 +64,5 @@ example.
 recommended follow-up is a larger fresh batch before treating this as settled). No
 lawyer has confirmed the corrected text is legally accurate — only that it now
 matches the system's own third-party-sourced evidence text.
+
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._

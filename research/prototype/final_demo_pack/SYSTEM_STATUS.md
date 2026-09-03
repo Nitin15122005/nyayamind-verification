@@ -37,6 +37,8 @@ This demo pack does not re-run or re-verify these itself except where the FINAL 
 2. **A genuine counter-signal exists and is not suppressed**: re-verifying the older, PROVISIONAL assumption-annotated set (38 evidence-matched claims, Claude-generated labels, NOT lawyer-verified) under labeled framing shows *slightly lower* agreement (18/38, 47.4%) than bare (20/38, 52.6%) — the opposite direction from every other source behind the `premise_framing` decision. See `FINAL_PRODUCTION_CONFIG.md` §1 and `reports/verifier_analysis.md`.
 3. **39% of the v1 evidence supplement (32/82 records) still rests on build-time provenance only**, not independently re-verified — rate-limited by the source site, not a decision to stop early (`research/data/evidence/README_v1.md`).
 4. **No lawyer/professional-legal ground-truth evaluation exists.** This is the single largest open item for any claim about real-world accuracy.
+
+   _See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
 5. **`run_mvp.py`'s evidence-loader bug** (silently loading only the 59-record v0 pool regardless of `use_evidence_v1`) was found and fixed during the 2026-08-27 repository freeze (commit `3e9e09a`) — flagged here so the fix's existence and reasoning are visible alongside frozen status, not because it's still open.
 
 ## Reproducing this status

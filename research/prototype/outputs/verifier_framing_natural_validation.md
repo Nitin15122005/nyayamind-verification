@@ -13,6 +13,8 @@ claims?**
 > lawyer ground truth exists (`lawyer_annotation.jsonl` still holds Claude-generated assumption
 > labels only, per `mvp_assumption_evaluation.md`) and none is fabricated here.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 0. Environment confirmed before running anything

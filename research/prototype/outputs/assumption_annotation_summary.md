@@ -4,6 +4,8 @@
 > preparation only. They are NOT lawyer-verified ground truth. Final human
 > labels will be obtained from the lawyer-provided annotated PDF.**
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 This document summarizes `assumption_annotation.jsonl`, produced by
 independently judging each of the 88 statutory claims in
 `gold_annotation.jsonl` against `matched_evidence_text` only (never outside

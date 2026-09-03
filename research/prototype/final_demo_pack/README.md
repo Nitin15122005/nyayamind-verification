@@ -50,6 +50,8 @@ final_demo_pack/
   every report's disclaimer), a new experiment (no new GPU inference beyond
   the small CPU-only DeBERTa calls the live demo makes), or a modification of
   any frozen research artifact (evidence corpus, `outputs/*`, `config/prototype.yaml`
+
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
   are all read-only inputs to everything in this pack).
 
 ## Validation status (as of the last build of this pack)

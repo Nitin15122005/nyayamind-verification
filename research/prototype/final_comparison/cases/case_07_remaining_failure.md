@@ -49,6 +49,8 @@ change measured in this comparison — see `final_limitations_and_future_scope.m
 `FINAL_BASELINE_COMPARISON.md`'s "What still requires lawyer ground truth" /
 "remaining weaknesses" sections.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ## Reproduce
 
 ```

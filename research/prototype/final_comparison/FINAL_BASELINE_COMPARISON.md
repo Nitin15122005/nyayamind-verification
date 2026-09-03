@@ -345,6 +345,9 @@ Full detail with exact source records and reproduction commands in `cases/`:
 
 No lawyer or professional legal ground truth exists anywhere in this project
 (`REPOSITORY_MANIFEST.md` §6, `final_limitations_and_future_scope.md` §3b). This means, for
+
+> _See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 both ORIGINAL and CURRENT, this comparison **cannot** and does not claim:
 
 - True contradiction recall or false-positive rate (only synthetic-data figures exist for

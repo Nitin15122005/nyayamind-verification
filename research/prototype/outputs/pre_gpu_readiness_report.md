@@ -13,6 +13,8 @@ code-only regression/adversarial test — never a new model call.
 
 > **Scope.** Nothing here is a legal-correctness determination. No lawyer ground truth
 > exists or is used anywhere in this project. No evaluation label or model verdict was
+
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
 > used to select or build anything reported here.
 
 ---

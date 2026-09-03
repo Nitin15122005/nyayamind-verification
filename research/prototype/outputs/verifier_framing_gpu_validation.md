@@ -12,6 +12,8 @@ report's §5 command completes.
 > config knob (`verification.premise_framing`), not a natural-data evaluation, and no
 > natural 30-case evaluation was re-run for this report.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 0. Environment confirmed before running anything

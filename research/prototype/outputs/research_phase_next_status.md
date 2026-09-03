@@ -14,6 +14,8 @@ root-cause diagnosis with two additional parser fixes, and a claim-granularity
 > this project (`lawyer_annotation.jsonl` still holds only Claude-generated assumption
 > labels, per `mvp_assumption_evaluation.md`), and none is fabricated or implied here.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 0. Baseline before this phase

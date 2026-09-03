@@ -8,6 +8,8 @@
 > against a 59-record third-party-sourced evidence corpus. They are NOT legal-correctness
 > determinations. No lawyer ground-truth annotation has been completed.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## A. Natural NyayaRAG Evaluation

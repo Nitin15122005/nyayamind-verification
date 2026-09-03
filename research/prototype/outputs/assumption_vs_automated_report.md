@@ -11,6 +11,8 @@
 > machine-produced label sets (an NLI classifier and an LLM assistant reading the
 > same evidence text), not correctness against real legal ground truth.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 Claims compared: **88** (all from `gold_annotation.jsonl` / `assumption_annotation.jsonl`).
 Claims with matched evidence (the only ones where `automated_verdict` is a real NLI call, not `NO_EVIDENCE`): **38**.
 

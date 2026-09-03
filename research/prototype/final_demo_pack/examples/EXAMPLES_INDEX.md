@@ -47,6 +47,7 @@ prose write-ups) are in `cases.json`.
 - They do not establish that the verifier's verdicts are legally correct — no
   lawyer has reviewed any of them (see `research/prototype/outputs/lawyer_annotation_guide.md`:
   that review has not happened).
+  _See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
 - They are not a random sample and are not a rate estimate — see
   `research/prototype/final_demo_pack/reports/correction_safety_analysis.md` and
   `tables/METRICS_COMPREHENSIVE.csv` for the actual population-level counts each

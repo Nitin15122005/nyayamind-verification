@@ -33,4 +33,6 @@ Script: `research/prototype/final_demo_pack/metadata/validate_pack.py`
 | All 8 exemplar cases present in cases.json | PASS | found 8 |
 | No undisclaimed 'lawyer-verified' claims found | PASS |  |
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 Note: `pytest research/prototype/tests/ -q` and `research/prototype/scripts/run_mvp.py --check` are full-repo checks, run separately (see RUNBOOK.md) and recorded in SYSTEM_STATUS.md, not duplicated by this demo-pack-scoped script.

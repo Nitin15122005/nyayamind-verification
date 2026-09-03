@@ -9,6 +9,8 @@ Generated 2026-08-26. Follows `verifier_correction_diagnosis.md`.
 > truth exists, and the Claude assumption annotations in this repository are not ground
 > truth and were not used.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 1. Existing bare-framing benchmark results

@@ -1,5 +1,7 @@
 # Instructions for the Lawyer — Statutory Claim Annotation
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author. This does not change the instructions below._
+
 ## Why we need this
 
 We built a small AI tool that reads a court case and writes a short

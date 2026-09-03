@@ -12,6 +12,8 @@ re-verification, both premise-framing arms, on the RTX 4050.
 > 4-bit), checked against a 59-record third-party-sourced evidence corpus. Not
 > legal-correctness determinations. No lawyer ground truth exists or is used here.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## 0. Method

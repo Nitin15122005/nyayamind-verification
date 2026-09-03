@@ -10,6 +10,8 @@ modified. Only the NLI premise framing differs.
 > Verdicts are a small public NLI model's output against a 59-record evidence corpus.
 > They are not legal-correctness determinations, and no lawyer ground truth exists.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 - Evidence-matched natural claims re-scored: **52**
 - Bare-framing verdicts reproduced from the original GPU runs: **52/52**
 

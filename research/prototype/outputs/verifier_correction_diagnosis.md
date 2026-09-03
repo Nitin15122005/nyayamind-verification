@@ -9,6 +9,8 @@ Generated 2026-08-26. All numbers below come from runs committed alongside this 
 > truth exists. The Claude assumption annotations in this repository are **not** ground
 > truth either and were not used here.
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ---
 
 ## Headline

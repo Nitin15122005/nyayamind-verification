@@ -4,6 +4,8 @@ Source: `research/prototype/final_demo_pack/metadata/computed_metrics.json` sect
 
 **Throughout this report: a verifier verdict (ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION) is a small public NLI model's statistical judgment that a matched evidence text entails, contradicts, or is neutral toward a claim sentence. It is never legal truth, never a lawyer's determination, and never validated against professional legal ground truth anywhere in this project.**
 
+_See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
+
 ## Model
 
 `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`, fp16 on GPU / fp32 on CPU, `confidence_threshold: 0.70`. A low-confidence argmax prediction is downgraded to `NOT_ENOUGH_INFORMATION` with `sub_reason: "low_confidence"`. Label order is read from the model's own `config.id2label`, never hardcoded.
