@@ -1,0 +1,39 @@
+{
+  "experiment": "labeled_framing_all_improvements_correction_validation_gpu",
+  "fresh_reproduction_of": "outputs/labeled_correction_validation_gpu_metrics.json (2026-08-27)",
+  "step": "STEP 10 (GPU execution validation)",
+  "scope": "Targeted: reuses Arm B's already-generated text + CPU-computed labeled verdicts; only genuine NEW work is the Qwen correction call + CPU DeBERTa reverification for each case with >=1 labeled-framing correction trigger.",
+  "config": {
+    "use_evidence_v1": true,
+    "premise_framing": "labeled",
+    "atomic_scope_check": "assertion_spans",
+    "narrow_reverification_hypothesis": true,
+    "confidence_threshold": 0.7
+  },
+  "n_cases_triggered": 10,
+  "status_counts": {
+    "correction_scope_violation": 3,
+    "correction_failed": 6,
+    "corrected": 1
+  },
+  "corrections_shipped": 1,
+  "unsafe_shipped": 0,
+  "runtime_seconds": 104.75310969352722,
+  "historical_comparison": {
+    "n_cases_triggered": 10,
+    "status_counts": {
+      "correction_scope_violation": 3,
+      "correction_failed": 6,
+      "corrected": 1
+    },
+    "corrections_shipped": 1,
+    "unsafe_shipped": 0,
+    "runtime_seconds": 84.90598940849304,
+    "source": "outputs/labeled_correction_validation_gpu_metrics.json"
+  },
+  "comparison_bare_arm_b_original": {
+    "n_cases_triggered": 5,
+    "corrections_shipped": 0,
+    "note": "from final_gpu_validation_metrics.json, per_arm.B (bare framing, same 50 cases, same improved config except framing)"
+  }
+}

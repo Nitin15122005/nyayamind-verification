@@ -1,0 +1,50 @@
+{
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.2.2+cu121",
+  "torch_cuda": "12.1",
+  "snapshots": [
+    {
+      "label": "before_any_load",
+      "allocated_mib": 0.0,
+      "reserved_mib": 0.0,
+      "max_allocated_mib": 0.0
+    },
+    {
+      "label": "after_generator_load",
+      "allocated_mib": 5018.9,
+      "reserved_mib": 5182.0,
+      "max_allocated_mib": 5026.7
+    },
+    {
+      "label": "after_one_generation",
+      "allocated_mib": 5027.7,
+      "reserved_mib": 7736.0,
+      "max_allocated_mib": 7151.4
+    },
+    {
+      "label": "after_verifier_load_alongside_generator",
+      "allocated_mib": 5393.1,
+      "reserved_mib": 7736.0,
+      "max_allocated_mib": 7151.4
+    }
+  ],
+  "generator_load_seconds": 19.57,
+  "generator_device": "cuda:0",
+  "generator_dtype_of_first_param": "torch.float16",
+  "probe_case_id": "1975_58",
+  "single_generation_seconds": 11.44,
+  "generation_output_chars": 417,
+  "generation_metadata": {
+    "model_id": "Qwen/Qwen2.5-7B-Instruct",
+    "quantization": {
+      "load_in_4bit": true,
+      "bnb_4bit_use_double_quant": true,
+      "bnb_4bit_quant_type": "nf4",
+      "bnb_4bit_compute_dtype": "bfloat16"
+    },
+    "max_new_tokens": 200,
+    "do_sample": false,
+    "seed": 42
+  },
+  "verifier_load_seconds": 3.86
+}

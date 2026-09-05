@@ -1,0 +1,26 @@
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Loaded 136 usable evidence records.
+Loaded 9892 raw NyayaRAG cases from scratch space.
+5938 cases have >=1 citation overlapping the usable evidence pool.
+Running mode C on 5 case(s): ['1975_58', '1996_129', '1994_495', '1979_295', '1973_257']
+Loading generator (Qwen/Qwen2.5-7B-Instruct, 4-bit, CUDA)... this downloads/loads a 7B model and will take a while.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|##5       | 1/4 [00:04<00:12,  4.31s/it]Loading checkpoint shards:  50%|#####     | 2/4 [00:07<00:07,  3.73s/it]Loading checkpoint shards:  75%|#######5  | 3/4 [00:11<00:03,  3.69s/it]Loading checkpoint shards: 100%|##########| 4/4 [00:14<00:00,  3.59s/it]Loading checkpoint shards: 100%|##########| 4/4 [00:14<00:00,  3.68s/it]
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:492: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:497: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:509: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\models\qwen2\modeling_qwen2.py:693: UserWarning: 1Torch was not compiled with flash attention. (Triggered internally at ..\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:263.)
+  attn_output = torch.nn.functional.scaled_dot_product_attention(
+Loading verifier (MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli)...
+  Running case 1975_58...
+  Running case 1996_129...
+  Running case 1994_495...
+  Running case 1979_295...
+  Running case 1973_257...
+Wrote 5 record(s) to research\prototype\testing\actual_outputs\step10_gpu_validation\run_modeC_n5.jsonl

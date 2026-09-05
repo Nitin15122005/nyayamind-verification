@@ -609,6 +609,244 @@ or experimental result was altered anywhere in this step.**
 **Confirmation**: no underlying experimental data changed. Every figure is a faithful
 visualization of a number that already existed, unchanged, in a STEP 4-8 artifact.
 
+## STEP 10 — GPU execution validation (2026-09-05)
+
+**Machine role**: GPU validation machine (a **different** physical machine from
+STEP 1-9, which had no NVIDIA GPU at all — AMD Radeon integrated only). Repo
+clone location on this machine: `D:\Programs\nyayamind-verification` (STEP 1-9's
+own "Verifying this provenance yourself" commands below cite
+`D:\nyaymind\nyayamind-verification`, that machine's own clone path — noted as
+an environmental difference between machines, not a discrepancy in this repo's
+content; both paths point at the same git history, confirmed via identical
+`HEAD` and `git log`).
+
+**Hardware**: Windows 11 Home Single Language 10.0.26200; Intel Core
+i7-13620H (10 cores / 16 logical processors); ~15.7 GiB RAM; **NVIDIA GeForce
+RTX 4050 Laptop GPU**, 6141 MiB VRAM per `nvidia-smi`, driver 592.82, CUDA
+(driver-reported) 13.1. `nvidia-smi` succeeded on the first attempt — full
+output captured during this step. This matches the GPU model
+`src/generator.py`'s own docstring names ("already validated on this RTX 4050
+6GB machine") — no claim is made that this is the *same physical unit*, only
+that it is the same GPU model/VRAM class the production code was written for.
+
+**Python environment**: `research/.venv` already existed on this machine and
+matched the canonical spec in `research/requirements.txt` exactly — no
+environment creation was needed. Versions confirmed: Python 3.11.9, pip
+(venv's own), torch 2.2.2+cu121, transformers 4.40.2, accelerate 0.29.3,
+bitsandbytes 0.43.1, peft 0.10.0, trl 0.8.6, sentencepiece 0.2.2, pytest
+9.1.1 — matching the "previously validated" versions this step was asked to
+verify (not assume).
+
+**PyTorch/CUDA validation**: `torch.cuda.is_available()` → `True`,
+`torch.cuda.device_count()` → `1`, `torch.cuda.get_device_name(0)` →
+`"NVIDIA GeForce RTX 4050 Laptop GPU"`, `torch.version.cuda` → `"12.1"`. A
+real 2048×2048 matmul was allocated on `cuda:0`, executed, and its result
+transferred back to CPU successfully (0 → 58,851,328 bytes allocated during
+the operation, no errors/warnings). This directly overturns STEP 1-9's
+recorded `torch.cuda.is_available() == False` — on **this** machine, not
+retroactively on the STEP 1-9 machine, which remains unchanged and
+GPU-less.
+
+**Regression baseline (before GPU experiments)**: `pytest research/prototype/tests/ -q`
+→ **205 passed**, identical to every prior step, no test modified.
+
+**Model access**: both models the production config names were already fully
+cached locally (`~/.cache/huggingface/hub/`), so no network download was
+required or performed: `Qwen/Qwen2.5-7B-Instruct` (snapshot
+`a09a35458c702b33eeacc393d103063234e8bc28`, ~15 GB, all 4 safetensors shards
+present) and `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli` (~363 MB). Neither
+model ID nor any quantization/config value was changed from
+`config/prototype.yaml`.
+
+**Model load result**: `StatuteGroundingGenerator.load()` (real production
+class, real config) succeeded in 19.57s, landing on `cuda:0`, first-parameter
+dtype `torch.float16` (bitsandbytes 4-bit nf4 quantized per config).
+`NLIVerifier.load()` (default `device="cuda"`) succeeded in 3.86s alongside
+the already-loaded generator. GPU memory (`torch.cuda.memory_allocated`/
+`memory_reserved`, device 0): 0 MiB before any load; 5018.9 MiB
+allocated / 5182.0 MiB reserved after the generator load; peak 7151.4 MiB
+allocated (7736.0 MiB reserved) during one generation; 5393.1 MiB allocated
+after also loading the verifier. **Observation, not a claim of failure**:
+peak reserved memory (7736 MiB) exceeded `nvidia-smi`'s reported 6141 MiB
+dedicated VRAM without a CUDA OOM error — consistent with Windows WDDM's
+shared-GPU-memory spillover into system RAM (this driver model was shown as
+`WDDM` in the `nvidia-smi` header), not investigated further this step.
+Full data: `actual_outputs/step10_gpu_validation/gpu_memory_probe_result.json`.
+
+**Real Qwen generation**: exactly one minimal generation (mode A, 1 case,
+document `1975_58`, real NyayaRAG case text, real chat template, real
+`model.generate()`, greedy/deterministic, seed 42) via the unmodified
+production entry point `scripts/run_mvp.py --mode A --num-cases 1`. Output:
+`actual_outputs/step10_gpu_validation/run_modeA_n1.jsonl`.
+`gpu_generation_executed: true` (recorded in the record's own
+`reproducibility.software_versions` block and this PROVENANCE entry — no
+separate flag file was introduced for this since `run_mvp.py`'s own output
+record already carries full generation metadata, model id, quantization,
+and software versions).
+
+**Real correction pipeline smoke test**: mode C, 5 real cases
+(`1975_58`, `1996_129`, `1994_495`, `1979_295`, `1973_257`), same production
+entry point, real generator + real verifier + real corrector + real scope
+check + real re-verification. 4/5 cases had no CONTRADICTED/low-confidence
+claim (`not_triggered`); 1/5 (`1996_129`, claim `c2`) triggered a real Qwen
+correction call, which was **correctly rejected** by the programmatic scope
+gate (`correction_scope_violation` — the correction altered text outside the
+flagged sentence) and never shipped. Output:
+`actual_outputs/step10_gpu_validation/run_modeC_n5.jsonl`. Full per-case
+detail: `evaluation/GPU_CORRECTION_SAFETY_STEP10.md`.
+
+**GPU-dependent historical experiment reproduced**: the targeted
+labeled-framing correction validation
+(`scripts/run_labeled_correction_validation_gpu.py`, historical result in
+`outputs/labeled_correction_validation_gpu_metrics.json`, 2026-08-27) was
+freshly re-executed via a byte-for-byte copy of that script with only its
+output paths redirected
+(`actual_outputs/step10_gpu_experiments/rerun_labeled_correction_validation_gpu.py`).
+**Exact reproduction**: same 10 triggering cases in the same order, identical
+`status_counts` (`{correction_scope_violation: 3, correction_failed: 6,
+corrected: 1}`), identical shipped count (1), identical unsafe-shipped count
+(0), and **byte-for-byte identical `regenerated_text` for all 10 cases**
+(verified programmatically). Runtime 104.8s fresh vs. 84.9s historical
+(+23%, hardware/timing variance, not investigated further). Full detail:
+`evaluation/GPU_REPRODUCTION_CROSSCHECK.md`.
+
+**GPU-dependent historical experiment NOT reproduced this step**: the
+209-claim paired evidence-v0-vs-v1 generation experiment
+(`outputs/final_gpu_validation_{A,B}.jsonl`, historical χ²=13.07, p≈0.0003)
+was not regenerated from scratch — doing so would require ~100+ fresh Qwen
+generations across two arms, judged out of scope for a GPU-execution-
+*validation* step. Remains HISTORICAL ONLY, explicitly not attempted (not
+blocked by any failure).
+
+**Ablation status**: `ablation/GPU_ABLATION_UPDATE.md` — exactly one STEP 7
+finding (targeted correction levers) is annotated as freshly, exactly
+reproduced on GPU this step; every other STEP 7 finding is unaffected
+(either not GPU-dependent, or HISTORICAL ONLY / NOT EXECUTED, unchanged). No
+evidence grade was upgraded.
+
+**Joint four-lever experiment**: re-checked (`grep` across `research/` for
+"four-lever"/"joint lever") — no protocol exists anywhere in the repository
+beyond STEP 7's own conclusion that it is `NOT_ISOLABLE`. **Joint four-lever
+experiment remains unavailable.** None was invented this step.
+
+**Validation**: `testing/validate_step10_gpu.py` — see this step's final
+report for the exact PASS/FAIL count (run once, immediately after all fresh
+files above were written, no retroactive edits to already-validated content).
+
+**Regression result (after GPU experiments)**: `pytest research/prototype/tests/ -q`
+→ **205 passed**, identical to every prior step — no file under `src/` or
+`tests/` was touched by this step.
+
+**Files added this step** (all new, nothing overwritten):
+`evaluation/GPU_EXECUTION_INVENTORY.md`, `evaluation/GPU_REPRODUCTION_CROSSCHECK.md`,
+`evaluation/GPU_CORRECTION_SAFETY_STEP10.md`, `ablation/GPU_ABLATION_UPDATE.md`,
+`validate_step10_gpu.py`, `actual_outputs/step10_gpu_validation/*`,
+`actual_outputs/step10_gpu_experiments/*`, and this PROVENANCE.md section.
+No file under `research/data/`, `final_demo_pack/`, `final_comparison/`,
+`src/`, `tests/`, `expected_outputs/`, or any pre-existing `actual_outputs/step{1..9}_*`
+directory was modified.
+
+**Limitations carried forward, unchanged**: no legal ground truth exists
+anywhere in this project; joint four-lever causal isolation does not exist;
+narrow re-verification and the general correction-levers finding remain
+DIAGNOSTIC; the cumulative 1/56 correction rate was not re-derived this step;
+the 209-claim generation experiment was not reproduced this step (see above,
+explicitly not attempted rather than failed).
+
+## STEP 10B — Remaining GPU experiment reproduction (2026-09-05)
+
+**Machine role**: same GPU validation machine as STEP 10, same session
+continuing directly afterward. No environment change from STEP 10 — same
+`research/.venv`, same GPU, same cached model weights.
+
+**Objective**: close the one remaining GPU-experiment gap STEP 10 left
+explicitly open (the 209-claim generation experiment), and determine whether
+the historical cumulative "1/56" correction figure can be freshly
+reproduced.
+
+**Distinguishing the 209-claim GPU experiment from STEP 6**: confirmed by
+reading `testing/run_step6_209_paired_evaluation.py`'s own docstring — that
+script performs fresh CPU-only re-evidence-matching and DeBERTa
+re-verification against the ORIGINALLY-STORED `final_gpu_validation_A.jsonl`/
+`_B.jsonl` verdicts ("No Qwen generation or correction is invoked"). The
+GPU-dependent work STEP 6 never touched is the original generation run that
+*produced* those two files: `scripts/run_final_gpu_validation.py` (50 real
+Qwen generations shared across two arms, plus up to 10 real Qwen correction
+calls). This is the experiment STEP 10B reproduces — genuinely distinct from,
+and never overlapping with, STEP 6's CPU-only work.
+
+**Fresh reproduction executed**: `testing/run_step10b_209_gpu_generation.py`
+— a copy of the unmodified production script `scripts/run_final_gpu_validation.py`
+with exactly two changes: fresh-output redirection to
+`testing/actual_outputs/step10b_gpu_experiments/` (never touching
+`research/prototype/outputs/`), and an added `reproducibility_metadata` block
+(git commit `4e221ba3426baa2e592b44d04c10ba092703b202`, torch 2.2.2+cu121,
+CUDA 12.1, driver 592.82, GPU `NVIDIA GeForce RTX 4050 Laptop GPU`, SHA-256 of
+every input dataset file, exact command, wall-clock start/end). Same 50-case
+candidate file, same seed (42), same Arm A/B configs, same models
+(`Qwen/Qwen2.5-7B-Instruct` 4-bit nf4, `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`),
+`do_sample=false`.
+
+**Result: exact reproduction.** `n_claims_shared_generation`=209 (both runs);
+Arm A 132/209 evidence-matched, Arm B 147/209 (both runs, identical
+`evidence_match_method_counts` and `verdict_counts`); confidence summary
+statistics identical to all stored digits in both arms; 5/5 correction
+triggers in both arms with identical `correction_failed`(3)/
+`correction_scope_violation`(2) split, 0 shipped, 0 unsafe — all matching
+the 2026-08-27 historical run exactly. Programmatic byte-for-byte comparison
+of all 50 cases' generated text: **0 mismatches**. `peak_vram_mib`: 7547 in
+both the historical run and this fresh run (identical figure). Runtime: this
+run's total was 1539.2s (25.7 min, faster than historical's 2040.9s/34.0
+min) — runtime direction reversed from STEP 10's Experiment 1 (+23% slower
+there), reinforcing that wall-clock time is a hardware/load measure, not a
+correctness measure, and is not used as a reproduction criterion. Historical
+files (`outputs/final_gpu_validation_metrics.json`, `_A.jsonl`, `_B.jsonl`,
+`_corrections_detail.jsonl`) verified untouched (mtimes and SHA-256 hashes
+unchanged from before this run). Full comparison:
+`evaluation/GPU_REPRODUCTION_CROSSCHECK.md`, Experiment 3.
+
+**Cumulative correction rate (1/56): PROTOCOL INSUFFICIENT, not attempted.**
+Investigated `outputs/final_metrics.json`'s `section_D_correction_safety_cumulative`
+and found it is a pooled rollup across the project's entire historical
+correction-experiment population, computed (per its own `provenance` field)
+by an ad-hoc, never-committed "build_final_metrics analysis" script that
+does not exist anywhere in this repository (confirmed by repository-wide
+search) and carries no per-constituent breakdown. Reconstructing it honestly
+would require freshly re-running every GPU-dependent correction experiment
+in the project's history and re-summing — not a bounded task, and out of
+scope for this step. Documented, not attempted, not treated as failed.
+
+**Ablation status update**: `ablation/GPU_ABLATION_UPDATE.md` updated —
+the evidence-v0-vs-v1 (209-claim) row now records the underlying generation
+as freshly, exactly reproduced on GPU (evidence GRADE unchanged, still
+SUPPORTED — this confirms reproducibility of the generation step, not new
+statistical evidence); the cumulative-1/56 row now records the STEP 10B
+PROTOCOL INSUFFICIENT finding in place of STEP 10's "not re-derived."
+
+**Regression result**: `pytest research/prototype/tests/ -q` → **205 passed**,
+identical to every prior step — no file under `src/` or `tests/` touched.
+
+**Validation**: `testing/validate_step10b_gpu.py` — see this step's final
+report for the exact PASS/FAIL count.
+
+**Files added this step** (all new, nothing overwritten):
+`testing/run_step10b_209_gpu_generation.py`,
+`actual_outputs/step10b_gpu_experiments/*` (fresh metrics/JSONL/console log),
+`validate_step10b_gpu.py`, and this PROVENANCE.md section. **Files extended
+(append-only, no prior content removed)**:
+`evaluation/GPU_REPRODUCTION_CROSSCHECK.md`, `ablation/GPU_ABLATION_UPDATE.md`.
+No file under `research/data/`, `final_demo_pack/`, `final_comparison/`,
+`src/`, `tests/`, `expected_outputs/`, or `research/prototype/outputs/` was
+modified — `outputs/final_gpu_validation_*` in particular was read-only for
+this step (candidate-ID list only) and never written to.
+
+**Limitations carried forward, unchanged**: no legal ground truth exists
+anywhere in this project; joint four-lever causal isolation does not exist
+(re-checked this step, still absent, none invented); narrow re-verification
+remains DIAGNOSTIC; the cumulative 1/56 correction rate remains
+un-reconstructable from a single protocol (PROTOCOL INSUFFICIENT, this
+step's own finding, not merely "not re-derived").
+
 ## Verifying this provenance yourself
 
 ```

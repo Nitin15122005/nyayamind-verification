@@ -1,0 +1,165 @@
+{
+  "experiment": "step10b_fresh_reproduction_of_final_gpu_validation_A_vs_B",
+  "fresh_reproduction_of": "research/prototype/outputs/final_gpu_validation_metrics.json (2026-08-27)",
+  "step": "STEP 10B",
+  "data": "50 deterministically-selected, NEVER-before-evaluated NyayaRAG cases (outputs/natural_candidate_selected_ids_50_final_validation.json), disjoint from all 130 document_ids used in run_A_n30/run_natural_targeted/natural_candidates_50_gpu/natural_candidates_batch2_gpu. Genuine fresh Qwen generation (once per case, shared across arms); genuine DeBERTa verification and Qwen correction, run independently per arm against that arm's own evidence pool.",
+  "n_cases": 50,
+  "seed": 42,
+  "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+  "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "arm_definitions": {
+    "A": {
+      "label": "baseline (production defaults, unmodified)",
+      "use_evidence_v1": false,
+      "premise_framing": "bare",
+      "atomic_scope_check": false,
+      "narrow_reverification_hypothesis": false,
+      "confidence_threshold": 0.7,
+      "evidence_pool_size": 59
+    },
+    "B": {
+      "label": "improved (all validated improvements enabled)",
+      "use_evidence_v1": true,
+      "premise_framing": "bare",
+      "atomic_scope_check": "assertion_spans",
+      "narrow_reverification_hypothesis": true,
+      "confidence_threshold": 0.7,
+      "evidence_pool_size": 136
+    }
+  },
+  "per_arm": {
+    "A": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_claims_evidence_matched": 132,
+      "evidence_match_method_counts": {
+        "exact_normalized": 130,
+        "no_evidence": 77,
+        "fuzzy": 2
+      },
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 129,
+        "NO_EVIDENCE": 77,
+        "CONTRADICTED": 3
+      },
+      "confidence_summary": {
+        "n": 132,
+        "mean": 0.9603012547348485,
+        "median": 0.9892578125,
+        "min": 0.52099609375,
+        "max": 0.9990234375
+      },
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 3,
+      "correction_scope_violation": 2,
+      "correction_sibling_regression": 0,
+      "failure_categories": {
+        "reverification_not_entailed": 3,
+        "correction_scope_violation": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claimtext_preserved": 16,
+      "unflagged_assertion_preserved": 18,
+      "unflagged_claim_checked": 21,
+      "runtime_seconds_arm_only": 141.9
+    },
+    "B": {
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_claims_evidence_matched": 147,
+      "evidence_match_method_counts": {
+        "exact_normalized": 145,
+        "no_evidence": 62,
+        "fuzzy": 2
+      },
+      "verdict_counts": {
+        "NOT_ENOUGH_INFORMATION": 144,
+        "NO_EVIDENCE": 62,
+        "CONTRADICTED": 3
+      },
+      "confidence_summary": {
+        "n": 147,
+        "mean": 0.9618974542942177,
+        "median": 0.9892578125,
+        "min": 0.52099609375,
+        "max": 0.9990234375
+      },
+      "correction_triggers": 5,
+      "correction_attempts": 5,
+      "correction_statuses": {
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "corrections_shipped_success": 0,
+      "correction_failed": 3,
+      "correction_scope_violation": 2,
+      "correction_sibling_regression": 0,
+      "failure_categories": {
+        "reverification_not_entailed": 3,
+        "correction_scope_violation": 2
+      },
+      "unsafe_corrections_shipped": 0,
+      "unflagged_claimtext_preserved": 16,
+      "unflagged_assertion_preserved": 18,
+      "unflagged_claim_checked": 21,
+      "runtime_seconds_arm_only": 145.15
+    }
+  },
+  "n_claims_shared_generation": 209,
+  "runtime_seconds_total": 1539.2305669784546,
+  "runtime_seconds_generation": 1252.183231830597,
+  "peak_vram_mib": 7547,
+  "peak_vram_reserved_mib": 8046,
+  "timestamp": "2026-09-05T13:51:38.332281+00:00",
+  "reproducibility_metadata": {
+    "git_commit": "4e221ba3426baa2e592b44d04c10ba092703b202",
+    "exact_command": "research/.venv/Scripts/python.exe research/prototype/testing/run_step10b_209_gpu_generation.py ",
+    "wall_clock_start_utc": "2026-09-05T13:25:37.865739+00:00",
+    "wall_clock_end_utc": "2026-09-05T13:51:38.332281+00:00",
+    "python_version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "torch_version": "2.2.2+cu121",
+    "torch_cuda_version": "12.1",
+    "gpu_device_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "nvidia_smi_query": "NVIDIA GeForce RTX 4050 Laptop GPU, 592.82, 6141 MiB",
+    "dataset_hashes": {
+      "candidate_file": {
+        "path": "research\\prototype\\outputs\\natural_candidate_selected_ids_50_final_validation.json",
+        "sha256": "954380e7695ceead984d67e7029186074a9ffd95130f02d17b01ea08d9877f9a"
+      },
+      "nyayarag_case_files": [
+        {
+          "path": "research\\data\\nyayarag\\CaseText_Statutes\\SCI_56k_multi_5k_summarised_w_sections.json",
+          "sha256": "afbaaa883cd46a8e2fc79d78edce20dac21485777c86bfa4314da32da9b67fed"
+        },
+        {
+          "path": "research\\data\\nyayarag\\CaseText_Statutes\\SCI_56k_single_5k_summarised_w_sections.json",
+          "sha256": "eeb441f97297f1b09a68260068cca02202a7410e8f7bbd1fec2a3b0670ee1747"
+        }
+      ],
+      "evidence_files": [
+        {
+          "path": "research\\data\\evidence\\canonical_statutes.jsonl",
+          "sha256": "cdef4eee5ed4d7a7e300d7b2907f2c8a1eca23653d76f92edd116b095b22c44a"
+        },
+        {
+          "path": "research\\data\\evidence\\evidence_audit.jsonl",
+          "sha256": "fef822cf8a4afe17280793771f9a2854e3fda66fb31d016d0c1cb383a6c97353"
+        },
+        {
+          "path": "research\\data\\evidence\\canonical_statutes_v1.jsonl",
+          "sha256": "2330919cc0bc3091ff9d6b986b317707405bd6b3902d353d299d5c7d36df7e63"
+        },
+        {
+          "path": "research\\data\\evidence\\evidence_audit_v1.jsonl",
+          "sha256": "0e73715e511df48fd2a4b9da251bb701d481256db38f0fdef26ff2778cae4d4a"
+        }
+      ]
+    }
+  }
+}

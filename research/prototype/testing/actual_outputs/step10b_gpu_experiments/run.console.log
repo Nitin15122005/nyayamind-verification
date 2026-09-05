@@ -1,0 +1,92 @@
+On-disk config/prototype.yaml is not modified; both arms are in-memory deep copies. Arm A = unmodified production defaults. Arm B = use_evidence_v1=true, atomic_scope_check=assertion_spans, narrow_reverification_hypothesis=true, premise_framing=bare, confidence_threshold=0.70.
+Arm A evidence pool: 59 usable records (use_evidence_v1=False).
+Arm B evidence pool: 136 usable records (use_evidence_v1=True).
+Loaded 50 selected cases (from natural_candidate_selected_ids_50_final_validation.json).
+Loading generator Qwen/Qwen2.5-7B-Instruct (4-bit, CUDA)...
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|##5       | 1/4 [00:04<00:12,  4.04s/it]Loading checkpoint shards:  50%|#####     | 2/4 [00:07<00:07,  3.67s/it]Loading checkpoint shards:  75%|#######5  | 3/4 [00:11<00:03,  3.70s/it]Loading checkpoint shards: 100%|##########| 4/4 [00:14<00:00,  3.54s/it]Loading checkpoint shards: 100%|##########| 4/4 [00:14<00:00,  3.62s/it]
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Loading verifier MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli (CUDA)...
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:492: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:497: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:509: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\transformers\models\qwen2\modeling_qwen2.py:693: UserWarning: 1Torch was not compiled with flash attention. (Triggered internally at ..\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:263.)
+  attn_output = torch.nn.functional.scaled_dot_product_attention(
+[1/50] 2003_999: gen=24.4s, claims=3, A_matched=2, B_matched=2
+[2/50] 2004_1020: gen=22.7s, claims=8, A_matched=8, B_matched=8
+[3/50] 2005_898: gen=21.5s, claims=4, A_matched=4, B_matched=4
+[4/50] 2006_641: gen=22.4s, claims=6, A_matched=6, B_matched=6
+[5/50] 2011_625: gen=23.4s, claims=6, A_matched=5, B_matched=5
+[6/50] 2014_66: gen=23.0s, claims=8, A_matched=7, B_matched=8
+[7/50] 2000_1266: gen=19.9s, claims=1, A_matched=0, B_matched=1
+[8/50] 2003_760: gen=25.8s, claims=4, A_matched=4, B_matched=4
+[9/50] 2004_315: gen=17.0s, claims=2, A_matched=0, B_matched=0
+[10/50] 2006_1150: gen=24.3s, claims=14, A_matched=8, B_matched=12
+[11/50] 2008_2318: gen=19.1s, claims=6, A_matched=4, B_matched=4
+[12/50] 2008_999: gen=21.2s, claims=1, A_matched=0, B_matched=0
+[13/50] 2009_1641: gen=15.5s, claims=2, A_matched=0, B_matched=0
+[14/50] 2021_677: gen=17.2s, claims=1, A_matched=1, B_matched=1
+[15/50] 2023_710: gen=26.3s, claims=6, A_matched=1, B_matched=2
+[16/50] 1978_206: gen=23.2s, claims=3, A_matched=2, B_matched=3
+[17/50] 2021_622: gen=26.6s, claims=4, A_matched=0, B_matched=0
+[18/50] 1954_121: gen=22.3s, claims=1, A_matched=0, B_matched=0
+[19/50] 1962_210: gen=40.1s, claims=10, A_matched=3, B_matched=3
+[20/50] 1989_215: gen=32.3s, claims=0, A_matched=0, B_matched=0
+[21/50] 1998_174: gen=40.7s, claims=2, A_matched=1, B_matched=1
+[22/50] 1998_826: gen=28.1s, claims=0, A_matched=0, B_matched=0
+[23/50] 2002_731: gen=26.9s, claims=6, A_matched=5, B_matched=6
+[24/50] 2003_1235: gen=26.6s, claims=2, A_matched=0, B_matched=1
+[25/50] 2003_161: gen=24.2s, claims=1, A_matched=1, B_matched=1
+[26/50] 2004_864: gen=24.6s, claims=2, A_matched=0, B_matched=0
+[27/50] 2005_850: gen=22.8s, claims=1, A_matched=1, B_matched=1
+[28/50] 2006_5: gen=25.4s, claims=8, A_matched=6, B_matched=8
+[29/50] 2006_849: gen=20.7s, claims=0, A_matched=0, B_matched=0
+[30/50] 2023_613: gen=22.9s, claims=5, A_matched=3, B_matched=3
+[31/50] 1996_685: gen=24.9s, claims=4, A_matched=2, B_matched=2
+[32/50] 1976_83: gen=25.1s, claims=10, A_matched=0, B_matched=0
+[33/50] 2000_152: gen=29.2s, claims=6, A_matched=6, B_matched=6
+[34/50] 2010_554: gen=25.3s, claims=2, A_matched=0, B_matched=0
+[35/50] 1953_64: gen=25.7s, claims=4, A_matched=0, B_matched=1
+[36/50] 1972_232: gen=25.6s, claims=0, A_matched=0, B_matched=0
+[37/50] 1950_13: gen=27.5s, claims=2, A_matched=0, B_matched=0
+[38/50] 1972_37: gen=26.0s, claims=1, A_matched=0, B_matched=0
+[39/50] 2006_770: gen=25.4s, claims=4, A_matched=4, B_matched=4
+[40/50] 2007_579: gen=21.1s, claims=4, A_matched=4, B_matched=4
+[41/50] 2017_182: gen=25.4s, claims=8, A_matched=4, B_matched=4
+[42/50] 2021_11: gen=20.9s, claims=5, A_matched=5, B_matched=5
+[43/50] 2021_181: gen=23.7s, claims=4, A_matched=3, B_matched=4
+[44/50] 2006_270: gen=27.9s, claims=5, A_matched=5, B_matched=5
+[45/50] 2006_412: gen=28.4s, claims=10, A_matched=6, B_matched=6
+[46/50] 2007_1348: gen=32.1s, claims=8, A_matched=7, B_matched=8
+[47/50] 2008_1768: gen=27.4s, claims=6, A_matched=6, B_matched=6
+[48/50] 2009_119: gen=27.7s, claims=4, A_matched=4, B_matched=4
+[49/50] 2010_229: gen=27.8s, claims=4, A_matched=4, B_matched=4
+[50/50] 2019_336: gen=23.7s, claims=1, A_matched=0, B_matched=0
+
+========================================================================
+metric                                      A (baseline)    B (improved)
+------------------------------------------------------------------------
+claims / evidence-matched                        209/132         209/147
+verdict counts                            {'NOT_ENOUGH_INFORMATION': 129, 'NO_EVIDENCE': 77, 'CONTRADICTED': 3}{'NOT_ENOUGH_INFORMATION': 144, 'NO_EVIDENCE': 62, 'CONTRADICTED': 3}
+correction triggers                                    5               5
+corrections shipped                                    0               0
+correction_failed                                      3               3
+scope_violation                                        2               2
+sibling_regression                                     0               0
+unsafe shipped                                         0               0
+========================================================================
+
+Total runtime: 1539.2s (generation: 1252.2s), peak VRAM: 7547 MiB (reserved: 8046 MiB)
+
+Wrote D:\Programs\nyayamind-verification\research\prototype\testing\actual_outputs\step10b_gpu_experiments\step10b_final_gpu_validation_metrics.json
+Wrote D:\Programs\nyayamind-verification\research\prototype\testing\actual_outputs\step10b_gpu_experiments\step10b_final_gpu_validation_A.jsonl
+Wrote D:\Programs\nyayamind-verification\research\prototype\testing\actual_outputs\step10b_gpu_experiments\step10b_final_gpu_validation_B.jsonl
+Wrote D:\Programs\nyayamind-verification\research\prototype\testing\actual_outputs\step10b_gpu_experiments\step10b_final_gpu_validation_corrections_detail.jsonl
+
+STEP10B_RUN_COMPLETE
