@@ -1,0 +1,94 @@
+{
+  "n_scope_violations_replayed": 11,
+  "n_unblocked_final": 1,
+  "results": [
+    {
+      "batch": "batch1",
+      "document_id": "2009_865",
+      "target_claim_id": "c2",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2020_51",
+      "target_claim_id": "c4",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch1",
+      "document_id": "1978_196",
+      "target_claim_id": "c4",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2003_924",
+      "target_claim_id": "c5",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch1",
+      "document_id": "2009_431",
+      "target_claim_id": "c2",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch1",
+      "document_id": "1991_110",
+      "target_claim_id": "c2",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2022_435",
+      "target_claim_id": "c3",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2022_435",
+      "target_claim_id": "c3",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2024_300",
+      "target_claim_id": "c2",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch2",
+      "document_id": "2024_300",
+      "target_claim_id": "c2",
+      "legacy_violation": true,
+      "assertion_spans_violation": true,
+      "unblocked": false
+    },
+    {
+      "batch": "batch2",
+      "document_id": "1997_1306",
+      "target_claim_id": "c6",
+      "legacy_violation": true,
+      "assertion_spans_violation": false,
+      "unblocked": true
+    }
+  ]
+}

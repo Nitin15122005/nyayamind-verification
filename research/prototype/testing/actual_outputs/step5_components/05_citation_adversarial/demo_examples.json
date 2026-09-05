@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "category": "wrong_act",
+      "source_test": "test_adversarial_citations.py::test_wrong_act_crpc_vs_cpc_section_100_never_cross_matches",
+      "input_citation": {
+        "provision_type": "Section",
+        "provision_number": "100",
+        "subsection": null,
+        "act_raw": "the Code of Criminal Procedure (CrPC)",
+        "act_norm": "code of criminal procedure 1973"
+      },
+      "available_evidence": [
+        "Section 100 in The Code of Civil Procedure, 1908"
+      ],
+      "actual_matched": false,
+      "actual_match_method": "no_evidence",
+      "expected_software_behavior": "must resolve to NO_EVIDENCE, never cross-match to the CPC record despite both being 'Section 100' and sharing 'code'/'procedure' tokens",
+      "pass": true,
+      "note": "This is a retrieval/matching behavior finding, not a legal-reasoning failure -- the corpus genuinely has no CrPC Section 100 record; the matcher correctly refuses to guess."
+    },
+    {
+      "category": "aliases",
+      "source_test": "test_adversarial_citations.py::test_aliases_crpc_and_cpc_are_distinct_and_each_resolves_correctly",
+      "input": {
+        "CrPC": "CrPC",
+        "CPC": "CPC"
+      },
+      "actual_normalize_act_crpc": "code of criminal procedure 1973",
+      "actual_normalize_act_cpc": "code of civil procedure 1908",
+      "expected_software_behavior": "CrPC -> 'code of criminal procedure 1973', CPC -> 'code of civil procedure 1908', and the two must be distinct",
+      "pass": true
+    }
+  ],
+  "all_pass": true
+}

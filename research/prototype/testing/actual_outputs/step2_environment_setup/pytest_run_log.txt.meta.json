@@ -1,0 +1,17 @@
+{
+  "produced_at": "2026-09-05",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "config_snapshot": "research/prototype/config/prototype.yaml as committed (unmodified), sha256 dcbc1dc6525659d871bb911f474337f06e88d99d08ef42d1c97ee7d49c73b630",
+  "python_version": "3.11.9",
+  "key_package_versions": {
+    "torch": "2.2.2+cu121",
+    "transformers": "4.40.2",
+    "pytest": "9.1.1"
+  },
+  "device": "cpu (torch.cuda.is_available() == False on this machine - AMD Radeon integrated GPU, no NVIDIA hardware present)",
+  "seed": "N/A - unit tests, not a pipeline run",
+  "command": "research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q",
+  "result": "205 passed, 3 warnings, in 46.16s",
+  "exit_code": 0,
+  "notes": "Includes test_correction_path_real_integration.py, which downloads and runs the real MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli model on CPU (network access to huggingface.co required, succeeded). This matches REPRODUCIBILITY.md's documented expected result (205 passed) exactly, with zero test modifications."
+}

@@ -1,0 +1,38 @@
+======================================================================
+STEP 4 -- GOLD-02 synthetic stress set run
+======================================================================
+Hash verified: 2dba39cc61eb94aa81daeff9817026ace0f531174e9312d49ce12522b3e9b516 (matches STEP 3 recorded hash)
+Record count verified: 59
+NOTE: GOLD-02 has no literal 'expected_label' field (unlike GOLD-01). Expected label is CONTRADICTED-by-construction for every record -- see this file's module docstring for the documented reasoning.
+NVIDIA GPU available = NO
+Re-derived 59 synthetic claims from the v0 evidence pool (same construction used to build the frozen fixture)
+CONFIRMED: all 59 re-derived synthetic claims exactly match the frozen fixture's own stored fields (claim text, transform rule, evidence identity, canonical text). The dataset is reproducible from the current codebase.
+
+Loading MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli on device=cpu ...
+Loaded in 3.3s
+
+--- Running framing=labeled ---
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold02_synthetic\gold02_predictions_labeled.jsonl (59 records)
+Contradiction recall (== accuracy, only gold class is CONTRADICTED): 0.4576
+  (macro F1 = 0.2535 -- degenerate/less meaningful here since only one gold class is present in this dataset, per its documented narrower scope)
+  no-evidence (predicted_label unreachable, no premise matched): 15
+  Confusion matrix (rows = expected/gold, cols = predicted/actual; N_EV = NO_EVIDENCE, never reached the verifier):
+    gold vs pred        ENT    CON    NEI   N_EV   total
+    ENT                   0      0      0      0       0
+    CON                   0     27     17     15      59
+    NEI                   0      0      0      0       0
+
+--- Running framing=bare ---
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold02_synthetic\gold02_predictions_bare.jsonl (59 records)
+Contradiction recall (== accuracy, only gold class is CONTRADICTED): 0.3559
+  (macro F1 = 0.2154 -- degenerate/less meaningful here since only one gold class is present in this dataset, per its documented narrower scope)
+  no-evidence (predicted_label unreachable, no premise matched): 15
+  Confusion matrix (rows = expected/gold, cols = predicted/actual; N_EV = NO_EVIDENCE, never reached the verifier):
+    gold vs pred        ENT    CON    NEI   N_EV   total
+    ENT                   0      0      0      0       0
+    CON                   0     21     23     15      59
+    NEI                   0      0      0      0       0
+
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold02_synthetic\gold02_metrics.json
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold02_synthetic\gold02_report.txt
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\run_metadata\gold02_run.meta.json

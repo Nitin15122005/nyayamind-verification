@@ -1,0 +1,70 @@
+{
+  "ship_case": {
+    "source_of_input": "tests/test_correction_path_real_integration.py::test_full_correction_path_triggers_and_reverifies_with_real_verifier (exact same fixtures)",
+    "generator": "FakeGenerator (supplies pre-existing text; real 7B Qwen model NOT invoked)",
+    "corrector": "ScriptedCorrector (supplies pre-authored corrected text; real 7B Qwen model NOT invoked)",
+    "gpu_generation_executed": false,
+    "input_corrupted_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+    "candidate_correction_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+    "actual_correction_block": {
+      "triggered_for_claim_id": "c1",
+      "attempts": 1,
+      "status": "corrected",
+      "regenerated_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "original_field_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "reverification": {
+        "claim_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "reverified_hypothesis": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "ENTAILED",
+        "confidence": 0.992287278175354,
+        "sub_reason": null
+      },
+      "sibling_regressions": [],
+      "corr_meta": {
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "max_new_tokens": 220,
+        "do_sample": false,
+        "seed": 42,
+        "corrected_at": "2026-09-05T11:21:12.829426Z"
+      }
+    },
+    "actual_final_field": {
+      "text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "source": "corrected"
+    },
+    "expected_behavior": "correction triggered for claim 302 only; real re-verification via real DeBERTa verifier; SHIP (status=corrected) iff re-verification verdict is ENTAILED",
+    "pass": true
+  },
+  "reject_case": {
+    "source_of_input": "tests/test_correction_path_real_integration.py::test_scope_violation_protection_when_corrector_alters_unflagged_claim (exact same fixtures)",
+    "generator": "FakeGenerator (real 7B Qwen model NOT invoked)",
+    "corrector": "ScriptedCorrector -- deliberately alters the UNFLAGGED sentence too (real 7B Qwen model NOT invoked)",
+    "gpu_generation_executed": false,
+    "input_corrupted_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+    "candidate_correction_text_bad": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with theft, which may be relevant if the prosecution can show that the accused acted alone.",
+    "actual_correction_block": {
+      "triggered_for_claim_id": "c1",
+      "attempts": 1,
+      "status": "correction_scope_violation",
+      "regenerated_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with theft, which may be relevant if the prosecution can show that the accused acted alone.",
+      "original_field_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "reverification": null,
+      "corr_meta": {
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "max_new_tokens": 220,
+        "do_sample": false,
+        "seed": 42,
+        "corrected_at": "2026-09-05T11:21:14.000149Z"
+      }
+    },
+    "actual_final_field": {
+      "text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "source": "correction_scope_violation"
+    },
+    "expected_behavior": "_scope_violation() must catch the altered unflagged sentence BEFORE re-verification and refuse to ship it -- status=correction_scope_violation, reverification=None, original corrupted text shipped instead",
+    "pass": true
+  },
+  "citation_identity_note": "Both cases route the corrected claim back to claim_id via ordinal position within its citation-identity group (src/pipeline.py::_citation_identity) -- see record['claims'] for the claim_id continuity."
+}

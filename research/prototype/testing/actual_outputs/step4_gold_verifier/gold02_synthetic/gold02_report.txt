@@ -1,0 +1,22 @@
+GOLD-02 -- Synthetic Stress Set (n=59) -- STEP 4 Evaluation
+Model: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+Device: cpu (no NVIDIA GPU present on this machine)
+Confidence threshold: 0.7 (unchanged from production config)
+Production premise_framing: labeled
+Expected label: CONTRADICTED for all 59 records (by construction, no literal field -- see metadata)
+
+=== framing=labeled (PRIMARY / production) ===
+contradiction_recall=0.4576  elapsed=26.4s
+Confusion matrix (rows = expected/gold, cols = predicted/actual; N_EV = NO_EVIDENCE, never reached the verifier):
+  gold vs pred        ENT    CON    NEI   N_EV   total
+  ENT                   0      0      0      0       0
+  CON                   0     27     17     15      59
+  NEI                   0      0      0      0       0
+
+=== framing=bare (secondary reference) ===
+contradiction_recall=0.3559  elapsed=26.6s
+Confusion matrix (rows = expected/gold, cols = predicted/actual; N_EV = NO_EVIDENCE, never reached the verifier):
+  gold vs pred        ENT    CON    NEI   N_EV   total
+  ENT                   0      0      0      0       0
+  CON                   0     21     23     15      59
+  NEI                   0      0      0      0       0

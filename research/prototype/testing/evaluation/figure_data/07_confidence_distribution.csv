@@ -1,0 +1,5 @@
+dataset,verdict,mean_confidence,median_confidence,n,source
+588_claim_aggregate,ENTAILED,0.8831725801740374,0.8998330235481262,21,step6/588_claims/claims_588_metrics.json
+588_claim_aggregate,CONTRADICTED,0.8452063918113708,0.8003418445587158,5,step6/588_claims/claims_588_metrics.json
+588_claim_aggregate,NOT_ENOUGH_INFORMATION,0.8729241560776155,0.9430956840515137,364,step6/588_claims/claims_588_metrics.json
+588_claim_aggregate,ALL,0.8731206383460607,0.9416141510009766,390,step6/588_claims/claims_588_metrics.json

@@ -1,0 +1,47 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- D:\nyaymind\nyayamind-verification\research\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\nyaymind\nyayamind-verification
+plugins: typeguard-4.6.0
+collecting ... collected 37 items / 5 deselected / 32 selected
+
+research/prototype/tests/test_pipeline_mock.py::test_mode_a_no_verification_no_correction PASSED [  3%]
+research/prototype/tests/test_pipeline_mock.py::test_no_evidence_claim_never_triggers_correction PASSED [  6%]
+research/prototype/tests/test_pipeline_mock.py::test_contradicted_claim_triggers_correction_and_succeeds PASSED [  9%]
+research/prototype/tests/test_pipeline_mock.py::test_correction_reproducibility_metadata_reaches_output_record PASSED [ 12%]
+research/prototype/tests/test_pipeline_mock.py::test_correction_failure_keeps_original_text_but_flags_status PASSED [ 15%]
+research/prototype/tests/test_pipeline_mock.py::test_correction_that_changes_the_citation_itself_is_rejected_not_shipped PASSED [ 18%]
+research/prototype/tests/test_pipeline_mock.py::test_low_confidence_nei_triggers_correction_entailed_does_not PASSED [ 21%]
+research/prototype/tests/test_pipeline_mock.py::test_genuine_high_confidence_neutral_does_not_trigger_correction PASSED [ 25%]
+research/prototype/tests/test_pipeline_mock.py::test_unflagged_claim_preserved_verbatim_when_correction_succeeds PASSED [ 28%]
+research/prototype/tests/test_pipeline_mock.py::test_correction_scope_violation_when_unflagged_claim_altered PASSED [ 31%]
+research/prototype/tests/test_pipeline_mock.py::test_replacement_matched_by_ordinal_position_when_claims_share_citation PASSED [ 34%]
+research/prototype/tests/test_pipeline_mock.py::test_scope_violation_still_caught_when_shared_citation_claim_altered PASSED [ 37%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_off_by_default PASSED [ 40%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_ships_a_narrowly_scoped_edit_legacy_would_reject PASSED [ 43%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_still_rejects_when_unflagged_content_actually_changes PASSED [ 46%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_falls_back_to_claim_text_when_no_assertion_text_present PASSED [ 50%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_is_inert_for_the_synthetic_two_claim_shape PASSED [ 53%]
+research/prototype/tests/test_pipeline_mock.py::test_assertion_spans_ships_respectively_edit_legacy_would_reject PASSED [ 56%]
+research/prototype/tests/test_pipeline_mock.py::test_assertion_spans_still_rejects_when_sibling_description_changes PASSED [ 59%]
+research/prototype/tests/test_pipeline_mock.py::test_assertion_spans_still_rejects_when_sibling_number_silently_changes PASSED [ 62%]
+research/prototype/tests/test_pipeline_mock.py::test_flagship_1991_110_end_to_end_correction_ships_under_assertion_spans PASSED [ 65%]
+research/prototype/tests/test_pipeline_mock.py::test_real_1997_1306_correction_ships_under_citation_keyword_boundary_split PASSED [ 68%]
+research/prototype/tests/test_pipeline_mock.py::test_atomic_scope_check_default_reproduces_legacy_end_to_end PASSED [ 71%]
+research/prototype/tests/test_pipeline_mock.py::test_single_citation_claim_behaviour_unchanged_by_ordinal_fix PASSED [ 75%]
+research/prototype/tests/test_pipeline_mock.py::test_narrow_reverification_hypothesis_off_by_default PASSED [ 78%]
+research/prototype/tests/test_pipeline_mock.py::test_narrow_reverification_ships_when_full_sentence_dilutes_confidence PASSED [ 81%]
+research/prototype/tests/test_pipeline_mock.py::test_narrow_reverification_never_synthesizes_text PASSED [ 84%]
+research/prototype/tests/test_pipeline_mock.py::test_sibling_regression_check_rejects_a_genuine_regression PASSED [ 87%]
+research/prototype/tests/test_pipeline_mock.py::test_sibling_regression_check_does_not_run_under_legacy_mode PASSED [ 90%]
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence PASSED [ 93%]
+research/prototype/tests/test_correction_path_real_integration.py::test_full_correction_path_triggers_and_reverifies_with_real_verifier PASSED [ 96%]
+research/prototype/tests/test_correction_path_real_integration.py::test_scope_violation_protection_when_corrector_alters_unflagged_claim PASSED [100%]
+
+============================== warnings summary ===============================
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+  D:\nyaymind\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================= 32 passed, 5 deselected, 1 warning in 7.40s =================

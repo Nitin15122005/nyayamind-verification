@@ -1,0 +1,267 @@
+{
+  "source_of_input": "tests/test_correction_path_real_integration.py (exact same FakeGenerator/ScriptedCorrector fixtures, real run_case() call)",
+  "source_test": "test_full_correction_path_triggers_and_reverifies_with_real_verifier, test_scope_violation_protection_when_corrector_alters_unflagged_claim",
+  "expected_behavior": "src/pipeline.py::run_case's final assembly must correctly select final_field.source per status, include a reproducibility block, and strip internal bookkeeping keys, for both a shipped correction and a scope-violation rejection",
+  "gpu_generation_executed": false,
+  "ship_case_full_record": {
+    "document_id": "1994_495",
+    "case_text": "facts...",
+    "generated_field": {
+      "text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "quantization": {
+        "load_in_4bit": true
+      },
+      "generation_params": {
+        "max_new_tokens": 200,
+        "do_sample": false,
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "seed": 42
+      },
+      "generated_at": "2026-09-05T11:21:12.277056Z"
+    },
+    "claims": [
+      {
+        "claim_id": "c1",
+        "claim_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_spans": [
+          "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "302",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "CONTRADICTED",
+        "confidence": 0.9985989928245544,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      },
+      {
+        "claim_id": "c2",
+        "claim_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_spans": [
+          "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "148",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever is guilty of rioting, being armed with a deadly weapon or with anything which, used as a weapon of offence, is likely to cause death, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "NOT_ENOUGH_INFORMATION",
+        "confidence": 0.9915558099746704,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      }
+    ],
+    "evidence": {
+      "total_claims": 2,
+      "claims_with_evidence": 2,
+      "claims_no_evidence": 0,
+      "usable_evidence_pool_size": 59
+    },
+    "verification": {
+      "mode": "C",
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "confidence_threshold": 0.7,
+      "counts": {
+        "ENTAILED": 0,
+        "CONTRADICTED": 1,
+        "NOT_ENOUGH_INFORMATION": 1,
+        "NO_EVIDENCE": 0
+      },
+      "disclaimer": "Verdicts reflect a small public NLI model's statistical confidence against a 59-record, third-party-sourced evidence corpus. Not a legal-correctness determination; verifier accuracy is not yet established (no gold evaluation has been run)."
+    },
+    "correction": {
+      "triggered_for_claim_id": "c1",
+      "attempts": 1,
+      "status": "corrected",
+      "regenerated_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "original_field_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "reverification": {
+        "claim_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "reverified_hypothesis": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "ENTAILED",
+        "confidence": 0.992287278175354,
+        "sub_reason": null
+      },
+      "sibling_regressions": [],
+      "corr_meta": {
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "max_new_tokens": 220,
+        "do_sample": false,
+        "seed": 42,
+        "corrected_at": "2026-09-05T11:21:12.829426Z"
+      }
+    },
+    "final_field": {
+      "text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "source": "corrected"
+    },
+    "reproducibility": {
+      "mode": "C",
+      "seed": 42,
+      "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+      "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "quantization": {
+        "load_in_4bit": true,
+        "bnb_4bit_use_double_quant": true,
+        "bnb_4bit_quant_type": "nf4",
+        "bnb_4bit_compute_dtype": "bfloat16"
+      },
+      "confidence_threshold": 0.7,
+      "premise_framing": "labeled",
+      "timestamp": "2026-09-05T11:21:13.363328Z",
+      "software_versions": {
+        "python": "3.11.9",
+        "torch": "2.2.2+cu121",
+        "transformers": "4.40.2",
+        "accelerate": "0.29.3",
+        "bitsandbytes": "0.43.1",
+        "peft": "0.10.0"
+      }
+    }
+  },
+  "reject_case_full_record": {
+    "document_id": "1994_495",
+    "case_text": "facts...",
+    "generated_field": {
+      "text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "quantization": {
+        "load_in_4bit": true
+      },
+      "generation_params": {
+        "max_new_tokens": 200,
+        "do_sample": false,
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "seed": 42
+      },
+      "generated_at": "2026-09-05T11:21:13.363328Z"
+    },
+    "claims": [
+      {
+        "claim_id": "c1",
+        "claim_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_spans": [
+          "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "302",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "CONTRADICTED",
+        "confidence": 0.9985989928245544,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      },
+      {
+        "claim_id": "c2",
+        "claim_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_spans": [
+          "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "148",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever is guilty of rioting, being armed with a deadly weapon or with anything which, used as a weapon of offence, is likely to cause death, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "NOT_ENOUGH_INFORMATION",
+        "confidence": 0.9915558099746704,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      }
+    ],
+    "evidence": {
+      "total_claims": 2,
+      "claims_with_evidence": 2,
+      "claims_no_evidence": 0,
+      "usable_evidence_pool_size": 59
+    },
+    "verification": {
+      "mode": "C",
+      "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "confidence_threshold": 0.7,
+      "counts": {
+        "ENTAILED": 0,
+        "CONTRADICTED": 1,
+        "NOT_ENOUGH_INFORMATION": 1,
+        "NO_EVIDENCE": 0
+      },
+      "disclaimer": "Verdicts reflect a small public NLI model's statistical confidence against a 59-record, third-party-sourced evidence corpus. Not a legal-correctness determination; verifier accuracy is not yet established (no gold evaluation has been run)."
+    },
+    "correction": {
+      "triggered_for_claim_id": "c1",
+      "attempts": 1,
+      "status": "correction_scope_violation",
+      "regenerated_text": "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 shall be punished with death, or imprisonment for life, and shall also be liable to fine. Additionally, Section 148 deals with theft, which may be relevant if the prosecution can show that the accused acted alone.",
+      "original_field_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "reverification": null,
+      "corr_meta": {
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "max_new_tokens": 220,
+        "do_sample": false,
+        "seed": 42,
+        "corrected_at": "2026-09-05T11:21:14.000149Z"
+      }
+    },
+    "final_field": {
+      "text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+      "source": "correction_scope_violation"
+    },
+    "reproducibility": {
+      "mode": "C",
+      "seed": 42,
+      "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+      "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "quantization": {
+        "load_in_4bit": true,
+        "bnb_4bit_use_double_quant": true,
+        "bnb_4bit_quant_type": "nf4",
+        "bnb_4bit_compute_dtype": "bfloat16"
+      },
+      "confidence_threshold": 0.7,
+      "premise_framing": "labeled",
+      "timestamp": "2026-09-05T11:21:14.000149Z",
+      "software_versions": {
+        "python": "3.11.9",
+        "torch": "2.2.2+cu121",
+        "transformers": "4.40.2",
+        "accelerate": "0.29.3",
+        "bitsandbytes": "0.43.1",
+        "peft": "0.10.0"
+      }
+    }
+  },
+  "note": "Full final output records (src/pipeline.py::run_case's complete return value) for both a shipped correction and a scope-violation rejection -- demonstrates final_field source selection, reproducibility block, and stripped internal keys end to end.",
+  "gpu_dependent_portions_not_executed": "Generation (stage 1) and real correction text generation (stage 6) both require the real 7B Qwen model, which requires an NVIDIA GPU not present on this machine (see STEP 2). Both are supplied here by FakeGenerator/ScriptedCorrector instead, exactly as tests/test_correction_path_real_integration.py already does. Everything else (claim parsing, evidence retrieval, verification, verdict, scope check, sibling-regression check, re-verification, shipping decision, final assembly) is 100% real, unmodified production code."
+}

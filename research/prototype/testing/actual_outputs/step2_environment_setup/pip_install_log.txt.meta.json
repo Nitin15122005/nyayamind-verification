@@ -1,0 +1,27 @@
+{
+  "produced_at": "2026-09-05",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "config_snapshot": "N/A - environment setup step, no pipeline config involved",
+  "python_version": "3.11.9 (exact match to REPRODUCIBILITY.md's pinned version)",
+  "interpreter_source": "C:\\Users\\darsh\\AppData\\Local\\Python\\pythoncore-3.11-64\\python.exe (pre-existing on this machine, discovered via `py -0p`)",
+  "venv_path": "research/.venv (created fresh this session; gitignored per .gitignore line 3)",
+  "key_package_versions": {
+    "torch": "2.2.2+cu121",
+    "transformers": "4.40.2",
+    "accelerate": "0.29.3",
+    "bitsandbytes": "0.43.1",
+    "peft": "0.10.0",
+    "trl": "0.8.6",
+    "sentencepiece": "0.2.2",
+    "PyYAML": "6.0.3",
+    "pytest": "9.1.1",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "datasets": "2.19.1"
+  },
+  "version_match": "Every package installed at exactly the version pinned in research/requirements.txt - no substitutions, no --no-deps hacks, no relaxed pins.",
+  "device": "N/A - this is the dependency-install step, no device used",
+  "command": "research/.venv/Scripts/python.exe -m pip install -r research/requirements.txt",
+  "exit_code": 0,
+  "network_used": "pypi.org / files.pythonhosted.org / download.pytorch.org (cu121 extra index)"
+}

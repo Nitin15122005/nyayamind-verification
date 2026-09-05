@@ -1,0 +1,59 @@
+{
+  "source_of_input": "tests/test_claim_parser_bugfixes.py, _BUG1_SENTENCE (verbatim from real Qwen output, document_id 2007_1517)",
+  "expected_behavior_asserted_by": "tests/test_claim_parser_bugfixes.py::test_bug1_ipc_sections_do_not_merge_with_poca_act_name, test_bug1_poca_citation_recovered_not_lost",
+  "input_sentence": "The case is grounded in the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976, specifically Regulation 15(2), and the Manual on Disciplinary Action and Related Matters of UCO Bank, particularly Clause 22 thereof, as well as Sections 120-B, 471, and 477 of the Indian Penal Code and Section 5(2) read with Section 1(d) of the Prevention of Corruption Act, 1947, which pertain to the criminal charges and the prevention of corruption respectively.",
+  "actual_extracted_citations": [
+    {
+      "provision_type": "Regulation",
+      "provision_number": "15",
+      "subsection": "2",
+      "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+      "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+    },
+    {
+      "provision_type": "Clause",
+      "provision_number": "22",
+      "subsection": null,
+      "act_raw": "the United Commercial Bank (Conduct and Discipline and Appeal) Regulation, 1976",
+      "act_norm": "united commercial bank (conduct and discipline and appeal) regulation 1976"
+    },
+    {
+      "provision_type": "Section",
+      "provision_number": "120-B",
+      "subsection": null,
+      "act_raw": "the Indian Penal Code",
+      "act_norm": "indian penal code 1860"
+    },
+    {
+      "provision_type": "Section",
+      "provision_number": "471",
+      "subsection": null,
+      "act_raw": "the Indian Penal Code",
+      "act_norm": "indian penal code 1860"
+    },
+    {
+      "provision_type": "Section",
+      "provision_number": "477",
+      "subsection": null,
+      "act_raw": "the Indian Penal Code",
+      "act_norm": "indian penal code 1860"
+    },
+    {
+      "provision_type": "Section",
+      "provision_number": "5",
+      "subsection": "2",
+      "act_raw": "the Indian Penal Code",
+      "act_norm": "indian penal code 1860"
+    },
+    {
+      "provision_type": "Section",
+      "provision_number": "1",
+      "subsection": "d",
+      "act_raw": "the Prevention of Corruption Act, 1947",
+      "act_norm": "prevention of corruption act 1947"
+    }
+  ],
+  "actual_extracted_claims_count": 7,
+  "software_invariant_checked": "IPC 120-B/471/477 citations must not have their act polluted by the trailing POCA clause; the POCA Section 1(d) citation must be recovered as its own, separate claim, not swallowed",
+  "pass": true
+}

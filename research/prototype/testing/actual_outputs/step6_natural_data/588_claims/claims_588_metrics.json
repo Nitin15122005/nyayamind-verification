@@ -1,0 +1,55 @@
+{
+  "dataset_tag": "588_claim_natural_aggregate",
+  "classification": "METRIC-ONLY -- no independent correctness labels",
+  "n_distinct_texts": 133,
+  "n_claims": 588,
+  "n_evidence_matched": 390,
+  "evidence_coverage": 0.6632653061224489,
+  "no_evidence_rate": 0.33673469387755106,
+  "verdict_distribution": {
+    "NOT_ENOUGH_INFORMATION": 364,
+    "NO_EVIDENCE": 198,
+    "ENTAILED": 21,
+    "CONTRADICTED": 5
+  },
+  "n_verification_errors": 0,
+  "confidence_overall": {
+    "n": 390,
+    "mean": 0.8731206383460607,
+    "median": 0.9416141510009766
+  },
+  "confidence_by_verdict": {
+    "ENTAILED": {
+      "n": 21,
+      "mean": 0.8831725801740374,
+      "median": 0.8998330235481262,
+      "min": 0.7123641967773438,
+      "max": 0.9804450273513794
+    },
+    "CONTRADICTED": {
+      "n": 5,
+      "mean": 0.8452063918113708,
+      "median": 0.8003418445587158,
+      "min": 0.7620325088500977,
+      "max": 0.9866379499435425
+    },
+    "NOT_ENOUGH_INFORMATION": {
+      "n": 364,
+      "mean": 0.8729241560776155,
+      "median": 0.9430956840515137,
+      "min": 0.3701574504375458,
+      "max": 0.999072790145874
+    }
+  },
+  "config": {
+    "use_evidence_v1": true,
+    "premise_framing": "labeled",
+    "confidence_threshold": 0.7,
+    "evidence_pool_size": 136
+  },
+  "elapsed_seconds": 137.11797213554382,
+  "gpu_execution_claimed": false,
+  "qwen_generation_or_correction_invoked": false,
+  "device": "cpu",
+  "cuda_available": false
+}

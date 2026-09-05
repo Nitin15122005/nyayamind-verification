@@ -1,0 +1,83 @@
+======================================================================
+STEP 8 CONSOLIDATION VALIDATION REPORT
+======================================================================
+
+PASSED (75):
+  [PASS] Source files exist: gold01_metrics.json present
+  [PASS] Source files exist: gold02_metrics.json present
+  [PASS] Source files exist: claims_588_metrics.json present
+  [PASS] Source files exist: paired_209_metrics.json present
+  [PASS] Source files exist: batches_analysis.json present
+  [PASS] Source files exist: ABLATION_SUMMARY.json present
+  [PASS] Source files exist: final_metrics.json present
+  [PASS] Source files exist: labeled_correction_validation_gpu_metrics.json present
+  [PASS] Source files exist: final_gpu_validation_metrics.json present
+  [PASS] Source files exist: final_validation_bare_vs_labeled_cpu_metrics.json present
+  [PASS] Canonical metrics reconcile: M02 (controlled benchmark accuracy, labeled) reconciles with source
+  [PASS] Canonical metrics reconcile: M05 (evidence coverage Arm B) reconciles with source
+  [PASS] 26 headline values reconcile: '63.2%' reconciles exactly (value=63.2)
+  [PASS] 26 headline values reconcile: '70.3%' reconciles exactly (value=70.3)
+  [PASS] 26 headline values reconcile: '15 gains' reconciles exactly (value=15)
+  [PASS] 26 headline values reconcile: '0 losses' reconciles exactly (value=0)
+  [PASS] 26 headline values reconcile: 'chi2 13.0667' reconciles exactly (value=13.0667)
+  [PASS] 26 headline values reconcile: 'p 0.000301' reconciles exactly (value=0.000301)
+  [PASS] 26 headline values reconcile: 'macro_f1 bare 0.7487' reconciles exactly (value=0.7487)
+  [PASS] 26 headline values reconcile: 'macro_f1 labeled 0.9684' reconciles exactly (value=0.9684)
+  [PASS] 26 headline values reconcile: 'accuracy bare 0.7333' reconciles exactly (value=0.7333)
+  [PASS] 26 headline values reconcile: 'accuracy labeled 0.9714' reconciles exactly (value=0.9714)
+  [PASS] 26 headline values reconcile: 'chi2 98.01 (premise framing)' reconciles exactly (value=98.01)
+  [PASS] 26 headline values reconcile: 'p 4.16e-23 (premise framing McNemar)' reconciles exactly (value=4.1627504389864034e-23)
+  [PASS] 26 headline values reconcile: 'p 1.5777e-30 (exact sign test)' reconciles exactly (value=1.5777218104420236e-30)
+  [PASS] 26 headline values reconcile: '6/30 improved (parser)' reconciles exactly (value=6)
+  [PASS] 26 headline values reconcile: '0/30 worsened (parser)' reconciles exactly (value=0)
+  [PASS] 26 headline values reconcile: 'p 0.03125 (parser sign test)' reconciles exactly (value=0.03125)
+  [PASS] 26 headline values reconcile: '66.3% (588 coverage)' reconciles exactly (value=66.3)
+  [PASS] 26 headline values reconcile: '390/588 matched' reconciles exactly (value=390)
+  [PASS] 26 headline values reconcile: '364 NEI' reconciles exactly (value=364)
+  [PASS] 26 headline values reconcile: '198 NO_EVIDENCE' reconciles exactly (value=198)
+  [PASS] 26 headline values reconcile: '21 ENTAILED' reconciles exactly (value=21)
+  [PASS] 26 headline values reconcile: '5 CONTRADICTED' reconciles exactly (value=5)
+  [PASS] 26 headline values reconcile: '0/5 triggered/shipped bare targeted' reconciles exactly (value=0)
+  [PASS] 26 headline values reconcile: '1/10 shipped labeled targeted' reconciles exactly (value=1)
+  [PASS] 26 headline values reconcile: '1/56 cumulative shipped' reconciles exactly (value=1)
+  [PASS] 26 headline values reconcile: '0 unsafe (cumulative)' reconciles exactly (value=0)
+  [PASS] Classifications/grades present: all 9 EVIDENCE_STRENGTH_MATRIX rows have a valid grade
+  [PASS] No fabrication / protected paths: no provisional annotation file found in STEP 8 output
+  [PASS] No fabrication / protected paths: GOLD fixture controlled_verifier_benchmark.jsonl unchanged
+  [PASS] No fabrication / protected paths: GOLD fixture run_synthetic_stress.jsonl unchanged
+  [PASS] Terminology discipline: no unsupported natural-data accuracy/F1 claim found across 11 files
+  [PASS] Terminology discipline: no unsupported 'caused'/'proved' claim found
+  [PASS] Fresh/historical and GPU/CPU separation: metric M01 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M02 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M03 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M04 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M05 labeled 'FRESH REPRODUCTION'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M06 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M07 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M08 labeled 'HISTORICAL REPRODUCTION / NOT FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M09 labeled 'HISTORICAL'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M10 labeled 'HISTORICAL'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M11 labeled 'HISTORICAL, GPU-dependent, NOT re-executed'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M12 labeled 'HISTORICAL'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M13 labeled 'HISTORICAL, GPU-dependent'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M14 labeled 'HISTORICAL'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M15 labeled 'FRESH'
+  [PASS] Fresh/historical and GPU/CPU separation: metric M16 labeled 'FRESH REPRODUCTION'
+  [PASS] Fresh/historical and GPU/CPU separation: REPRODUCIBILITY_MATRIX.md explicitly marks GPU-required/not-executed rows
+  [PASS] Correction synthetic/natural separation: all 5 distinct correction populations present and separated, never merged into one row
+  [PASS] Correction synthetic/natural separation: CORRECTION_FUNNEL.md explicitly states the 72.2% synthetic rate cannot be equated with the natural rate
+  [PASS] Figure CSVs parseable / no duplicates: exactly 11 figure_data CSVs present
+  [PASS] Figure CSVs parseable / no duplicates: 01_overall_metric_comparison.csv parses OK (4 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 02_evidence_coverage.csv parses OK (11 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 03_verdict_distribution.csv parses OK (37 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 04_correction_funnel.csv parses OK (5 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 05_correction_outcome.csv parses OK (5 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 06_safety.csv parses OK (5 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 07_confidence_distribution.csv parses OK (4 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 08_ablation_comparison.csv parses OK (8 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 09_runtime_resource.csv parses OK (5 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 10_cumulative_natural_results.csv parses OK (11 rows)
+  [PASS] Figure CSVs parseable / no duplicates: 11_synthetic_vs_natural_transfer.csv parses OK (2 rows)
+
+RESULT: PASS (75 checks passed, 0 warning(s), 0 failures)
+VALIDATE_STEP8_EXIT_CODE=0

@@ -1,0 +1,41 @@
+======================================================================
+STEP 6 NATURAL-DATA VALIDATION REPORT
+======================================================================
+
+PASSED (33):
+  [PASS] Source datasets unchanged: run_A_n30.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: run_natural_targeted.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidates_50_gpu_bare.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidates_50_gpu_labeled.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidates_batch2_gpu_bare.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidates_batch2_gpu_labeled.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: final_gpu_validation_A.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: final_gpu_validation_B.jsonl unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidate_selected_ids_30.json unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidate_selected_ids_50.json unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidate_selected_ids_50_batch2.json unchanged since Phase 2 integrity check
+  [PASS] Source datasets unchanged: natural_candidate_selected_ids_50_final_validation.json unchanged since Phase 2 integrity check
+  [PASS] Record counts: 588-claim results has exactly 588 rows
+  [PASS] Record counts: 209-paired results has exactly 209 rows
+  [PASS] Duplicate IDs: 588-claim results has no duplicate input_id values (588 unique)
+  [PASS] Duplicate IDs: 209-paired results has no duplicate claim_position_id values (209 unique)
+  [PASS] Fresh output IDs map to real inputs: every 588-claim row's source_file is one of the 4 documented sources
+  [PASS] No GOLD/provisional contamination: no STEP 6 artifact found under any GOLD-designated directory, and no provisional file found under STEP 6 output
+  [PASS] No natural-data accuracy/F1 terminology: no unsupported accuracy/precision/recall/F1 usage found in STEP 6 evaluation reports
+  [PASS] Historical outputs untouched: evidence_coverage_v0_vs_v1.json unchanged (n_matched_v1=390)
+  [PASS] Historical outputs untouched: final_validation_bare_vs_labeled_cpu_metrics.json unchanged (n_claims_with_evidence=147)
+  [PASS] Historical outputs untouched: final_gpu_validation_A.jsonl still present and readable (not deleted/moved)
+  [PASS] Historical outputs untouched: final_gpu_validation_B.jsonl still present and readable (not deleted/moved)
+  [PASS] Fresh vs historical labeling: run_metadata.json explicitly labels its result classification
+  [PASS] Fresh vs historical labeling: paired_209_metrics.json explicitly labels its result classification
+  [PASS] Fresh vs historical labeling: batches_analysis.json explicitly labels its result classification
+  [PASS] GPU-dependent stages explicitly marked: run_metadata.json explicitly marks GPU unavailable and Qwen not invoked
+  [PASS] GPU-dependent stages explicitly marked: run_metadata.json explicitly marks GPU unavailable and Qwen not invoked
+  [PASS] GPU-dependent stages explicitly marked: GPU_LIMITATIONS.md explicitly states NVIDIA GPU available: NO
+  [PASS] Aggregate/row-level reconciliation: 588-claim aggregate evidence-matched count reconciles with row-level data (390)
+  [PASS] Aggregate/row-level reconciliation: 209-paired evidence-gained count reconciles with the stored McNemar b value (15)
+  [PASS] 209-claim pairing alignment: 209 paired rows span 46 distinct document_ids (<=50 cases), consistent with alignment
+  [PASS] No records silently dropped: all 209 source claims from Arm A are present in the paired output, none dropped
+
+RESULT: PASS (33 checks passed, 0 warning(s), 0 failures)
+VALIDATE_EXIT_CODE=0

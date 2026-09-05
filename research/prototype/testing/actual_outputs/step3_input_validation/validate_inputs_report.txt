@@ -1,0 +1,46 @@
+======================================================================
+STEP 3 INPUT VALIDATION REPORT
+======================================================================
+
+PASSED (38):
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): fixture hash matches recorded hash (962de21ee373bcfb...)
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): fixture is byte-identical to frozen source
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): record count == 420
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): all 5 required fields present on all 420 records
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): no duplicate 'benchmark_id' values among 420 IDs
+  [PASS] GOLD-01 (controlled_verifier_benchmark.jsonl): all expected_label values are within the known label set
+  [PASS] GOLD-02 (run_synthetic_stress.jsonl): fixture hash matches recorded hash (2dba39cc61eb94aa...)
+  [PASS] GOLD-02 (run_synthetic_stress.jsonl): fixture is byte-identical to frozen source
+  [PASS] GOLD-02 (run_synthetic_stress.jsonl): record count == 59
+  [PASS] GOLD-02 (run_synthetic_stress.jsonl): all 5 required fields present on all 59 records
+  [PASS] GOLD-02 (run_synthetic_stress.jsonl): no duplicate 'synthetic_claim_id' values among 59 IDs
+  [PASS] Evidence corpus (v0/v1, referenced in place): canonical_statutes.jsonl record count == 63
+  [PASS] Evidence corpus (v0/v1, referenced in place)/canonical_statutes.jsonl: no duplicate 'dataset_citation_key' values among 63 IDs
+  [PASS] Evidence corpus (v0/v1, referenced in place): evidence_audit.jsonl record count == 63
+  [PASS] Evidence corpus (v0/v1, referenced in place)/evidence_audit.jsonl: no duplicate 'dataset_citation_key' values among 63 IDs
+  [PASS] Evidence corpus (v0/v1, referenced in place): canonical_statutes_v1.jsonl record count == 82
+  [PASS] Evidence corpus (v0/v1, referenced in place)/canonical_statutes_v1.jsonl: no duplicate 'dataset_citation_key' values among 82 IDs
+  [PASS] Evidence corpus (v0/v1, referenced in place): evidence_audit_v1.jsonl record count == 82
+  [PASS] Evidence corpus (v0/v1, referenced in place)/evidence_audit_v1.jsonl: no duplicate 'dataset_citation_key' values among 82 IDs
+  [PASS] Evidence corpus (v0/v1, referenced in place): merged usable evidence pool (v0+v1) == 136 records, confirmed via live loader
+  [PASS] Provisional-promotion guard: no provisional annotation file or tag found under expected_outputs/ or inputs/gold/
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): final_gpu_validation_A.jsonl record count == 50
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): final_gpu_validation_B.jsonl record count == 50
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): run_A_n30.jsonl record count == 30
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): run_B_n30.jsonl record count == 30
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): run_C_n30.jsonl record count == 30
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): natural_candidates_50_gpu_bare.jsonl record count == 50
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): natural_candidates_batch2_gpu_bare.jsonl record count == 50
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): final_gpu_validation_corrections_detail.jsonl record count == 10
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): labeled_correction_validation_gpu_corrections_detail.jsonl record count == 10
+  [PASS] Referenced METRIC-ONLY sources (existence + count only): natural_candidates_50_gpu_corrections_detail.jsonl record count == 21
+  [PASS] Provisional source check: gold_annotation.jsonl record count == 88 (remains PROVISIONAL, not copied)
+  [PASS] Provisional source check: lawyer_annotation.jsonl record count == 88 (remains PROVISIONAL, not copied)
+  [PASS] Provisional source check: assumption_annotation.jsonl record count == 88 (remains PROVISIONAL, not copied)
+  [PASS] BEHAVIOR inputs (test file existence only, no modification): test_adversarial_citations.py has 15 test functions (>= 15 expected)
+  [PASS] BEHAVIOR inputs (test file existence only, no modification): test_final_pass_adversarial.py has 10 test functions (>= 10 expected)
+  [PASS] BEHAVIOR inputs (test file existence only, no modification): test_respectively_claims.py has 16 test functions (>= 16 expected)
+  [PASS] BEHAVIOR inputs (test file existence only, no modification): test_claim_parser_bugfixes.py has 20 test functions (>= 20 expected)
+
+RESULT: PASS (38 checks passed, 0 warning(s), 0 failures)
+VALIDATE_INPUTS_EXIT_CODE=0

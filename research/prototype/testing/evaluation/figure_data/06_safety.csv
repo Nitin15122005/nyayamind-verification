@@ -1,0 +1,6 @@
+safety_mechanism,count,denominator,source
+Unsafe corrections shipped (cumulative),0,56 natural + 66 synthetic = 122 total correction attempts,outputs/final_metrics.json
+Scope-gate rejections (cumulative natural),18,56 natural correction attempts,outputs/final_metrics.json
+Sibling-regression rejections observed (final_gpu_validation Arm B),0,5 correction attempts,outputs/final_gpu_validation_metrics.json
+Citation-identity preservation failures observed,NOT AVAILABLE (not separately tracked as a count; STEP 0 audit found 0 confirmed false-ship cases),N/A,outputs/final_gpu_validation.md Section 4 (narrative)
+Re-verification-not-ENTAILED rejections (cumulative natural),37,56 natural correction attempts,outputs/final_metrics.json

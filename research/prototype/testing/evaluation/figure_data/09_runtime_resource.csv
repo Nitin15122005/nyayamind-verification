@@ -1,0 +1,6 @@
+arm,runtime_seconds,peak_vram_mib,n_cases,fresh_or_historical,source
+final_gpu_validation_total,2040.9377949237823,7547,50,"HISTORICAL (GPU, prior session)",outputs/final_gpu_validation_metrics.json
+final_gpu_validation_generation_only,1662.8286445140839,7547,50,"HISTORICAL (GPU, prior session)",outputs/final_gpu_validation_metrics.json
+synthetic_correction_bare,644.5045371055603,7502,59,"HISTORICAL (GPU, prior session)",outputs/final_metrics.json
+synthetic_correction_labeled,1412.7578926086426,7502,59,"HISTORICAL (GPU, prior session)",outputs/final_metrics.json
+step4_gold01_labeled_cpu,153.79437613487244,N/A (CPU),420,"FRESH (CPU, this workspace)",step4/gold01_controlled/gold01_metrics.json

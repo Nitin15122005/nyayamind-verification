@@ -1,0 +1,46 @@
+======================================================================
+STEP 4 OUTPUT VALIDATION REPORT
+======================================================================
+
+PASSED (38):
+  [PASS] GOLD-01: fixture hash matches recorded STEP 3 hash
+  [PASS] GOLD-01/labeled: predictions count == 420
+  [PASS] GOLD-01/labeled: no duplicate prediction IDs (420 unique)
+  [PASS] GOLD-01/labeled: every record has a predicted_label key (present, possibly NO_EVIDENCE)
+  [PASS] GOLD-01/labeled: 'match' field is mechanically consistent with expected==predicted for all records
+  [PASS] GOLD-01/bare: predictions count == 420
+  [PASS] GOLD-01/bare: no duplicate prediction IDs (420 unique)
+  [PASS] GOLD-01/bare: every record has a predicted_label key (present, possibly NO_EVIDENCE)
+  [PASS] GOLD-01/bare: 'match' field is mechanically consistent with expected==predicted for all records
+  [PASS] GOLD-01: expected_label is identical across both framing arms (never modified per-arm)
+  [PASS] GOLD-01: CSV row count == 420
+  [PASS] GOLD-01: CSV rows correspond exactly to the labeled-framing predictions (same ID set)
+  [PASS] GOLD-01: CSV 'MATCH' column is mechanically derived from EXPECTED/ACTUAL for all rows
+  [PASS] GOLD-01: accuracy recomputed from the expected-vs-actual CSV exactly matches the stored aggregate metric (0.971429)
+  [PASS] GOLD-01: run metadata present with all 8 required fields
+  [PASS] GOLD-01: run metadata explicitly records NVIDIA GPU available = False
+  [PASS] GOLD-01: run metadata's dataset_sha256 matches the recorded STEP 3 hash
+  [PASS] GOLD-02: fixture hash matches recorded STEP 3 hash
+  [PASS] GOLD-02/labeled: predictions count == 59
+  [PASS] GOLD-02/labeled: no duplicate prediction IDs (59 unique)
+  [PASS] GOLD-02/labeled: every record has a predicted_label key (present, possibly NO_EVIDENCE)
+  [PASS] GOLD-02/labeled: 'match' field is mechanically consistent with expected==predicted for all records
+  [PASS] GOLD-02/bare: predictions count == 59
+  [PASS] GOLD-02/bare: no duplicate prediction IDs (59 unique)
+  [PASS] GOLD-02/bare: every record has a predicted_label key (present, possibly NO_EVIDENCE)
+  [PASS] GOLD-02/bare: 'match' field is mechanically consistent with expected==predicted for all records
+  [PASS] GOLD-02: expected_label is identical across both framing arms (never modified per-arm)
+  [PASS] GOLD-02: CSV row count == 59
+  [PASS] GOLD-02: CSV rows correspond exactly to the labeled-framing predictions (same ID set)
+  [PASS] GOLD-02: CSV 'MATCH' column is mechanically derived from EXPECTED/ACTUAL for all rows
+  [PASS] GOLD-02: accuracy recomputed from the expected-vs-actual CSV exactly matches the stored aggregate metric (0.457627)
+  [PASS] GOLD-02: run metadata present with all 8 required fields
+  [PASS] GOLD-02: run metadata explicitly records NVIDIA GPU available = False
+  [PASS] GOLD-02: run metadata's dataset_sha256 matches the recorded STEP 3 hash
+  [PASS] Historical-artifact preservation: controlled_benchmark_deberta_metrics.json still shows its original historical environment (3.13.1) -- not overwritten
+  [PASS] Historical-artifact preservation: controlled_benchmark_deberta_labeled_metrics.json still shows its original historical environment (3.13.1) -- not overwritten
+  [PASS] Historical-artifact preservation: research/prototype/outputs/run_synthetic_stress.jsonl unchanged (hash matches)
+  [PASS] gold_verifier_summary.csv: 4 rows present (GOLD-01/GOLD-02 x labeled/bare)
+
+RESULT: PASS (38 checks passed, 0 failures)
+VALIDATE_EXIT_CODE=0

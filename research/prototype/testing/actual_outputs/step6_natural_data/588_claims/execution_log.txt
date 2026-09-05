@@ -1,0 +1,17 @@
+======================================================================
+STEP 6 Phase 4 -- 588-claim natural aggregate evaluation
+======================================================================
+Current production evidence pool loaded: 136 usable records (use_evidence_v1=True)
+Production premise_framing: labeled
+NVIDIA GPU available = NO
+Loading real DeBERTa verifier on device=cpu ...
+Loaded in 3.2s
+
+Distinct generated texts scanned: 133
+Total claims: 588
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\588_claims\claims_588_results.jsonl
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\588_claims\claims_588_metrics.json
+
+Evidence coverage: 0.6633 (390/588)
+Verdict distribution: {'NOT_ENOUGH_INFORMATION': 364, 'NO_EVIDENCE': 198, 'ENTAILED': 21, 'CONTRADICTED': 5}
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\588_claims\run_metadata.json

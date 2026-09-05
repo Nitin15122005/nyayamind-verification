@@ -1,0 +1,131 @@
+{
+  "benchmark_tag": "GOLD-01_controlled_verifier_benchmark",
+  "n_items": 420,
+  "dataset_sha256": "962de21ee373bcfb685193902767c1c2c4f10acf592b08f561159503b4287f99",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "max_sequence_length": 512,
+  "device": "cpu",
+  "production_premise_framing": "labeled",
+  "framings_run": [
+    "labeled",
+    "bare"
+  ],
+  "primary_framing": "labeled",
+  "results_by_framing": {
+    "labeled": {
+      "n_items": 420,
+      "n_inference_failures": 0,
+      "elapsed_seconds": 153.79437613487244,
+      "accuracy": 0.9714285714285714,
+      "macro_f1": 0.9683612674297156,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 184,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 5,
+          "CONTRADICTED": 110,
+          "NOT_ENOUGH_INFORMATION": 3
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 4,
+          "NOT_ENOUGH_INFORMATION": 114
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9735449735449735,
+          "recall": 1.0,
+          "f1": 0.9865951742627346,
+          "support": 184,
+          "tp": 184,
+          "fp": 5,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 0.9649122807017544,
+          "recall": 0.9322033898305084,
+          "f1": 0.9482758620689654,
+          "support": 118,
+          "tp": 110,
+          "fp": 4,
+          "fn": 8
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9661016949152542,
+          "f1": 0.9702127659574468,
+          "support": 118,
+          "tp": 114,
+          "fp": 3,
+          "fn": 4
+        }
+      }
+    },
+    "bare": {
+      "n_items": 420,
+      "n_inference_failures": 0,
+      "elapsed_seconds": 152.8794355392456,
+      "accuracy": 0.7333333333333333,
+      "macro_f1": 0.7486646586649771,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 92,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 92
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 2,
+          "CONTRADICTED": 103,
+          "NOT_ENOUGH_INFORMATION": 13
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 5,
+          "NOT_ENOUGH_INFORMATION": 113
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9787234042553191,
+          "recall": 0.5,
+          "f1": 0.6618705035971223,
+          "support": 184,
+          "tp": 92,
+          "fp": 2,
+          "fn": 92
+        },
+        "CONTRADICTED": {
+          "precision": 0.9537037037037037,
+          "recall": 0.8728813559322034,
+          "f1": 0.9115044247787611,
+          "support": 118,
+          "tp": 103,
+          "fp": 5,
+          "fn": 15
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.518348623853211,
+          "recall": 0.9576271186440678,
+          "f1": 0.6726190476190477,
+          "support": 118,
+          "tp": 113,
+          "fp": 105,
+          "fn": 5
+        }
+      }
+    }
+  },
+  "model_load_seconds": 3.1588237285614014,
+  "timestamp_utc": "2026-09-05T10:56:34.378006+00:00",
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "torch": "2.2.2+cu121",
+    "cuda_available": false
+  }
+}

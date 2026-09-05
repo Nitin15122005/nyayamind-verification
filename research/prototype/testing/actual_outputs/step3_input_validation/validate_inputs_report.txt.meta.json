@@ -1,0 +1,11 @@
+{
+  "produced_at": "2026-09-05",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "config_snapshot": "N/A - input validation only, no pipeline config involved",
+  "python_version": "3.11.9",
+  "device": "N/A - CPU-only validation, no model loaded",
+  "seed": "N/A",
+  "command": "research/.venv/Scripts/python.exe research/prototype/testing/validate_inputs.py",
+  "result": "38 checks passed, 0 warnings, 0 failures",
+  "exit_code": 0
+}

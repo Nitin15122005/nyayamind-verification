@@ -1,0 +1,18 @@
+{
+  "produced_at": "2026-09-05T11:33:20.603970+00:00",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "python_version": "3.11.9",
+  "command_executed": "research/.venv/Scripts/python.exe research/prototype/testing/run_step6_588_evaluation.py",
+  "source_files": [
+    "run_A_n30.jsonl",
+    "run_natural_targeted.jsonl",
+    "natural_candidates_50_gpu_bare.jsonl",
+    "natural_candidates_batch2_gpu_bare.jsonl"
+  ],
+  "config_path": "research/prototype/config/prototype.yaml",
+  "nvidia_gpu_available": false,
+  "cuda_available_per_torch": false,
+  "qwen_generation_or_correction_invoked": false,
+  "model_identifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "result_classification": "FRESH TESTING RESULT (claim parsing, evidence matching, and NLI verification freshly computed this run; underlying generated text is historical, from a prior GPU session)"
+}

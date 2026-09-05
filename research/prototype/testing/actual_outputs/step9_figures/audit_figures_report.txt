@@ -1,0 +1,109 @@
+D:\nyaymind\nyayamind-verification\research\prototype\testing\figures\audit_figures.py:54: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  pixels = list(small.getdata())
+======================================================================
+STEP 9 AUTOMATED IMAGE AUDIT
+======================================================================
+
+PASSED (99):
+  [PASS] File exists: 01_overall_metric_comparison.png
+  [PASS] Image opens: 01_overall_metric_comparison.png
+  [PASS] Nonzero dimensions: 01_overall_metric_comparison.png is 1693x1109
+  [PASS] Resolution appropriate: 01_overall_metric_comparison.png is 1693x1109 (>= 1200x600)
+  [PASS] Not blank: 01_overall_metric_comparison.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 01_overall_metric_comparison.png corners/content look normal
+  [PASS] Metadata row exists: 01_overall_metric_comparison.png
+  [PASS] Source CSV exists: 01_overall_metric_comparison.png -> 01_overall_metric_comparison.csv
+  [PASS] Source artifact exists: 01_overall_metric_comparison.png
+  [PASS] File exists: 02_evidence_coverage.png
+  [PASS] Image opens: 02_evidence_coverage.png
+  [PASS] Nonzero dimensions: 02_evidence_coverage.png is 1451x1181
+  [PASS] Resolution appropriate: 02_evidence_coverage.png is 1451x1181 (>= 1200x600)
+  [PASS] Not blank: 02_evidence_coverage.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 02_evidence_coverage.png corners/content look normal
+  [PASS] Metadata row exists: 02_evidence_coverage.png
+  [PASS] Source CSV exists: 02_evidence_coverage.png -> 02_evidence_coverage.csv
+  [PASS] Source artifact exists: 02_evidence_coverage.png
+  [PASS] File exists: 03_verdict_distribution.png
+  [PASS] Image opens: 03_verdict_distribution.png
+  [PASS] Nonzero dimensions: 03_verdict_distribution.png is 1373x992
+  [PASS] Resolution appropriate: 03_verdict_distribution.png is 1373x992 (>= 1200x600)
+  [PASS] Not blank: 03_verdict_distribution.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 03_verdict_distribution.png corners/content look normal
+  [PASS] Metadata row exists: 03_verdict_distribution.png
+  [PASS] Source CSV exists: 03_verdict_distribution.png -> 03_verdict_distribution.csv
+  [PASS] Source artifact exists: 03_verdict_distribution.png
+  [PASS] File exists: 04_correction_funnel.png
+  [PASS] Image opens: 04_correction_funnel.png
+  [PASS] Nonzero dimensions: 04_correction_funnel.png is 3980x1127
+  [PASS] Resolution appropriate: 04_correction_funnel.png is 3980x1127 (>= 1200x600)
+  [PASS] Not blank: 04_correction_funnel.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 04_correction_funnel.png corners/content look normal
+  [PASS] Metadata row exists: 04_correction_funnel.png
+  [PASS] Source CSV exists: 04_correction_funnel.png -> 04_correction_funnel.csv
+  [PASS] Source artifact exists: 04_correction_funnel.png
+  [PASS] File exists: 05_correction_outcome.png
+  [PASS] Image opens: 05_correction_outcome.png
+  [PASS] Nonzero dimensions: 05_correction_outcome.png is 1529x1166
+  [PASS] Resolution appropriate: 05_correction_outcome.png is 1529x1166 (>= 1200x600)
+  [PASS] Not blank: 05_correction_outcome.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 05_correction_outcome.png corners/content look normal
+  [PASS] Metadata row exists: 05_correction_outcome.png
+  [PASS] Source CSV exists: 05_correction_outcome.png -> 05_correction_outcome.csv
+  [PASS] Source artifact exists: 05_correction_outcome.png
+  [PASS] File exists: 06_safety.png
+  [PASS] Image opens: 06_safety.png
+  [PASS] Nonzero dimensions: 06_safety.png is 2190x926
+  [PASS] Resolution appropriate: 06_safety.png is 2190x926 (>= 1200x600)
+  [PASS] Not blank: 06_safety.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 06_safety.png corners/content look normal
+  [PASS] Metadata row exists: 06_safety.png
+  [PASS] Source CSV exists: 06_safety.png -> 06_safety.csv
+  [PASS] Source artifact exists: 06_safety.png
+  [PASS] File exists: 07_confidence_distribution.png
+  [PASS] Image opens: 07_confidence_distribution.png
+  [PASS] Nonzero dimensions: 07_confidence_distribution.png is 1460x1235
+  [PASS] Resolution appropriate: 07_confidence_distribution.png is 1460x1235 (>= 1200x600)
+  [PASS] Not blank: 07_confidence_distribution.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 07_confidence_distribution.png corners/content look normal
+  [PASS] Metadata row exists: 07_confidence_distribution.png
+  [PASS] Source CSV exists: 07_confidence_distribution.png -> 07_confidence_distribution.csv
+  [PASS] Source artifact exists: 07_confidence_distribution.png
+  [PASS] File exists: 08_ablation_comparison.png
+  [PASS] Image opens: 08_ablation_comparison.png
+  [PASS] Nonzero dimensions: 08_ablation_comparison.png is 1746x1236
+  [PASS] Resolution appropriate: 08_ablation_comparison.png is 1746x1236 (>= 1200x600)
+  [PASS] Not blank: 08_ablation_comparison.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 08_ablation_comparison.png corners/content look normal
+  [PASS] Metadata row exists: 08_ablation_comparison.png
+  [PASS] Source CSV exists: 08_ablation_comparison.png -> 08_ablation_comparison.csv
+  [PASS] Source artifact exists: 08_ablation_comparison.png
+  [PASS] File exists: 09_runtime_resource.png
+  [PASS] Image opens: 09_runtime_resource.png
+  [PASS] Nonzero dimensions: 09_runtime_resource.png is 1943x1112
+  [PASS] Resolution appropriate: 09_runtime_resource.png is 1943x1112 (>= 1200x600)
+  [PASS] Not blank: 09_runtime_resource.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 09_runtime_resource.png corners/content look normal
+  [PASS] Metadata row exists: 09_runtime_resource.png
+  [PASS] Source CSV exists: 09_runtime_resource.png -> 09_runtime_resource.csv
+  [PASS] Source artifact exists: 09_runtime_resource.png
+  [PASS] File exists: 10_cumulative_natural_results.png
+  [PASS] Image opens: 10_cumulative_natural_results.png
+  [PASS] Nonzero dimensions: 10_cumulative_natural_results.png is 2247x1237
+  [PASS] Resolution appropriate: 10_cumulative_natural_results.png is 2247x1237 (>= 1200x600)
+  [PASS] Not blank: 10_cumulative_natural_results.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 10_cumulative_natural_results.png corners/content look normal
+  [PASS] Metadata row exists: 10_cumulative_natural_results.png
+  [PASS] Source CSV exists: 10_cumulative_natural_results.png -> 10_cumulative_natural_results.csv
+  [PASS] Source artifact exists: 10_cumulative_natural_results.png
+  [PASS] File exists: 11_synthetic_vs_natural_transfer.png
+  [PASS] Image opens: 11_synthetic_vs_natural_transfer.png
+  [PASS] Nonzero dimensions: 11_synthetic_vs_natural_transfer.png is 1610x1166
+  [PASS] Resolution appropriate: 11_synthetic_vs_natural_transfer.png is 1610x1166 (>= 1200x600)
+  [PASS] Not blank: 11_synthetic_vs_natural_transfer.png has varied pixel content
+  [PASS] No extreme clipping (heuristic): 11_synthetic_vs_natural_transfer.png corners/content look normal
+  [PASS] Metadata row exists: 11_synthetic_vs_natural_transfer.png
+  [PASS] Source CSV exists: 11_synthetic_vs_natural_transfer.png -> 11_synthetic_vs_natural_transfer.csv
+  [PASS] Source artifact exists: 11_synthetic_vs_natural_transfer.png
+
+RESULT: PASS (99 checks passed, 0 failures)
+AUDIT_FIGURES_EXIT_CODE=0

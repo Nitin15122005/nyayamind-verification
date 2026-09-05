@@ -1,0 +1,59 @@
+{
+  "case": {
+    "source_of_input": "tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence (exact same fixtures)",
+    "input_generated_field_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment. Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+    "real_component_used": "src.verifier.NLIVerifier (real DeBERTa-v3-base-mnli-fever-anli, device=cpu -- no NVIDIA GPU on this machine)",
+    "actual_evidence_id": "Section 302 in The Indian Penal Code, 1860",
+    "actual_evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+    "actual_verdict": "CONTRADICTED",
+    "actual_confidence": 0.9985989928245544,
+    "expected_behavior": "must resolve evidence to 'Section 302 in The Indian Penal Code, 1860' and verdict CONTRADICTED, confidence above threshold",
+    "pass": true,
+    "full_verdict_application_record_claims": [
+      {
+        "claim_id": "c1",
+        "claim_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_text": "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment.",
+        "assertion_spans": [
+          "The offense of murder under Section 302 of the Indian Penal Code, 1860 is punishable only by a fine and never by death or imprisonment."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "302",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 302 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "CONTRADICTED",
+        "confidence": 0.9985989928245544,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      },
+      {
+        "claim_id": "c2",
+        "claim_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_text": "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly.",
+        "assertion_spans": [
+          "Additionally, Section 148 deals with the unlawful assembly, which may be relevant if the prosecution can show that the accused acted as part of an unlawful assembly."
+        ],
+        "citation_extracted": {
+          "provision_type": "Section",
+          "provision_number": "148",
+          "subsection": null,
+          "act_raw": "the Indian Penal Code, 1860",
+          "act_norm": "indian penal code 1860"
+        },
+        "evidence_id": "Section 148 in The Indian Penal Code, 1860",
+        "evidence_text": "Whoever is guilty of rioting, being armed with a deadly weapon or with anything which, used as a weapon of offence, is likely to cause death, shall be punished with imprisonment of either description for a term which may extend to three years, or with fine, or with both.",
+        "evidence_match_method": "exact_normalized",
+        "verdict": "NOT_ENOUGH_INFORMATION",
+        "confidence": 0.9915558099746704,
+        "sub_reason": null,
+        "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+      }
+    ]
+  }
+}

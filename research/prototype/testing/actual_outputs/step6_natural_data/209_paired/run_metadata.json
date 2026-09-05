@@ -1,0 +1,14 @@
+{
+  "produced_at": "2026-09-05T11:36:09.227765+00:00",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "python_version": "3.11.9",
+  "command_executed": "research/.venv/Scripts/python.exe research/prototype/testing/run_step6_209_paired_evaluation.py",
+  "source_files": [
+    "outputs/final_gpu_validation_A.jsonl",
+    "outputs/final_gpu_validation_B.jsonl"
+  ],
+  "nvidia_gpu_available": false,
+  "cuda_available_per_torch": false,
+  "qwen_generation_or_correction_invoked": false,
+  "model_identifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+}

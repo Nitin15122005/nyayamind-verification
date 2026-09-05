@@ -1,0 +1,5 @@
+dataset,framing,n,correct,incorrect,accuracy,macro_precision,macro_recall,macro_f1
+GOLD-01,labeled,420,408,12,0.971429,0.970939,0.966102,0.968361
+GOLD-01,bare,420,308,112,0.733333,0.816925,0.776836,0.748665
+GOLD-02,labeled,59,27,32,0.457627,1.000000,0.457627,0.627907
+GOLD-02,bare,59,21,38,0.355932,1.000000,0.355932,0.525000

@@ -1,0 +1,12 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- D:\nyaymind\nyayamind-verification\research\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\nyaymind\nyayamind-verification
+plugins: typeguard-4.6.0
+collecting ... collected 34 items / 31 deselected / 3 selected
+
+research/prototype/tests/test_pipeline_mock.py::test_mode_a_no_verification_no_correction PASSED [ 33%]
+research/prototype/tests/test_pipeline_mock.py::test_mode_b_verifies_but_never_changes_final_field PASSED [ 66%]
+research/prototype/tests/test_pipeline_mock.py::test_no_evidence_claim_never_triggers_correction PASSED [100%]
+
+====================== 3 passed, 31 deselected in 3.45s =======================

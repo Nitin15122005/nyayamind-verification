@@ -1,0 +1,11 @@
+........................................................................ [ 35%]
+........................................................................ [ 70%]
+.............................................................            [100%]
+============================== warnings summary ===============================
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+  D:\nyaymind\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+205 passed, 1 warning in 8.23s
+PYTEST_EXIT_CODE=0

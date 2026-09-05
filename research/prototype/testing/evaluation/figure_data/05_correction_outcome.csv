@@ -1,0 +1,6 @@
+population,n_triggered,shipped,correction_failed_or_reverification_not_entailed,scope_violation,source
+synthetic_bare,30,0,30,0,outputs/final_metrics.json
+synthetic_labeled,36,26,10,0,outputs/final_metrics.json
+natural_targeted_bare,5,0,3,2,outputs/final_gpu_validation_metrics.json
+natural_targeted_labeled,10,1,6,3,outputs/labeled_correction_validation_gpu_metrics.json
+natural_cumulative,56,1,37,18,outputs/final_metrics.json

@@ -1,0 +1,9 @@
+factor,baseline_value,variant_value,primary_metric,p_value,classification,fresh_or_historical,source
+evidence_v1,0.631578947368421,0.7033492822966507,evidence_coverage,0.00030059760744045107,SUPPORTED,FRESH REPRODUCTION,testing/evaluation/ABLATION_SUMMARY.json
+premise_framing,0.7486646586649771,0.9683612674297156,macro_f1,4.1627504389864034e-23,SUPPORTED,FRESH,testing/evaluation/ABLATION_SUMMARY.json
+claim_parser_fix,,,per_case_evidence_matched_count,0.03125,SUPPORTED,HISTORICAL REPRODUCTION / NOT FRESH -- the parser fix itself cannot be re-executed without checking out old source code,testing/evaluation/ABLATION_SUMMARY.json
+atomic_scope_check_assertion_spans,0,1,n_unblocked (scope-gate outcome only),,DIAGNOSTIC,FRESH REPRODUCTION,testing/evaluation/ABLATION_SUMMARY.json
+narrow_reverification_hypothesis,,,re-verification verdict category shift (descriptive),,DIAGNOSTIC,HISTORICAL,testing/evaluation/ABLATION_SUMMARY.json
+confidence_threshold,,,macro_f1_vs_threshold,,DESCRIPTIVE,FRESH,testing/evaluation/ABLATION_SUMMARY.json
+correction_levers_combined (premise_framing isolated within an otherwise-fixed config),,,corrections_shipped / corrections_triggered,,DIAGNOSTIC,HISTORICAL -- GPU-dependent,testing/evaluation/ABLATION_SUMMARY.json
+joint_four_lever_isolation,,,,,NOT_ISOLABLE,NOT_EXECUTED,testing/evaluation/ABLATION_SUMMARY.json

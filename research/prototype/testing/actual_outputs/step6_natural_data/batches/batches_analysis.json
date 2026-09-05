@@ -1,0 +1,235 @@
+{
+  "batches": [
+    {
+      "name": "n30_mode_B",
+      "file": "run_B_n30.jsonl",
+      "configuration": "bare, v0-only, legacy scope (pre-2026-08-27 default)",
+      "n_cases": 30,
+      "n_claims": 88,
+      "n_evidence_matched": 38,
+      "evidence_coverage": 0.4318181818181818,
+      "no_evidence_rate": 0.5681818181818181,
+      "verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 38,
+        "NO_EVIDENCE": 50
+      },
+      "n_contradicted_raw_count": 0,
+      "confidence_stats": {
+        "n": 38,
+        "mean": 0.9888723273026315,
+        "median": 0.992919921875
+      },
+      "correction_status_counts_historical": {
+        "not_applicable_mode_B": 30
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "targeted_mode_B",
+      "file": "run_natural_targeted.jsonl",
+      "configuration": "bare, v0-only, legacy scope",
+      "n_cases": 11,
+      "n_claims": 29,
+      "n_evidence_matched": 14,
+      "evidence_coverage": 0.4827586206896552,
+      "no_evidence_rate": 0.5172413793103448,
+      "verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 14,
+        "NO_EVIDENCE": 15
+      },
+      "n_contradicted_raw_count": 0,
+      "confidence_stats": {
+        "n": 14,
+        "mean": 0.9765276227678571,
+        "median": 0.987548828125
+      },
+      "correction_status_counts_historical": {
+        "not_applicable_mode_B": 11
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "batch1_bare",
+      "file": "natural_candidates_50_gpu_bare.jsonl",
+      "configuration": "bare, v0-only",
+      "n_cases": 50,
+      "n_claims": 251,
+      "n_evidence_matched": 168,
+      "evidence_coverage": 0.6693227091633466,
+      "no_evidence_rate": 0.3306772908366534,
+      "verdict_distribution": {
+        "NO_EVIDENCE": 83,
+        "NOT_ENOUGH_INFORMATION": 167,
+        "CONTRADICTED": 1
+      },
+      "n_contradicted_raw_count": 1,
+      "confidence_stats": {
+        "n": 168,
+        "mean": 0.9299432663690477,
+        "median": 0.9716796875
+      },
+      "correction_status_counts_historical": {
+        "not_triggered": 45,
+        "correction_failed": 5
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "batch1_labeled",
+      "file": "natural_candidates_50_gpu_labeled.jsonl",
+      "configuration": "labeled, v0-only",
+      "n_cases": 50,
+      "n_claims": 251,
+      "n_evidence_matched": 168,
+      "evidence_coverage": 0.6693227091633466,
+      "no_evidence_rate": 0.3306772908366534,
+      "verdict_distribution": {
+        "NO_EVIDENCE": 83,
+        "NOT_ENOUGH_INFORMATION": 161,
+        "ENTAILED": 5,
+        "CONTRADICTED": 2
+      },
+      "n_contradicted_raw_count": 2,
+      "confidence_stats": {
+        "n": 168,
+        "mean": 0.8407374790736607,
+        "median": 0.90966796875
+      },
+      "correction_status_counts_historical": {
+        "not_triggered": 34,
+        "correction_failed": 10,
+        "correction_scope_violation": 6
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "batch2_bare",
+      "file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "configuration": "bare, v0-only",
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_evidence_matched": 116,
+      "evidence_coverage": 0.4915254237288136,
+      "no_evidence_rate": 0.5084745762711864,
+      "verdict_distribution": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 113,
+        "ENTAILED": 2,
+        "CONTRADICTED": 1
+      },
+      "n_contradicted_raw_count": 1,
+      "confidence_stats": {
+        "n": 116,
+        "mean": 0.9359257139008621,
+        "median": 0.986328125
+      },
+      "correction_status_counts_historical": {
+        "correction_failed": 3,
+        "not_triggered": 45,
+        "correction_scope_violation": 2
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "batch2_labeled",
+      "file": "natural_candidates_batch2_gpu_labeled.jsonl",
+      "configuration": "labeled, v0-only",
+      "n_cases": 50,
+      "n_claims": 236,
+      "n_evidence_matched": 116,
+      "evidence_coverage": 0.4915254237288136,
+      "no_evidence_rate": 0.5084745762711864,
+      "verdict_distribution": {
+        "NO_EVIDENCE": 120,
+        "NOT_ENOUGH_INFORMATION": 102,
+        "CONTRADICTED": 3,
+        "ENTAILED": 11
+      },
+      "n_contradicted_raw_count": 3,
+      "confidence_stats": {
+        "n": 116,
+        "mean": 0.893243197737069,
+        "median": 0.96240234375
+      },
+      "correction_status_counts_historical": {
+        "correction_failed": 7,
+        "not_triggered": 40,
+        "correction_scope_violation": 3
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "final_validation_arm_A",
+      "file": "final_gpu_validation_A.jsonl",
+      "configuration": "bare, v0-only, legacy scope (ORIGINAL)",
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_evidence_matched": 132,
+      "evidence_coverage": 0.631578947368421,
+      "no_evidence_rate": 0.368421052631579,
+      "verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 129,
+        "NO_EVIDENCE": 77,
+        "CONTRADICTED": 3
+      },
+      "n_contradicted_raw_count": 3,
+      "confidence_stats": {
+        "n": 132,
+        "mean": 0.9603012547348485,
+        "median": 0.9892578125
+      },
+      "correction_status_counts_historical": {
+        "not_triggered": 45,
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    },
+    {
+      "name": "final_validation_arm_B",
+      "file": "final_gpu_validation_B.jsonl",
+      "configuration": "bare (as stored), v0+v1, assertion_spans (pre-labeled-decision)",
+      "n_cases": 50,
+      "n_claims": 209,
+      "n_evidence_matched": 147,
+      "evidence_coverage": 0.7033492822966507,
+      "no_evidence_rate": 0.2966507177033493,
+      "verdict_distribution": {
+        "NOT_ENOUGH_INFORMATION": 144,
+        "NO_EVIDENCE": 62,
+        "CONTRADICTED": 3
+      },
+      "n_contradicted_raw_count": 3,
+      "confidence_stats": {
+        "n": 147,
+        "mean": 0.9618974542942177,
+        "median": 0.9892578125
+      },
+      "correction_status_counts_historical": {
+        "not_triggered": 45,
+        "correction_failed": 3,
+        "correction_scope_violation": 2
+      },
+      "result_classification": "HISTORICAL RESULT (verdicts as originally computed at generation time, tabulated fresh this run -- not re-verified)",
+      "gpu_execution_claimed": false,
+      "status": "analyzed"
+    }
+  ],
+  "note": "Batches are reported SEPARATELY, never merged, per outputs/final_research_results.md's own '10 distinct regimes, never pooled' methodology.",
+  "produced_at": "2026-09-05T11:36:45.914096+00:00",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3"
+}

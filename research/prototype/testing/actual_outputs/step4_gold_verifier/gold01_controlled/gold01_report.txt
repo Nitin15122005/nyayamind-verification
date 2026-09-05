@@ -1,0 +1,21 @@
+GOLD-01 -- Controlled Verifier Benchmark (n=420) -- STEP 4 Evaluation
+Model: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+Device: cpu (no NVIDIA GPU present on this machine)
+Confidence threshold: 0.7 (unchanged from production config)
+Production premise_framing: labeled
+
+=== framing=labeled (PRIMARY / production) ===
+accuracy=0.9714  macro_f1=0.9684  elapsed=153.8s
+Confusion matrix (rows = expected/gold, cols = predicted/actual):
+  gold vs pred        ENT    CON    NEI   total
+  ENT                 184      0      0     184
+  CON                   5    110      3     118
+  NEI                   0      4    114     118
+
+=== framing=bare (secondary reference) ===
+accuracy=0.7333  macro_f1=0.7487  elapsed=152.9s
+Confusion matrix (rows = expected/gold, cols = predicted/actual):
+  gold vs pred        ENT    CON    NEI   total
+  ENT                  92      0     92     184
+  CON                   2    103     13     118
+  NEI                   0      5    113     118

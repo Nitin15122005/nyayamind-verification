@@ -1,0 +1,6 @@
+population,candidate,correction_triggered,correction_generated,scope_gate_rejected,reverification_not_entailed,sibling_regression_rejected,citation_identity_failures,shipped,rejected_total
+synthetic_labeled,59,36,36,0,10,NOT AVAILABLE,NOT AVAILABLE,26,10
+synthetic_bare,59,30,30,0,30,NOT AVAILABLE,NOT AVAILABLE,0,30
+natural_targeted_bare,209,5,5,2,3,0,NOT AVAILABLE,0,5
+natural_targeted_labeled,209,10,10,3,6,NOT AVAILABLE,NOT AVAILABLE,1,9
+natural_cumulative_project_history,NOT AVAILABLE (not tracked as a single denominator),56,56,18,37,NOT AVAILABLE,NOT AVAILABLE,1,55

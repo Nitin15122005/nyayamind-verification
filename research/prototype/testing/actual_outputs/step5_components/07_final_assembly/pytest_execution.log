@@ -1,0 +1,29 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- D:\nyaymind\nyayamind-verification\research\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\nyaymind\nyayamind-verification
+plugins: typeguard-4.6.0
+collecting ... collected 34 items / 32 deselected / 2 selected
+
+research/prototype/tests/test_pipeline_mock.py::test_correction_reproducibility_metadata_reaches_output_record PASSED [ 50%]
+research/prototype/tests/test_pipeline_mock.py::test_assertion_text_surfaces_in_output_record_additively PASSED [100%]
+
+====================== 2 passed, 32 deselected in 3.50s =======================
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- D:\nyaymind\nyayamind-verification\research\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\nyaymind\nyayamind-verification
+plugins: typeguard-4.6.0
+collecting ... collected 3 items
+
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence PASSED [ 33%]
+research/prototype/tests/test_correction_path_real_integration.py::test_full_correction_path_triggers_and_reverifies_with_real_verifier PASSED [ 66%]
+research/prototype/tests/test_correction_path_real_integration.py::test_scope_violation_protection_when_corrector_alters_unflagged_claim PASSED [100%]
+
+============================== warnings summary ===============================
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+  D:\nyaymind\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 3 passed, 1 warning in 7.64s =========================

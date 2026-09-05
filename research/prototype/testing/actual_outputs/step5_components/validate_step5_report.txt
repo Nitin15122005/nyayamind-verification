@@ -1,0 +1,45 @@
+======================================================================
+STEP 5 COMPONENT VALIDATION REPORT
+======================================================================
+
+PASSED (37):
+  [PASS] Execution records: 01_claim_parser execution log present, 111 passed, 0 failed
+  [PASS] Execution records: 01_claim_parser/demo_examples.json is valid JSON
+  [PASS] Execution records: 02_evidence_matcher execution log present, 72 passed, 0 failed
+  [PASS] Execution records: 02_evidence_matcher/demo_examples.json is valid JSON
+  [PASS] Execution records: 03_verifier execution log present, 48 passed, 0 failed
+  [PASS] Execution records: 03_verifier/demo_examples.json is valid JSON
+  [PASS] Execution records: 04_verdict_application execution log present, 3 passed, 0 failed
+  [PASS] Execution records: 04_verdict_application/demo_examples.json is valid JSON
+  [PASS] Execution records: 05_citation_adversarial execution log present, 15 passed, 0 failed
+  [PASS] Execution records: 05_citation_adversarial/demo_examples.json is valid JSON
+  [PASS] Execution records: 06_correction_safety execution log present, 32 passed, 0 failed
+  [PASS] Execution records: 06_correction_safety/demo_examples.json is valid JSON
+  [PASS] Execution records: 07_final_assembly execution log present, 2 passed, 0 failed
+  [PASS] Execution records: 07_final_assembly/demo_examples.json is valid JSON
+  [PASS] No fabricated expected output: 01_claim_parser/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 02_evidence_matcher/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 03_verifier/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 04_verdict_application/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 05_citation_adversarial/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 06_correction_safety/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] No fabricated expected output: 07_final_assembly/demo_examples.json cites an existing test/behavior source for its example(s)
+  [PASS] GOLD fixtures unchanged since STEP 3/4: controlled_verifier_benchmark.jsonl unchanged (hash matches)
+  [PASS] GOLD fixtures unchanged since STEP 3/4: run_synthetic_stress.jsonl unchanged (hash matches)
+  [PASS] No provisional label promoted to GOLD: no provisional file or tag found under expected_outputs/ or inputs/gold/
+  [PASS] Pass/fail counts reconcile: full regression suite shows exactly 205 passed, 0 failed
+  [PASS] Pass/fail counts reconcile: 01_claim_parser log's passed count (111) matches TEST_INVENTORY.md
+  [PASS] Pass/fail counts reconcile: 02_evidence_matcher log's passed count (72) matches TEST_INVENTORY.md
+  [PASS] Pass/fail counts reconcile: 03_verifier log's passed count (48) matches TEST_INVENTORY.md
+  [PASS] Pass/fail counts reconcile: 04_verdict_application log's passed count (3) matches TEST_INVENTORY.md
+  [PASS] Pass/fail counts reconcile: 05_citation_adversarial log's passed count (15) matches TEST_INVENTORY.md
+  [PASS] GPU-dependent portions explicitly marked: 06_correction_safety/demo_examples.json explicitly marks GPU generation as not executed
+  [PASS] GPU-dependent portions explicitly marked: 07_final_assembly/demo_examples.json explicitly marks GPU generation as not executed
+  [PASS] GPU-dependent portions explicitly marked: component_tests/06_correction_safety/RESULT.md explicitly documents the GPU/Qwen limitation
+  [PASS] GPU-dependent portions explicitly marked: component_tests/07_final_assembly/RESULT.md explicitly documents the GPU/Qwen limitation
+  [PASS] Historical-artifact preservation: controlled_benchmark_deberta_metrics.json unchanged (original 3.13.1 environment signature intact)
+  [PASS] Historical-artifact preservation: controlled_benchmark_deberta_labeled_metrics.json unchanged (original 3.13.1 environment signature intact)
+  [PASS] Historical-artifact preservation: outputs/run_synthetic_stress.jsonl unchanged
+
+RESULT: PASS (37 checks passed, 0 warning(s), 0 failures)
+VALIDATE_EXIT_CODE=0

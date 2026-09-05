@@ -1,0 +1,24 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- D:\nyaymind\nyayamind-verification\research\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\nyaymind\nyayamind-verification
+plugins: typeguard-4.6.0
+collecting ... collected 15 items
+
+research/prototype/tests/test_adversarial_citations.py::test_wrong_act_crpc_vs_cpc_section_100_never_cross_matches PASSED [  6%]
+research/prototype/tests/test_adversarial_citations.py::test_wrong_act_high_but_subthreshold_overlap_does_not_match PASSED [ 13%]
+research/prototype/tests/test_adversarial_citations.py::test_same_section_number_three_way_split_across_acts PASSED [ 20%]
+research/prototype/tests/test_adversarial_citations.py::test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act PASSED [ 26%]
+research/prototype/tests/test_adversarial_citations.py::test_year_edition_land_acquisition_act_central_vs_state_variant PASSED [ 33%]
+research/prototype/tests/test_adversarial_citations.py::test_aliases_crpc_and_cpc_are_distinct_and_each_resolves_correctly PASSED [ 40%]
+research/prototype/tests/test_adversarial_citations.py::test_aliases_id_act_resolves_to_industrial_disputes_act PASSED [ 46%]
+research/prototype/tests/test_adversarial_citations.py::test_aliases_evidence_act_short_form_matches_full_indian_evidence_act PASSED [ 53%]
+research/prototype/tests/test_adversarial_citations.py::test_aliases_parenthetical_abbreviation_never_redirects_to_wrong_act PASSED [ 60%]
+research/prototype/tests/test_adversarial_citations.py::test_range_hyphenated_span_is_never_silently_expanded_or_mismatched PASSED [ 66%]
+research/prototype/tests/test_adversarial_citations.py::test_range_legitimate_suffixed_provision_120b_is_not_treated_as_a_range PASSED [ 73%]
+research/prototype/tests/test_adversarial_citations.py::test_multi_act_three_acts_in_one_sentence_stay_independently_resolved PASSED [ 80%]
+research/prototype/tests/test_adversarial_citations.py::test_multi_act_claims_each_get_independent_evidence_lookup PASSED [ 86%]
+research/prototype/tests/test_adversarial_citations.py::test_ambiguous_same_number_two_different_acts_in_field_stays_unresolved PASSED [ 93%]
+research/prototype/tests/test_adversarial_citations.py::test_ambiguous_unresolved_citation_never_reaches_match_evidence_as_a_false_match PASSED [100%]
+
+============================= 15 passed in 0.04s ==============================

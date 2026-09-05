@@ -1,0 +1,114 @@
+{
+  "files": [
+    {
+      "file": "run_A_n30.jsonl",
+      "path": "research\\prototype\\outputs\\run_A_n30.jsonl",
+      "sha256": "d5186dcba7dfea7002abbf25abd5e11b371ae159f70297a52cb84fd97b9996e2",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 30,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "run_natural_targeted.jsonl",
+      "path": "research\\prototype\\outputs\\run_natural_targeted.jsonl",
+      "sha256": "2edfa76ff287cbd4bb589e970890f773a17667ab0b8493e8ad5cb4fc8eb0720f",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 11,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "natural_candidates_50_gpu_bare.jsonl",
+      "path": "research\\prototype\\outputs\\natural_candidates_50_gpu_bare.jsonl",
+      "sha256": "10b4b6414ee71f2798b555284b378e48c6d871eca25f8419d991e6e599d5135d",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "natural_candidates_50_gpu_labeled.jsonl",
+      "path": "research\\prototype\\outputs\\natural_candidates_50_gpu_labeled.jsonl",
+      "sha256": "4a1d78dc828aba1de46a1a1efae3cb4f20fd107d1d463206f252b13d274d75eb",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "path": "research\\prototype\\outputs\\natural_candidates_batch2_gpu_bare.jsonl",
+      "sha256": "6b050c147320a26bb09b1baf4d0cd1e83b3bb878b5d788a51258bcac7aa006b4",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "natural_candidates_batch2_gpu_labeled.jsonl",
+      "path": "research\\prototype\\outputs\\natural_candidates_batch2_gpu_labeled.jsonl",
+      "sha256": "e5c052a01dcdb6c0fe03886091dbae52753c3695ed9a15ea844541d5180673e6",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "final_gpu_validation_A.jsonl",
+      "path": "research\\prototype\\outputs\\final_gpu_validation_A.jsonl",
+      "sha256": "27f88e760f5258c6e9b76a0f233add341bc41f0e8f37fa228c8964533dc9e532",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "final_gpu_validation_B.jsonl",
+      "path": "research\\prototype\\outputs\\final_gpu_validation_B.jsonl",
+      "sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+      "comparison": "no prior recorded hash -- this is the fresh STEP 6 baseline",
+      "status": "baseline recorded (no prior hash to compare)",
+      "record_count": 50,
+      "duplicate_document_ids": []
+    },
+    {
+      "file": "natural_candidate_selected_ids_30.json",
+      "path": "research\\prototype\\outputs\\natural_candidate_selected_ids_30.json",
+      "sha256": "182b45703c8efdf1d871d8be2fb2ff4222b6cb72f90b0bf6a0f54fc329d4f3cb",
+      "comparison": "against STEP 3 recorded hash",
+      "expected_hash": "182b45703c8efdf1d871d8be2fb2ff4222b6cb72f90b0bf6a0f54fc329d4f3cb",
+      "status": "unchanged since STEP 3",
+      "record_count": 3
+    },
+    {
+      "file": "natural_candidate_selected_ids_50.json",
+      "path": "research\\prototype\\outputs\\natural_candidate_selected_ids_50.json",
+      "sha256": "ba0458778b2e76a50df54cc2d78f04ba5a25fc41fa2921ad78d363b3da3d3d09",
+      "comparison": "against STEP 3 recorded hash",
+      "expected_hash": "ba0458778b2e76a50df54cc2d78f04ba5a25fc41fa2921ad78d363b3da3d3d09",
+      "status": "unchanged since STEP 3",
+      "record_count": 3
+    },
+    {
+      "file": "natural_candidate_selected_ids_50_batch2.json",
+      "path": "research\\prototype\\outputs\\natural_candidate_selected_ids_50_batch2.json",
+      "sha256": "4e65d310fefd9f458546f1bc50c99dc85026d4b51a343c747ef7f05ee4ff7828",
+      "comparison": "against STEP 3 recorded hash",
+      "expected_hash": "4e65d310fefd9f458546f1bc50c99dc85026d4b51a343c747ef7f05ee4ff7828",
+      "status": "unchanged since STEP 3",
+      "record_count": 3
+    },
+    {
+      "file": "natural_candidate_selected_ids_50_final_validation.json",
+      "path": "research\\prototype\\outputs\\natural_candidate_selected_ids_50_final_validation.json",
+      "sha256": "954380e7695ceead984d67e7029186074a9ffd95130f02d17b01ea08d9877f9a",
+      "comparison": "against STEP 3 recorded hash",
+      "expected_hash": "954380e7695ceead984d67e7029186074a9ffd95130f02d17b01ea08d9877f9a",
+      "status": "unchanged since STEP 3",
+      "record_count": 3
+    }
+  ],
+  "stop_on_discrepancy": false,
+  "discrepancies": []
+}

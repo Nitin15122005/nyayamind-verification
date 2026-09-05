@@ -1,0 +1,45 @@
+======================================================================
+STEP 4 -- GOLD-01 controlled verifier benchmark run
+======================================================================
+Hash verified: 962de21ee373bcfb685193902767c1c2c4f10acf592b08f561159503b4287f99 (matches STEP 3 recorded hash)
+Record count verified: 420
+Confirmed: expected_label field present on all 420 records
+NVIDIA GPU available = NO
+torch version: 2.2.2+cu121
+Model: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+confidence_threshold: 0.7 (unchanged from config/prototype.yaml)
+Production premise_framing (config/prototype.yaml): labeled
+Loading NLIVerifier on device=cpu ...
+Loaded in 3.2s
+
+--- Running framing=labeled ---
+  100/420
+  200/420
+  300/420
+  400/420
+  420/420
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold01_controlled\gold01_predictions_labeled.jsonl (420 records)
+Overall accuracy: 0.9714   Macro F1: 0.9684
+  Confusion matrix (rows = expected/gold, cols = predicted/actual):
+    gold vs pred        ENT    CON    NEI   total
+    ENT                 184      0      0     184
+    CON                   5    110      3     118
+    NEI                   0      4    114     118
+
+--- Running framing=bare ---
+  100/420
+  200/420
+  300/420
+  400/420
+  420/420
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold01_controlled\gold01_predictions_bare.jsonl (420 records)
+Overall accuracy: 0.7333   Macro F1: 0.7487
+  Confusion matrix (rows = expected/gold, cols = predicted/actual):
+    gold vs pred        ENT    CON    NEI   total
+    ENT                  92      0     92     184
+    CON                   2    103     13     118
+    NEI                   0      5    113     118
+
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold01_controlled\gold01_metrics.json
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\gold01_controlled\gold01_report.txt
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step4_gold_verifier\run_metadata\gold01_run.meta.json

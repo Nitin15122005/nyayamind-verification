@@ -1,0 +1,28 @@
+{
+  "produced_at": "2026-09-05",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "python_version": "3.11.9",
+  "venv_path": "research/.venv",
+  "nvidia_gpu_available": false,
+  "qwen_generation_or_correction_invoked": false,
+  "real_model_used": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli (device=cpu) -- used in 03/06/07 demos and in test_correction_path_real_integration.py's 3 tests",
+  "commands_executed": [
+    "research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -v --tb=short  (full suite, source of truth)",
+    "research/.venv/Scripts/python.exe -m pytest <component-specific file/-k selections>  (7 targeted group runs)",
+    "research/.venv/Scripts/python.exe research/prototype/testing/run_step5_component_demos.py",
+    "research/.venv/Scripts/python.exe research/prototype/testing/validate_step5_components.py",
+    "research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q  (final regression confirmation)"
+  ],
+  "full_suite_result": "205 passed, 0 failed",
+  "component_group_results": {
+    "01_claim_parser": "111 passed, 0 failed",
+    "02_evidence_matcher": "72 passed, 0 failed",
+    "03_verifier": "48 passed, 0 failed",
+    "04_verdict_application": "3 passed, 0 failed",
+    "05_citation_adversarial": "15 passed, 0 failed",
+    "06_correction_safety": "35 passed (32 mocked + 3 real-model), 0 failed",
+    "07_final_assembly": "5 passed (2 mocked + 3 real-model), 0 failed"
+  },
+  "validator_result": "37 checks passed, 0 warnings, 0 failures",
+  "no_new_test_cases_added": "true -- all component tests executed are pre-existing, unmodified tests from research/prototype/tests/; demo_examples.json files reuse verbatim fixtures from those same tests via direct function calls, not new test cases"
+}

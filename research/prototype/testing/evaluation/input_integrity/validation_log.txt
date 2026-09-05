@@ -1,0 +1,31 @@
+======================================================================
+STEP 6 Phase 2 -- natural-data input integrity check
+======================================================================
+[BASELINE] run_A_n30.jsonl: d5186dcba7dfea7002abbf25abd5e11b371ae159f70297a52cb84fd97b9996e2 (no prior hash recorded in STEP 3 for this file)
+[OK] run_A_n30.jsonl: 30 records (matches expected)
+[OK] run_A_n30.jsonl: no duplicate document_id values (30 unique)
+[BASELINE] run_natural_targeted.jsonl: 2edfa76ff287cbd4bb589e970890f773a17667ab0b8493e8ad5cb4fc8eb0720f (no prior hash recorded in STEP 3 for this file)
+[OK] run_natural_targeted.jsonl: 11 records (matches expected)
+[OK] run_natural_targeted.jsonl: no duplicate document_id values (11 unique)
+[BASELINE] natural_candidates_50_gpu_bare.jsonl: 10b4b6414ee71f2798b555284b378e48c6d871eca25f8419d991e6e599d5135d (no prior hash recorded in STEP 3 for this file)
+[OK] natural_candidates_50_gpu_bare.jsonl: 50 records (matches expected)
+[OK] natural_candidates_50_gpu_bare.jsonl: no duplicate document_id values (50 unique)
+[BASELINE] natural_candidates_50_gpu_labeled.jsonl: 4a1d78dc828aba1de46a1a1efae3cb4f20fd107d1d463206f252b13d274d75eb (no prior hash recorded in STEP 3 for this file)
+[OK] natural_candidates_50_gpu_labeled.jsonl: 50 records (matches expected)
+[OK] natural_candidates_50_gpu_labeled.jsonl: no duplicate document_id values (50 unique)
+[BASELINE] natural_candidates_batch2_gpu_bare.jsonl: 6b050c147320a26bb09b1baf4d0cd1e83b3bb878b5d788a51258bcac7aa006b4 (no prior hash recorded in STEP 3 for this file)
+[OK] natural_candidates_batch2_gpu_bare.jsonl: 50 records (matches expected)
+[OK] natural_candidates_batch2_gpu_bare.jsonl: no duplicate document_id values (50 unique)
+[BASELINE] natural_candidates_batch2_gpu_labeled.jsonl: e5c052a01dcdb6c0fe03886091dbae52753c3695ed9a15ea844541d5180673e6 (no prior hash recorded in STEP 3 for this file)
+[OK] natural_candidates_batch2_gpu_labeled.jsonl: 50 records (matches expected)
+[OK] natural_candidates_batch2_gpu_labeled.jsonl: no duplicate document_id values (50 unique)
+[BASELINE] final_gpu_validation_A.jsonl: 27f88e760f5258c6e9b76a0f233add341bc41f0e8f37fa228c8964533dc9e532 (no prior hash recorded in STEP 3 for this file)
+[OK] final_gpu_validation_A.jsonl: 50 records (matches expected)
+[OK] final_gpu_validation_A.jsonl: no duplicate document_id values (50 unique)
+[BASELINE] final_gpu_validation_B.jsonl: c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18 (no prior hash recorded in STEP 3 for this file)
+[OK] final_gpu_validation_B.jsonl: 50 records (matches expected)
+[OK] final_gpu_validation_B.jsonl: no duplicate document_id values (50 unique)
+[OK] natural_candidate_selected_ids_30.json: hash matches STEP 3 record
+[OK] natural_candidate_selected_ids_50.json: hash matches STEP 3 record
+[OK] natural_candidate_selected_ids_50_batch2.json: hash matches STEP 3 record
+[OK] natural_candidate_selected_ids_50_final_validation.json: hash matches STEP 3 record

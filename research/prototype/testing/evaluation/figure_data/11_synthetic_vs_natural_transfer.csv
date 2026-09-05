@@ -1,0 +1,3 @@
+metric,synthetic_value,natural_value,populations_comparable,note,source
+contradiction_recall_or_detection,0.4576271186440678,not directly comparable (no natural denominator of known-contradictory claims),NO,Synthetic set is 100% contradictory by construction; natural data has no such label.,step4/gold02 + step6/588_claims
+correction_shipping_rate,26/36 = 0.722,1/56 = 0.018,NO,Disjoint populations with different base rates by construction -- the 72.2% synthetic figure must not be presented as equivalent to the natural shipped-correction rate.,outputs/final_metrics.json

@@ -1,0 +1,22 @@
+{
+  "produced_at": "2026-09-05T10:56:34.413754+00:00",
+  "operating_system": "Windows-10-10.0.26200-SP0",
+  "python_version": "3.11.9",
+  "venv_path": "research/.venv",
+  "package_versions": {
+    "torch": "2.2.2+cu121"
+  },
+  "model_identifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "model_checkpoint": "as pulled from Hugging Face Hub at first load (no revision= pin in src/verifier.py -- documented, pre-existing project limitation, not introduced by STEP 4)",
+  "config_path": "research/prototype/config/prototype.yaml",
+  "dataset_path": "research\\prototype\\testing\\expected_outputs\\controlled_benchmark_gold\\controlled_verifier_benchmark.jsonl",
+  "dataset_sha256": "962de21ee373bcfb685193902767c1c2c4f10acf592b08f561159503b4287f99",
+  "record_count": 420,
+  "command_executed": "research/.venv/Scripts/python.exe research/prototype/testing/run_gold01_evaluation.py",
+  "git_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "nvidia_gpu_available": false,
+  "cuda_available_per_torch": false,
+  "gpu_execution_claimed": false,
+  "known_blocker_documented": "scripts/run_controlled_benchmark.py cannot be imported under this project's pinned Python 3.11.9 (Python 3.12+-only f-string syntax) -- see step4_common.py module docstring. This runner calls the real NLIVerifier/format_premise directly instead and reimplements only the confusion-matrix arithmetic.",
+  "cpu_info": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD"
+}

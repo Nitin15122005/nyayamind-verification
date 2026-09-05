@@ -1,0 +1,8 @@
+metric,original,current,delta,n,dataset,statistical_support,classification
+Evidence coverage (209-claim paired natural),63.2%,70.3%,+7.1pp,209,209-claim paired natural set,McNemar p=0.0003; sign test p=6.10e-05,SUPPORTED
+Verifier controlled benchmark (macro F1),0.7487,0.9684,+0.2197,420,GOLD-01 controlled benchmark,McNemar p=4.16e-23; sign test p=1.58e-30,SUPPORTED
+Natural ENTAILED reached (147-claim subset),0/147,13/147,+13,147,final_validation Arm B evidence-matched subset,none performed,DESCRIPTIVE (not a correctness metric)
+Natural CONTRADICTED detection (147-claim subset),3,3,0,147,final_validation Arm B evidence-matched subset,none performed,DESCRIPTIVE
+Targeted correction shipping,0/5,1/10,+1,5 vs 10,"final_validation batch, targeted",none (n too small),DIAGNOSTIC / UNDERPOWERED
+Cumulative correction shipping,n/a (single-arm cumulative),1/56 = 1.8%,n/a,56,"all natural correction attempts, project history",none (not an ablation),DIAGNOSTIC
+Unsafe corrections shipped,0,0,0,56 natural + 66 synthetic = 122,"all correction attempts, project history",none (descriptive count),"DESCRIPTIVE (0 observed, not proof of impossibility)"

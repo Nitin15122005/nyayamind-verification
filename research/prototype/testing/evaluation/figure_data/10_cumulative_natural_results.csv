@@ -1,0 +1,12 @@
+dataset,arm_or_config,coverage,n,n_matched,fresh_or_historical,source
+209_paired_ArmA,v0-only (original),0.631578947368421,209,,FRESH,step6/209_paired
+209_paired_ArmB,v0+v1 (current),0.7033492822966507,209,,FRESH,step6/209_paired
+588_claim_aggregate,v0+v1 (current),0.6632653061224489,588,390,FRESH,step6/588_claims
+n30_mode_B,"bare, v0-only, legacy scope (pre-2026-08-27 default)",0.4318181818181818,88,38,HISTORICAL,step6/batches/batches_analysis.json
+targeted_mode_B,"bare, v0-only, legacy scope",0.4827586206896552,29,14,HISTORICAL,step6/batches/batches_analysis.json
+batch1_bare,"bare, v0-only",0.6693227091633466,251,168,HISTORICAL,step6/batches/batches_analysis.json
+batch1_labeled,"labeled, v0-only",0.6693227091633466,251,168,HISTORICAL,step6/batches/batches_analysis.json
+batch2_bare,"bare, v0-only",0.4915254237288136,236,116,HISTORICAL,step6/batches/batches_analysis.json
+batch2_labeled,"labeled, v0-only",0.4915254237288136,236,116,HISTORICAL,step6/batches/batches_analysis.json
+final_validation_arm_A,"bare, v0-only, legacy scope (ORIGINAL)",0.631578947368421,209,132,HISTORICAL,step6/batches/batches_analysis.json
+final_validation_arm_B,"bare (as stored), v0+v1, assertion_spans (pre-labeled-decision)",0.7033492822966507,209,147,HISTORICAL,step6/batches/batches_analysis.json

@@ -1,0 +1,9 @@
+{
+  "produced_at": "2026-09-05",
+  "repo_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "command": "research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q",
+  "purpose": "STEP 4 regression check - confirms GOLD-01/GOLD-02 evaluation runs caused no change to the existing, frozen test suite",
+  "result": "205 passed, 1 warning, 8.23s",
+  "exit_code": 0,
+  "comparison_to_step3": "identical result (205 passed) - no regression"
+}

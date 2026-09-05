@@ -1,0 +1,65 @@
+{
+  "dataset_tag": "209_claim_paired_natural_evaluation",
+  "classification": "METRIC-ONLY -- paired comparative data, not ground truth",
+  "n_paired_claims": 209,
+  "arm_A_config": {
+    "use_evidence_v1": false,
+    "evidence_pool_size": 59,
+    "note": "Arm A's ORIGINAL, explicitly-recorded configuration"
+  },
+  "arm_B_config": {
+    "use_evidence_v1": true,
+    "evidence_pool_size": 136,
+    "note": "CURRENT production evidence pool"
+  },
+  "fresh_reverification_premise_framing": "labeled",
+  "fresh_evidence_coverage_arm_A": 0.631578947368421,
+  "fresh_evidence_coverage_arm_B": 0.7033492822966507,
+  "evidence_change_counts": {
+    "unchanged_matched": 132,
+    "unchanged_no_evidence": 62,
+    "evidence_gained": 15
+  },
+  "verdict_change_counts": {
+    "unchanged": 132,
+    "both_no_evidence": 62,
+    "changed_None_to_NOT_ENOUGH_INFORMATION": 14,
+    "changed_None_to_CONTRADICTED": 1
+  },
+  "historical_verdict_distribution_arm_A": {
+    "NOT_ENOUGH_INFORMATION": 129,
+    "NO_EVIDENCE": 77,
+    "CONTRADICTED": 3
+  },
+  "historical_verdict_distribution_arm_B": {
+    "NOT_ENOUGH_INFORMATION": 144,
+    "NO_EVIDENCE": 62,
+    "CONTRADICTED": 3
+  },
+  "fresh_verdict_distribution_arm_A": {
+    "NOT_ENOUGH_INFORMATION": 117,
+    "NO_EVIDENCE": 77,
+    "ENTAILED": 13,
+    "CONTRADICTED": 2
+  },
+  "fresh_verdict_distribution_arm_B": {
+    "NOT_ENOUGH_INFORMATION": 131,
+    "NO_EVIDENCE": 62,
+    "ENTAILED": 13,
+    "CONTRADICTED": 3
+  },
+  "mcnemar_evidence_coverage": {
+    "binary_event": "claim received usable evidence (yes/no)",
+    "b_gained": 15,
+    "c_lost": 0,
+    "chi2": 13.066666666666666,
+    "p_value": 0.00030059760744045107,
+    "note": "Reproduces this project's existing methodology (outputs/final_gpu_validation.md) for this exact binary event -- not a new hypothesis."
+  },
+  "elapsed_seconds": 88.79212307929993,
+  "gpu_execution_claimed": false,
+  "qwen_generation_or_correction_invoked": false,
+  "device": "cpu",
+  "cuda_available": false,
+  "result_classification_note": "historical_* fields = HISTORICAL RESULT (as originally stored, Arm B under bare framing). fresh_* fields = FRESH TESTING RESULT (evidence re-matched and verdicts re-verified this run, both arms under current production labeled framing)."
+}

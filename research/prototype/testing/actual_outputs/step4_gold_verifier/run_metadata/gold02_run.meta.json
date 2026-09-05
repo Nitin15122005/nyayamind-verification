@@ -1,0 +1,24 @@
+{
+  "produced_at": "2026-09-05T10:59:06.221363+00:00",
+  "operating_system": "Windows-10-10.0.26200-SP0",
+  "python_version": "3.11.9",
+  "venv_path": "research/.venv",
+  "package_versions": {
+    "torch": "2.2.2+cu121"
+  },
+  "model_identifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "model_checkpoint": "as pulled from Hugging Face Hub at first load (no revision= pin -- pre-existing project limitation)",
+  "config_path": "research/prototype/config/prototype.yaml",
+  "dataset_path": "research\\prototype\\testing\\expected_outputs\\synthetic_stress_gold\\run_synthetic_stress.jsonl",
+  "dataset_sha256": "2dba39cc61eb94aa81daeff9817026ace0f531174e9312d49ce12522b3e9b516",
+  "record_count": 59,
+  "command_executed": "research/.venv/Scripts/python.exe research/prototype/testing/run_gold02_evaluation.py",
+  "git_commit": "ccbe73f3c6c504c4f7d84cd8e8c9c128397f56a3",
+  "nvidia_gpu_available": false,
+  "cuda_available_per_torch": false,
+  "gpu_execution_claimed": false,
+  "qwen_generation_or_correction_invoked": false,
+  "existing_evaluation_code_reused": "scripts/compare_premise_framing_synthetic.py::build_baseline, triggers_correction (imported directly, unmodified); src/pipeline.py::apply_verification, resolve_premise_framing (real production functions, unmodified)",
+  "reproducibility_check": "PASSED -- all 59 re-derived synthetic claims exactly matched the frozen fixture's stored fields before inference was run",
+  "cpu_info": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD"
+}

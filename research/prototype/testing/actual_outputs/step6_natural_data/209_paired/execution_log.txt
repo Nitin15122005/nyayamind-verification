@@ -1,0 +1,17 @@
+======================================================================
+STEP 6 Phase 5/7 -- 209-claim paired natural evaluation
+======================================================================
+Arm A fresh re-match pool (v0-only, its ORIGINAL config): 59 records
+Arm B fresh re-match pool (CURRENT production, v0+v1): 136 records
+Fresh re-verification premise_framing (CURRENT production): labeled
+NVIDIA GPU available = NO
+Loading real DeBERTa verifier on device=cpu ...
+
+Processed 209 paired claim positions in 88.8s
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\evaluation\paired_209_analysis.csv
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\209_paired\paired_209_full_records.jsonl
+
+Fresh evidence coverage: Arm A (v0-only) 132/209 = 0.6316, Arm B (v0+v1) 147/209 = 0.7033
+McNemar (binary event: usable evidence found y/n): b(gained)=15 c(lost)=0 chi2=13.0667 p=0.000301
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\209_paired\paired_209_metrics.json
+Wrote D:\nyaymind\nyayamind-verification\research\prototype\testing\actual_outputs\step6_natural_data\209_paired\run_metadata.json

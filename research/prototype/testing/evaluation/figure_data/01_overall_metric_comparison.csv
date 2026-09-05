@@ -1,0 +1,5 @@
+metric,original_value,current_value,unit,dataset,n,fresh_or_historical,source
+evidence_coverage,0.631578947368421,0.7033492822966507,fraction,209_claim_paired_natural,209,FRESH,step6/209_paired/paired_209_metrics.json
+controlled_benchmark_macro_f1,0.7486646586649771,0.9683612674297156,fraction,GOLD-01,420,FRESH,step4/gold01_controlled/gold01_metrics.json
+controlled_benchmark_accuracy,0.7333333333333333,0.9714285714285714,fraction,GOLD-01,420,FRESH,step4/gold01_controlled/gold01_metrics.json
+synthetic_contradiction_recall,0.3559322033898305,0.4576271186440678,fraction,GOLD-02,59,FRESH,step4/gold02_synthetic/gold02_metrics.json

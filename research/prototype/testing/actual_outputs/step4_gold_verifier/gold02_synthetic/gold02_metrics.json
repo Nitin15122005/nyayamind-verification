@@ -1,0 +1,137 @@
+{
+  "benchmark_tag": "GOLD-02_synthetic_stress_set",
+  "n_items": 59,
+  "dataset_sha256": "2dba39cc61eb94aa81daeff9817026ace0f531174e9312d49ce12522b3e9b516",
+  "expected_label_note": "No literal 'expected_label' field in this dataset -- CONTRADICTED-by-construction for all records, per src/synthetic_stress.py's module docstring. Reproducibility of this claim was independently verified this run (see log).",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "device": "cpu",
+  "production_premise_framing": "labeled",
+  "framings_run": [
+    "labeled",
+    "bare"
+  ],
+  "primary_framing": "labeled",
+  "results_by_framing": {
+    "labeled": {
+      "n_items": 59,
+      "n_no_evidence": 15,
+      "elapsed_seconds": 26.422931432724,
+      "contradiction_recall": 0.4576271186440678,
+      "macro_f1_degenerate_single_class": 0.2535211267605634,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0,
+          "NO_EVIDENCE": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 27,
+          "NOT_ENOUGH_INFORMATION": 17,
+          "NO_EVIDENCE": 15
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0,
+          "NO_EVIDENCE": 0
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 1.0,
+          "recall": 0.6136363636363636,
+          "f1": 0.7605633802816901,
+          "support": 59,
+          "tp": 27,
+          "fp": 0,
+          "fn": 17
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "tp": 0,
+          "fp": 17,
+          "fn": 0
+        }
+      }
+    },
+    "bare": {
+      "n_items": 59,
+      "n_no_evidence": 15,
+      "elapsed_seconds": 26.55144453048706,
+      "contradiction_recall": 0.3559322033898305,
+      "macro_f1_degenerate_single_class": 0.2153846153846154,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0,
+          "NO_EVIDENCE": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 21,
+          "NOT_ENOUGH_INFORMATION": 23,
+          "NO_EVIDENCE": 15
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0,
+          "NO_EVIDENCE": 0
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 1.0,
+          "recall": 0.4772727272727273,
+          "f1": 0.6461538461538462,
+          "support": 59,
+          "tp": 21,
+          "fp": 0,
+          "fn": 23
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "tp": 0,
+          "fp": 23,
+          "fn": 0
+        }
+      }
+    }
+  },
+  "model_load_seconds": 3.297149896621704,
+  "timestamp_utc": "2026-09-05T10:59:06.199232+00:00",
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "torch": "2.2.2+cu121",
+    "cuda_available": false
+  }
+}

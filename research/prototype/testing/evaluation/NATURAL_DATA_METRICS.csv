@@ -1,0 +1,12 @@
+Dataset,N,EvidenceCoverage,NO_EVIDENCE,ENTAILED,CONTRADICTED,NOT_ENOUGH_INFORMATION,FreshOrHistorical,Configuration,GPUStageExecuted
+588_claim_aggregate,588,0.6633,198,21,5,364,FRESH,"v0+v1 (136), labeled",No
+209_paired_ArmA_fresh,209,0.6316,77,13,2,117,FRESH,"v0-only (59), labeled",No
+209_paired_ArmB_fresh,209,0.7033,62,13,3,131,FRESH,"v0+v1 (136), labeled",No
+n30_mode_B,88,0.4318,50,0,0,38,HISTORICAL,"bare, v0-only, legacy scope (pre-2026-08-27 default)",No
+targeted_mode_B,29,0.4828,15,0,0,14,HISTORICAL,"bare, v0-only, legacy scope",No
+batch1_bare,251,0.6693,83,0,1,167,HISTORICAL,"bare, v0-only",No
+batch1_labeled,251,0.6693,83,5,2,161,HISTORICAL,"labeled, v0-only",No
+batch2_bare,236,0.4915,120,2,1,113,HISTORICAL,"bare, v0-only",No
+batch2_labeled,236,0.4915,120,11,3,102,HISTORICAL,"labeled, v0-only",No
+final_validation_arm_A,209,0.6316,77,0,3,129,HISTORICAL,"bare, v0-only, legacy scope (ORIGINAL)",No
+final_validation_arm_B,209,0.7033,62,0,3,144,HISTORICAL,"bare (as stored), v0+v1, assertion_spans (pre-labeled-decision)",No
