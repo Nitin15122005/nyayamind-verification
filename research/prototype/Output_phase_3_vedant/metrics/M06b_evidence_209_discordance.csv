@@ -1,0 +1,2 @@
+gained_evidence_b,lost_evidence_c,unchanged_matched,unchanged_no_evidence,mcnemar_chi2,mcnemar_p_value,n_claims,source_artifact
+15,0,132,62,13.066666666666666,0.00030059760744045107,209,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json

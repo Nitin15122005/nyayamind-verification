@@ -1,0 +1,9 @@
+Component,Tests,Passed,Real model used,CPU/GPU,Representative case,Classification,Source artifact
+01_claim_parser,111,111,No,CPU,IPC 120-B/471/477 vs POCA sec 1(d) act-attribution (gold_annotation.jsonl doc 2007_1517),SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+02_evidence_matcher,72,72,No,CPU,Section 34 resolved independently across IPC / Arbitration Act 1940 / 1996,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+03_verifier,48,48,Yes (DeBERTa),CPU,Real Section 302 IPC evidence vs corrupted hypothesis -> CONTRADICTED,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+04_verdict_application,3,3,No (mocked),CPU,NO_EVIDENCE claim never reaches the verifier,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+05_citation_adversarial,15,15,No,CPU,CrPC-vs-CPC Section 100 never cross-matches,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+06_correction_safety,35,35,"Yes (DeBERTa, 3 of 35)",CPU,Scope-violation correctly rejected before re-verification,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+07_final_assembly,5,5,"Yes (DeBERTa, 3 of 5)",CPU,Full run_case() record for a shipped correction and a scope-violation rejection,SOFTWARE BEHAVIOR PASS,research/prototype/evaluation/metrics/COMPONENT_TEST_MATRIX.csv
+FULL REGRESSION SUITE (authoritative),205,205,"Yes (DeBERTa, 6 tests)",CPU,research/prototype/tests/ — re-run for this package,SOFTWARE BEHAVIOUR PASS,pytest research/prototype/tests/ -q

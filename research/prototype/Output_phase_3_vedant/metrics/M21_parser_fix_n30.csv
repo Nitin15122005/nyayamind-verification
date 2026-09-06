@@ -1,0 +1,5 @@
+measure,baseline_pre_fix_parser,modified_post_fix_parser,n_cases,statistical_test,p_value,source_artifact
+Claims extracted,88,93,30,,,research/prototype/outputs/parser_fix_before_after_n30.json
+Claims with usable evidence,38,51,30,,,research/prototype/outputs/parser_fix_before_after_n30.json
+Claims with unresolved act name,7,1,30,,,research/prototype/outputs/parser_fix_before_after_n30.json
+Per-case outcome (improved / worsened / unchanged),0 cases worsened,"6 improved, 24 unchanged",30,exact two-sided sign test (on the non-tied pairs only),0.03125,research/prototype/evaluation/ablation/ABLATION_SUMMARY.json

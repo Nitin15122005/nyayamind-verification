@@ -1,0 +1,77 @@
+NyayaMind Phase-3 visualisation package — validation report
+Generated: 2026-09-06T19:44:04
+Package:   research/prototype/Output_phase_3_vedant
+Baseline:  Baseline: NyayaMind v0 (bare premise · evidence v0, 59 rec)
+Modified:  Modified: NyayaMind production (labeled premise · evidence v0+v1, 136 rec)
+
+=== A. Metric values re-verified independently against source artifacts ===
+  [PASS] M01 evidence coverage baseline
+  [PASS] M01 evidence coverage modified
+  [PASS] M01 GOLD-01 macro F1 pair
+  [PASS] M01 GOLD-01 accuracy pair
+  [PASS] M01 GOLD-02 contradiction recall pair
+  [PASS] M02 statistics match ABLATION_SUMMARY
+  [PASS] M03 all 42 per-class values match gold01_metrics.json
+  [PASS] M04 all 18 confusion-matrix cells match
+  [PASS] M05 GOLD-02 values match gold02_metrics.json
+  [PASS] M06b McNemar discordance matches paired_209_metrics.json
+  [PASS] M07 corpus coverage matches evidence_coverage_v0_vs_v1.json
+  [PASS] M08 all verdict counts match their source
+  [PASS] M09 batch verdict counts match batches_analysis.json
+  [PASS] M10 147-claim framing counts match the CPU metrics json
+  [PASS] M11 confidence statistics match claims_588_metrics.json
+  [PASS] M12 all 20 threshold-sweep points match
+  [PASS] M13 synthetic modified arm matches final_metrics.json
+  [PASS] M13 natural cumulative matches final_metrics.json
+  [PASS] M13 natural targeted arms match their GPU metrics
+  [PASS] M15 unsafe shipped == 0 in the source
+  [PASS] M15 scope-gate and re-verification rejections match
+  [PASS] M16 ablation p-values and baselines match ABLATION_SUMMARY.json
+  [PASS] M18 batch coverage values match batches_analysis.json
+  [PASS] M20 NO_EVIDENCE taxonomy counts match no_evidence_taxonomy_v3.json
+  [PASS] M25 scope replay matches scope_check_replay_fresh.json
+  [PASS] M22 every reproduced quantity is an exact match
+  [PASS] M24 evidence pool sizes reproduce via the production loader — baseline=59, modified=136
+
+=== B. Artifact coverage ===
+  [PASS] every manifest artifact exists (both variants) — 96 files checked
+  [PASS] no artifact is suspiciously small
+  [PASS] no unlisted artifact on disk — unlisted: []
+  manifest: 25 figures, 14 diagrams, 9 tables (48 artifacts, 96 files)
+  [PASS] README.md present
+  [PASS] FIGURE_DATA_AUDIT.md present
+  [PASS] METRIC_SOURCE_MAP.csv present
+  [PASS] VISUALIZATION_MANIFEST.csv present
+  [PASS] NOT_GENERATED_REGISTER.md present
+  [PASS] ppt_assets/FIGURE_INDEX.md present
+  [PASS] ppt_assets/DIAGRAM_INDEX.md present
+  [PASS] ppt_assets/SLIDE_MAPPING.md present
+
+=== C. Naming discipline ===
+  [PASS] no vague comparison label in any package document
+  [PASS] no vague comparison label in any filename
+  [PASS] exact model id present in README: Qwen/Qwen2.5-7B-Instruct
+  [PASS] exact model id present in README: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+  [PASS] exact baseline system name used in the manifest
+  [PASS] exact modified system name used in the manifest
+  [PASS] out-of-scope RhetoricLLaMA baseline is documented
+  [PASS] every artifact carries a system/model designation — []
+
+=== D. Claim discipline ===
+  [PASS] no natural-data contract is described as accuracy/precision/recall
+  [PASS] synthetic vs natural transfer is marked non-comparable on every row
+  [PASS] no contract silently mixes GOLD and natural datasets — []
+  [PASS] M01 (the one mixed-class figure) labels every row's metric class
+  [PASS] every artifact declares a freshness status — []
+  [PASS] every artifact declares a caveat — []
+  [PASS] every runtime row names its hardware
+  [PASS] GPU and CPU runtime rows are both present and distinguished
+  [PASS] joint four-lever ablation is present and marked NOT_ISOLABLE / Grade E
+  [PASS] no provisional/assumption label set is used as a metric source
+
+=== E. Protected paths untouched ===
+  [PASS] no protected path was created, modified or deleted — only research/prototype/Output_phase_3_vedant/ appears as new in git status
+
+========================================================================
+RESULT: PASS — 0 failure(s), 0 warning(s)
+========================================================================

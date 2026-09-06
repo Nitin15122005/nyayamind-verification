@@ -1,0 +1,18 @@
+Setting,Baseline — NyayaMind v0 (pre-2026-08-27 baseline),Modified — NyayaMind (2026-08-27 production),Status,Source
+Generation model,Qwen/Qwen2.5-7B-Instruct,Qwen/Qwen2.5-7B-Instruct,identical,config/prototype.yaml generation.model_id
+Generation quantization,"4-bit nf4, double-quant, bfloat16 compute","4-bit nf4, double-quant, bfloat16 compute",identical,config/prototype.yaml generation.quantization
+Generation decoding,"greedy (do_sample=False), max_new_tokens=200","greedy (do_sample=False), max_new_tokens=200",identical,config/prototype.yaml generation
+Verification model,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,identical,config/prototype.yaml verification.model_id
+Correction model,Qwen/Qwen2.5-7B-Instruct (reuses the loaded generator),Qwen/Qwen2.5-7B-Instruct (reuses the loaded generator),identical,config/prototype.yaml correction.model_id
+Seed,42,42,identical,config/prototype.yaml seed
+verification.confidence_threshold,0.7,0.7,identical (evidence supports keeping),config/prototype.yaml; FINAL_PRODUCTION_CONFIG.md §5
+verification.premise_framing,bare,labeled,CHANGED,config/prototype.yaml; FINAL_PRODUCTION_CONFIG.md §1
+use_evidence_v1,False,True,CHANGED,config/prototype.yaml; FINAL_PRODUCTION_CONFIG.md §2
+Usable evidence records,59,136,CHANGED,computed live via src/data_loader.load_usable_evidence_from_config()
+correction.atomic_scope_check,False,"""assertion_spans""",CHANGED,config/prototype.yaml; FINAL_PRODUCTION_CONFIG.md §3
+correction.narrow_reverification_hypothesis,False,True,CHANGED,config/prototype.yaml; FINAL_PRODUCTION_CONFIG.md §4
+Sibling-regression protection,not applicable -- only activates when atomic_scope_check is truthy; inactive under ORIGINAL by construction,active whenever atomic_scope_check is truthy -- always active under CURRENT,"CHANGED (as a consequence, not a toggle)",src/pipeline.py _reverify_sibling_regressions(); FINAL_PRODUCTION_CONFIG.md §6
+Citation-identity preservation,"always on -- core pipeline logic, not a toggle, identical in ORIGINAL and CURRENT","always on -- core pipeline logic, not a toggle, identical in ORIGINAL and CURRENT",identical,src/pipeline.py _citation_identity(); FINAL_PRODUCTION_CONFIG.md §7
+Claim parser version,post commit 223eb9d for the primary baseline arms,"current (post commit 223eb9d, unchanged since)",identical for the primary comparison; the earlier pre-fix parser is ablated separately,comparison_config.json ORIGINAL.claim_parser_version
+correction.max_attempts / max_reverifications,1 / 1,1 / 1,identical,config/prototype.yaml correction
+evidence_matching.fuzzy_token_overlap_threshold,0.8,0.8,identical,config/prototype.yaml evidence_matching

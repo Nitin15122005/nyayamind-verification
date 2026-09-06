@@ -1,0 +1,17 @@
+batch,regime,system,premise_framing,configuration,verdict,count,n_claims,n_cases,evidence_coverage,fresh_or_historical,source_artifact
+batch1,batch1_bare,baseline,bare,"bare, v0-only",ENTAILED,0,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_bare,baseline,bare,"bare, v0-only",CONTRADICTED,1,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_bare,baseline,bare,"bare, v0-only",NOT_ENOUGH_INFORMATION,167,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_bare,baseline,bare,"bare, v0-only",NO_EVIDENCE,83,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_labeled,modified,labeled,"labeled, v0-only",ENTAILED,5,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_labeled,modified,labeled,"labeled, v0-only",CONTRADICTED,2,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_labeled,modified,labeled,"labeled, v0-only",NOT_ENOUGH_INFORMATION,161,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1,batch1_labeled,modified,labeled,"labeled, v0-only",NO_EVIDENCE,83,251,50,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_bare,baseline,bare,"bare, v0-only",ENTAILED,2,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_bare,baseline,bare,"bare, v0-only",CONTRADICTED,1,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_bare,baseline,bare,"bare, v0-only",NOT_ENOUGH_INFORMATION,113,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_bare,baseline,bare,"bare, v0-only",NO_EVIDENCE,120,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_labeled,modified,labeled,"labeled, v0-only",ENTAILED,11,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_labeled,modified,labeled,"labeled, v0-only",CONTRADICTED,3,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_labeled,modified,labeled,"labeled, v0-only",NOT_ENOUGH_INFORMATION,102,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2,batch2_labeled,modified,labeled,"labeled, v0-only",NO_EVIDENCE,120,236,50,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json

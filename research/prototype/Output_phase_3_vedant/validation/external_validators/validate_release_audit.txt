@@ -1,0 +1,21 @@
+======================================================================
+STEP 13 FINAL RELEASE AUDIT VALIDATION REPORT
+======================================================================
+
+PASSED (11):
+  [PASS] All 10 required testing-workspace directories exist: inputs, expected_outputs, actual_outputs, comparisons, components, integration_tests, ablation, metrics, figures, reports, scripts
+  [PASS] Cited paths in reconciliation/faculty documents resolve to real files: 71 cited path(s) checked across 6 documents, all resolved
+  [PASS] FINAL_CLAIM_REGISTER.csv is contiguous and fully referenced by the faculty table: 26 contiguous claim IDs (C01-C26), all 26 table references resolve to real register rows
+  [PASS] All six required limitations present and unweakened in FACULTY_LIMITATIONS_AND_CAVEATS.md: all 6 limitations present, no clear softening language detected
+  [PASS] GPU-absence statements are scoped to the STEP 1-9 machine only: every GPU-absence statement found is explicitly scoped; RTX 4050 capability documented separately
+  [PASS] Cumulative 1/56 remains historical-only / protocol-insufficient everywhere mentioned: all 11 mention(s) carry a historical-only/protocol-insufficient qualifier
+  [PASS] Joint four-lever experiment remains marked unavailable everywhere mentioned: all 11 mention(s) confirm the experiment does not exist
+  [PASS] Natural-data results are never bare accuracy/correctness claims: every 'natural data' + accuracy/correctness co-occurrence found is a disclaimer
+  [PASS] All 11 figures exist under evaluation/figures/: figures 01-11 all present
+  [PASS] 205 is the sole authoritative regression-test total (never summed as 289 etc.): 205 is asserted as the authoritative total; any 289 reference is explicitly disclaimed as an overlapping categorization, not an alternative total
+  [PASS] PROVENANCE.md step-header chain (STEP 3-10B) is present and unbroken: STEP 3 through STEP 10B headers all present and unbroken
+
+WARNINGS (1):
+  [WARN] PROVENANCE.md step-header chain (STEP 3-10B) is present and unbroken: PROVENANCE.md has no dedicated '## STEP 11' / '## STEP 12' section (their deliverables live under reports/ instead, per their own task scope -- this is a documentation-completeness observation, not a defect)
+
+RESULT: PASS (11/11 checks passed, 0 failures, 1 warnings)

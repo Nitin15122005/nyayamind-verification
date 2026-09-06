@@ -1,0 +1,9 @@
+system,premise_framing,verdict,count,n_claims,correction_triggers,n_verdict_flips,fresh_or_historical,source_artifact
+baseline,bare,ENTAILED,0,147,9,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+baseline,bare,CONTRADICTED,3,147,9,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+baseline,bare,NOT_ENOUGH_INFORMATION,144,147,9,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+baseline,bare,NO_EVIDENCE,0,147,9,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+modified,labeled,ENTAILED,13,147,19,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+modified,labeled,CONTRADICTED,3,147,19,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+modified,labeled,NOT_ENOUGH_INFORMATION,131,147,19,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json
+modified,labeled,NO_EVIDENCE,0,147,19,15,HISTORICAL,research/prototype/outputs/final_validation_bare_vs_labeled_cpu_metrics.json

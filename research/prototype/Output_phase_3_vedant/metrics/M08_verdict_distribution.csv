@@ -1,0 +1,13 @@
+dataset,system,arm_label,verdict,count,n_total,premise_framing,fresh_or_historical,source_artifact
+209_claim_paired_natural_evaluation,baseline,Baseline evidence pool v0 (Arm A),ENTAILED,13,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,baseline,Baseline evidence pool v0 (Arm A),CONTRADICTED,2,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,baseline,Baseline evidence pool v0 (Arm A),NOT_ENOUGH_INFORMATION,117,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,baseline,Baseline evidence pool v0 (Arm A),NO_EVIDENCE,77,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,modified,Modified evidence pool v0+v1 (Arm B),ENTAILED,13,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,modified,Modified evidence pool v0+v1 (Arm B),CONTRADICTED,3,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,modified,Modified evidence pool v0+v1 (Arm B),NOT_ENOUGH_INFORMATION,131,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_claim_paired_natural_evaluation,modified,Modified evidence pool v0+v1 (Arm B),NO_EVIDENCE,62,209,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+588_claim_natural_aggregate,modified,Modified production config (588-claim aggregate),ENTAILED,21,588,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,modified,Modified production config (588-claim aggregate),CONTRADICTED,5,588,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,modified,Modified production config (588-claim aggregate),NOT_ENOUGH_INFORMATION,364,588,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,modified,Modified production config (588-claim aggregate),NO_EVIDENCE,198,588,labeled,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json

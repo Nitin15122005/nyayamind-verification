@@ -1,0 +1,5 @@
+dataset,verdict,n,mean_confidence,median_confidence,min_confidence,max_confidence,premise_framing,confidence_threshold,source_artifact
+588_claim_natural_aggregate,ENTAILED,21,0.8831725801740374,0.8998330235481262,0.7123641967773438,0.9804450273513794,labeled,0.7,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,CONTRADICTED,5,0.8452063918113708,0.8003418445587158,0.7620325088500977,0.9866379499435425,labeled,0.7,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,NOT_ENOUGH_INFORMATION,364,0.8729241560776155,0.9430956840515137,0.3701574504375458,0.999072790145874,labeled,0.7,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json
+588_claim_natural_aggregate,ALL evidence-matched,390,0.8731206383460607,0.9416141510009766,,,labeled,0.7,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json

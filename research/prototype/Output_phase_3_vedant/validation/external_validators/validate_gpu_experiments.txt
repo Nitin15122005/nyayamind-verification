@@ -1,0 +1,20 @@
+======================================================================
+STEP 10 GPU EXECUTION VALIDATION REPORT
+======================================================================
+
+PASSED (13):
+  [PASS] GPU metadata exists: gpu_memory_probe_result.json has gpu_name/torch/torch_cuda/snapshots
+  [PASS] GPU metadata exists: PROVENANCE.md STEP 10 section present
+  [PASS] GPU availability claim matches execution: GPU claimed available AND a real generation output file exists
+  [PASS] No mocked generation labeled real: all no mocked generation labeled real checks passed — no Fake/Mock/Scripted model ids found in STEP 10 outputs
+  [PASS] Fresh outputs have metadata: every fresh JSONL record and experiment summary carries reproducibility/config metadata
+  [PASS] Model IDs recorded: Qwen and DeBERTa model ids explicitly recorded in probe result and inventory
+  [PASS] Dataset/source files identified: exact historical input/output source paths named in crosscheck doc
+  [PASS] Historical files not overwritten: historical outputs/labeled_correction_validation_gpu_metrics.json unchanged (runtime_seconds still 84.906...); fresh result saved separately as *.fresh.json
+  [PASS] GPU experiment classifications explicit: explicit A-F classification present in crosscheck; FRESH GPU REPRODUCTION / HISTORICAL ONLY / NOT EXECUTED labels present in ablation update
+  [PASS] No unsupported safety claims: no unsupported universal-safety language found in GPU_CORRECTION_SAFETY_STEP10.md
+  [PASS] No unsupported accuracy/correctness claims: every 'legally correct/accurate/proven correct' occurrence found is a negation/disclaimer, not an affirmative claim
+  [PASS] GOLD/METRIC-ONLY/BEHAVIOR/PROVISIONAL classifications intact: MANIFEST.md still references GOLD/PROVISIONAL classifications; STEP 10 added no files under expected_outputs/
+  [PASS] Fresh vs historical distinction explicit: every STEP 10 evaluation/ablation doc explicitly labels fresh vs. historical results
+
+RESULT: PASS (13 checks passed, 0 failures, 0 warnings)

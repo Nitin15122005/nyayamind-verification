@@ -1,0 +1,73 @@
+======================================================================
+STEP 9 FIGURE VALIDATION REPORT
+======================================================================
+
+PASSED (66):
+  [PASS] PNGs exist and open: exactly 11 PNGs present
+  [PASS] PNGs exist and open: 01_overall_metric_comparison.png opens OK (1693x1109)
+  [PASS] PNGs exist and open: 02_evidence_coverage.png opens OK (1451x1181)
+  [PASS] PNGs exist and open: 03_verdict_distribution.png opens OK (1373x992)
+  [PASS] PNGs exist and open: 04_correction_funnel.png opens OK (3980x1127)
+  [PASS] PNGs exist and open: 05_correction_outcome.png opens OK (1529x1166)
+  [PASS] PNGs exist and open: 06_safety.png opens OK (2190x926)
+  [PASS] PNGs exist and open: 07_confidence_distribution.png opens OK (1460x1235)
+  [PASS] PNGs exist and open: 08_ablation_comparison.png opens OK (1746x1236)
+  [PASS] PNGs exist and open: 09_runtime_resource.png opens OK (1943x1112)
+  [PASS] PNGs exist and open: 10_cumulative_natural_results.png opens OK (2247x1237)
+  [PASS] PNGs exist and open: 11_synthetic_vs_natural_transfer.png opens OK (1610x1166)
+  [PASS] Metadata and source CSVs: FIGURE_METADATA.csv has exactly 11 rows
+  [PASS] Metadata and source CSVs: 01_overall_metric_comparison.png's source_csv exists
+  [PASS] Metadata and source CSVs: 02_evidence_coverage.png's source_csv exists
+  [PASS] Metadata and source CSVs: 03_verdict_distribution.png's source_csv exists
+  [PASS] Metadata and source CSVs: 04_correction_funnel.png's source_csv exists
+  [PASS] Metadata and source CSVs: 05_correction_outcome.png's source_csv exists
+  [PASS] Metadata and source CSVs: 06_safety.png's source_csv exists
+  [PASS] Metadata and source CSVs: 07_confidence_distribution.png's source_csv exists
+  [PASS] Metadata and source CSVs: 08_ablation_comparison.png's source_csv exists
+  [PASS] Metadata and source CSVs: 09_runtime_resource.png's source_csv exists
+  [PASS] Metadata and source CSVs: 10_cumulative_natural_results.png's source_csv exists
+  [PASS] Metadata and source CSVs: 11_synthetic_vs_natural_transfer.png's source_csv exists
+  [PASS] Source CSVs valid, numeric values present: 01_overall_metric_comparison.csv valid, 4 rows
+  [PASS] Source CSVs valid, numeric values present: 02_evidence_coverage.csv valid, 11 rows
+  [PASS] Source CSVs valid, numeric values present: 03_verdict_distribution.csv valid, 37 rows
+  [PASS] Source CSVs valid, numeric values present: 04_correction_funnel.csv valid, 5 rows
+  [PASS] Source CSVs valid, numeric values present: 05_correction_outcome.csv valid, 5 rows
+  [PASS] Source CSVs valid, numeric values present: 06_safety.csv valid, 5 rows
+  [PASS] Source CSVs valid, numeric values present: 07_confidence_distribution.csv valid, 4 rows
+  [PASS] Source CSVs valid, numeric values present: 08_ablation_comparison.csv valid, 8 rows
+  [PASS] Source CSVs valid, numeric values present: 09_runtime_resource.csv valid, 5 rows
+  [PASS] Source CSVs valid, numeric values present: 10_cumulative_natural_results.csv valid, 11 rows
+  [PASS] Source CSVs valid, numeric values present: 11_synthetic_vs_natural_transfer.csv valid, 2 rows
+  [PASS] Headline metrics reconcile: evidence_coverage current_value in fig01 matches Arm B coverage in fig02 exactly
+  [PASS] Headline metrics reconcile: evidence_v1 variant_value in fig08 matches Arm B coverage exactly
+  [PASS] Terminology discipline: no unsupported natural-data accuracy/F1 claim found in figures/ markdown
+  [PASS] Terminology discipline: no unsupported 'solved' claim found
+  [PASS] No unsupported causal claims: FIGURE_CLAIM_AUDIT.md explicitly disclaims joint four-lever causal isolation
+  [PASS] No fabricated N values: 01_overall_metric_comparison.png has N recorded (209 / 420 / 59)
+  [PASS] No fabricated N values: 02_evidence_coverage.png has N recorded (209 / 588)
+  [PASS] No fabricated N values: 03_verdict_distribution.png has N recorded (588)
+  [PASS] No fabricated N values: 04_correction_funnel.png has N recorded (30-59 / 5-10 / 56)
+  [PASS] No fabricated N values: 05_correction_outcome.png has N recorded (30-59 / 5-10 / 56)
+  [PASS] No fabricated N values: 06_safety.png has N recorded (122 (56 natural + 66 synthetic))
+  [PASS] No fabricated N values: 07_confidence_distribution.png has N recorded (5-390 per verdict)
+  [PASS] No fabricated N values: 08_ablation_comparison.png has N recorded (varies)
+  [PASS] No fabricated N values: 09_runtime_resource.png has N recorded (50 / 59 / 420)
+  [PASS] No fabricated N values: 10_cumulative_natural_results.png has N recorded (29-588 per regime)
+  [PASS] No fabricated N values: 11_synthetic_vs_natural_transfer.png has N recorded (36 / 56)
+  [PASS] Fresh/historical, CPU/GPU distinctions: 01_overall_metric_comparison.png labeled 'FRESH'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 02_evidence_coverage.png labeled 'FRESH'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 03_verdict_distribution.png labeled 'FRESH'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 04_correction_funnel.png labeled 'HISTORICAL'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 05_correction_outcome.png labeled 'HISTORICAL'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 06_safety.png labeled 'HISTORICAL'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 07_confidence_distribution.png labeled 'FRESH'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 08_ablation_comparison.png labeled 'Mixed (2 FRESH REPRODUCTION/FRESH; 1 HIS'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 09_runtime_resource.png labeled 'Mixed (4 HISTORICAL GPU; 1 FRESH CPU)'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 10_cumulative_natural_results.png labeled 'Mixed (2 FRESH; 9 HISTORICAL)'
+  [PASS] Fresh/historical, CPU/GPU distinctions: 11_synthetic_vs_natural_transfer.png labeled 'HISTORICAL'
+  [PASS] Fresh/historical, CPU/GPU distinctions: GPU non-execution explicitly documented in FIGURE_INDEX.md
+  [PASS] Synthetic/natural correction separation: 11_synthetic_vs_natural_transfer.csv marks all rows as NOT comparable
+  [PASS] Synthetic/natural correction separation: 04_correction_funnel.csv keeps synthetic and natural populations as separate rows
+  [PASS] GOLD/natural distinction preserved: Figure 01 metadata explicitly distinguishes gold_metric from natural_metric
+
+RESULT: PASS (66 checks passed, 0 failures)

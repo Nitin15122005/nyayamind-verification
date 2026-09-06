@@ -1,0 +1,4 @@
+population,population_type,shipped,triggered,shipped_rate_pct,comparable_to_other_rows,source_artifact
+Synthetic stress set (labeled framing),synthetic (contradictory by construction),26,36,72.2,NO,research/prototype/outputs/final_metrics.json
+"Natural data, all regimes (project history)",natural (no correctness label),1,56,1.8,NO,research/prototype/outputs/final_metrics.json
+"Natural data, modified production regime (targeted)",natural (no correctness label),1,10,10.0,NO,research/prototype/outputs/final_metrics.json

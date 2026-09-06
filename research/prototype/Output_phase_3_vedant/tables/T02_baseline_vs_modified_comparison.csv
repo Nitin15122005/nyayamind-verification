@@ -1,0 +1,21 @@
+Measure,Dataset,n,Baseline (NyayaMind v0 (pre-2026-08-27 baseline)),Modified (NyayaMind (2026-08-27 production)),Change,Statistical support,Metric class,Freshness,Evidence grade
+Evidence coverage,209-claim paired natural,209,63.2%,70.3%,+7.2 pp,"McNemar chi2=13.07, p=3.01e-04; gained 15, lost 0",METRIC-ONLY,FRESH REPRODUCTION (CPU),A
+Evidence coverage (corpus level),588 pooled natural claims,588,60.2%,66.3%,+6.1 pp,none; 36 claims newly covered,METRIC-ONLY,HISTORICAL (CPU replay),B
+Verifier accuracy,GOLD-01 controlled benchmark,420,0.7333,0.9714,+0.2381,"McNemar chi2=98.01, p=4.16e-23; exact sign test p=1.58e-30",GOLD,FRESH (CPU),A
+Verifier macro F1,GOLD-01 controlled benchmark,420,0.7487,0.9684,+0.2197,"McNemar chi2=98.01, p=4.16e-23; exact sign test p=1.58e-30",GOLD,FRESH (CPU),A
+GOLD-01 ENTAILED precision,GOLD-01 controlled benchmark,184,0.9787,0.9735,-0.0052,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 ENTAILED recall,GOLD-01 controlled benchmark,184,0.5000,1.0000,+0.5000,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 ENTAILED f1,GOLD-01 controlled benchmark,184,0.6619,0.9866,+0.3247,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 CONTRADICTED precision,GOLD-01 controlled benchmark,118,0.9537,0.9649,+0.0112,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 CONTRADICTED recall,GOLD-01 controlled benchmark,118,0.8729,0.9322,+0.0593,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 CONTRADICTED f1,GOLD-01 controlled benchmark,118,0.9115,0.9483,+0.0368,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 NOT_ENOUGH_INFORMATION precision,GOLD-01 controlled benchmark,118,0.5183,0.9744,+0.4560,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 NOT_ENOUGH_INFORMATION recall,GOLD-01 controlled benchmark,118,0.9576,0.9661,+0.0085,none (per-class),GOLD,FRESH (CPU),A
+GOLD-01 NOT_ENOUGH_INFORMATION f1,GOLD-01 controlled benchmark,118,0.6726,0.9702,+0.2976,none (per-class),GOLD,FRESH (CPU),A
+Contradiction recall,GOLD-02 synthetic stress set,59,0.3559,0.4576,+0.1017,none performed,GOLD (contradictory by construction),FRESH (CPU),A
+Natural 147-claim subset: ENTAILED count,final_validation Arm B subset,147,0,13,+13,none performed,"METRIC-ONLY (verdict count, NOT correctness)",HISTORICAL (CPU),B
+Natural 147-claim subset: CONTRADICTED count,final_validation Arm B subset,147,3,3,+0,none performed,"METRIC-ONLY (verdict count, NOT correctness)",HISTORICAL (CPU),B
+Natural 147-claim subset: NOT_ENOUGH_INFORMATION count,final_validation Arm B subset,147,144,131,-13,none performed,"METRIC-ONLY (verdict count, NOT correctness)",HISTORICAL (CPU),B
+Corrections shipped (targeted natural),final_validation targeted batch,5 vs 10 triggered,0/5,1/10,+1 shipped,none (n far too small),METRIC-ONLY,HISTORICAL (GPU); exactly reproduced STEP 10,C
+Scope violations unblocked at the gate,11 real scope violations,11,0,1,+1,none (descriptive),METRIC-ONLY (gate outcome only),FRESH REPRODUCTION (CPU),C
+Unsafe corrections shipped,122 correction attempts (56 natural + 66 synthetic),122,0,0,0,none (observed count),observed safety count,HISTORICAL,n/a

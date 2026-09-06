@@ -1,0 +1,34 @@
+........................................................................ [ 35%]
+........................................................................ [ 70%]
+.............................................................            [100%]
+============================== warnings summary ===============================
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+research/prototype/tests/test_correction_path_real_integration.py::test_corrupted_claim_reaches_contradicted_against_real_evidence
+  C:\Users\Vedant Tamboli\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\jit\_script.py:1488: DeprecationWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+research/prototype/tests/test_correction_path_real_integration.py: 3 warnings
+research/prototype/tests/test_pipeline_mock.py: 35 warnings
+research/prototype/tests/test_premise_framing_production.py: 5 warnings
+  D:\Major\nyayamind-verification\research\prototype\src\generator.py:35: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    generated_at: str = field(default_factory=lambda: datetime.datetime.utcnow().isoformat() + "Z")
+
+research/prototype/tests/test_correction_path_real_integration.py: 3 warnings
+research/prototype/tests/test_pipeline_mock.py: 35 warnings
+research/prototype/tests/test_premise_framing_production.py: 5 warnings
+  D:\Major\nyayamind-verification\research\prototype\src\pipeline.py:668: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+
+research/prototype/tests/test_correction_path_real_integration.py: 2 warnings
+research/prototype/tests/test_pipeline_mock.py: 28 warnings
+research/prototype/tests/test_premise_framing_production.py: 1 warning
+  D:\Major\nyayamind-verification\research\prototype\src\corrector.py:27: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    corrected_at: str = field(default_factory=lambda: datetime.datetime.utcnow().isoformat() + "Z")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+205 passed, 124 warnings in 13.59s

@@ -1,0 +1,6 @@
+population,system,n_triggered,shipped,reverification_not_entailed,scope_gate_rejected,shipped_rate,fresh_or_historical,source_artifact
+Synthetic stress — baseline (bare premise),baseline,30,0,30,0,0.0,HISTORICAL (GPU),research/prototype/outputs/final_metrics.json
+Synthetic stress — modified (labeled premise),modified,36,26,10,0,0.7222222222222222,HISTORICAL (GPU),research/prototype/outputs/final_metrics.json
+"Natural targeted — baseline framing (Arm B, bare)",baseline,5,0,3,2,0.0,HISTORICAL (GPU); exactly reproduced STEP 10B,research/prototype/outputs/final_gpu_validation_metrics.json
+Natural targeted — modified framing (labeled),modified,10,1,6,3,0.1,HISTORICAL (GPU); exactly reproduced STEP 10,research/prototype/outputs/labeled_correction_validation_gpu_metrics.json
+"Natural cumulative — all correction attempts, project history",cumulative,56,1,37,18,0.017857142857142856,HISTORICAL-ONLY (protocol insufficient to reproduce),research/prototype/outputs/final_metrics.json

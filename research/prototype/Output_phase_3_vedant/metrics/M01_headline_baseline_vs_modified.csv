@@ -1,0 +1,9 @@
+metric_key,metric_label,baseline_value,modified_value,unit,dataset,n,metric_class,lever_changed,statistical_test,p_value,fresh_or_historical,evidence_grade,source_artifact
+evidence_coverage_209_paired,"Evidence coverage
+(209-claim paired natural)",0.631578947368421,0.7033492822966507,fraction of claims,209_claim_paired_natural_evaluation,209,"METRIC-ONLY (natural, no correctness label)",use_evidence_v1: false -> true,McNemar (continuity-corrected),0.00030059760744045107,FRESH REPRODUCTION (CPU),A,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+gold01_macro_f1,"Verifier macro F1
+(GOLD-01 controlled benchmark)",0.7486646586649771,0.9683612674297156,macro F1,GOLD-01_controlled_verifier_benchmark,420,GOLD (labelled ground truth),premise_framing: bare -> labeled,"McNemar (continuity-corrected), paired correct/incorrect per item",4.1627504389864034e-23,FRESH (CPU),A,research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json
+gold01_accuracy,"Verifier accuracy
+(GOLD-01 controlled benchmark)",0.7333333333333333,0.9714285714285714,fraction correct,GOLD-01_controlled_verifier_benchmark,420,GOLD (labelled ground truth),premise_framing: bare -> labeled,"McNemar (continuity-corrected), paired correct/incorrect per item",4.1627504389864034e-23,FRESH (CPU),A,research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json
+gold02_contradiction_recall,"Contradiction recall
+(GOLD-02 synthetic stress set)",0.3559322033898305,0.4576271186440678,recall,GOLD-02_synthetic_stress_set,59,GOLD (contradictory by construction),premise_framing: bare -> labeled,none performed,,FRESH (CPU),A,research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold02_synthetic/gold02_metrics.json

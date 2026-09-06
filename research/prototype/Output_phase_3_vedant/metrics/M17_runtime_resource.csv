@@ -1,0 +1,9 @@
+arm,runtime_seconds,peak_vram_mib,n_cases,hardware,fresh_or_historical,source_artifact
+209-claim paired generation experiment (total),2040.9377949237823,7547,50,"NVIDIA GPU (RTX 4050 Laptop class, 6GB)",HISTORICAL (GPU),research/prototype/outputs/final_gpu_validation_metrics.json
+"209-claim paired generation experiment (total), STEP 10B reproduction",1539.2305669784546,7547,50,NVIDIA GPU (second machine),FRESH GPU REPRODUCTION (STEP 10B),research/prototype/evaluation/actual_outputs/gpu_209_reproduction/step10b_final_gpu_validation_metrics.json
+"Synthetic correction, baseline (bare premise)",644.5045371055603,7502,59,NVIDIA GPU,HISTORICAL (GPU),research/prototype/outputs/final_metrics.json
+"Synthetic correction, modified (labeled premise)",1412.7578926086426,7502,59,NVIDIA GPU,HISTORICAL (GPU),research/prototype/outputs/final_metrics.json
+Targeted labeled-framing correction validation,84.90598940849304,,10,NVIDIA GPU,HISTORICAL (GPU),research/prototype/outputs/labeled_correction_validation_gpu_metrics.json
+"Targeted labeled-framing correction validation, STEP 10 reproduction",104.75310969352722,,10,NVIDIA GPU (second machine),FRESH GPU REPRODUCTION (STEP 10),research/prototype/evaluation/actual_outputs/gpu_correction_rerun/labeled_correction_validation_gpu_metrics.fresh.json
+"GOLD-01 verifier benchmark, modified framing (CPU)",153.79437613487244,N/A (CPU),420,CPU only,FRESH (CPU),research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json
+"GOLD-01 verifier benchmark, baseline framing (CPU)",152.8794355392456,N/A (CPU),420,CPU only,FRESH (CPU),research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json

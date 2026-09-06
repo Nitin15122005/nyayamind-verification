@@ -1,0 +1,3 @@
+system,premise_framing,contradiction_recall,detected_contradicted,missed_as_nei,missed_as_entailed,no_evidence,n_items,n_no_evidence,contradicted_precision,verifier_model,device,source_artifact
+baseline,bare,0.3559322033898305,21,23,0,15,59,15,1.0,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,cpu,research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold02_synthetic/gold02_metrics.json
+modified,labeled,0.4576271186440678,27,17,0,15,59,15,1.0,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,cpu,research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold02_synthetic/gold02_metrics.json

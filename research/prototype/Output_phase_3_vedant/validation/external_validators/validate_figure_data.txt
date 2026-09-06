@@ -1,0 +1,61 @@
+======================================================================
+FIGURE DATA VALIDATION REPORT
+======================================================================
+
+PASSED (54):
+  [PASS] Files present, parseable, source-declared: 01_overall_metric_comparison.csv parses OK (4 rows)
+  [PASS] Files present, parseable, source-declared: 01_overall_metric_comparison.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 02_evidence_coverage.csv parses OK (11 rows)
+  [PASS] Files present, parseable, source-declared: 02_evidence_coverage.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 03_verdict_distribution.csv parses OK (37 rows)
+  [PASS] Files present, parseable, source-declared: 03_verdict_distribution.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 04_correction_funnel.csv parses OK (5 rows)
+  [PASS] Files present, parseable, source-declared: 04_correction_funnel.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 05_correction_outcome.csv parses OK (5 rows)
+  [PASS] Files present, parseable, source-declared: 05_correction_outcome.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 06_safety.csv parses OK (5 rows)
+  [PASS] Files present, parseable, source-declared: 06_safety.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 07_confidence_distribution.csv parses OK (4 rows)
+  [PASS] Files present, parseable, source-declared: 07_confidence_distribution.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 08_ablation_comparison.csv parses OK (8 rows)
+  [PASS] Files present, parseable, source-declared: 08_ablation_comparison.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 09_runtime_resource.csv parses OK (5 rows)
+  [PASS] Files present, parseable, source-declared: 09_runtime_resource.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 10_cumulative_natural_results.csv parses OK (11 rows)
+  [PASS] Files present, parseable, source-declared: 10_cumulative_natural_results.csv declares a non-empty source for every row
+  [PASS] Files present, parseable, source-declared: 11_synthetic_vs_natural_transfer.csv parses OK (2 rows)
+  [PASS] Files present, parseable, source-declared: 11_synthetic_vs_natural_transfer.csv declares a non-empty source for every row
+  [PASS] Numeric values match source: 01_overall_metric_comparison.csv's macro_f1 current_value matches gold01_metrics.json exactly
+  [PASS] Numeric values match source: 02_evidence_coverage.csv's Arm B coverage matches paired_209_metrics.json exactly
+  [PASS] No natural-data accuracy/F1: no figure_data row combines accuracy/F1 with a natural, non-GOLD dataset
+  [PASS] No fabricated labels: no figure_data file references a provisional annotation source
+  [PASS] N present where required: 01_overall_metric_comparison.csv has N populated for every row
+  [PASS] N present where required: 02_evidence_coverage.csv has N populated for every row
+  [PASS] N present where required: 03_verdict_distribution.csv has N populated for every row
+  [PASS] N present where required: 07_confidence_distribution.csv has N populated for every row
+  [PASS] N present where required: 09_runtime_resource.csv has N populated for every row
+  [PASS] Baseline/current labels unambiguous: 01_overall_metric_comparison.csv row 'evidence_coverage' has unambiguous original_value/current_value columns
+  [PASS] Baseline/current labels unambiguous: 01_overall_metric_comparison.csv row 'controlled_benchmark_macro_f1' has unambiguous original_value/current_value columns
+  [PASS] Baseline/current labels unambiguous: 01_overall_metric_comparison.csv row 'controlled_benchmark_accuracy' has unambiguous original_value/current_value columns
+  [PASS] Baseline/current labels unambiguous: 01_overall_metric_comparison.csv row 'synthetic_contradiction_recall' has unambiguous original_value/current_value columns
+  [PASS] Consistent percentage units: no '%' strings found in numeric columns -- all coverage/metric values are plain fractions
+  [PASS] Fresh/historical and GPU/CPU labeling: 09_runtime_resource.csv row 'final_gpu_validation_total' correctly labeled (HISTORICAL (GPU, prior session))
+  [PASS] Fresh/historical and GPU/CPU labeling: 09_runtime_resource.csv row 'final_gpu_validation_generation_only' correctly labeled (HISTORICAL (GPU, prior session))
+  [PASS] Fresh/historical and GPU/CPU labeling: 09_runtime_resource.csv row 'synthetic_correction_bare' correctly labeled (HISTORICAL (GPU, prior session))
+  [PASS] Fresh/historical and GPU/CPU labeling: 09_runtime_resource.csv row 'synthetic_correction_labeled' correctly labeled (HISTORICAL (GPU, prior session))
+  [PASS] Fresh/historical and GPU/CPU labeling: 09_runtime_resource.csv row 'step4_gold01_labeled_cpu' labeled FRESH (CPU, this workspace)
+  [PASS] Correction synthetic/natural separation: 05_correction_outcome.csv contains both synthetic and natural populations, never merged into one row
+  [PASS] Correction synthetic/natural separation: 11_synthetic_vs_natural_transfer.csv explicitly marks synthetic/natural as NOT comparable
+  [PASS] Headline values reconcile (figure data): 08_ablation_comparison.csv's evidence_v1 p_value reconciles exactly with ABLATION_SUMMARY.json
+  [PASS] No duplicate metric rows: 01_overall_metric_comparison.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 02_evidence_coverage.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 03_verdict_distribution.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 04_correction_funnel.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 05_correction_outcome.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 06_safety.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 07_confidence_distribution.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 08_ablation_comparison.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 10_cumulative_natural_results.csv has no fully duplicate rows
+  [PASS] No duplicate metric rows: 11_synthetic_vs_natural_transfer.csv has no fully duplicate rows
+
+RESULT: PASS (54 checks passed, 0 warning(s), 0 failures)

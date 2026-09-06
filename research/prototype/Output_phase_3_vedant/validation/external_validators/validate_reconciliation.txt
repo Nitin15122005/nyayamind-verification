@@ -1,0 +1,17 @@
+======================================================================
+STEP 11 FINAL RECONCILIATION VALIDATION REPORT
+======================================================================
+
+PASSED (10):
+  [PASS] STEP 11 deliverables exist: FINAL_RECONCILIATION_REPORT.md, FINAL_CLAIM_REGISTER.csv, FINAL_REPRODUCIBILITY_MATRIX.md all present under evaluation/reports/
+  [PASS] All claim-register source_artifact paths exist on disk: 47 source-artifact path reference(s) across all claims resolved to real files (matched by full relative path or, where cited by bare filename, by a unique recursive basename lookup)
+  [PASS] 209-claim GPU experiment correctly classified FRESH GPU REPRODUCED: claim C09 classified FRESH GPU REPRODUCED in the register, corroborated in the reconciliation report
+  [PASS] Cumulative 1/56 remains historical-only / protocol insufficient: consistently classified HISTORICAL-ONLY / PROTOCOL INSUFFICIENT, never approximated or claimed freshly re-derived
+  [PASS] Joint four-lever experiment remains marked unavailable: consistently marked as not existing/unavailable, with no additive or interaction effect inferred anywhere in the new STEP 11 documents
+  [PASS] GOLD vs METRIC-ONLY separation intact: 6 GOLD row(s) and 8 METRIC-ONLY row(s) in the claim register are cleanly separated, no GOLD-only language applied to natural-data rows or vice versa
+  [PASS] Authoritative test count is 205 (not summed from component subsets): 205 recorded as the sole authoritative total; report explicitly documents that the 7 component-group counts (summing to 289) are an overlapping categorization, not an alternative total
+  [PASS] No unscoped stale GPU-unavailable statement in STEP 11 documents: every GPU-unavailability statement in the new STEP 11 documents is explicitly scoped to the STEP 1-9 machine; none is stated as a current/general project limitation
+  [PASS] No prohibited claim patterns in STEP 11 documents: no unsupported natural-data-accuracy/universal-safety/solved-correction/joint-lever-interaction claims found
+  [PASS] Prior-step canonical files not edited (only new STEP 11 files added): canonical STEP 4-10B files retain their own content markers, consistent with append-only/read-only treatment by STEP 11
+
+RESULT: PASS (10 checks passed, 0 failures, 0 warnings)

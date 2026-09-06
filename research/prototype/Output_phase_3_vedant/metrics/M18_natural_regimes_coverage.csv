@@ -1,0 +1,12 @@
+regime,configuration,n_cases,n_claims,n_evidence_matched,evidence_coverage,fresh_or_historical,source_artifact
+n30_mode_B,"bare, v0-only, legacy scope (pre-2026-08-27 default)",30,88,38,0.4318181818181818,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+targeted_mode_B,"bare, v0-only, legacy scope",11,29,14,0.4827586206896552,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1_bare,"bare, v0-only",50,251,168,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch1_labeled,"labeled, v0-only",50,251,168,0.6693227091633466,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2_bare,"bare, v0-only",50,236,116,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+batch2_labeled,"labeled, v0-only",50,236,116,0.4915254237288136,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+final_validation_arm_A,"bare, v0-only, legacy scope (ORIGINAL)",50,209,132,0.631578947368421,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+final_validation_arm_B,"bare (as stored), v0+v1, assertion_spans (pre-labeled-decision)",50,209,147,0.7033492822966507,HISTORICAL,research/prototype/evaluation/actual_outputs/natural_data_runs/batches/batches_analysis.json
+209_paired_ArmA,"evidence pool v0 (59), labeled re-verification",50,209,132,0.631578947368421,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+209_paired_ArmB,"evidence pool v0+v1 (136), labeled",50,209,147,0.7033492822966507,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+588_claim_aggregate,"evidence pool v0+v1 (136), labeled",133,588,390,0.6632653061224489,FRESH,research/prototype/evaluation/actual_outputs/natural_data_runs/588_claims/claims_588_metrics.json

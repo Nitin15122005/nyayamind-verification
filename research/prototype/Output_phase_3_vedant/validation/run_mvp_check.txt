@@ -1,0 +1,12 @@
+  OK: src.data_loader
+  OK: src.evidence_matcher
+  OK: src.verifier (module only — NLIVerifier not instantiated/loaded)
+  OK: src.generator (module only — StatuteGroundingGenerator not instantiated/loaded)
+  OK: src.corrector
+  OK: src.pipeline
+  OK: D:\Major\nyayamind-verification\research\prototype\config\prototype.yaml parses and has all required top-level keys
+  OK: found D:\Major\nyayamind-verification\research\data\evidence\canonical_statutes.jsonl
+  OK: found D:\Major\nyayamind-verification\research\data\evidence\evidence_audit.jsonl
+  OK: loaded 136 usable evidence records (VERIFIED_EXACT + VERIFIED_CONTENT only, per config; use_evidence_v1=True)
+
+All checks passed. No model was loaded, nothing was downloaded.

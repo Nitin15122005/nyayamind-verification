@@ -1,0 +1,6 @@
+Safety observation,Count,Denominator,Mechanism (src/pipeline.py),Source artifact
+Unsafe corrections shipped,0,122 correction attempts (56 natural + 66 synthetic),ENTAILED-only shipping gate + scope gate + sibling-regression net,research/prototype/outputs/final_metrics.json
+"Scope-gate rejections (natural, cumulative)",18,56 natural correction attempts,pipeline._scope_violation(),research/prototype/outputs/final_metrics.json
+"Re-verification-not-ENTAILED rejections (natural, cumulative)",37,56 natural correction attempts,ENTAILED-only shipping gate,research/prototype/outputs/final_metrics.json
+"Sibling-regression rejections observed (209-claim paired, Arm B)",0,5 correction attempts,pipeline._reverify_sibling_regressions(),research/prototype/outputs/final_gpu_validation_metrics.json
+"Corrections shipped (natural, cumulative)",1,56 natural correction attempts,passed every gate,research/prototype/outputs/final_metrics.json

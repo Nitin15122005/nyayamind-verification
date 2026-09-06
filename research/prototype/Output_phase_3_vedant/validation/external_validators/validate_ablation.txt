@@ -1,0 +1,59 @@
+======================================================================
+STEP 7 ABLATION VALIDATION REPORT
+======================================================================
+
+PASSED (46):
+  [PASS] No production/test/historical modification: evidence_coverage_v0_vs_v1.json still present (not deleted)
+  [PASS] No production/test/historical modification: atomic_scope_check_final_replay.json still present (not deleted)
+  [PASS] No production/test/historical modification: parser_fix_before_after_n30.json still present (not deleted)
+  [PASS] No production/test/historical modification: threshold_sensitivity_analysis.json still present (not deleted)
+  [PASS] No production/test/historical modification: final_metrics.json still present (not deleted)
+  [PASS] No production/test/historical modification: src/ and tests/ directories present (no deletion); git diff check performed separately by the shell audit
+  [PASS] No GOLD/label contamination: no provisional annotation file found in STEP 7 output
+  [PASS] Statistics reconcile with source data: evidence_v1 N reconciles with STEP 6 source (209)
+  [PASS] Statistics reconcile with source data: evidence_v1 baseline_value reconciles with STEP 6 source
+  [PASS] Statistics reconcile with source data: premise_framing N == 420
+  [PASS] Statistics reconcile with source data: premise_framing variant_value reconciles with STEP 4 GOLD-01 source
+  [PASS] Statistics reconcile with source data: claim_parser_fix N reconciles with raw source (30)
+  [PASS] Statistics reconcile with source data: atomic_scope_check fresh reproduction matches the historical committed replay exactly
+  [PASS] Every ablation classified: evidence_v1 classified as SUPPORTED
+  [PASS] Every ablation classified: premise_framing classified as SUPPORTED
+  [PASS] Every ablation classified: claim_parser_fix classified as SUPPORTED
+  [PASS] Every ablation classified: atomic_scope_check_assertion_spans classified as DIAGNOSTIC
+  [PASS] Every ablation classified: narrow_reverification_hypothesis classified as DIAGNOSTIC
+  [PASS] Every ablation classified: confidence_threshold classified as DESCRIPTIVE
+  [PASS] Every ablation classified: correction_levers_combined (premise_framing isolated within an otherwise-fixed config) classified as DIAGNOSTIC
+  [PASS] Every ablation classified: joint_four_lever_isolation classified as NOT_ISOLABLE
+  [PASS] SUPPORTED results have genuine isolation: evidence_v1 (SUPPORTED) has isolated=True and a documented isolation rationale
+  [PASS] SUPPORTED results have genuine isolation: premise_framing (SUPPORTED) has isolated=True and a documented isolation rationale
+  [PASS] SUPPORTED results have genuine isolation: claim_parser_fix (SUPPORTED) has isolated=True and a documented isolation rationale
+  [PASS] Fresh/historical and GPU labeling: top-level summary explicitly marks GPU unavailable and Qwen not invoked
+  [PASS] Fresh/historical and GPU labeling: evidence_v1 has an explicit fresh_or_historical label (FRESH REPRODUCTION)
+  [PASS] Fresh/historical and GPU labeling: premise_framing has an explicit fresh_or_historical label (FRESH)
+  [PASS] Fresh/historical and GPU labeling: claim_parser_fix has an explicit fresh_or_historical label (HISTORICAL REPRODUCTION / NOT FRESH -- the parser fix itself cannot be re-executed without checking out old source code)
+  [PASS] Fresh/historical and GPU labeling: atomic_scope_check_assertion_spans has an explicit fresh_or_historical label (FRESH REPRODUCTION)
+  [PASS] Fresh/historical and GPU labeling: narrow_reverification_hypothesis has an explicit fresh_or_historical label (HISTORICAL)
+  [PASS] Fresh/historical and GPU labeling: confidence_threshold has an explicit fresh_or_historical label (FRESH)
+  [PASS] Fresh/historical and GPU labeling: GPU-dependent correction-levers factor correctly marked HISTORICAL, gpu_execution_claimed_this_step=False
+  [PASS] Fresh/historical and GPU labeling: joint_four_lever_isolation has an explicit fresh_or_historical label (NOT_EXECUTED)
+  [PASS] Terminology discipline: no unsupported 'caused'/'proved'/'solved' usage found outside explicit negations
+  [PASS] Terminology discipline: no natural-data accuracy/F1 claim found
+  [PASS] Production configuration unchanged: confidence_threshold unchanged at 0.70
+  [PASS] Production configuration unchanged: all four production config levers remain at their shipped values
+  [PASS] Production configuration unchanged: ABLATION_SUMMARY.json confirms production config unchanged
+  [PASS] JSON/CSV/MD agreement: factor 'evidence_v1' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'premise_framing' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'claim_parser_fix' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'atomic_scope_check_assertion_spans' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'narrow_reverification_hypothesis' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'confidence_threshold' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'correction_levers_combined (premise_framing isolated within an otherwise-fixed config)' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+  [PASS] JSON/CSV/MD agreement: factor 'joint_four_lever_isolation' present in both ABLATION_SUMMARY.json and ABLATION_RESULTS.csv
+
+FAILURES (4):
+  [FAIL] No production/test/historical modification: run_synthetic_stress.jsonl hash changed (2dba39cc61eb94aa81daeff9817026ace0f531174e9312d49ce12522b3e9b516 != 717378e88648deb8491caabc24455e1d7f57e27d8923ee2582a64936289237d5)
+  [FAIL] No production/test/historical modification: controlled_verifier_benchmark.jsonl hash changed (962de21ee373bcfb685193902767c1c2c4f10acf592b08f561159503b4287f99 != aad8018bafc1d9e8b65b100b7cbbede6f22cfd29cf5c5d7863845443a632bfec)
+  [FAIL] No GOLD/label contamination: GOLD fixture controlled_verifier_benchmark.jsonl modified
+  [FAIL] No GOLD/label contamination: GOLD fixture run_synthetic_stress.jsonl modified
+
+RESULT: FAIL (4 failure(s), 0 warning(s), 46 passed)

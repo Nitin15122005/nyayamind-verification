@@ -1,0 +1,3 @@
+scope_check_mode,system,n_replayed,n_blocked,n_unblocked,source_artifact
+"atomic_scope_check=false (baseline, full-sentence rule)",baseline,11,11,0,research/prototype/evaluation/ablation/scope_check_replay_fresh.json
+"atomic_scope_check=""assertion_spans"" (modified)",modified,11,10,1,research/prototype/evaluation/ablation/scope_check_replay_fresh.json
