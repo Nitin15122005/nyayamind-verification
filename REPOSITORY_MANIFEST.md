@@ -1,4 +1,74 @@
-# Repository Manifest — Publication Cleanup Pass
+# Repository Manifest
+
+## 0. Update — 2026-09-06 (repository cleanup PASS 1 through PASS 3B)
+
+**Everything below this section (§1-10) is the original 2026-08-27 manifest, kept
+unedited as the historical record of that specific pass.** A separate, later cleanup
+(PASS 1 through PASS 3B, 2026-09-05/06) restructured `research/prototype/` further. This
+section describes the **current, final structure** — read this first; treat §1-10 as
+history, not as a description of the repository as it stands today.
+
+### What changed since 2026-08-27
+
+- Added `research/prototype/evaluation/` — a full presentation/evaluation workspace
+  (input inventories, component/integration/ablation test results, dataset-level
+  metrics, faculty-facing reports, figures, and the reproduction scripts for all of it).
+  Built fresh across STEP 1-13, then reorganized in three cleanup passes (PASS 1, PASS 2,
+  PASS 3A) — see `research/prototype/evaluation/PROVENANCE.md` and
+  `research/prototype/evaluation/PASS3A_REORGANIZATION_REPORT.md` for the full history.
+  It only ever reads `src/`, `config/`, `outputs/`, and `research/data/`; it writes
+  nothing back into any of them.
+- Added `research/prototype/archive/2026-08-27_presentation/` — `final_demo_pack/` and
+  `final_comparison/` (the two presentation/comparison layers built on 2026-08-27, listed
+  in §2 below under `research/prototype/`) moved here unedited in PASS 3B, since their
+  role as a one-time presentation snapshot is now superseded by the live `evaluation/`
+  workspace. Nothing was deleted — see that archive's own `README.md` for the full
+  disposition, including two subdirectories (`live_demo/`, `examples/`) that were
+  promoted into `evaluation/` instead of archived, because they are reusable tooling
+  rather than presentation-snapshot narrative.
+- `research/prototype/scripts/` (the production reproduction scripts described in §2
+  below) is unchanged — do not confuse it with the newer, separate
+  `research/prototype/evaluation/scripts/` (the evaluation workspace's own validate/build
+  scripts, moved there from the workspace root in PASS 3A).
+- Nothing described in §1-10 below was altered: `src/`, `tests/`, `config/prototype.yaml`,
+  `research/data/`, and `research/prototype/outputs/` are exactly as this original
+  manifest describes them.
+
+### Current top-level structure (`research/prototype/`)
+
+```
+research/prototype/
+├── README.md, REPRODUCIBILITY.md
+├── config/prototype.yaml          — unchanged, see §2/§7 below
+├── src/                           — unchanged, see §2 below
+├── tests/                         — unchanged, 205 tests, see §2/§9 below
+├── outputs/                       — unchanged, 125 files, see §3 below
+├── scripts/                       — unchanged, production reproduction scripts, see §2 below
+├── archive/2026-08-27_presentation/
+│   ├── README.md                  — full disposition of what moved here and why
+│   ├── final_demo_pack/           — 67 files (2 subdirs promoted out, see above)
+│   └── final_comparison/          — 34 files, unedited
+└── evaluation/                    — presentation/evaluation workspace (new since 2026-08-27)
+    ├── README.md                  — start here for this workspace
+    ├── PROVENANCE.md, MANIFEST.md, PASS1_5_VERIFICATION_REPORT.md,
+    │   PASS3A_REORGANIZATION_REPORT.md, REPOSITORY_FINAL_STRUCTURE_PLAN.md
+    ├── inputs/, expected_outputs/, actual_outputs/, comparisons/
+    ├── components/, integration_tests/, ablation/, metrics/, figures/
+    ├── live_demo/, examples/      — promoted from final_demo_pack/ in PASS 3B
+    ├── scripts/                   — every run_*/build_*/validate_* script, moved from
+    │                                the workspace root in PASS 3A
+    ├── reports/                   — faculty/reviewer-facing final reports
+    └── archive/                   — this workspace's own superseded-in-place documents
+                                      (PASS 1/PASS 2 process ledgers, superseded reports)
+```
+
+For the exact file-by-file disposition of the PASS 1 through PASS 3B cleanup (what moved,
+what was archived, what was verified), see `research/prototype/evaluation/PROVENANCE.md`
+and the `PASS*_REPORT.md`/`PASS*_VERIFICATION_REPORT.md` files alongside it.
+
+---
+
+# Repository Manifest — Publication Cleanup Pass (original, 2026-08-27)
 
 Written 2026-08-27, after the pre-publication cleanup/consolidation pass over this repository.
 This document records **what remains, in what role, and why** — the inventory this cleanup was
@@ -8,6 +78,10 @@ or `FINAL_PRODUCTION_CONFIG.md` (the production-config decision record) — it i
 
 Scope: `research/` and repo-root files. `baseline/LegalSeg` (a separate git submodule) is out of
 scope, per this task's own instructions, and was not touched.
+
+**Note**: §2's structure tree and file count below describe the repository as it stood on
+2026-08-27, before the `evaluation/` workspace and PASS 1-3B cleanup existed. See §0 above
+for the current structure.
 
 ---
 
