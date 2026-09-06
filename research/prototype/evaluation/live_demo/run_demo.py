@@ -1,18 +1,29 @@
 #!/usr/bin/env python
 """
-Small, deterministic, end-to-end demo of the NyayaMind pipeline using the
-EXISTING production implementation (research/prototype/src/*, unmodified,
-unmocked) and the EXISTING production config (research/prototype/config/prototype.yaml,
-unmodified -- use_evidence_v1: true, premise_framing: "labeled",
-atomic_scope_check: "assertion_spans", narrow_reverification_hypothesis: true).
+Small, deterministic, end-to-end WALKTHROUGH demo of the NyayaMind pipeline
+using the EXISTING production implementation (research/prototype/src/*,
+unmodified, unmocked) and the EXISTING production config
+(research/prototype/config/prototype.yaml, unmodified -- use_evidence_v1:
+true, premise_framing: "labeled", atomic_scope_check: "assertion_spans",
+narrow_reverification_hypothesis: true).
+
+This is the original combined demo, covering 3 real cases end to end across
+every pipeline stage in one script. For a focused, one-stage-at-a-time tour
+(with more explanation per stage) see the numbered demos in this same
+directory (01_claim_parser_demo.py .. 06_correction_reverification_demo.py)
+and the four terminal-outcome demos in 07_full_pipeline/ -- this script and
+those are complementary, not duplicates: this one shows the whole journey
+per case; those isolate and explain one mechanism each. See README.md for
+the full directory structure and reading order.
 
 What is genuinely LIVE in this demo (real code, real model, executed now):
   [2] claim extraction        -- src.claim_parser.extract_claims()
   [3] evidence retrieval      -- src.evidence_matcher.match_evidence() against the
                                   real 136-record production pool
   [4] NLI verification        -- src.verifier.NLIVerifier, real DeBERTa-v3-base-mnli-
-                                  fever-anli inference, CPU (small model, no GPU needed
-                                  -- see REPRODUCIBILITY.md S2)
+                                  fever-anli inference (device auto-detected: CUDA if
+                                  available, else this ~184M-param model runs fine on
+                                  CPU in seconds -- see REPRODUCIBILITY.md)
   [6] re-verification         -- the SAME live verifier, called again on the corrected
                                   sentence
   [7] safety gate             -- src.pipeline._scope_violation(), the actual
@@ -23,10 +34,9 @@ each time), not re-run:
   [1] generation               -- Qwen2.5-7B-Instruct text generation requires a GPU
                                    and several GB of VRAM; re-running it for a demo
                                    is unnecessary GPU work this script deliberately
-                                   avoids (per this task's own instruction: "do not
-                                   launch unnecessary large experiments"). The text
-                                   shown is real, previously-generated Qwen output,
-                                   read verbatim from a committed outputs/*.jsonl file.
+                                   avoids. The text shown is real, previously-generated
+                                   Qwen output, read verbatim from a committed
+                                   outputs/*.jsonl file.
   [5] selective correction     -- likewise a Qwen2.5-7B generation call. The
                                    corrected text shown is the real, already-shipped
                                    correction from
@@ -48,39 +58,16 @@ import json
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-PROTOTYPE_ROOT = REPO_ROOT / "research/prototype"
-sys.path.insert(0, str(REPO_ROOT))
-sys.path.insert(0, str(PROTOTYPE_ROOT))
+LIVE_DEMO_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(LIVE_DEMO_ROOT))
 
-# Windows consoles/redirected-output default to the system codepage (often
-# cp1252), which cannot encode the em-dashes and smart quotes this script and
-# some source jsonl text contain -- force UTF-8 so redirected logs are always
-# readable regardless of host locale.
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8")
-
-import yaml  # noqa: E402
+from common import formatting as fmt  # noqa: E402
+from common import pipeline_helpers as ph  # noqa: E402
 
 from src import claim_parser, pipeline  # noqa: E402
-from src.data_loader import load_usable_evidence_from_config  # noqa: E402
 from src.evidence_matcher import match_evidence  # noqa: E402
-from src.verifier import NLIVerifier  # noqa: E402
 
-
-def load_config() -> dict:
-    with (PROTOTYPE_ROOT / "config/prototype.yaml").open(encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_record(rel_path: str, document_id: str) -> dict:
-    with (REPO_ROOT / rel_path).open(encoding="utf-8") as f:
-        for line in f:
-            rec = json.loads(line)
-            if rec.get("document_id") == document_id:
-                return rec
-    raise KeyError(f"{document_id} not found in {rel_path}")
-
+REPO_ROOT = ph.REPO_ROOT
 
 CORRECTION_DETAIL_FILES = [
     "research/prototype/outputs/natural_candidates_50_gpu_corrections_detail.jsonl",
@@ -125,62 +112,42 @@ DEMO_CASES = [
 ]
 
 
-def banner(text: str) -> None:
-    print("\n" + "=" * 78)
-    print(text)
-    print("=" * 78)
-
-
-def stage(n: int, name: str, live: bool) -> None:
-    tag = "LIVE" if live else "REPLAYED (from committed output, not re-run)"
-    print(f"\n  --- Stage [{n}] {name} :: {tag} ---")
-
-
 def main() -> int:
-    config = load_config()
+    config = ph.load_config()
     print("Production config in use (unmodified, research/prototype/config/prototype.yaml):")
-    print(f"  premise_framing              = {config['verification']['premise_framing']}")
-    print(f"  use_evidence_v1               = {config['use_evidence_v1']}")
-    print(f"  atomic_scope_check            = {config['correction']['atomic_scope_check']}")
-    print(f"  narrow_reverification_hypothesis = {config['correction']['narrow_reverification_hypothesis']}")
-    print(f"  confidence_threshold          = {config['verification']['confidence_threshold']}")
+    fmt.kv("premise_framing", config["verification"]["premise_framing"])
+    fmt.kv("use_evidence_v1", config["use_evidence_v1"])
+    fmt.kv("atomic_scope_check", config["correction"]["atomic_scope_check"])
+    fmt.kv("narrow_reverification_hypothesis", config["correction"]["narrow_reverification_hypothesis"])
+    fmt.kv("confidence_threshold", config["verification"]["confidence_threshold"])
 
     print("\nLoading production evidence pool (real data, no model)...")
-    exact_index, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+    exact_index, all_usable = ph.load_evidence_pool(config)
     print(f"  Loaded {len(all_usable)} usable evidence records (expect 136).")
 
-    print("\nLoading the real DeBERTa-v3-base-mnli-fever-anli verifier (CPU, small model,"
-          " no GPU required)... this takes a few seconds.")
-    verifier = NLIVerifier(
-        model_id=config["verification"]["model_id"],
-        confidence_threshold=config["verification"]["confidence_threshold"],
-        max_sequence_length=config["verification"]["max_sequence_length"],
-    )
-    verifier.load()
+    verifier = ph.load_verifier(config)
     premise_framing = pipeline.resolve_premise_framing(config)
-    print("  Verifier loaded.")
 
     fuzzy_threshold = config["evidence_matching"]["fuzzy_token_overlap_threshold"]
 
     for case in DEMO_CASES:
-        banner(f"CASE {case['document_id']} — {case['headline']}")
-        rec = load_record(case["source"], case["document_id"])
+        fmt.section(f"CASE {case['document_id']} — {case['headline']}")
+        rec = ph.load_record(case["source"], case["document_id"])
         generated_text = rec["generated_field"]["text"]
 
-        stage(1, "Generation (Qwen2.5-7B-Instruct, 4-bit, greedy)", live=False)
-        print(f"  Source: {case['source']}")
-        print(f"  Generated statutory-grounding text:\n    {generated_text[:400]}"
-              + ("..." if len(generated_text) > 400 else ""))
+        fmt.stage(1, "Generation (Qwen2.5-7B-Instruct, 4-bit, greedy)", fmt.REPLAYED)
+        fmt.kv("Source", case["source"])
+        print(f"  Generated statutory-grounding text:\n    {fmt.trunc(generated_text, 400)}")
 
-        stage(2, "Claim extraction (deterministic regex, no LLM)", live=True)
+        fmt.stage(2, "Claim extraction (deterministic regex, no LLM)", fmt.LIVE)
         claims = claim_parser.extract_claims(generated_text)
-        print(f"  Extracted {len(claims)} citation-bearing claim(s).")
-        for c in claims[:3]:
-            print(f"    [{c.claim_id}] {c.claim_text[:100]}")
-        if len(claims) > 3:
-            print(f"    ... ({len(claims) - 3} more claim(s) not shown)")
+        print(f"  Extracted {len(claims)} citation-bearing claim(s). A sentence naming several\n"
+              "  provisions at once yields one claim PER provision, sharing that sentence's text\n"
+              "  but each carrying its own citation -- see 01_claim_parser_demo.py for why this\n"
+              "  is legitimate atomic decomposition, not duplicate parsing; the grouped view in\n"
+              "  stage [4] below shows each claim's own distinguishing citation/evidence/verdict.")
 
-        stage(3, "Evidence retrieval (exact + fuzzy match, 136-record production pool)", live=True)
+        fmt.stage(3, "Evidence retrieval (exact + fuzzy match, 136-record production pool)", fmt.LIVE)
         claim_records = []
         for claim in claims:
             match = match_evidence(claim.citation_extracted, exact_index, all_usable, fuzzy_threshold)
@@ -202,15 +169,16 @@ def main() -> int:
             })
             if not match.matched:
                 claim_records[-1]["verdict"] = "NO_EVIDENCE"
-        for cr in claim_records:
-            print(f"    [{cr['claim_id']}] evidence_id={cr['evidence_id']!r} method={cr['evidence_match_method']}")
+        n_matched = sum(1 for c in claim_records if c["evidence_id"])
+        fmt.kv("Resolved to evidence", f"{n_matched}/{len(claim_records)} claim(s)"
+               " (the rest stay NO_EVIDENCE, verifier never called for them)")
 
-        stage(4, f"NLI verification (premise_framing={premise_framing!r}, real DeBERTa call per matched claim)", live=True)
+        fmt.stage(4, f"NLI verification (premise_framing={premise_framing!r}, real DeBERTa call per matched claim)", fmt.LIVE)
         baseline = {"document_id": rec["document_id"], "claims": claim_records}
         pipeline.apply_verification(baseline, verifier, premise_framing=premise_framing)
+        fmt.claim_overview(claim_records)
         flagged_claim_id = None
         for cr in claim_records:
-            print(f"    [{cr['claim_id']}] verdict={cr['verdict']} confidence={cr['confidence']}")
             if cr["verdict"] not in ("NO_EVIDENCE", None) and pipeline._should_trigger_correction(cr):
                 flagged_claim_id = flagged_claim_id or cr["claim_id"]
 
@@ -220,18 +188,19 @@ def main() -> int:
             continue
 
         print(f"\n  Claim [{flagged_claim_id}] triggers correction.")
-        stage(5, "Selective correction (Qwen2.5-7B-Instruct rewrite of the flagged sentence)", live=False)
+        fmt.stage(5, "Selective correction (Qwen2.5-7B-Instruct rewrite of the flagged sentence)", fmt.REPLAYED)
         source_file, committed = load_committed_correction_attempt(case["document_id"], flagged_claim_id)
         if committed is None:
-            print(f"  No committed correction-attempt record exists for this exact "
-                  f"(document_id, claim_id) under any historical run. Skipping stages 6-7 "
-                  f"for this case rather than fabricating a correction attempt.")
+            print("  No committed correction-attempt record exists for this exact "
+                  "(document_id, claim_id) under any historical run. Skipping stages 6-7 "
+                  "for this case rather than fabricating a correction attempt.")
             continue
         corrected_text = committed["regenerated_text"]
-        print(f"  Source: {source_file}  (historical status: {committed['status']!r}, framing: {committed.get('framing', 'n/a')!r})")
-        print(f"  Corrected text:\n    {corrected_text[:400]}" + ("..." if len(corrected_text) > 400 else ""))
+        fmt.kv("Source", f"{source_file}  (historical status: {committed['status']!r}, "
+                          f"framing: {committed.get('framing', 'n/a')!r})")
+        print(f"  Corrected text:\n    {fmt.trunc(corrected_text, 400)}")
 
-        stage(6, "Re-verification of the corrected sentence (real DeBERTa call)", live=True)
+        fmt.stage(6, "Re-verification of the corrected sentence (real DeBERTa call)", fmt.LIVE)
         target = next(cr for cr in claim_records if cr["claim_id"] == flagged_claim_id)
         # Same ordinal-position citation-identity matching src.pipeline.apply_selective_correction
         # itself uses (a document can have multiple claims citing the same provision;
@@ -260,23 +229,26 @@ def main() -> int:
             premise=pipeline._premise_for_claim(target, premise_framing),
             hypothesis=reverify_hypothesis,
         )
-        print(f"  Reverified hypothesis: {reverify_hypothesis[:150]}")
-        print(f"  Reverification verdict: {reverify_result.label} (confidence {reverify_result.confidence:.4f})")
-        print(f"  (Historical committed reverification for comparison: {committed.get('reverification')})")
+        fmt.kv("Reverified hypothesis", fmt.trunc(reverify_hypothesis, 150))
+        fmt.kv("Reverification verdict", f"{reverify_result.label} (confidence {reverify_result.confidence:.4f})")
+        fmt.kv("Historical committed reverification for comparison", committed.get("reverification"))
+        print(f"\n  {fmt.NLI_DISCLAIMER}")
 
-        stage(7, "Safety gate (programmatic scope-violation check, src.pipeline._scope_violation)", live=True)
+        fmt.stage(7, "Safety gate (programmatic scope-violation check, src.pipeline._scope_violation)", fmt.LIVE)
         violation = pipeline._scope_violation(
             claim_records, flagged_claim_id, corrected_text,
             use_assertion_spans=(config["correction"]["atomic_scope_check"] == "assertion_spans"),
             use_assertion_text=(config["correction"]["atomic_scope_check"] is True),
         )
-        print(f"  Scope violation detected: {violation}")
         ships = (not violation) and reverify_result.label == "ENTAILED"
-        print(f"  FINAL GATE DECISION: {'SHIP corrected text' if ships else 'REJECT — keep original text'}"
-              f" (ship iff not violation AND reverification.verdict == ENTAILED)")
-        print(f"  (Historical committed outcome for comparison: {committed['status']!r})")
+        fmt.final_gate_line(
+            shipped=ships,
+            reason=f"scope violation={violation}, reverification verdict={reverify_result.label} "
+                   "(ship iff not violation AND reverification.verdict == ENTAILED)",
+        )
+        fmt.kv("Historical committed outcome for comparison", committed["status"])
 
-    banner("Demo complete. No file under research/prototype/outputs/ or research/data/ was modified.")
+    fmt.section("Demo complete. No file under research/prototype/outputs/ or research/data/ was modified.")
     return 0
 
 

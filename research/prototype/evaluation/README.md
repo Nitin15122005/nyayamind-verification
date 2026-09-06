@@ -198,5 +198,5 @@ writes its output under `evaluation/`, never back into them.
 | `figures/` | Chart categories and their generation/audit scripts |
 | `reports/` | Faculty/reviewer-facing final reports |
 | `scripts/` | Every `run_*`/`build_*`/`validate_*` reproduction and validation script (moved here from the workspace root in PASS 3A) |
-| `live_demo/` | GPU-free, code-path-verifying demo (`run_demo.py`), promoted from `final_demo_pack/live_demo/` in PASS 3B |
+| `live_demo/` | Presentation-quality demo suite (11 independently-runnable, code-path-verifying scripts, one per pipeline stage plus 4 full-pipeline outcomes, all CPU-safe) built on `run_demo.py`, promoted from `final_demo_pack/live_demo/` in PASS 3B — see `live_demo/README.md` |
 | `examples/` | 8 audited real-case worked examples plus their selection scripts, promoted from `final_demo_pack/examples/` in PASS 3B |

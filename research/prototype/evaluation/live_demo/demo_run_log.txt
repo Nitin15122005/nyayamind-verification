@@ -1,17 +1,16 @@
 D:\Programs\nyayamind-verification\research\.venv\Lib\site-packages\huggingface_hub\file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
   warnings.warn(
 Production config in use (unmodified, research/prototype/config/prototype.yaml):
-  premise_framing              = labeled
-  use_evidence_v1               = True
-  atomic_scope_check            = assertion_spans
-  narrow_reverification_hypothesis = True
-  confidence_threshold          = 0.7
+  premise_framing: labeled
+  use_evidence_v1: True
+  atomic_scope_check: assertion_spans
+  narrow_reverification_hypothesis: True
+  confidence_threshold: 0.7
 
 Loading production evidence pool (real data, no model)...
   Loaded 136 usable evidence records (expect 136).
-
-Loading the real DeBERTa-v3-base-mnli-fever-anli verifier (CPU, small model, no GPU required)... this takes a few seconds.
-  Verifier loaded.
+Loading real DeBERTa-v3-base-mnli-fever-anli verifier (device=cuda) ... this takes a few seconds.
+  Verifier loaded (cuda).
 
 ==============================================================================
 CASE 2011_625 — NO_EVIDENCE — claim outside the corpus, correctly never verified or corrected
@@ -23,27 +22,48 @@ CASE 2011_625 — NO_EVIDENCE — claim outside the corpus, correctly never veri
     The statutory grounding for this case includes Sections 302 and 304 Part III of the Indian Penal Code (IPC). Section 302 IPC prescribes the punishment for murder, which in this case was interpreted by the Trial Court as applicable due to the premeditated nature of the crime. Section 304 Part III IPC deals with culpable homicide not amounting to murder, which the High Court attempted to apply based...
 
   --- Stage [2] Claim extraction (deterministic regex, no LLM) :: LIVE ---
-  Extracted 6 citation-bearing claim(s).
-    [c1] The statutory grounding for this case includes Sections 302 and 304 Part III of the Indian Penal Cod
-    [c2] The statutory grounding for this case includes Sections 302 and 304 Part III of the Indian Penal Cod
-    [c3] Section 302 IPC prescribes the punishment for murder, which in this case was interpreted by the Tria
-    ... (3 more claim(s) not shown)
+  Extracted 6 citation-bearing claim(s). A sentence naming several
+  provisions at once yields one claim PER provision, sharing that sentence's text
+  but each carrying its own citation -- see 01_claim_parser_demo.py for why this
+  is legitimate atomic decomposition, not duplicate parsing; the grouped view in
+  stage [4] below shows each claim's own distinguishing citation/evidence/verdict.
 
   --- Stage [3] Evidence retrieval (exact + fuzzy match, 136-record production pool) :: LIVE ---
-    [c1] evidence_id='Section 302 in The Indian Penal Code, 1860' method=exact_normalized
-    [c2] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c3] evidence_id='Section 302 in The Indian Penal Code, 1860' method=exact_normalized
-    [c4] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c5] evidence_id=None method=no_evidence
-    [c6] evidence_id='Section 149 in The Indian Penal Code, 1860' method=exact_normalized
+  Resolved to evidence: 5/6 claim(s) (the rest stay NO_EVIDENCE, verifier never called for them)
 
   --- Stage [4] NLI verification (premise_framing='labeled', real DeBERTa call per matched claim) :: LIVE ---
-    [c1] verdict=NOT_ENOUGH_INFORMATION confidence=0.82177734375
-    [c2] verdict=NOT_ENOUGH_INFORMATION confidence=0.97265625
-    [c3] verdict=NOT_ENOUGH_INFORMATION confidence=0.99951171875
-    [c4] verdict=NOT_ENOUGH_INFORMATION confidence=0.9990234375
-    [c5] verdict=NO_EVIDENCE confidence=None
-    [c6] verdict=NOT_ENOUGH_INFORMATION confidence=0.9931640625
+
+  6 atomic claim(s) extracted from 4 unique source sentence(s):
+
+    Sentence: "The statutory grounding for this case includes Sections 302 and 304 Part III of the Indian Penal Code (IPC)."
+      -> 2 citations in this sentence, each its own atomic claim (independently matched, verified, and correctable):
+           [c1] Section 302
+           [c2] Section 304
+
+    Sentence: "Section 302 IPC prescribes the punishment for murder, which in this case was interpreted by the Trial Court as applicable due to the premedi..."
+      -> 1 citation-bearing claim: [c3] Section 302
+
+    Sentence: "Section 304 Part III IPC deals with culpable homicide not amounting to murder, which the High Court attempted to apply based on the circumst..."
+      -> 1 citation-bearing claim: [c4] Section 304
+
+    Sentence: "Additionally, Sections 336 and 149 of the IPC are relevant as they pertain to the use of weapons and the liability of persons acting in conc..."
+      -> 2 citations in this sentence, each its own atomic claim (independently matched, verified, and correctable):
+           [c5] Section 336
+           [c6] Section 149
+
+  Claim -> citation -> evidence -> verdict:
+    claim_id citation                   evidence_id                                verdict                  confidence
+    ------------------------------------------------------------------------------------------------------------------
+    c1       Section 302                Section 302 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.8218
+    c2       Section 304                Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9727
+    c3       Section 302                Section 302 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9995
+    c4       Section 304                Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9990
+    c5       Section 336                (no evidence)                              NO_EVIDENCE              -
+    c6       Section 149                Section 149 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9932
+
+  Evidence cited by more than one claim in this document (grouped, not shown as separate unexplained repeats):
+    'Section 302 in The Indian Penal Code, 1860' <- claims c1, c3
+    'Section 304 in The Indian Penal Code, 1860' <- claims c2, c4
 
   No claim triggers correction (no CONTRADICTED, no low-confidence NEI) — pipeline correctly stops here. final_field == generated_field.
 
@@ -57,35 +77,54 @@ CASE 1997_1306 — CONTRADICTED — a citation's claimed content does not match 
     The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 require that the accused be members of an unlawful assembly with a common intention to commit criminal trespass and assault, and that the assault was carried out in the course of such trespass. Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culp...
 
   --- Stage [2] Claim extraction (deterministic regex, no LLM) :: LIVE ---
-  Extracted 10 citation-bearing claim(s).
-    [c1] The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 re
-    [c2] The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 re
-    [c3] The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 re
-    ... (7 more claim(s) not shown)
+  Extracted 10 citation-bearing claim(s). A sentence naming several
+  provisions at once yields one claim PER provision, sharing that sentence's text
+  but each carrying its own citation -- see 01_claim_parser_demo.py for why this
+  is legitimate atomic decomposition, not duplicate parsing; the grouped view in
+  stage [4] below shows each claim's own distinguishing citation/evidence/verdict.
 
   --- Stage [3] Evidence retrieval (exact + fuzzy match, 136-record production pool) :: LIVE ---
-    [c1] evidence_id='Section 148 in The Indian Penal Code, 1860' method=exact_normalized
-    [c2] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c3] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c4] evidence_id='Section 323 in The Indian Penal Code, 1860' method=exact_normalized
-    [c5] evidence_id='Section 149 in The Indian Penal Code, 1860' method=exact_normalized
-    [c6] evidence_id='Section 148 in The Indian Penal Code, 1860' method=exact_normalized
-    [c7] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c8] evidence_id='Section 304 in The Indian Penal Code, 1860' method=exact_normalized
-    [c9] evidence_id='Section 323 in The Indian Penal Code, 1860' method=exact_normalized
-    [c10] evidence_id='Section 149 in The Indian Penal Code, 1860' method=exact_normalized
+  Resolved to evidence: 10/10 claim(s) (the rest stay NO_EVIDENCE, verifier never called for them)
 
   --- Stage [4] NLI verification (premise_framing='labeled', real DeBERTa call per matched claim) :: LIVE ---
-    [c1] verdict=NOT_ENOUGH_INFORMATION confidence=0.9775390625
-    [c2] verdict=NOT_ENOUGH_INFORMATION confidence=0.94921875
-    [c3] verdict=NOT_ENOUGH_INFORMATION confidence=0.94921875
-    [c4] verdict=NOT_ENOUGH_INFORMATION confidence=0.9462890625
-    [c5] verdict=NOT_ENOUGH_INFORMATION confidence=0.970703125
-    [c6] verdict=CONTRADICTED confidence=0.98681640625
-    [c7] verdict=NOT_ENOUGH_INFORMATION confidence=0.96240234375
-    [c8] verdict=NOT_ENOUGH_INFORMATION confidence=0.96240234375
-    [c9] verdict=NOT_ENOUGH_INFORMATION confidence=0.546875
-    [c10] verdict=ENTAILED confidence=0.71142578125
+
+  10 atomic claim(s) extracted from 2 unique source sentence(s):
+
+    Sentence: "The Indian Penal Code, 1860, specifically sections 148, 304 (Part-I), 304 (Part-II), 323, and 149 require that the accused be members of an ..."
+      -> 5 citations in this sentence, each its own atomic claim (independently matched, verified, and correctable):
+           [c1] Section 148
+           [c2] Section 304 (Part-I)
+           [c3] Section 304 (Part-II)
+           [c4] Section 323
+           [c5] Section 149
+
+    Sentence: "Section 148 mandates punishment for criminal trespass, section 304 (Part-I) and 304 (Part-II) deal with culpable homicide not amounting to m..."
+      -> 5 citations in this sentence, each its own atomic claim (independently matched, verified, and correctable):
+           [c6] Section 148
+           [c7] Section 304 (Part-I)
+           [c8] Section 304 (Part-II)
+           [c9] Section 323
+           [c10] Section 149
+
+  Claim -> citation -> evidence -> verdict:
+    claim_id citation                   evidence_id                                verdict                  confidence
+    ------------------------------------------------------------------------------------------------------------------
+    c1       Section 148                Section 148 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9775
+    c2       Section 304 (Part-I)       Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9492
+    c3       Section 304 (Part-II)      Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9492
+    c4       Section 323                Section 323 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9463
+    c5       Section 149                Section 149 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9707
+    c6       Section 148                Section 148 in The Indian Penal Code, 18... CONTRADICTED             0.9868
+    c7       Section 304 (Part-I)       Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9624
+    c8       Section 304 (Part-II)      Section 304 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.9624
+    c9       Section 323                Section 323 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.5469
+    c10      Section 149                Section 149 in The Indian Penal Code, 18... ENTAILED                 0.7114
+
+  Evidence cited by more than one claim in this document (grouped, not shown as separate unexplained repeats):
+    'Section 148 in The Indian Penal Code, 1860' <- claims c1, c6
+    'Section 304 in The Indian Penal Code, 1860' <- claims c2, c3, c7, c8
+    'Section 323 in The Indian Penal Code, 1860' <- claims c4, c9
+    'Section 149 in The Indian Penal Code, 1860' <- claims c5, c10
 
   Claim [c6] triggers correction.
 
@@ -97,12 +136,14 @@ CASE 1997_1306 — CONTRADICTED — a citation's claimed content does not match 
   --- Stage [6] Re-verification of the corrected sentence (real DeBERTa call) :: LIVE ---
   Reverified hypothesis: Section 148 mandates punishment for rioting
   Reverification verdict: ENTAILED (confidence 0.9990)
-  (Historical committed reverification for comparison: {})
+  Historical committed reverification for comparison: {}
+
+  Disclaimer: this is a small NLI model's statistical confidence that the statute text supports the claim sentence -- not a lawyer-verified legal-correctness determination.
 
   --- Stage [7] Safety gate (programmatic scope-violation check, src.pipeline._scope_violation) :: LIVE ---
-  Scope violation detected: False
-  FINAL GATE DECISION: SHIP corrected text (ship iff not violation AND reverification.verdict == ENTAILED)
-  (Historical committed outcome for comparison: 'correction_scope_violation')
+
+  >>> FINAL DECISION: SHIPPED -- scope violation=False, reverification verdict=ENTAILED (ship iff not violation AND reverification.verdict == ENTAILED)
+  Historical committed outcome for comparison: correction_scope_violation
 
 ==============================================================================
 CASE 2003_760 — Flagged claim -> shipped correction (the project's one natural shipped correction)
@@ -114,23 +155,41 @@ CASE 2003_760 — Flagged claim -> shipped correction (the project's one natural
     The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 and 34. Section 302 deals with murder, which prescribes that whoever commits the act which causes the death of a human being with the intention to cause death or with the knowledge that such act will cause death, commits murder. Section 34 addresses criminal liability for an act done by more than on...
 
   --- Stage [2] Claim extraction (deterministic regex, no LLM) :: LIVE ---
-  Extracted 4 citation-bearing claim(s).
-    [c1] The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 
-    [c2] The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 
-    [c3] Section 302 deals with murder, which prescribes that whoever commits the act which causes the death 
-    ... (1 more claim(s) not shown)
+  Extracted 4 citation-bearing claim(s). A sentence naming several
+  provisions at once yields one claim PER provision, sharing that sentence's text
+  but each carrying its own citation -- see 01_claim_parser_demo.py for why this
+  is legitimate atomic decomposition, not duplicate parsing; the grouped view in
+  stage [4] below shows each claim's own distinguishing citation/evidence/verdict.
 
   --- Stage [3] Evidence retrieval (exact + fuzzy match, 136-record production pool) :: LIVE ---
-    [c1] evidence_id='Section 302 in The Indian Penal Code, 1860' method=exact_normalized
-    [c2] evidence_id='Section 34 in The Indian Penal Code, 1860' method=exact_normalized
-    [c3] evidence_id='Section 302 in The Indian Penal Code, 1860' method=exact_normalized
-    [c4] evidence_id='Section 34 in The Indian Penal Code, 1860' method=exact_normalized
+  Resolved to evidence: 4/4 claim(s) (the rest stay NO_EVIDENCE, verifier never called for them)
 
   --- Stage [4] NLI verification (premise_framing='labeled', real DeBERTa call per matched claim) :: LIVE ---
-    [c1] verdict=NOT_ENOUGH_INFORMATION confidence=0.79541015625
-    [c2] verdict=NOT_ENOUGH_INFORMATION confidence=0.9287109375
-    [c3] verdict=NOT_ENOUGH_INFORMATION confidence=0.6279296875
-    [c4] verdict=ENTAILED confidence=0.98828125
+
+  4 atomic claim(s) extracted from 3 unique source sentence(s):
+
+    Sentence: "The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 and 34."
+      -> 2 citations in this sentence, each its own atomic claim (independently matched, verified, and correctable):
+           [c1] Section 302
+           [c2] Section 34
+
+    Sentence: "Section 302 deals with murder, which prescribes that whoever commits the act which causes the death of a human being with the intention to c..."
+      -> 1 citation-bearing claim: [c3] Section 302
+
+    Sentence: "Section 34 addresses criminal liability for an act done by more than one person in furtherance of the common intention or common object, the..."
+      -> 1 citation-bearing claim: [c4] Section 34
+
+  Claim -> citation -> evidence -> verdict:
+    claim_id citation                   evidence_id                                verdict                  confidence
+    ------------------------------------------------------------------------------------------------------------------
+    c1       Section 302                Section 302 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.7954
+    c2       Section 34                 Section 34 in The Indian Penal Code, 186... NOT_ENOUGH_INFORMATION   0.9287
+    c3       Section 302                Section 302 in The Indian Penal Code, 18... NOT_ENOUGH_INFORMATION   0.6279
+    c4       Section 34                 Section 34 in The Indian Penal Code, 186... ENTAILED                 0.9883
+
+  Evidence cited by more than one claim in this document (grouped, not shown as separate unexplained repeats):
+    'Section 302 in The Indian Penal Code, 1860' <- claims c1, c3
+    'Section 34 in The Indian Penal Code, 1860' <- claims c2, c4
 
   Claim [c3] triggers correction.
 
@@ -140,14 +199,16 @@ CASE 2003_760 — Flagged claim -> shipped correction (the project's one natural
     The statutory grounding of the case involves the Indian Penal Code, 1860, specifically Sections 302 and 34. Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine. Section 34 addresses criminal liability for an act done by more than one person in furtherance of the common intention or comm...
 
   --- Stage [6] Re-verification of the corrected sentence (real DeBERTa call) :: LIVE ---
-  Reverified hypothesis: Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be 
+  Reverified hypothesis: Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be ...
   Reverification verdict: ENTAILED (confidence 0.9946)
-  (Historical committed reverification for comparison: {'claim_text': 'Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.', 'reverified_hypothesis': 'Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.', 'evidence_id': 'Section 302 in The Indian Penal Code, 1860', 'evidence_match_method': 'exact_normalized', 'verdict': 'ENTAILED', 'confidence': 0.9945693016052246, 'sub_reason': None})
+  Historical committed reverification for comparison: {'claim_text': 'Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.', 'reverified_hypothesis': 'Section 302 deals with murder, which prescribes that whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.', 'evidence_id': 'Section 302 in The Indian Penal Code, 1860', 'evidence_match_method': 'exact_normalized', 'verdict': 'ENTAILED', 'confidence': 0.9945693016052246, 'sub_reason': None}
+
+  Disclaimer: this is a small NLI model's statistical confidence that the statute text supports the claim sentence -- not a lawyer-verified legal-correctness determination.
 
   --- Stage [7] Safety gate (programmatic scope-violation check, src.pipeline._scope_violation) :: LIVE ---
-  Scope violation detected: False
-  FINAL GATE DECISION: SHIP corrected text (ship iff not violation AND reverification.verdict == ENTAILED)
-  (Historical committed outcome for comparison: 'corrected')
+
+  >>> FINAL DECISION: SHIPPED -- scope violation=False, reverification verdict=ENTAILED (ship iff not violation AND reverification.verdict == ENTAILED)
+  Historical committed outcome for comparison: corrected
 
 ==============================================================================
 Demo complete. No file under research/prototype/outputs/ or research/data/ was modified.
