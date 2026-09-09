@@ -41,9 +41,22 @@ claims[]  (one Claim per citation-bearing sentence)
    v
 [3] evidence_matcher.match_evidence()      -- src/evidence_matcher.py
    |  deterministic: exact (provision_type, provision_number, subsection,
-   |  act_norm) lookup, then fuzzy act-name-token-overlap fallback,
-   |  against the usable evidence pool (canonical_statutes.jsonl joined
-   |  with evidence_audit.jsonl, VERIFIED_EXACT/VERIFIED_CONTENT only)
+   |  act_norm) lookup, then fuzzy act-name-token-overlap (Jaccard)
+   |  fallback, against the usable evidence pool (canonical_statutes.jsonl
+   |  joined with evidence_audit.jsonl, VERIFIED_EXACT/VERIFIED_CONTENT only)
+   |
+   |  BM25 and sentence-embedding act-name scoring were built and
+   |  benchmarked as alternatives to Jaccard for this fuzzy step
+   |  (src/retrieval_signals.py, config: evidence_matching.fuzzy_method) and
+   |  NOT adopted: both are measurably LESS safe than Jaccard on this
+   |  corpus's confusable Act-name pairs (Civil vs Criminal Procedure Code,
+   |  Arbitration Act 1940 vs Arbitration and Conciliation Act 1996, Income
+   |  Tax Act vs Income Tax Rules) -- Jaccard is the only method reaching
+   |  zero wrong-Act matches at any threshold tested. See
+   |  outputs/retrieval_signal_benchmark_report.md for the full comparison.
+   |  No BM25/vector index is used anywhere else in retrieval either --
+   |  this remains a small, statically-loaded JSONL lookup, not a search
+   |  index.
    v
 claim.evidence_text | NO_EVIDENCE
    |

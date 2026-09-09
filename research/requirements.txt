@@ -44,3 +44,22 @@ PyYAML==6.0.3
 # Dev-only: runs research/prototype/tests/ (deterministic, no-GPU unit
 # tests). Not needed to run the pipeline itself.
 pytest==9.1.1
+
+# Added for research/prototype/src/retrieval_signals.py -- EVALUATED,
+# OFF-BY-DEFAULT alternative act-name similarity scoring for
+# evidence_matcher's fuzzy fallback (fuzzy_method: "bm25" | "embedding" in
+# config/prototype.yaml, default remains "jaccard"). See
+# outputs/retrieval_signal_benchmark_report.md: both were measured LESS
+# safe than the production jaccard baseline on this corpus's confusable
+# Act-name pairs and were NOT adopted as the default -- kept installed so
+# the evaluated code path and its tests
+# (tests/test_retrieval_signals.py) remain runnable/reproducible.
+rank_bm25==0.2.2
+sentence-transformers==2.7.0
+# sentence-transformers' own runtime deps, not otherwise required by this
+# project (transformers/torch/numpy/tqdm/huggingface_hub/Pillow above are
+# already pinned):
+scipy==1.13.0
+scikit-learn==1.4.2
+joblib==1.4.2
+threadpoolctl==3.6.0

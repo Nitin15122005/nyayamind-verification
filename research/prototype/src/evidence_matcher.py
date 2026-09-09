@@ -71,7 +71,25 @@ def match_evidence(
     exact_index: dict[tuple, EvidenceRecord],
     all_usable: list[EvidenceRecord],
     fuzzy_token_overlap_threshold: float = 0.8,
+    fuzzy_method: str = "jaccard",
+    fuzzy_act_index: "object | None" = None,
+    fuzzy_bm25_threshold: float = 0.5,
+    fuzzy_embedding_threshold: float = 0.55,
 ) -> MatchResult:
+    """
+    fuzzy_method: "jaccard" (default, production-unchanged) | "bm25" |
+    "embedding". Selects the act-name SIMILARITY SCORING function used only
+    in the fuzzy fallback step below -- it never changes the legal-identity
+    gate above (exact (provision_type, provision_number[, subsection]) key
+    lookup) or the year-conflict veto. "bm25"/"embedding" require
+    `fuzzy_act_index` (a prebuilt src.retrieval_signals.Bm25ActIndex /
+    EmbeddingActIndex over the same `all_usable` list -- build once, reuse
+    across calls; see scripts/benchmark_retrieval_signals.py for the
+    measured comparison this default is based on). Thresholds are
+    method-specific because the two backends' score scales differ (BM25 is
+    min-max normalized per candidate set; embedding is raw cosine
+    similarity) -- see retrieval_signals.best_match_among()'s docstring.
+    """
     index_key = (
         citation.provision_type,
         citation.provision_number,
@@ -92,28 +110,43 @@ def match_evidence(
             return MatchResult(matched=True, evidence=exact_loose, match_method="exact_normalized")
 
     # Fuzzy fallback: same provision_type + provision_number, act-name
-    # token overlap above threshold. Deterministic, no model involved.
-    claim_act_words = act_significant_words(citation.act_norm)
+    # similarity above threshold. The legal-identity gate (provision_type +
+    # provision_number match, year-conflict veto) is IDENTICAL for every
+    # fuzzy_method -- only the act-name scoring function below changes.
     claim_years = _act_years(citation.act_norm)
-    best: Optional[EvidenceRecord] = None
-    best_overlap = 0.0
-    for ev in all_usable:
-        if ev.provision_type != citation.provision_type:
-            continue
-        if ev.provision_number != citation.provision_number:
-            continue
-        if _year_conflict(claim_years, _act_years(ev.act_norm)):
-            continue  # explicit, differing years -> distinct enactments, never cross-match
-        ev_act_words = act_significant_words(ev.act_norm)
-        overlap = _token_overlap(claim_act_words, ev_act_words)
-        if overlap > best_overlap:
-            best_overlap = overlap
-            best = ev
+    same_number_year_ok: list[EvidenceRecord] = [
+        ev for ev in all_usable
+        if ev.provision_type == citation.provision_type
+        and ev.provision_number == citation.provision_number
+        and not _year_conflict(claim_years, _act_years(ev.act_norm))
+    ]
 
-    if best is not None and best_overlap >= fuzzy_token_overlap_threshold:
-        return MatchResult(matched=True, evidence=best, match_method="fuzzy")
+    if fuzzy_method == "jaccard":
+        claim_act_words = act_significant_words(citation.act_norm)
+        best: Optional[EvidenceRecord] = None
+        best_overlap = 0.0
+        for ev in same_number_year_ok:
+            ev_act_words = act_significant_words(ev.act_norm)
+            overlap = _token_overlap(claim_act_words, ev_act_words)
+            if overlap > best_overlap:
+                best_overlap = overlap
+                best = ev
+        if best is not None and best_overlap >= fuzzy_token_overlap_threshold:
+            return MatchResult(matched=True, evidence=best, match_method="fuzzy")
+        return MatchResult(matched=False, evidence=None, match_method="no_evidence")
 
-    return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+    if fuzzy_method in ("bm25", "embedding"):
+        if fuzzy_act_index is None:
+            raise ValueError(f"fuzzy_method={fuzzy_method!r} requires fuzzy_act_index")
+        from .retrieval_signals import best_match_among  # deferred: keeps optional deps optional
+
+        scored = best_match_among(citation.act_norm, same_number_year_ok, fuzzy_act_index, fuzzy_method)
+        threshold = fuzzy_bm25_threshold if fuzzy_method == "bm25" else fuzzy_embedding_threshold
+        if scored.evidence is not None and scored.score >= threshold:
+            return MatchResult(matched=True, evidence=scored.evidence, match_method="fuzzy")
+        return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+
+    raise ValueError(f"unknown fuzzy_method: {fuzzy_method!r}")
 
 
 # Failure-category taxonomy for a NO_EVIDENCE claim — mirrors, exactly, the

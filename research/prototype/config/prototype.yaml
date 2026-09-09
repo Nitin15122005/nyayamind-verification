@@ -96,6 +96,42 @@ evidence_matching:
   top_k: 1
   fuzzy_token_overlap_threshold: 0.8   # fixed by design, not calibrated
 
+  # EVALUATED AND REJECTED as the default -- alternative act-name
+  # similarity scoring for the fuzzy fallback step (src/retrieval_signals.py).
+  # Motivation: the corpus's 22 unique Act names mean Jaccard token overlap
+  # occasionally rejects legitimate shorthand act-name variants (e.g.
+  # "Evidence Act" for "Indian Evidence Act", "Corruption Act" for
+  # "Prevention of Corruption Act") that drop a qualifying word Jaccard
+  # weighs equally with the head noun -- bm25/embedding DO fix that (100%
+  # correct-accept on this project's 21 pre-registered should-match cases,
+  # vs jaccard's 90.5%).
+  #
+  # RESULT (see outputs/retrieval_signal_benchmark_report.md for the full
+  # threshold sweep this summarizes): both are measurably LESS SAFE than
+  # jaccard on this corpus's confusable-Act-name pairs (e.g. Code of Civil
+  # vs Criminal Procedure; Arbitration Act, 1940 vs Arbitration and
+  # Conciliation Act, 1996; Income Tax Act vs Income Tax Rules). jaccard is
+  # the ONLY method reaching 100% correct-reject (zero wrong-Act matches)
+  # at any threshold tested. bm25 never reaches 100% correct-reject at any
+  # threshold (best: 7/9, giving up correct-accept too). embedding CAN
+  # reach 100% correct-reject, but only at threshold>=0.8, where its
+  # correct-accept rate (76%) is already worse than jaccard's 90.5% at full
+  # safety -- i.e. jaccard Pareto-dominates both alternatives on this
+  # corpus. Root cause: bm25's term-frequency weighting under-penalizes a
+  # query missing an Act's single distinguishing word the way Jaccard's
+  # set-union normalization does; embedding actively rewards TRUE semantic/
+  # topical similarity between Acts that are legally distinct enactments,
+  # which is exactly backwards for citation-identity matching.
+  #
+  # DEFAULT REMAINS "jaccard". Kept available (not deleted) for future
+  # corpora where this measured trade-off might differ -- re-run
+  # scripts/benchmark_retrieval_signals.py before ever changing this
+  # default, never assume the tradeoff has changed.
+  fuzzy_method: "jaccard"              # jaccard (default) | bm25 | embedding
+  fuzzy_bm25_threshold: 0.5            # min-max normalized within each candidate set
+  fuzzy_embedding_threshold: 0.55      # raw cosine similarity
+  embedding_model_id: "sentence-transformers/all-MiniLM-L6-v2"
+
 verification:
   model_id: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
   # UNCHANGED 2026-08-27 review: outputs/threshold_sensitivity_analysis.md's
