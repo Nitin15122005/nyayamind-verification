@@ -15,6 +15,7 @@ are ever returned as evidence.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Optional
 
@@ -22,6 +23,30 @@ from .claim_parser import ExtractedCitation, act_significant_words
 from .data_loader import EvidenceRecord
 
 NO_EVIDENCE = "NO_EVIDENCE"
+
+# `act_significant_words()` tokenizes with `[a-z']+`, which drops digits
+# entirely — so two same-named Acts differing ONLY by year (e.g. "Income
+# Tax Act, 1961" vs "Income-tax Act, 2025") reduce to an identical
+# significant-word set and can fuzzy-cross-match at overlap 1.0, even
+# though they are legally distinct enactments. Confirmed, documented latent
+# limitation (see outputs/evidence_v1_independent_audit.md §5,
+# tests/test_adversarial_citations.py::test_year_edition_...) — not
+# triggered in the shipped 136-record corpus, but a real gap for any future
+# corpus growth or new citation. Fixed here: if BOTH sides of a fuzzy
+# comparison name an explicit year and those years differ, the pair can
+# never fuzzy-match, regardless of token overlap. A side with NO explicit
+# year (e.g. a claim that never states one, or an alias without one) is
+# unaffected — that is the legitimate, intentional year-omission fuzzy path
+# this project relies on elsewhere, and this change never narrows it.
+_YEAR_RE = re.compile(r"\b(1[5-9]\d\d|20\d\d)\b")
+
+
+def _act_years(act_norm: str) -> set[str]:
+    return set(_YEAR_RE.findall(act_norm))
+
+
+def _year_conflict(claim_years: set[str], ev_years: set[str]) -> bool:
+    return bool(claim_years) and bool(ev_years) and claim_years.isdisjoint(ev_years)
 
 
 @dataclass
@@ -69,6 +94,7 @@ def match_evidence(
     # Fuzzy fallback: same provision_type + provision_number, act-name
     # token overlap above threshold. Deterministic, no model involved.
     claim_act_words = act_significant_words(citation.act_norm)
+    claim_years = _act_years(citation.act_norm)
     best: Optional[EvidenceRecord] = None
     best_overlap = 0.0
     for ev in all_usable:
@@ -76,6 +102,8 @@ def match_evidence(
             continue
         if ev.provision_number != citation.provision_number:
             continue
+        if _year_conflict(claim_years, _act_years(ev.act_norm)):
+            continue  # explicit, differing years -> distinct enactments, never cross-match
         ev_act_words = act_significant_words(ev.act_norm)
         overlap = _token_overlap(claim_act_words, ev_act_words)
         if overlap > best_overlap:
@@ -86,3 +114,73 @@ def match_evidence(
         return MatchResult(matched=True, evidence=best, match_method="fuzzy")
 
     return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+
+
+# Failure-category taxonomy for a NO_EVIDENCE claim — mirrors, exactly, the
+# already-validated methodology scripts/audit_no_evidence_taxonomy_v2.py has
+# used project-wide (see outputs/final_research_results.md's NO_EVIDENCE
+# taxonomy table, and outputs/evidence_v1_independent_audit.md §4): every
+# NO_EVIDENCE claim genuinely falls into exactly one of these, decided by
+# evidence (corpus content + measured token overlap), never guessed. This
+# was previously only computable by re-running that standalone offline
+# script over already-produced outputs — promoting it into a reusable,
+# importable function closes a real ablation-readiness gap (mission
+# priority: "the system must expose enough information to understand WHY
+# an outcome occurred", not just a black-box NO_EVIDENCE label) without
+# changing the taxonomy's own decision rule at all.
+UNRESOLVED_ACT = "unresolved_act"
+GENUINELY_ABSENT_NO_SUCH_PROVISION = "genuinely_absent_no_such_provision_any_act"
+GENUINELY_ABSENT_WRONG_ACT_OR_EDITION = "genuinely_absent_wrong_act_or_edition"
+PARSER_OR_MATCHER_DEFECT_CANDIDATE = "parser_or_matcher_defect_candidate"
+
+
+def classify_no_evidence(
+    citation: ExtractedCitation,
+    all_usable: list[EvidenceRecord],
+    fuzzy_token_overlap_threshold: float = 0.8,
+) -> str:
+    """Only meaningful (and only ever called by the pipeline) when
+    match_evidence() already returned matched=False for this exact
+    citation — this never re-derives or second-guesses the match/no-match
+    decision itself, only explains it after the fact.
+
+    - `unresolved_act`: the parser could not resolve an act at all
+      (act_norm == "") — a parser-side limitation (see claim_parser.py's
+      "never guess" field-wide-inheritance contract), not a corpus gap.
+    - `genuinely_absent_no_such_provision_any_act`: no record for this
+      (provision_type, provision_number) exists under ANY act in the
+      corpus — a pure coverage gap, closing it needs more evidence data,
+      not a code change.
+    - `genuinely_absent_wrong_act_or_edition`: the provision number exists
+      under a DIFFERENT act, correctly not matched (token overlap below
+      threshold, or vetoed by an explicit year conflict) — the citation's
+      own act really is a different enactment.
+    - `parser_or_matcher_defect_candidate`: the provision number exists
+      under an act with SUBSTANTIAL (0.5 <= overlap < threshold) but
+      sub-threshold name overlap to the citation's own act — a genuine
+      candidate for a normalization/alias gap, flagged for manual review
+      rather than auto-corrected (this project's own project-wide review
+      of every candidate ever surfaced this way found zero confirmed
+      defects — see outputs/evidence_v1_independent_audit.md §4 — so this
+      label means "worth a human look," never "confirmed bug")."""
+    if not citation.act_norm:
+        return UNRESOLVED_ACT
+
+    same_number = [
+        e for e in all_usable
+        if e.provision_type == citation.provision_type
+        and e.provision_number == citation.provision_number
+    ]
+    if not same_number:
+        return GENUINELY_ABSENT_NO_SUCH_PROVISION
+
+    claim_words = act_significant_words(citation.act_norm)
+    best_overlap = 0.0
+    for ev in same_number:
+        overlap = _token_overlap(claim_words, act_significant_words(ev.act_norm))
+        if overlap > best_overlap:
+            best_overlap = overlap
+
+    if 0.5 <= best_overlap < fuzzy_token_overlap_threshold:
+        return PARSER_OR_MATCHER_DEFECT_CANDIDATE
+    return GENUINELY_ABSENT_WRONG_ACT_OR_EDITION

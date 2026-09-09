@@ -85,6 +85,21 @@ class VerificationResult:
     sub_reason: Optional[str]  # None | "low_confidence" (only set when downgraded)
     raw_scores: dict           # {"entailment": p, "neutral": p, "contradiction": p}
     verifier_model: str
+    # Measurement instrumentation, not live behavior — never changes the
+    # verdict/confidence/sub_reason above. True when premise+hypothesis
+    # together exceed max_sequence_length, meaning HF's pair-truncation
+    # silently cut content from the END of the premise (verified empirically
+    # against this project's cached tokenizer: the premise, not the
+    # hypothesis, is trimmed first) before this verdict was computed —
+    # exactly where a real statute's trailing exception/proviso clause would
+    # sit. Confirmed inert against the current 136-record evidence corpus
+    # (the longest real record + a realistic claim sentence total ~354/512
+    # tokens), but previously had zero detection: a future longer record
+    # could silently produce a verdict from truncated evidence with no
+    # trace in the output record. Same shape as the (separately fixed)
+    # evidence-matcher year-blindness gap — real, checked, currently-safe,
+    # worth closing before it can bite.
+    input_truncated: bool = False
     disclaimer: str = (
         "NLI statistical confidence, not a legal-correctness determination."
     )
@@ -166,6 +181,20 @@ class NLIVerifier:
 
         import torch
 
+        # Detect (never prevent) truncation: tokenize the SAME pair without
+        # truncation first, purely to measure its true combined length —
+        # this is a cheap, CPU-only tokenizer call (no model forward pass),
+        # not a second inference. HF's default pair-truncation trims the
+        # FIRST sequence (the premise, here) from its end when the pair
+        # exceeds max_length (verified empirically against this project's
+        # cached tokenizer) — exactly where a real statute's trailing
+        # exception/proviso clause would sit. Detection only; the actual
+        # model call below is unchanged (still truncates exactly as before)
+        # — this never alters what verdict is computed, only whether the
+        # caller can tell afterward that the input was cut.
+        untruncated_length = len(self._tokenizer(premise, hypothesis)["input_ids"])
+        input_truncated = untruncated_length > self.max_sequence_length
+
         inputs = self._tokenizer(
             premise,
             hypothesis,
@@ -198,4 +227,5 @@ class NLIVerifier:
             sub_reason=sub_reason,
             raw_scores=raw_scores,
             verifier_model=self.model_id,
+            input_truncated=input_truncated,
         )

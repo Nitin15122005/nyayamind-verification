@@ -295,6 +295,51 @@ _KNOWN_ACT_ALIASES = {
 }
 
 
+# A bare citation immediately followed by one of these well-known
+# single-token abbreviations -- e.g. "Section 100 CrPC", "Section 302 IPC"
+# -- with NO "in"/"of" connector in between. This is an extremely common
+# real Indian-legal-citation shorthand (confirmed present verbatim in this
+# project's own committed generated output: "Section 147 IPC", "Section
+# 302 IPC", "Section 100 CrPC", etc.), but neither CITATION_REGEX (requires
+# an explicit "in"/"of" connector) nor _BARE_ACT_MENTION_RE (requires an
+# Act/Code/... suffix WORD, which a bare acronym is not) recognizes it as
+# an act-bearing citation.
+#
+# Left unhandled, this citation's act stays unresolved at the sentence
+# level and falls through to extract_claims()'s field-wide "exactly one
+# distinct act elsewhere in the field" fallback -- which is actively WRONG
+# whenever the field also contains a different, properly-cited Act
+# elsewhere (real, reproduced case: "... Section 32 of the Indian Evidence
+# Act, 1872. Section 100 CrPC also applies." previously mis-resolved the
+# CrPC citation's act to "indian evidence act 1872", since the field looks
+# single-act to that fallback only because THIS citation's own act
+# signal — its trailing abbreviation — was being silently dropped). This
+# is exactly the CrPC-vs-CPC-Section-100 confusion category
+# tests/test_adversarial_citations.py already treats as a known adversarial
+# risk, from a different root cause than that suite covers.
+#
+# Deliberately restricted to the exact three single-token acronyms already
+# present, tested, and trusted in _KNOWN_ACT_ALIASES above (never a new
+# alias invented for this) -- this only teaches the parser to attach an
+# ALREADY-TRUSTED act identity to the position it appears in real
+# generated prose, it never guesses a new one.
+_TRAILING_ABBREV_TOKENS = ("IPC", "CrPC", "CPC")
+# No leading `^`: this is matched via `.match(sentence, pos)` at a
+# specific offset, not necessarily the string start — `^` (without
+# MULTILINE) anchors to index 0 of the whole string regardless of `pos`,
+# not to `pos` itself, so it would silently never match here.
+#
+# Optional leading comma (`,?\s*`, not just `\s*`): real generated prose
+# uses both "Section 302 IPC" and "Section 302, IPC" for the exact same
+# citation shape (both confirmed present verbatim in this project's own
+# committed output) — the comma carries no different meaning here, so
+# both must resolve identically.
+_TRAILING_ABBREV_RE = re.compile(
+    r",?\s*(" + "|".join(re.escape(t) for t in _TRAILING_ABBREV_TOKENS) + r")\b",
+    re.IGNORECASE,
+)
+
+
 def normalize_act(act_raw: str) -> str:
     """Lowercase, strip leading 'The', strip a trailing abbreviation gloss
     in parentheses (e.g. "the Indian Penal Code (IPC)" -> same act as "the
@@ -558,7 +603,17 @@ def extract_citations(sentence: str) -> list[ExtractedCitation]:
                 # provision number this large — never guess a citation here.
                 continue
             if not resolved:
-                sentence_act_raw, sentence_act_norm = _sentence_level_act(sentence, m.start())
+                trailing_m = _TRAILING_ABBREV_RE.match(sentence, m.end())
+                if trailing_m:
+                    # A known abbreviation directly adjacent to THIS
+                    # citation is a stronger, more specific signal than any
+                    # other same-sentence act mention (which may belong to
+                    # an entirely different citation earlier in the
+                    # sentence) -- takes priority over _sentence_level_act.
+                    sentence_act_raw = trailing_m.group(1)
+                    sentence_act_norm = normalize_act(sentence_act_raw)
+                else:
+                    sentence_act_raw, sentence_act_norm = _sentence_level_act(sentence, m.start())
                 resolved = True
             results.append((
                 m.start(),

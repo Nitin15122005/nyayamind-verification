@@ -57,7 +57,17 @@ claim.evidence_text | NO_EVIDENCE
    v
 claim.verdict
    |
-   v (Mode C only, first flagged claim)
+   v  Negation safety gate -- src/pipeline.py:_NEGATION_MARKER_RE
+   |  A CONTRADICTED verdict whose claim_text matches a known negation
+   |  pattern ("neither...nor", "does not apply", "not applicable", ...) is
+   |  excluded from the correction-trigger list -- empirically confirmed
+   |  (real DeBERTa) that negation alone can drive a spurious high-confidence
+   |  CONTRADICTED, and auto-"fixing" such a claim risks flipping a true
+   |  negative legal conclusion into a false affirmative one. The verdict
+   |  itself is untouched and stays visible for manual review; only the
+   |  automatic rewrite attempt is suppressed (claim.negation_contradiction_
+   |  caveat marks this).
+   v (Mode C only, first flagged, non-negation-caveated claim)
 [5] SelectiveCorrector.correct()           -- src/corrector.py
    |  reuses the already-loaded generation model; rewrites ONLY the
    |  flagged sentence, asked to copy every other sentence verbatim
@@ -65,15 +75,35 @@ claim.verdict
 corrected_text
    |
    v
-[6] Scope-violation gate                   -- src/pipeline.py:_scope_violation
-   |  programmatic check (not just a prompt instruction): every unflagged
-   |  claim's exact original sentence must still appear verbatim in
-   |  corrected_text. Violation -> correction_scope_violation, corrected
-   |  text discarded, original shipped.
+[6] Scope-enforcement gates                -- src/pipeline.py:apply_selective_correction
+   |  Four independent, programmatic checks (not just a prompt instruction),
+   |  each rejecting the correction and falling back to the original text on
+   |  failure -- never a prompt-only guarantee:
+   |    - _scope_violation(): every unflagged claim's required text
+   |      (claim_text, or a narrower assertion_text/assertion_spans verbatim
+   |      fragment under atomic_scope_check) must still appear, as ITSELF
+   |      (word-boundary aware -- a bare fragment like "34" must never be
+   |      satisfied by an unrelated "134"), in corrected_text.
+   |    - Unauthorized-addition check: no citation identity may appear in
+   |      corrected_text that wasn't already present in the original field
+   |      (blocks both a hallucinated extra citation and a citation SWAP
+   |      disguised as a fix for the flagged claim).
+   |    - Ordinal-integrity check: the same-citation-identity ordinal slot
+   |      selected as "the replacement" must not be byte-identical to some
+   |      OTHER sibling's own original sentence (guards the ordinal-position
+   |      matching scheme against a corrector that reorders same-citation
+   |      claims).
+   |    - Sibling-regression re-verification (opt-in, paired with
+   |      atomic_scope_check): every OTHER evidence-matched claim is
+   |      independently re-verified against its own evidence; a genuine new
+   |      CONTRADICTED rejects the correction even though the narrower scope
+   |      check alone would have allowed it.
    v
 [7] Re-parse + re-match + re-verify ONLY the corrected sentence
    v
-final_field  (original | corrected | correction_failed | correction_scope_violation)
+final_field  (original | corrected | correction_failed | correction_scope_violation |
+              correction_sibling_regression | correction_ordinal_ambiguous |
+              correction_unauthorized_addition)
 ```
 
 Orchestration lives in `src/pipeline.py::run_case()`. All three modes share
@@ -87,7 +117,7 @@ comparison against an identical baseline, not three different generations.
 |------|-----------|---------------|------------|----------------|
 | A | yes | no | no | always the raw generated text |
 | B | yes | yes | no (diagnostic only) | always the raw generated text, even if a claim is CONTRADICTED |
-| C | yes | yes | yes | original, corrected, `correction_failed`, or `correction_scope_violation` — see `final_field.source` |
+| C | yes | yes | yes | original, `corrected`, or one of five distinct rejection statuses (`correction_failed`, `correction_scope_violation`, `correction_sibling_regression`, `correction_ordinal_ambiguous`, `correction_unauthorized_addition`) — see `final_field.source` and `correction.status` |
 
 Correction triggers only for the **first** flagged claim in the field
 (CONTRADICTED at any confidence, or NOT_ENOUGH_INFORMATION with
@@ -119,9 +149,11 @@ directory it's invoked from.
 
 - **59-record (v0-only) or 136-record (v0+v1, production default since 2026-08-27) evidence pool**, depending on `use_evidence_v1`. Coverage is the top-~140-citation profile from the NyayaRAG corpus, filtered to independently audit-verified records (v0: `research/data/evidence/README.md`; v1 supplement: `research/data/evidence/README_v1.md`, including a 2026-08-27 independent re-audit). Most claims in an arbitrary case will still resolve to `NO_EVIDENCE`; case selection (`select_cases_with_evidence_overlap`) filters to cases with ≥1 overlapping citation specifically to avoid trivial all-`NO_EVIDENCE` runs.
 - **Pre-2024-07-01 "canonical" text for IPC/CrPC-heavy citations.** IPC and CrPC (41 of the top-100 citations) are nationally superseded by the Bharatiya Nyaya Sanhita / Bharatiya Nagarik Suraksha Sanhita as of 2024-07-01; canonical text here is the pre-repeal version. See `research/data/evidence/README.md`.
-- **One claim per sentence, first citation only.** A sentence with multiple citations is represented by its first citation only (documented simplification in `claim_parser.extract_citation`).
+- **One claim per citation, not per sentence.** A sentence naming several provisions (e.g. "Articles 1A, 31A, 31B, and 31C of the Constitution of India") becomes one `Claim` per provision, each with its own independent evidence lookup and verification (`claim_parser.extract_claims`); `extract_citation` (singular) is a backward-compatible first-citation-only accessor, not what the live pipeline uses.
 - **First flagged claim only drives correction** (Mode C). If a field has more than one flagged claim, only the first one is corrected; the rest keep their original verdicts.
-- **Selective-correction scope is enforced programmatically, not just by prompt.** `pipeline._scope_violation()` checks that every unflagged claim's original sentence text still appears verbatim in the corrected paragraph; if the corrector alters an unflagged claim anyway, the run is marked `correction_scope_violation` and the corrected text is discarded (never shipped as `final_field`), while both texts are retained in the output record for inspection.
+- **Selective-correction scope is enforced programmatically, not just by prompt**, across four independent gates (see the architecture diagram above): `_scope_violation()` (no unflagged claim's required text may vanish or be altered), an unauthorized-addition check (no citation identity may be introduced that wasn't already in the field, whether hallucinated fresh or swapped in for the flagged claim's own), an ordinal-integrity check (the same-citation-identity replacement lookup must not have silently resolved to a different, untouched sibling), and an opt-in sibling-regression re-verification. Any gate failing discards the corrected text (never shipped as `final_field`) and records the specific rejection status (`correction_scope_violation` / `correction_unauthorized_addition` / `correction_ordinal_ambiguous` / `correction_sibling_regression`); both the original and regenerated texts are retained in `correction` for inspection regardless of which gate fired.
+- **Measurement/ablation instrumentation fields are additive and never read by any live decision.** Each claim record carries `no_evidence_category` (WHY a NO_EVIDENCE claim has no evidence — `unresolved_act` / `genuinely_absent_no_such_provision_any_act` / `genuinely_absent_wrong_act_or_edition` / `parser_or_matcher_defect_candidate`, see `evidence_matcher.classify_no_evidence`), `raw_scores` (the verifier's full entailment/neutral/contradiction distribution, not just the argmax `confidence`), and `input_truncated` (whether the NLI tokenizer actually truncated this premise+hypothesis pair — currently never observed in the shipped 136-record corpus, see `verifier.NLIVerifier.verify`). None of these change `verdict`/`confidence`/`sub_reason`/`final_field` — they exist so a future ablation/calibration study can be recomputed from a committed output record alone, without re-running the model.
+- **`negation_contradiction_caveat` is NOT purely additive — it is a live safety gate**, unlike the three fields above. A CONTRADICTED verdict whose claim_text matches a known negation pattern (see the architecture diagram's "Negation safety gate") is excluded from the automatic correction-trigger list — this field marks that a claim's own verdict is CONTRADICTED but was deliberately never sent for automatic correction, which does change `final_field` (the claim's untouched text ships, correction never attempted). `verdict`/`confidence`/`sub_reason` themselves remain the real, unmodified NLI output either way.
 - **`research/data/nyayarag/` was populated by copying files already extracted to local scratch space in an earlier session**, not by a fresh download performed as part of this fix. If those files are ever missing in a new environment, they must be re-obtained from `L-NLProc/NyayaRAG` (`3.CaseText_Statutes.zip`) before Mode A/B/C can run — `scripts/run_mvp.py --check` does not verify their presence (only the evidence files), so a real run is the first point that would surface a missing-file error.
 - **Hard-capped at `MAX_ALLOWED_CASES = 5`** cases per invocation of `scripts/run_mvp.py` itself, by design — not a performance limit, a "don't run the full dataset yet" guardrail on that specific entry point (dedicated experiment scripts such as `scripts/run_final_gpu_validation.py` are not subject to this cap and have been run at n=50-59 real GPU cases repeatedly — see `REPRODUCIBILITY.md` and `outputs/final_research_results.md`).
 - **Real inference has been run extensively as of 2026-08-27** — real Qwen2.5-7B generation, real DeBERTa verification, and real Qwen correction across ~180 distinct natural NyayaRAG cases and 59 synthetic stress cases (see `outputs/final_research_results.md` for the full, recomputed-from-raw-artifacts numbers). `run_mvp.py --check` itself still only confirms imports/config/evidence-loading and loads no model — that claim about `--check` specifically remains true; it is the broader "no real inference" claim that is now outdated and is corrected here.

@@ -150,7 +150,8 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
       - "reverification_not_entailed": a replacement was found, evidence
         matched, but the re-verification verdict was not ENTAILED.
       - anything else falls back to the status string itself (scope
-        violation / sibling regression / not triggered).
+        violation / sibling regression / unauthorized addition / ordinal
+        ambiguity / not triggered).
     """
     if status == "correction_failed":
         if reverification is None:
@@ -158,7 +159,11 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
         if reverification.get("verdict") == NO_EVIDENCE:
             return "evidence_lost_after_edit"
         return "reverification_not_entailed"
-    if status in ("correction_scope_violation", "correction_sibling_regression", "not_triggered"):
+    if status in (
+        "correction_scope_violation", "correction_sibling_regression",
+        "correction_ordinal_ambiguous", "correction_unauthorized_addition",
+        "not_triggered",
+    ):
         return status
     return None
 

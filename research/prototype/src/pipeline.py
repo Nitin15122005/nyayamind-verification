@@ -23,11 +23,12 @@ this prototype.
 from __future__ import annotations
 
 import datetime
+import re
 import sys
 from typing import Optional
 
 from . import claim_parser
-from .evidence_matcher import match_evidence, NO_EVIDENCE
+from .evidence_matcher import match_evidence, classify_no_evidence, NO_EVIDENCE
 from .verifier import (
     ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION,
     format_premise, PREMISE_FRAMINGS, PREMISE_FRAMING_BARE,
@@ -80,13 +81,65 @@ def _should_trigger_correction(claim_record: dict) -> bool:
     genuine high-confidence "neutral" NLI prediction, which is a legitimate
     NEI verdict on its own, not a flagged failure. NO_EVIDENCE never
     triggers, regardless of this function (callers only pass claims that
-    already have evidence)."""
+    already have evidence).
+
+    Deliberately does NOT also check `negation_contradiction_caveat` (see
+    apply_verification) — this function answers "was this claim already a
+    problem in the baseline," which is also reused by
+    _reverify_sibling_regressions() to identify pre-existing failures to
+    exclude from its own, separate check. Whether a negation-flagged
+    CONTRADICTED verdict is trusted enough to actually ATTEMPT an automatic
+    correction on is a narrower, different question, applied only at the
+    one call site in apply_selective_correction() that builds the
+    correction-trigger list."""
     verdict = claim_record["verdict"]
     if verdict == CONTRADICTED:
         return True
     if verdict == NOT_ENOUGH_INFORMATION and claim_record.get("sub_reason") == "low_confidence":
         return True
     return False
+
+
+# A claim asserting that a provision does NOT apply/is not applicable
+# ("Neither Section 302 nor Section 304 ... applies to this case.") is
+# empirically confirmed (real MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,
+# real IPC Section 302 evidence text) to reach CONTRADICTED at very high
+# confidence (0.998) purely from the grammatical negation — the same
+# underlying legal content phrased affirmatively ("Section 302 ... applies
+# to this case.") reaches ENTAILED (0.896) against the identical premise.
+# This is a well-documented general NLI weakness (models learning that
+# negation words in the hypothesis correlate with "contradiction" in
+# training data, independent of genuine logical entailment), not something
+# any premise-construction or code fix can repair in a fixed pretrained
+# model's weights. It matters here specifically because CONTRADICTED always
+# triggers automatic correction (_should_trigger_correction above): without
+# this carve-out, the pipeline could "fix" a claim that correctly, truthfully
+# asserts a NEGATIVE legal conclusion (e.g. explaining why a LESSER charge
+# applies instead) by rewriting it into an affirmative statement — which, if
+# the rewrite happens to re-verify ENTAILED, would ship a claim asserting
+# the OPPOSITE of what may have been a true statement, discovered and
+# confirmed during this session's adversarial claim-parser audit.
+#
+# Deliberately narrow and lexical (matching this project's established
+# "never guess, prefer declining" style elsewhere in claim_parser.py):
+# catches the clear-cut, unambiguous negation shapes actually demonstrated,
+# not a general negation detector. A claim matching none of these patterns
+# is unaffected — this only ever REMOVES a claim from automatic correction,
+# it never adds, loosens, or changes what counts as CONTRADICTED, ENTAILED,
+# or NO_EVIDENCE; the claim's own verdict/confidence/sub_reason are
+# untouched and remain fully visible for manual review.
+_NEGATION_MARKER_RE = re.compile(
+    r"\bneither\b.{0,200}?\bnor\b"
+    r"|\b(?:does|do|did)\s+not\s+apply\b"
+    r"|\b(?:is|are|was|were)\s+not\s+applicable\b"
+    r"|\bno\s+longer\s+appli(?:es|cable)\b"
+    r"|\bnot\s+applicable\b",
+    re.IGNORECASE,
+)
+
+
+def _negation_marker_present(text: str) -> bool:
+    return bool(_NEGATION_MARKER_RE.search(text))
 
 
 def _software_versions() -> dict:
@@ -151,10 +204,63 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 # and must survive into the output record's claims list, not
                 # be stripped by run_case()'s internal-bookkeeping filter.
                 "evidence_match_method": match.match_method,
+                # Additive field (measurement/ablation infrastructure, not
+                # live behavior — never read by any verification/correction
+                # decision): WHY this claim is NO_EVIDENCE, using the exact
+                # same taxonomy already established and validated project-
+                # wide by scripts/audit_no_evidence_taxonomy_v2.py (see
+                # evidence_matcher.classify_no_evidence's docstring for the
+                # four categories). None for any claim that DID match
+                # evidence — there is nothing to explain. Distinguishing
+                # "parser couldn't resolve the act" from "corpus genuinely
+                # lacks this provision" from "a different Act/edition
+                # exists" from "a possible normalization gap worth review"
+                # was previously only derivable by re-running that
+                # standalone script over already-produced outputs.
+                "no_evidence_category": (
+                    classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold)
+                    if not match.matched else None
+                ),
                 "verdict": None,          # filled by apply_verification (mode B/C)
                 "confidence": None,
                 "sub_reason": None,
                 "verifier_model": None,
+                # Additive field (measurement infrastructure, not live
+                # behavior): the verifier's FULL raw label distribution
+                # (all three of entailment/neutral/contradiction, not just
+                # the argmax `confidence`), filled by apply_verification.
+                # Without this, a low-confidence downgrade to
+                # NOT_ENOUGH_INFORMATION (sub_reason="low_confidence")
+                # permanently discards which raw label was actually the
+                # argmax and how close the other two were — recomputing
+                # verdicts under a different confidence_threshold, or
+                # measuring calibration, would otherwise require re-running
+                # the model rather than being derivable from the committed
+                # output record. Never read by any live decision (verdict/
+                # sub_reason/confidence remain the single source of truth
+                # for pipeline behavior) — purely additive, for post-hoc
+                # analysis and future ablation/threshold-sensitivity work.
+                "raw_scores": None,
+                # Additive field (measurement infrastructure, not live
+                # behavior): whether the verifier's premise+hypothesis pair
+                # exceeded max_sequence_length and was silently truncated
+                # (see verifier.VerificationResult.input_truncated's
+                # docstring) before this verdict was computed. None for any
+                # claim never verified (NO_EVIDENCE) — there is nothing to
+                # report. Never read by any live decision.
+                "input_truncated": None,
+                # Additive field (measurement/safety infrastructure): set by
+                # apply_verification once verified, to a bool — True only
+                # when the verdict is CONTRADICTED AND the claim's own text
+                # matches a known negation pattern (see _NEGATION_MARKER_RE
+                # above _should_trigger_correction). None until verified.
+                # When True, this SPECIFIC claim is excluded from
+                # apply_selective_correction's automatic-correction trigger
+                # list (never auto-"fixed"), because a negation-driven
+                # CONTRADICTED verdict is empirically confirmed unreliable —
+                # the verdict/confidence themselves are left untouched and
+                # fully visible for manual review.
+                "negation_contradiction_caveat": None,
             }
         )
         if not match.matched:
@@ -205,6 +311,50 @@ def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_
         rec["confidence"] = result.confidence
         rec["sub_reason"] = result.sub_reason
         rec["verifier_model"] = result.verifier_model
+        rec["raw_scores"] = result.raw_scores
+        rec["input_truncated"] = result.input_truncated
+        rec["negation_contradiction_caveat"] = (
+            result.label == CONTRADICTED and _negation_marker_present(rec["claim_text"])
+        )
+
+
+def _fragment_present(fragment: str, text: str) -> bool:
+    """True if `fragment` is present in `text` as itself, not merely as a
+    substring embedded inside a larger token.
+
+    Real, reproduced gap this closes: plain Python `in` containment (the
+    prior check) treats the bare provision number "34" (see
+    claim_parser.py's `_bare_number_span`, used in `assertion_spans` for
+    the "respectively" pattern — e.g. "sections 302, 149, 323, and 34 ...,
+    which respectively deal with ...") as "present" even when the
+    corrected text instead says "Section 134" — a genuinely different
+    provision. "34" is trivially a substring of "134", so a corrector that
+    silently changed an unflagged sibling claim's OWN section number could
+    ship undetected: this is the production-default `atomic_scope_check:
+    "assertion_spans"` path, and the independent `_reverify_sibling_
+    regressions` safety net does not catch it either, since it explicitly
+    skips a sibling whose citation no longer re-extracts at all, assuming
+    (this function's job) already rejected the case.
+
+    A `\\b` word-boundary is anchored at whichever end of `fragment` is
+    itself a word character — never forced onto a non-word edge (e.g. the
+    trailing ")" of a parenthetical-gloss fragment like "34 (common
+    intention)", where a trailing `\\b` would be meaningless). This only
+    TIGHTENS the check: a fragment that is a genuine verbatim copy of the
+    original text always already sits at a real word/punctuation boundary
+    at its true occurrence (sentences, clauses, and parenthetical glosses
+    are all extracted at real delimiters — see claim_parser.py), so this
+    can only turn a false "present" into a correct "absent", never the
+    reverse — no legitimate, honestly-preserved fragment can fail this
+    that would have passed the old check."""
+    if not fragment:
+        return False
+    pattern = re.escape(fragment)
+    if fragment[0].isalnum() or fragment[0] == "_":
+        pattern = r"\b" + pattern
+    if fragment[-1].isalnum() or fragment[-1] == "_":
+        pattern = pattern + r"\b"
+    return re.search(pattern, text) is not None
 
 
 def _scope_violation(
@@ -267,13 +417,13 @@ def _scope_violation(
             continue
         if use_assertion_spans:
             fragments = rec.get("assertion_spans") or [rec.get("assertion_text") or rec.get("claim_text")]
-            if not all(f and f in corrected_text for f in fragments):
+            if not all(f and _fragment_present(f, corrected_text) for f in fragments):
                 return True
             continue
         check_text = rec.get("claim_text")
         if use_assertion_text:
             check_text = rec.get("assertion_text") or check_text
-        if check_text not in corrected_text:
+        if not _fragment_present(check_text, corrected_text):
             return True
     return False
 
@@ -317,12 +467,36 @@ def _reverify_sibling_regressions(
     required fragment, actually changed).
 
     Never used to loosen anything — only ever a reason to REJECT a
-    correction that the scope check alone would have allowed."""
+    correction that the scope check alone would have allowed.
+
+    Excludes a sibling whose OWN baseline verdict was ALREADY flagged
+    (`_should_trigger_correction` — CONTRADICTED, or low-confidence NEI)
+    ONLY when it is ALSO genuinely untouched by this edit (its full
+    original `claim_text` still appears verbatim in `corrected_text`) — in
+    that case re-verifying it is a proven no-op (byte-for-byte preserved
+    siblings can never change verdict, since verification is a
+    deterministic function of premise+hypothesis) and re-flagging it here
+    would conflate "my edit broke something" with "something else was
+    already broken, and I never touched it," corrupting failure-category
+    attribution. That sibling's own pre-existing CONTRADICTED/NEI verdict
+    already remains fully visible in its own claim record — nothing is
+    hidden by excluding it here, only mislabeled here.
+
+    Deliberately does NOT skip an already-flagged sibling whose full
+    `claim_text` was NOT preserved verbatim (its own required
+    assertion_text/span fragment may still have survived, satisfying the
+    scope check, while text elsewhere in its SAME sentence changed) — a
+    real, confirmed gap this narrower condition closes: an unqualified
+    "already flagged -> always skip" rule let a sibling whose surrounding
+    context genuinely changed ship unexamined, silently discarding exactly
+    the kind of regression this safety net exists to catch."""
     regressions = []
     reverify_claims = claim_parser.extract_claims(corrected_text)
     for rec in baseline["claims"]:
         if rec["claim_id"] == target_claim_id:
             continue
+        if _should_trigger_correction(rec) and rec["claim_text"] in corrected_text:
+            continue  # pre-existing failure, AND genuinely untouched by this edit
         if rec["evidence_text"] is None:
             continue  # NO_EVIDENCE claim: nothing to re-verify against
         identity = _citation_identity(rec["citation_extracted"])
@@ -359,6 +533,8 @@ def _reverify_sibling_regressions(
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
                 "evidence_id": match.evidence.dataset_citation_key,
                 "verdict": result.label, "confidence": result.confidence,
+                "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
+                "input_truncated": result.input_truncated,
             })
     return regressions
 
@@ -372,8 +548,17 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
     corrector changes any sentence other than the flagged one, the
     corrected text is never shipped — status is set to
     "correction_scope_violation" and both the original and regenerated
-    texts are retained in the output for inspection."""
-    flagged = [rec for rec in baseline["claims"] if _should_trigger_correction(rec)]
+    texts are retained in the output for inspection.
+
+    Excludes any claim with `negation_contradiction_caveat` True — a
+    negation-driven CONTRADICTED verdict is empirically confirmed
+    unreliable (see `_NEGATION_MARKER_RE`'s docstring) and must never
+    automatically drive a rewrite; its own verdict stays visible in the
+    claim record for manual review, it is simply never auto-"fixed"."""
+    flagged = [
+        rec for rec in baseline["claims"]
+        if _should_trigger_correction(rec) and not rec.get("negation_contradiction_caveat")
+    ]
     original_field_text = baseline["generated_field"]["text"]
     if not flagged:
         return {
@@ -421,6 +606,37 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             "corr_meta": corr_meta_dict,
         }
 
+    # Unauthorized-content-injection check. _scope_violation() above only
+    # verifies that every EXISTING unflagged claim's own text survives — it
+    # has no concept of "no NEW citation may be introduced." A corrector
+    # that correctly fixes the flagged claim but ALSO hallucinates an extra,
+    # never-requested citation elsewhere in the paragraph (a real, plausible
+    # LLM failure mode — the correction prompt asks for one targeted edit,
+    # not "add nothing else") would pass the scope check outright: the new
+    # sentence is not extracted as a baseline claim, so nothing requires it
+    # to be absent. Reject before any ordinal-matching/re-verification work,
+    # same priority as a scope violation, since this is scope enforcement
+    # too — just for additions rather than alterations/removals.
+    reverify_claims = claim_parser.extract_claims(corrected_text)
+    baseline_identities = {
+        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
+    }
+    baseline_identities.discard(None)
+    if any(
+        _citation_identity(c.citation_extracted) is not None
+        and _citation_identity(c.citation_extracted) not in baseline_identities
+        for c in reverify_claims
+    ):
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 1,
+            "status": "correction_unauthorized_addition",
+            "regenerated_text": corrected_text,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+        }
+
     # Re-parse + re-match + re-verify ONLY the previously-flagged claim's
     # replacement sentence, by finding the sentence in the corrected text
     # whose citation matches the originally-flagged claim's citation.
@@ -446,7 +662,6 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         ]
         target_ordinal = next(i for i, rec in enumerate(same_identity_baseline) if rec is target)
 
-    reverify_claims = claim_parser.extract_claims(corrected_text)
     replacement = None
     if target_identity is not None:
         same_identity_reextracted = [
@@ -454,6 +669,46 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         ]
         if target_ordinal < len(same_identity_reextracted):
             replacement = same_identity_reextracted[target_ordinal]
+
+    # Ordinal-position integrity check. The ordinal-matching scheme above
+    # relies on an invariant _scope_violation() does NOT actually enforce:
+    # that same-citation-identity siblings keep their RELATIVE ORDER in the
+    # corrected text, not just their presence somewhere in it. If the
+    # corrector's output reorders two same-identity claims (e.g. moves the
+    # newly-corrected sentence ahead of an unflagged sibling that shares its
+    # citation), every unflagged claim's exact text still appears — the
+    # scope check passes — but "the Nth same-identity claim in reading
+    # order" no longer denotes the same claim slot it did in the baseline.
+    # `replacement` can then silently BE an untouched sibling's own original
+    # sentence, re-verified as if it were the actual edit: this would ship
+    # `status="corrected"` carrying a genuine-looking ENTAILED confirmation
+    # that was never computed against the real correction at all — a
+    # fabricated safety confirmation, worse than any honest rejection.
+    #
+    # Detected here by a direct, checkable signal: if what ordinal-matching
+    # selected as "the replacement" is BYTE-IDENTICAL to some OTHER
+    # same-identity claim's own ORIGINAL (baseline) text, the ordinal slot
+    # cannot be trusted — a genuine correction of the flagged claim does
+    # not, except by a bizarre coincidence, reproduce a completely
+    # different sibling claim's own original sentence verbatim. Fails
+    # closed (new, distinct status — never silently reclassified as
+    # "corrected" or "correction_failed", since neither means what actually
+    # happened here) rather than trust the ordinal lookup further.
+    if replacement is not None and target_identity is not None:
+        other_original_texts = {
+            rec["claim_text"] for rec in same_identity_baseline
+            if rec["claim_id"] != target["claim_id"]
+        }
+        if replacement.claim_text in other_original_texts:
+            return {
+                "triggered_for_claim_id": target["claim_id"],
+                "attempts": 1,
+                "status": "correction_ordinal_ambiguous",
+                "regenerated_text": corrected_text,
+                "original_field_text": original_field_text,
+                "reverification": None,
+                "corr_meta": corr_meta_dict,
+            }
 
     reverification = None
     status = "correction_failed"
@@ -511,6 +766,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                 "verdict": result.label,
                 "confidence": result.confidence,
                 "sub_reason": result.sub_reason,
+                "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
+                "input_truncated": result.input_truncated,
             }
             if result.label == ENTAILED:
                 status = "corrected"
@@ -522,6 +779,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                 "verdict": NO_EVIDENCE,
                 "confidence": None,
                 "sub_reason": None,
+                "raw_scores": None,
+                "input_truncated": None,
             }
 
     # Independent sibling-regression safety net (opt-in, only meaningful
@@ -635,6 +894,22 @@ def run_case(
             # Never ship; both texts retained in correction_summary for
             # inspection, same as scope_violation.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_sibling_regression"}
+        elif correction_summary["status"] == "correction_ordinal_ambiguous":
+            # The ordinal-position replacement lookup could not trust which
+            # re-extracted claim was actually the correction (see
+            # apply_selective_correction's ordinal-integrity check) — never
+            # ship a "confirmation" that may have been computed against the
+            # wrong (untouched) sibling's text instead of the real edit.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_ordinal_ambiguous"}
+        elif correction_summary["status"] == "correction_unauthorized_addition":
+            # The corrected text contains a citation identity with no
+            # counterpart anywhere in the original field — either a brand
+            # new, hallucinated citation introduced alongside the flagged
+            # claim's own fix, or the flagged claim's own citation swapped
+            # for a different provision instead of being fixed. Never ship
+            # either way; both texts retained in correction_summary for
+            # inspection.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_unauthorized_addition"}
         # "not_triggered": final_field stays as original (already set above)
 
     verifier_model_id = getattr(verifier, "model_id", None) if verifier is not None else None
@@ -665,6 +940,21 @@ def run_case(
             # cannot be attributed to a framing after the fact, and the bare vs
             # labeled ablation becomes uninterpretable.
             "premise_framing": resolve_premise_framing(config) if mode in ("B", "C") else None,
+            # Additive: the other three config-level ablation knobs this
+            # project already treats as baseline/treatment pairs (see
+            # FINAL_PRODUCTION_CONFIG.md), recorded the same way
+            # premise_framing already was. Without these, a future ablation
+            # reading only a committed output record — without also
+            # archiving the exact config.yaml used for that specific run —
+            # could not attribute a given `evidence.usable_evidence_pool_size`
+            # or `correction.status` (e.g. a `correction_scope_violation` or
+            # `correction_ordinal_ambiguous`) to which scope-check mode or
+            # evidence pool actually produced it.
+            "use_evidence_v1": bool(config.get("use_evidence_v1", False)),
+            "atomic_scope_check": (config.get("correction") or {}).get("atomic_scope_check", False) if mode == "C" else None,
+            "narrow_reverification_hypothesis": bool((config.get("correction") or {}).get(
+                "narrow_reverification_hypothesis", False
+            )) if mode == "C" else None,
             "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
             "software_versions": _software_versions(),
         },

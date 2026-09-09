@@ -52,7 +52,7 @@ import pytest
 import yaml
 
 from src.corrector import CorrectionMetadata
-from src.data_loader import Case, load_usable_evidence
+from src.data_loader import Case, load_usable_evidence_from_config
 from src.generator import GenerationMetadata
 from src.pipeline import run_case
 from src.verifier import CONTRADICTED, ENTAILED, NOT_ENOUGH_INFORMATION, NLIVerifier
@@ -60,8 +60,6 @@ from src.verifier import CONTRADICTED, ENTAILED, NOT_ENOUGH_INFORMATION, NLIVeri
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PROTOTYPE_ROOT = REPO_ROOT / "research" / "prototype"
 CONFIG_PATH = PROTOTYPE_ROOT / "config" / "prototype.yaml"
-CANONICAL_PATH = REPO_ROOT / "research/data/evidence/canonical_statutes.jsonl"
-AUDIT_PATH = REPO_ROOT / "research/data/evidence/evidence_audit.jsonl"
 
 # The real base: sentence 2 below is copied VERBATIM from the actual
 # generated_field.text in research/prototype/outputs/run_C_targeted_1994_495.jsonl
@@ -98,13 +96,21 @@ def real_config() -> dict:
 
 
 @pytest.fixture(scope="module")
-def real_evidence_pool():
-    """Read-only load of the real, unmodified 59-record usable evidence
-    pool. Nothing is written to research/data/evidence/ anywhere in this
-    file."""
-    exact_index, all_usable = load_usable_evidence(
-        CANONICAL_PATH, AUDIT_PATH, {"VERIFIED_EXACT", "VERIFIED_CONTENT"}
-    )
+def real_evidence_pool(real_config):
+    """Read-only load of the real, unmodified usable evidence pool — via
+    `load_usable_evidence_from_config`, honoring `real_config`'s own
+    `use_evidence_v1` setting exactly as production does, rather than a
+    hardcoded v0-only call. (Fixed: this fixture previously always loaded
+    only the 59-record v0 pool regardless of what `real_config` said,
+    while `real_config` is the actual shipped `config/prototype.yaml`,
+    whose production default is `use_evidence_v1: true` — a 136-record
+    pool. Every "real integration" test in this file was therefore
+    exercising the correction/reverification/scope-violation path against
+    an evidence pool production never actually uses; a matching bug
+    specific to the v1 supplement's records could have passed this entire
+    file undetected.) Nothing is written to research/data/evidence/
+    anywhere in this file."""
+    exact_index, all_usable = load_usable_evidence_from_config(real_config, REPO_ROOT)
     return exact_index, all_usable
 
 
@@ -336,3 +342,98 @@ def test_scope_violation_protection_when_corrector_alters_unflagged_claim(
     assert record["final_field"]["text"] == corrupted_text
     assert _REAL_UNFLAGGED_SENTENCE in record["final_field"]["text"]
     assert _ALTERED_UNFLAGGED_SENTENCE not in record["final_field"]["text"]
+
+
+# ---------------------------------------------------------------------------
+# Truncation-detection instrumentation (measurement infrastructure, not live
+# behavior) — must reflect the REAL tokenizer's actual truncation behavior,
+# not an assumption about it.
+# ---------------------------------------------------------------------------
+
+def test_input_truncated_flag_false_for_a_normal_length_pair(real_verifier):
+    """A realistic premise+hypothesis pair, well under
+    max_sequence_length (512), must report input_truncated=False."""
+    result = real_verifier.verify(
+        premise="Whoever commits murder shall be punished with death, or imprisonment "
+                "for life, and shall also be liable to fine.",
+        hypothesis="Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder.",
+    )
+    assert result.input_truncated is False
+
+
+def test_input_truncated_flag_true_when_pair_exceeds_max_sequence_length(real_verifier):
+    """(real, reproduced instrumentation gap — fixed) Before this fix,
+    NLIVerifier.verify() had no way to report that HF's pair-truncation
+    silently cut content from the input — a verdict computed from a
+    truncated premise looked identical, in the output record, to one
+    computed from the full text. Uses the REAL cached DeBERTa tokenizer
+    (via real_verifier, not a mock) so this proves actual truncation
+    behavior, not an assumed one: a premise long enough that the combined
+    pair genuinely exceeds max_sequence_length must report
+    input_truncated=True. This is currently inert against the real 136
+    -record evidence corpus (see verifier.py's VerificationResult
+    docstring) — this test constructs the exceeding-length case directly
+    rather than waiting for a future corpus record to happen to trigger it."""
+    long_premise = (
+        "Whoever commits murder shall be punished with death or life imprisonment. "
+        * 50
+    )
+    result = real_verifier.verify(
+        premise=long_premise,
+        hypothesis="Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder.",
+    )
+    assert result.input_truncated is True
+    # Sanity check on the model call itself: it must still have run (never
+    # skipped or errored just because truncation occurred) and produced a
+    # normal, well-formed verdict.
+    assert result.label in (ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION)
+
+
+# ---------------------------------------------------------------------------
+# Negation safety gate: a negated claim must not silently drive an automatic
+# "correction" into an affirmative rewrite, using the REAL verifier — not a
+# scripted one — so the CONTRADICTED verdict driving this test is a genuine
+# model output, not asserted by construction.
+# ---------------------------------------------------------------------------
+
+def test_negated_claim_reaches_contradicted_via_real_verifier_but_never_triggers_correction(
+    real_evidence_pool, real_verifier, real_config
+):
+    """(real, reproduced cross-component safety gap — fixed) A negated claim
+    ("Neither Section 302 nor Section 304 ... applies to this case.") reaches
+    CONTRADICTED at very high confidence against the REAL DeBERTa verifier
+    and real IPC evidence — empirically confirmed during this session's
+    adversarial claim-parser audit, and reconfirmed here. Before the
+    negation-safety gate, CONTRADICTED always triggered automatic
+    correction, which could rewrite a claim that correctly, truthfully
+    asserts a NEGATIVE legal conclusion into an affirmative one. A
+    NoCallCorrector that raises if ever invoked proves the gate actually
+    prevents the correction ATTEMPT (not just its outcome) — the claim's own
+    CONTRADICTED verdict remains fully visible in the claim record for
+    manual review; only the automatic rewrite is suppressed."""
+    exact_index, all_usable = real_evidence_pool
+    negated_text = (
+        "Neither Section 302 nor Section 304 of the Indian Penal Code, 1860 "
+        "applies to this case."
+    )
+
+    class NoCallCorrector:
+        def correct(self, *args, **kwargs):
+            raise AssertionError(
+                "corrector.correct() must never be called for a negation-flagged claim"
+            )
+
+    case = _case()
+    generator = FakeGenerator(negated_text, real_config["generation"]["model_id"])
+    record = run_case(
+        case, "C", generator, real_verifier, NoCallCorrector(),
+        exact_index=exact_index, all_usable=all_usable, config=real_config,
+    )
+
+    claim = next(c for c in record["claims"] if c["citation_extracted"]["provision_number"] == "302")
+    assert claim["verdict"] == CONTRADICTED  # genuine real-model verdict, unchanged
+    assert claim["negation_contradiction_caveat"] is True
+    assert record["correction"]["status"] == "not_triggered"
+    assert record["correction"]["triggered_for_claim_id"] is None
+    assert record["final_field"]["source"] == "original"
+    assert record["final_field"]["text"] == negated_text

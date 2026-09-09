@@ -27,7 +27,7 @@ from src.claim_parser import (
     normalize_act,
 )
 from src.data_loader import EvidenceRecord
-from src.evidence_matcher import match_evidence
+from src.evidence_matcher import match_evidence, _act_years
 
 
 def _make_evidence(provision_type, provision_number, act, subsection=None, text="dummy text"):
@@ -152,28 +152,27 @@ def test_same_section_number_three_way_split_across_acts():
 # ---------------------------------------------------------------------------
 
 def test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act():
-    """CONFIRMED LATENT LIMITATION, surfaced by this exact test during the
-    2026-08-27 independent audit (see outputs/evidence_v1_independent_audit.md
-    -- "fuzzy matching is year-blind"): exact-key matching correctly keeps
-    act_norm "income tax act 1961" distinct from "income-tax act 2025" (the
-    year IS part of the exact index key). But `act_significant_words()`
-    tokenizes with `re.findall(r"[a-z']+", act_norm)`, which drops digits
-    entirely -- so BOTH act names reduce to the identical significant-word
-    set {"income", "tax"} and the FUZZY fallback (overlap 1.0) matches them
-    anyway. This is a real, generalizable gap: any two same-named editions
-    of an Act that differ ONLY by year can fuzzy-cross-match. Not fixed in
-    this pass (a shared-code change to evidence_matcher.py's token-overlap
-    semantics is out of the "narrow, isolated, safe" bar for an in-session
-    fix -- it would retroactively change every historical fuzzy-matched
-    claim's behaviour and needs its own dedicated validation run). This test
-    exists to PIN the current, confirmed behaviour so a future fix is
-    validated against a known baseline, and so this gap cannot silently
-    regress further (e.g. by someone loosening the threshold) without a
-    test failing to draw attention to it. No live collision currently
-    exists in the shipped 136-record v0+v1 corpus (no two same-named,
-    different-year Acts share a provision_type+provision_number there
-    today) -- this is a latent risk for future corpus growth, not an
-    observed production error."""
+    """FIXED (2026-09-07; was a confirmed, tested, unfixed latent limitation
+    -- see outputs/evidence_v1_independent_audit.md §5, "fuzzy matching is
+    year-blind"). exact-key matching correctly keeps act_norm "income tax
+    act 1961" distinct from "income-tax act 2025" (the year IS part of the
+    exact index key). `act_significant_words()` tokenizes with
+    `re.findall(r"[a-z']+", act_norm)`, which drops digits entirely -- so
+    BOTH act names reduce to the identical significant-word set {"income",
+    "tax"} and, absent a dedicated check, the FUZZY fallback (overlap 1.0)
+    would match them anyway. evidence_matcher.match_evidence() now vetoes
+    any fuzzy candidate whose act_norm names an explicit year that
+    conflicts with the claim's own explicit year (see `_year_conflict`) --
+    this closes the gap while leaving the legitimate year-OMISSION fuzzy
+    path untouched (see
+    test_year_omission_still_fuzzy_matches_when_claim_states_no_year below).
+    No live collision existed in the shipped 136-record v0+v1 corpus before
+    this fix (confirmed by
+    test_no_cross_act_fuzzy_collision_risk_anywhere_in_expanded_corpus), so
+    no historical committed output is affected -- this only changes
+    behaviour for a future citation that explicitly states a conflicting
+    year, which previously risked a false match and now correctly falls
+    through to NO_EVIDENCE."""
     it1961_4 = _make_evidence("Section", "4", "The Income Tax Act, 1961",
                                text="1961-Act charge-of-tax text.")
     exact_index, all_usable = _pool(it1961_4)
@@ -184,11 +183,12 @@ def test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act():
     )
     # Exact-key identity correctly differs...
     assert citation_2025.act_norm != it1961_4.act_norm
-    # ...but the fuzzy fallback currently does not respect that difference,
-    # because act_significant_words() strips all digits (including years).
+    # ...and the fuzzy fallback now also respects that difference: both
+    # sides state an explicit year (2025 vs 1961) and they conflict, so the
+    # year-conflict veto fires regardless of the 1.0 word-overlap score.
     result = match_evidence(citation_2025, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
-    assert result.matched is True
-    assert result.match_method == "fuzzy"
+    assert result.matched is False
+    assert result.match_method == "no_evidence"
 
     # The 1961 citation still matches its own evidence via the stronger,
     # year-aware exact path.
@@ -199,6 +199,29 @@ def test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act():
     result_1961 = match_evidence(citation_1961, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
     assert result_1961.matched is True
     assert result_1961.match_method == "exact_normalized"
+
+
+def test_year_omission_still_fuzzy_matches_when_claim_states_no_year():
+    """The year-conflict veto must NOT break the legitimate, intentional
+    year-OMISSION fuzzy path: a claim that never states an Act's year at
+    all (e.g. because the generator wrote a short form with no year, and no
+    alias resolved one) must still be able to fuzzy-match a corpus record
+    that does state a year, exactly as before this fix -- `_year_conflict`
+    only fires when BOTH sides name an explicit year and they differ; a
+    side with zero years is never in conflict with anything."""
+    arms1959_25f = _make_evidence("Section", "25F", "The Arms Act, 1959",
+                                   text="Arms Act 1959 licensing text.")
+    exact_index, all_usable = _pool(arms1959_25f)
+
+    citation_no_year = ExtractedCitation(
+        provision_type="Section", provision_number="25F", subsection=None,
+        act_raw="the Arms Act", act_norm=normalize_act("the Arms Act"),
+    )
+    assert _act_years(citation_no_year.act_norm) == set()
+    result = match_evidence(citation_no_year, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
+    assert result.matched is True
+    assert result.match_method == "fuzzy"
+    assert result.evidence.canonical_text == "Arms Act 1959 licensing text."
 
 
 def test_year_edition_land_acquisition_act_central_vs_state_variant():
@@ -425,3 +448,99 @@ def test_ambiguous_unresolved_citation_never_reaches_match_evidence_as_a_false_m
     result = match_evidence(unresolved_citation, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
     assert result.matched is False
     assert result.match_method == "no_evidence"
+
+
+# ---------------------------------------------------------------------------
+# 8. Bare trailing-abbreviation citations ("Section 100 CrPC", no "in"/"of"
+#    connector) — added 2026-09-07 after finding this is a real, currently
+#    generated citation shape (verbatim in this project's own committed
+#    output: "Section 147 IPC", "Section 100 CrPC", "Section 302, IPC", ...)
+#    that neither the full-form nor bare-act-mention grammar recognized as
+#    act-bearing, and which could previously mis-resolve via
+#    extract_claims()'s field-wide "single act" fallback to a WRONG,
+#    unrelated act stated elsewhere in the same field — exactly the
+#    CrPC-vs-CPC-Section-100 confusion category this file already treats as
+#    a known risk, from a different root cause than the wrong-Act group
+#    above covers.
+# ---------------------------------------------------------------------------
+
+def test_trailing_abbrev_bare_citation_resolves_to_correct_act_not_a_sibling_acts_act():
+    """Real, previously-mis-resolving shape: a field states one citation in
+    full form (Indian Evidence Act) and a LATER citation using only a bare
+    trailing abbreviation (CrPC) with no connector of its own. Before this
+    fix, the CrPC citation's act stayed unresolved at the sentence level and
+    then wrongly inherited the Evidence Act via extract_claims()'s
+    single-distinct-act-in-field fallback — a genuine cross-Act
+    mis-attribution, not merely a missed match. It must now resolve to CrPC,
+    its own actually-written act, and must never match the Evidence Act's
+    evidence record for the same provision number."""
+    evidence_act_100 = _make_evidence("Section", "100", "The Indian Evidence Act, 1872",
+                                       text="Evidence Act Section 100 text (should never be used here).")
+    crpc_100 = _make_evidence("Section", "100", "The Code of Criminal Procedure, 1973",
+                               text="CrPC Section 100 search-and-seizure text.")
+    exact_index, all_usable = _pool(evidence_act_100, crpc_100)
+
+    text = "The case concerns Section 32 of the Indian Evidence Act, 1872. Section 100 CrPC also applies."
+    claims = extract_claims(text)
+    crpc_claim = [c for c in claims if c.citation_extracted.provision_number == "100"]
+    assert len(crpc_claim) == 1
+    citation = crpc_claim[0].citation_extracted
+    assert citation.act_norm == normalize_act("CrPC") == "code of criminal procedure 1973"
+
+    result = match_evidence(citation, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
+    assert result.matched is True
+    assert result.evidence.canonical_text == "CrPC Section 100 search-and-seizure text."
+
+
+def test_trailing_abbrev_ipc_crpc_cpc_each_resolve_distinctly_with_no_connector():
+    for abbrev, expected_norm in (
+        ("IPC", "indian penal code 1860"),
+        ("CrPC", "code of criminal procedure 1973"),
+        ("CPC", "code of civil procedure 1908"),
+    ):
+        sentence = f"Section 100 {abbrev} governs the matter at hand."
+        claims = extract_claims(sentence)
+        assert len(claims) == 1, abbrev
+        assert claims[0].citation_extracted.act_norm == expected_norm, abbrev
+
+
+def test_trailing_abbrev_comma_separated_variant_also_resolves():
+    """Real generated prose uses both "Section 302 IPC" and "Section 302,
+    IPC" for the identical citation shape — both must resolve the same
+    way."""
+    for sentence in (
+        "Section 302 IPC prescribes punishment for murder.",
+        "Section 302, IPC prescribes punishment for murder.",
+    ):
+        claims = extract_claims(sentence)
+        assert len(claims) == 1
+        assert claims[0].citation_extracted.act_norm == "indian penal code 1860"
+
+
+def test_trailing_abbrev_applies_to_every_number_in_a_bundled_list():
+    """"Sections 147, 323, 302, and 34 IPC" — the trailing abbreviation
+    applies to the WHOLE preceding number list, not just the last number."""
+    sentence = "Sections 147, 323, 302, and 34 IPC are all invoked in this matter."
+    claims = extract_claims(sentence)
+    assert {c.citation_extracted.provision_number for c in claims} == {"147", "323", "302", "34"}
+    assert all(c.citation_extracted.act_norm == "indian penal code 1860" for c in claims)
+
+
+def test_trailing_abbrev_never_fires_on_an_unrelated_trailing_word():
+    """A bare citation with no trailing abbreviation and no other
+    same-sentence/field-wide resolvable act must still correctly stay
+    unresolved — this fix must never turn into "assume IPC by default"."""
+    sentence = "Section 100 empowers the police to conduct searches without a warrant."
+    claims = extract_claims(sentence)
+    assert len(claims) == 1
+    assert claims[0].citation_extracted.act_norm == ""
+
+
+def test_trailing_abbrev_does_not_match_a_word_that_merely_starts_with_it():
+    """A word boundary is required after the abbreviation token — a
+    (synthetic, adversarial) trailing word that merely starts with "IPC"
+    must not be misread as the abbreviation."""
+    sentence = "Section 100 IPCwatch was mentioned by a witness."
+    claims = extract_claims(sentence)
+    assert len(claims) == 1
+    assert claims[0].citation_extracted.act_norm == ""

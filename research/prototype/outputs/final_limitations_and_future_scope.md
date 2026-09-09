@@ -126,10 +126,15 @@ professionally verified. This means:
 
 - 39% of v1's 82 records (32) remain unverified beyond build-time provenance (rate-limited by the
   source site this session, not abandoned).
-- A confirmed, tested, **unfixed** latent limitation: fuzzy evidence matching is year-blind
-  (`act_significant_words()` strips digits, so same-named Acts differing only by year can
-  fuzzy-cross-match) — not currently triggered in the live 136-record corpus, but a real
-  architectural gap for future corpus growth.
+- A confirmed, tested, ~~unfixed~~ **fixed 2026-09-07** latent limitation: fuzzy evidence matching
+  was year-blind (`act_significant_words()` strips digits, so same-named Acts differing only by
+  year could fuzzy-cross-match) — not triggered in the live 136-record corpus at the time this was
+  written (so no historical output changed), but a real architectural gap for future corpus growth.
+  `evidence_matcher.match_evidence()` now vetoes a fuzzy candidate whenever both the claim's and the
+  candidate's `act_norm` name an explicit, conflicting year (`_year_conflict`); the legitimate
+  year-omission fuzzy path (one side states no year) is untouched. See
+  `tests/test_adversarial_citations.py::test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act`
+  (now pins the fixed behaviour) and `::test_year_omission_still_fuzzy_matches_when_claim_states_no_year`.
 - 140 (53.8% of all NO_EVIDENCE claims with a citation) are genuine corpus-coverage gaps — the
   corpus does not have every provision Qwen cites, and closing this requires more evidence
   records, not code changes.

@@ -23,7 +23,14 @@ from src.claim_parser import (
     split_sentences,
 )
 from src.data_loader import EvidenceRecord, load_usable_evidence, load_usable_evidence_from_config
-from src.evidence_matcher import match_evidence
+from src.evidence_matcher import (
+    match_evidence,
+    classify_no_evidence,
+    UNRESOLVED_ACT,
+    GENUINELY_ABSENT_NO_SUCH_PROVISION,
+    GENUINELY_ABSENT_WRONG_ACT_OR_EDITION,
+    PARSER_OR_MATCHER_DEFECT_CANDIDATE,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 CANONICAL_PATH = REPO_ROOT / "research/data/evidence/canonical_statutes.jsonl"
@@ -546,6 +553,66 @@ def test_evidence_matcher_returns_no_evidence_when_nothing_matches(synthetic_poo
     assert result.match_method == "no_evidence"
 
 
+def test_classify_no_evidence_unresolved_act():
+    """A citation whose act could not be resolved at all (act_norm=="")
+    must classify as unresolved_act — a parser-side limitation, never
+    confused with a genuine corpus-coverage gap."""
+    citation = ExtractedCitation(
+        provision_type="Section", provision_number="100", subsection=None,
+        act_raw=None, act_norm="",
+    )
+    assert classify_no_evidence(citation, all_usable=[], fuzzy_token_overlap_threshold=0.8) == UNRESOLVED_ACT
+
+
+def test_classify_no_evidence_no_such_provision_any_act(synthetic_pool):
+    """A resolved act, but no record for this exact (provision_type,
+    provision_number) exists under ANY act in the corpus -> a pure
+    coverage gap."""
+    _, all_usable = synthetic_pool
+    citation = ExtractedCitation(
+        provision_type="Section", provision_number="999999", subsection=None,
+        act_raw="The Indian Penal Code, 1860", act_norm=normalize_act("The Indian Penal Code, 1860"),
+    )
+    assert classify_no_evidence(citation, all_usable, fuzzy_token_overlap_threshold=0.8) == (
+        GENUINELY_ABSENT_NO_SUCH_PROVISION
+    )
+
+
+def test_classify_no_evidence_wrong_act_or_edition():
+    """The provision number exists under a DIFFERENT act with LOW (<0.5)
+    name overlap (correctly unmatched by match_evidence) ->
+    wrong_act_or_edition, not a defect candidate. Mirrors the real
+    corpus-derived near-zero-overlap shape from
+    test_same_section_number_three_way_split_across_acts (IPC vs
+    Arbitration Act, 1940 -- share zero significant words)."""
+    ipc34 = _make_evidence("Section", "34", "The Indian Penal Code, 1860", text="x")
+    citation = ExtractedCitation(
+        provision_type="Section", provision_number="34", subsection=None,
+        act_raw="the Arbitration Act, 1940", act_norm=normalize_act("the Arbitration Act, 1940"),
+    )
+    assert classify_no_evidence(citation, [ipc34], fuzzy_token_overlap_threshold=0.8) == (
+        GENUINELY_ABSENT_WRONG_ACT_OR_EDITION
+    )
+
+
+def test_classify_no_evidence_parser_or_matcher_defect_candidate():
+    """The provision number exists under an act with SUBSTANTIAL but
+    sub-threshold overlap (0.5 <= overlap < 0.8) -> flagged as a defect
+    CANDIDATE (worth manual review), distinct from a confirmed different
+    act. Mirrors the real corpus shape used in
+    test_evidence_matcher_year_edition_collision_stays_unmatched (0.75
+    overlap, below the 0.8 threshold)."""
+    itax_1961 = _make_evidence("Section", "8", "The Income Tax Act, 1961", text="x")
+    citation = ExtractedCitation(
+        provision_type="Section", provision_number="8", subsection=None,
+        act_raw="The Indian Income Tax Act, 1922",
+        act_norm=normalize_act("The Indian Income Tax Act, 1922"),
+    )
+    assert classify_no_evidence(citation, [itax_1961], fuzzy_token_overlap_threshold=0.8) == (
+        PARSER_OR_MATCHER_DEFECT_CANDIDATE
+    )
+
+
 def test_evidence_matcher_same_section_number_different_acts_no_collision():
     """Two evidence records can share the same provision_type/number as
     long as their acts differ (e.g. Section 302 exists in both the IPC and
@@ -811,3 +878,65 @@ def test_no_cross_act_fuzzy_collision_risk_anywhere_in_expanded_corpus():
                     violations.append((ptype, pnum, acts[i], acts[j], overlap))
 
     assert violations == [], f"cross-act fuzzy-collision risk found: {violations}"
+
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_no_exact_key_duplicates_anywhere_in_expanded_corpus():
+    """evidence_matcher.match_evidence()'s exact-index lookup and its
+    docstring both assume k=1: no two usable records share the exact same
+    (provision_type, provision_number, subsection, act_norm) key (if they
+    did, `exact_index` — a plain dict — would silently keep only the LAST
+    one loaded, an arbitrary and undocumented tie-break with no ranking
+    logic behind it). Checked against the REAL v0+v1 corpus, not asserted
+    from the v0-only audit history this assumption was originally based
+    on — a bigger corpus is exactly where a stale assumption like this
+    would first go stale."""
+    import yaml
+    config = yaml.safe_load((REPO_ROOT / "research/prototype/config/prototype.yaml").read_text(encoding="utf-8"))
+    config["use_evidence_v1"] = True
+    _, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+
+    from collections import defaultdict
+    by_key = defaultdict(list)
+    for e in all_usable:
+        by_key[(e.provision_type, e.provision_number, e.subsection, e.act_norm)].append(e)
+    dups = {k: v for k, v in by_key.items() if len(v) > 1}
+    assert dups == {}, f"exact-key duplicates found (k=1 assumption violated): {list(dups.keys())}"
+
+
+@pytest.mark.skipif(not CANONICAL_V1_PATH.exists() or not AUDIT_V1_PATH.exists(),
+                     reason="v1 evidence supplement not built")
+def test_no_subsection_loose_fallback_collision_risk_anywhere_in_expanded_corpus():
+    """match_evidence()'s subsection-loose fallback (a claim citing
+    'Section 25F(1)' also matches a corpus record for base 'Section 25F'
+    with no subsection, and vice versa) is safe ONLY as long as no single
+    (provision_type, provision_number, act_norm) group in the corpus holds
+    TWO OR MORE DIFFERENT non-null subsections — otherwise a citation for
+    one specific subsection could, in principle, resolve to a DIFFERENT
+    subsection's record via the loose key rather than its own (the loose
+    key drops subsection entirely, so it cannot distinguish between them).
+    Checked against the REAL v0+v1 corpus: currently zero such groups
+    exist, so the loose fallback poses no live collision risk today — this
+    pins that fact so a future corpus addition introducing a second
+    subsection under an already-subsectioned provision cannot silently
+    reintroduce it without a test failing to draw attention to it (the
+    same 'confirmed safe today, latent risk for future corpus growth'
+    category as the evidence-matcher year-blindness gap fixed this
+    session, before that fix — not currently a bug, a documented gap this
+    pins against silent regression)."""
+    import yaml
+    config = yaml.safe_load((REPO_ROOT / "research/prototype/config/prototype.yaml").read_text(encoding="utf-8"))
+    config["use_evidence_v1"] = True
+    _, all_usable = load_usable_evidence_from_config(config, REPO_ROOT)
+
+    from collections import defaultdict
+    by_base = defaultdict(set)
+    for e in all_usable:
+        if e.subsection is not None:
+            by_base[(e.provision_type, e.provision_number, e.act_norm)].add(e.subsection)
+    multi_subsection = {k: v for k, v in by_base.items() if len(v) > 1}
+    assert multi_subsection == {}, (
+        f"multiple distinct subsections found under the same base provision "
+        f"(subsection-loose-fallback collision risk): {multi_subsection}"
+    )

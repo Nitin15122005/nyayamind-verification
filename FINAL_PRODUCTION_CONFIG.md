@@ -156,6 +156,23 @@ benefit (unblocking legitimate bundled-sentence edits), and an independent safet
 for the residual risk. This does not weaken any safety gate — it changes what counts as "in
 scope" for the check, and the ENTAILED-only shipping gate is untouched.
 
+**Update 2026-09-08 — a real gap found and fixed in the containment mechanics itself, not the
+above decision.** `pipeline._scope_violation()`'s `assertion_spans` check used plain Python `in`
+substring containment. A bare provision-number fragment (`claim_parser._bare_number_span`, used for
+the "respectively" pattern — e.g. the flagship sentence's own "34") is trivially "present" inside
+an unrelated, unauthorized "134" — so a corrector silently changing an UNFLAGGED sibling's own
+section number (e.g. 34 → 134) could ship undetected: reproduced concretely, and confirmed that
+`_reverify_sibling_regressions` (§4's safety net) does **not** catch it either, since it explicitly
+skips a sibling whose citation no longer re-extracts at all, assuming (incorrectly, in this one
+case) the scope check had already rejected it. Fixed via `_fragment_present()`, which anchors a
+`\b` word-boundary at whichever end of a fragment is itself a word character — this only tightens
+the check (a genuine, honestly-preserved verbatim fragment always already sits at a real
+word/punctuation boundary), never loosens it. This was never observed in any committed real-data
+run (like the evidence-matcher year-blindness gap, this is a theoretical/adversarially-discovered
+class of gap, not a retroactive finding against the "0 unsafe corrections shipped" observation
+above) — no historical output is affected. See
+`tests/test_pipeline_mock.py::test_assertion_spans_catches_sibling_provision_number_changed_to_a_superstring`.
+
 ---
 
 ## 4. `correction.narrow_reverification_hypothesis`: false → **true**
@@ -227,6 +244,64 @@ it functions correctly: every case where a corrector's edit disturbed a claim's 
 correctly produced `correction_failed` with `reverification: null` (the "citation identity lost"
 failure category — see `outputs/final_gpu_validation.md` §4), never a false ship.
 
+**Update 2026-09-08 — a real gap found and fixed in the ordinal-matching mechanics themselves,
+found during a multi-agent adversarial hardening campaign.** The ordinal-position scheme above
+relies on an invariant the scope check never actually enforced: that same-citation-identity
+siblings keep their *relative order* in the corrected text, not just their presence somewhere in
+it. Reproduced concretely: two claims sharing one citation, the corrector's output reorders them
+(the newly-corrected one moved ahead of the untouched sibling) — every unflagged claim's text
+still appeared verbatim (the scope check passed), but "the Nth same-identity claim in reading
+order" no longer denoted the same claim slot it did in the baseline, so the replacement lookup
+silently grabbed the untouched sibling's own original sentence and shipped `status="corrected"`
+with a genuine-looking ENTAILED confirmation that was never computed against the real edit at
+all — a **fabricated safety confirmation**, strictly worse than an honest rejection. Fixed via an
+ordinal-integrity check (`apply_selective_correction`, new status
+`correction_ordinal_ambiguous`): if the selected "replacement" is byte-identical to some *other*
+same-identity claim's own original baseline text, the ordinal slot is untrusted and the correction
+is rejected rather than shipped. See
+`tests/test_pipeline_mock.py::test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected`.
+
+**Also fixed in the same pass:** (a) a corrector hallucinating a brand-new, never-requested
+citation (alongside a genuinely correct fix to the flagged claim, or by swapping the flagged
+claim's own citation for a different provision) previously shipped undetected — `_scope_violation`
+only verified *existing* unflagged claims survive, with no concept of "no new citation may be
+introduced"; fixed via a new `correction_unauthorized_addition` status
+(`tests/test_pipeline_mock.py::test_correction_hallucinating_an_extra_new_citation_is_rejected_not_shipped`).
+(b) `_reverify_sibling_regressions()` previously re-checked *every* unflagged sibling
+indiscriminately, including one that was already independently CONTRADICTED in the *baseline* (a
+pre-existing failure the correction attempt never touched — only the first flagged claim in a
+field is ever targeted) — mislabeling an otherwise-successful correction as
+`correction_sibling_regression` and conflating "my edit broke something" with "something else was
+already broken." Fixed by excluding already-independently-flagged siblings from this check
+(`tests/test_pipeline_mock.py::test_sibling_regression_check_excludes_a_pre_existing_independently_flagged_sibling`).
+
+---
+
+## 7a. Negation safety gate — new, 2026-09-08
+
+Empirically confirmed (real `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`, real IPC evidence,
+during the same hardening campaign's adversarial claim-parser audit): a negated statutory claim
+("Neither Section 302 nor Section 304 of the Indian Penal Code, 1860 applies to this case.")
+reaches CONTRADICTED at 0.998 confidence, while the identical legal content phrased affirmatively
+reaches ENTAILED at 0.896 against the same premise — a well-documented general NLI weakness
+(negation-word/contradiction spurious correlation), not something any premise-construction change
+can repair in a fixed pretrained model. This matters because CONTRADICTED always triggered
+automatic correction: unmitigated, the pipeline could rewrite a claim that correctly, truthfully
+asserts a *negative* legal conclusion (e.g. explaining why a lesser charge applies instead) into an
+affirmative statement — which, if the rewrite happened to re-verify ENTAILED, would ship a claim
+asserting the *opposite* of what may have been true. Fixed via a narrow, lexical negation-marker
+check (`pipeline._NEGATION_MARKER_RE` — "neither...nor", "does/do/did not apply",
+"is/are/was/were not applicable", "no longer applies/applicable", "not applicable"): a
+CONTRADICTED verdict matching one of these patterns is excluded from the automatic
+correction-trigger list (a new `negation_contradiction_caveat` claim-record field marks this) —
+the verdict/confidence themselves are left fully untouched and visible for manual review; only the
+automatic rewrite attempt is suppressed. Confirmed via both a real-model test
+(`tests/test_correction_path_real_integration.py::test_negated_claim_reaches_contradicted_via_real_verifier_but_never_triggers_correction`,
+using a corrector that raises `AssertionError` if ever invoked, proving the attempt itself is
+suppressed) and a mock-based wiring test. This is a narrow, deterministic safety gate on the
+correction *trigger*, not a threshold/calibration change — no NLI threshold was touched, and this
+never widens what counts as ENTAILED/CONTRADICTED/NO_EVIDENCE for any other claim.
+
 ---
 
 ## 8. What would justify a *different* answer
@@ -248,6 +323,8 @@ failure category — see `outputs/final_gpu_validation.md` §4), never a false s
 - `tests/test_premise_framing_production.py::test_shipped_config_can_still_reproduce_every_pre_2026_08_27_committed_output`
   — asserts the pre-2026-08-27 combination (all four flags at their old values) still resolves
   correctly through the same production code path, so historical outputs remain reproducible.
-- `tests/test_adversarial_citations.py` (15 tests, new this session) — locks the citation
-  parsing/evidence-matching behavior this configuration relies on, including the one confirmed
-  latent limitation (fuzzy matching is year-blind) so it cannot silently worsen.
+- `tests/test_adversarial_citations.py` (15 tests, 2026-08-27) — locks the citation
+  parsing/evidence-matching behavior this configuration relies on. Its one confirmed latent
+  limitation (fuzzy matching was year-blind) was fixed 2026-09-07 in `evidence_matcher.py`
+  (`_year_conflict` veto); the test suite now pins the fixed, safer behavior (17 tests in that
+  file) instead of merely pinning the known gap.

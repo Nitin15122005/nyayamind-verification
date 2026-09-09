@@ -183,7 +183,31 @@ missed matches.
 
 ---
 
-## 5. Adversarial test suite (`tests/test_adversarial_citations.py`, 15 tests, all passing)
+## 5. Adversarial test suite (`tests/test_adversarial_citations.py`, originally 15 tests, all passing)
+
+**Addendum, 2026-09-07 — a genuine, currently-live mis-attribution bug found and fixed (not
+present in the original 15 tests below, discovered during a later improvement pass).** Real
+generated output uses a bare-abbreviation citation shape with no "in"/"of" connector at all —
+"Section 302 IPC", "Section 100 CrPC", "Section 302, IPC" — confirmed verbatim in this project's
+own committed generation history (`outputs/final_gpu_validation_A.jsonl`,
+`outputs/run_A_n30.jsonl`, others). Neither the full-form citation grammar (requires "in"/"of")
+nor the bare-Act-mention grammar (requires an "Act"/"Code"/... suffix WORD, which a bare acronym
+is not) recognized this as act-bearing, so the citation's act stayed unresolved at the sentence
+level and fell through to `extract_claims()`'s field-wide "exactly one distinct act elsewhere in
+the field" fallback. That fallback could then actively mis-attribute the citation to a
+**different, unrelated Act** stated elsewhere in the same field — reproduced concretely with "...
+Section 32 of the Indian Evidence Act, 1872. Section 100 CrPC also applies.", where the CrPC
+citation previously resolved to `"indian evidence act 1872"`. This is exactly the
+CrPC-vs-CPC-Section-100 confusion category the table below already treats as a known adversarial
+risk, surfacing from a different root cause (a missing act-recognition rule, not act-name textual
+similarity) than the tests below cover. Fixed in `src/claim_parser.py` (`_TRAILING_ABBREV_RE`): a
+bare citation immediately followed by one of the three already-trusted, already-tested single-token
+aliases in `_KNOWN_ACT_ALIASES` (`IPC`/`CrPC`/`CPC`) now resolves directly to that act, taking
+priority over the less-specific field-wide fallback — this never invents a new alias, it only wires
+an already-trusted one into a real-world position the parser previously ignored. 6 new regression
+tests added (`tests/test_adversarial_citations.py`, "Bare trailing-abbreviation citations" group),
+including the exact mis-attribution reproduction above and a negative test that an unrelated
+trailing word never gets treated as an act.
 
 | Category | Tests | Key finding |
 |---|---:|---|
@@ -195,20 +219,30 @@ missed matches.
 | Multi-Act | 2 | Bundled sentences citing 2–3 different Acts keep every citation's act clean and independently resolvable |
 | Ambiguous | 2 | Same provision number resolving to 2+ different Acts elsewhere in a field is correctly left unresolved, never guessed |
 
-**Confirmed latent limitation — fuzzy matching is year-blind
+**Confirmed latent limitation — fuzzy matching was year-blind
 (`test_year_edition_income_tax_act_1961_vs_hypothetical_2025_act`).** `evidence_matcher`'s exact-key
 path correctly distinguishes `"income tax act 1961"` from `"income-tax act 2025"` (year is part of
 the exact index key). But the **fuzzy fallback**'s `act_significant_words()` tokenizes with
 `re.findall(r"[a-z']+", act_norm)`, which drops all digits — so two same-named Acts differing only
-by year reduce to an identical significant-word set and can fuzzy-match each other. **Not fixed in
-this pass**: this is a shared-code change to `evidence_matcher.py`'s core token-overlap semantics,
-which would retroactively change every historical fuzzy-matched claim's behavior across every
-already-committed evaluation in this project — outside this audit's "narrow, isolated, safe fix"
-bar, and it needs its own dedicated validation run, not a same-session patch. **No live collision
-currently exists** in the shipped 136-record corpus (no two same-named, different-year Acts share
-a provision_type+provision_number there today) — this is a latent risk for future corpus growth,
-now protected by a permanent regression test so it cannot silently worsen and is ready as
-scoped, tested groundwork for a future fix.
+by year reduced to an identical significant-word set and could fuzzy-match each other. **Not fixed
+in this pass** (see above at the time this was written) since it read as a shared-code change to
+`evidence_matcher.py`'s core token-overlap semantics that would need its own dedicated validation
+run. **No live collision existed** in the shipped 136-record corpus at that time (no two
+same-named, different-year Acts shared a provision_type+provision_number there), so this was a
+latent risk for future corpus growth rather than an active production error.
+
+**Update 2026-09-07 — fixed.** `evidence_matcher.match_evidence()` now computes each side's
+explicit year(s) directly from `act_norm` (`_act_years`) and vetoes a fuzzy candidate whenever both
+the claim and the candidate name an explicit year and those years are disjoint (`_year_conflict`) —
+this is a narrow addition to the fuzzy-candidate filter, not a change to `act_significant_words()`
+or the token-overlap score itself, so it does not touch any other matching decision. The legitimate
+year-*omission* fuzzy path (a claim that states no year at all, e.g. "the Arms Act" with no alias
+supplying one) is deliberately untouched — the veto only fires when both sides state a year.
+Confirmed via `test_no_cross_act_fuzzy_collision_risk_anywhere_in_expanded_corpus` (the corpus-wide
+regression test referenced above) that no historical fuzzy match in the live corpus is affected;
+the fix only changes behavior for a future citation that states an explicitly conflicting year,
+which now correctly falls through to `NO_EVIDENCE` instead of risking a false match. See
+`tests/test_adversarial_citations.py` (now 17 tests in that file, up from 15).
 
 ---
 
@@ -221,8 +255,8 @@ scoped, tested groundwork for a future fix.
    has not been independently confirmed. Re-fetching stopped at 41/82 after `indiankanoon.org`
    began returning HTTP 429 (rate limit) — a session/tooling constraint, not a decision to stop
    early.
-2. **The fuzzy year-blindness limitation (§5)** is confirmed and tested but not fixed — a
-   real, if currently inert, gap in the matching algorithm.
+2. **The fuzzy year-blindness limitation (§5)** was confirmed and tested at the time this was
+   written; it was fixed 2026-09-07 (see the update note in §5) — no longer an open gap.
 3. **Point-in-time/historical-status caveats already documented in `README_v1.md`** (the 2024
    BNS/BNSS transition affecting most IPC/CrPC records, the pending Income-tax Act 2025
    supersession, the 2018 POCA §13 amendment, the 2021 Income Tax Act §§147/148 substitution) are

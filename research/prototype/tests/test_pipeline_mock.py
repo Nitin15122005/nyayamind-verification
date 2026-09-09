@@ -197,6 +197,31 @@ def test_mode_a_no_verification_no_correction(evidence_pool, config):
     assert record["verification"]["verifier_model"] is None
 
 
+def test_no_evidence_category_populated_only_for_no_evidence_claims(evidence_pool, config):
+    """Measurement-infrastructure regression test: a claim whose citation
+    resolves to real evidence must carry no_evidence_category=None (nothing
+    to explain), while a claim with an act the corpus has no record for at
+    all must carry the "genuinely_absent_no_such_provision_any_act" bucket
+    from evidence_matcher.classify_no_evidence — proving the field is
+    actually threaded through generate_and_parse(), not just defined."""
+    exact_index, all_usable = evidence_pool
+    text = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder. "
+        "Section 999999 of the Indian Penal Code, 1860 governs an unrelated matter."
+    )
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(text)
+
+    record = run_case(case, "A", generator, verifier=None, corrector=None,
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    claims_by_number = {c["citation_extracted"]["provision_number"]: c for c in record["claims"]}
+    assert claims_by_number["302"]["evidence_id"] is not None
+    assert claims_by_number["302"]["no_evidence_category"] is None
+    assert claims_by_number["999999"]["evidence_id"] is None
+    assert claims_by_number["999999"]["no_evidence_category"] == "genuinely_absent_no_such_provision_any_act"
+
+
 # ---------------------------------------------------------------------------
 # Mode B: verification only, never modifies output
 # ---------------------------------------------------------------------------
@@ -216,6 +241,63 @@ def test_mode_b_verifies_but_never_changes_final_field(evidence_pool, config):
     assert record["final_field"]["source"] == "original"
     assert record["final_field"]["text"] == text
     assert record["correction"]["status"] == "not_applicable_mode_B"
+
+
+def test_raw_scores_are_threaded_into_the_claim_record(evidence_pool, config):
+    """Measurement-infrastructure regression test: the verifier's FULL raw
+    label distribution must survive into the output record, not just the
+    argmax `confidence` — otherwise a low-confidence downgrade permanently
+    discards how close the other two labels were, and a future
+    threshold-sensitivity ablation could not recompute verdicts under a
+    different confidence_threshold without re-running the model. Before
+    this fix, claim records had no "raw_scores" key at all; this pins that
+    the exact dict returned by the verifier is threaded through unchanged."""
+    exact_index, all_usable = evidence_pool
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(text)
+    # Mirrors real NLIVerifier.verify() behaviour: argmax is "contradiction"
+    # at 0.63, but that's below the configured 0.70 confidence_threshold, so
+    # the live verdict is downgraded to NEI/low_confidence — a live decision
+    # this test does NOT dispute. What matters is that the underlying
+    # argmax-was-actually-contradiction signal survives in raw_scores.
+    distribution = {"entailment": 0.12, "neutral": 0.25, "contradiction": 0.63}
+    verifier = ScriptedVerifier({
+        text: VerificationResult(
+            label=NOT_ENOUGH_INFORMATION, confidence=0.63, sub_reason="low_confidence",
+            raw_scores=distribution, verifier_model="mock-verifier",
+        )
+    })
+
+    record = run_case(case, "B", generator, verifier, corrector=None,
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    claim = record["claims"][0]
+    assert claim["verdict"] == NOT_ENOUGH_INFORMATION
+    assert claim["sub_reason"] == "low_confidence"
+    # The pre-downgrade signal (argmax was actually "contradiction", not
+    # "neutral") is recoverable from raw_scores even though the live verdict
+    # correctly downgraded to NEI per the confidence threshold.
+    assert claim["raw_scores"] == distribution
+    assert max(distribution, key=distribution.get) == "contradiction"
+
+
+def test_raw_scores_stay_none_for_no_evidence_claims(evidence_pool, config):
+    """A NO_EVIDENCE claim never reaches the verifier (no premise exists),
+    so raw_scores must stay None, not an empty dict or a stale value from
+    another claim — there is nothing to report."""
+    exact_index, all_usable = evidence_pool
+    text = "Section 999 of the Unknown Act, 1999 governs this matter."
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(text)
+    verifier = ScriptedVerifier({})  # never called
+
+    record = run_case(case, "B", generator, verifier, corrector=None,
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    claim = record["claims"][0]
+    assert claim["verdict"] == NO_EVIDENCE
+    assert claim["raw_scores"] is None
 
 
 # ---------------------------------------------------------------------------
@@ -304,7 +386,16 @@ def test_reverification_matches_replacement_by_act_not_just_provision_number(con
     section NUMBER under a DIFFERENT act (e.g. "Section 302" appears in both
     the IPC and some other act), the old code could grab that unrelated
     sentence as if it were the flagged claim's replacement. The match must
-    also require the same normalized act."""
+    also require the same normalized act.
+
+    The "Some Other Act" sentence is deliberately present in BOTH
+    `original_text` and `corrected_text`, unchanged — it is a genuine,
+    pre-existing, unflagged sibling claim the corrector must preserve, not a
+    hallucinated new one. (An earlier version of this test had it appear
+    only in `corrected_text`; after the `correction_unauthorized_addition`
+    safety check was added — see pipeline.py — that shape would itself be
+    correctly rejected as an unauthorized new citation, which is a
+    different, real invariant this test does not intend to exercise.)"""
     ipc302 = EvidenceRecord(
         dataset_citation_key="Section 302 in The Indian Penal Code, 1860",
         act="The Indian Penal Code, 1860", provision_type="Section", provision_number="302",
@@ -324,22 +415,29 @@ def test_reverification_matches_replacement_by_act_not_just_provision_number(con
         (e.provision_type, e.provision_number, e.subsection, e.act_norm): e for e in all_usable
     }
 
-    original_text = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
-    # The unflagged sentence (same section NUMBER, different act) is placed
-    # FIRST so a number-only match would greedily pick it over the real
-    # replacement that follows.
+    other_act_sentence = "Section 302 of the Some Other Act, 1999 remains applicable here."
+    # The pre-existing, unflagged sentence (same section NUMBER, different
+    # act) is placed FIRST so a number-only match would greedily pick it
+    # over the real replacement that follows.
+    original_text = (
+        f"{other_act_sentence} Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    )
     corrected_text = (
-        "Section 302 of the Some Other Act, 1999 remains applicable here. "
+        f"{other_act_sentence} "
         "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
     )
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     generator = FakeGenerator(original_text)
-    # Deliberately do NOT script the "Some Other Act" sentence as a
-    # hypothesis: if the buggy code path picks it, ScriptedVerifier raises
-    # AssertionError on an unexpected hypothesis, failing the test loudly.
+    # Deliberately do NOT script the "Some Other Act" sentence with a
+    # verdict that would ALSO flag it for correction, and do not script an
+    # ENTAILED verdict for it as if it were the flagged claim's replacement:
+    # if the buggy code path picks it during re-verification,
+    # ScriptedVerifier raises AssertionError on an unexpected hypothesis,
+    # failing the test loudly.
     ipc_replacement_sentence = "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
     verifier = ScriptedVerifier({
-        original_text: _vr(CONTRADICTED, confidence=0.88),
+        other_act_sentence: _vr(ENTAILED, confidence=0.97),  # unflagged, never touched
+        "Section 302 of the Indian Penal Code, 1860 prescribes a fine only.": _vr(CONTRADICTED, confidence=0.88),
         ipc_replacement_sentence: _vr(ENTAILED, confidence=0.93),
     })
     corrector = ScriptedCorrector(corrected_text)
@@ -386,11 +484,14 @@ def test_correction_that_changes_the_citation_itself_is_rejected_not_shipped(evi
     # provision/act to dodge the contradiction. If the corrector rewrites
     # the flagged sentence's own citation (here: Section 302 -> Section
     # 304, a real, different IPC provision with real evidence of its own),
-    # the re-extracted replacement no longer carries the ORIGINAL citation
-    # identity the correction was scoped to, so it can never be found by
-    # the ordinal-matched re-verification lookup — status must stay
-    # "correction_failed", the same as a genuine re-verification failure,
-    # never silently accepted as "corrected".
+    # Section 304's citation identity has no counterpart anywhere in the
+    # original field — the `correction_unauthorized_addition` check (see
+    # pipeline.py) catches this as its own, more precise category than a
+    # generic re-verification failure: the corrector did not merely fail to
+    # fix the flagged claim, it introduced a citation nobody asked about.
+    # Never silently accepted as "corrected" either way — this test's core
+    # safety property (never shipped) is unchanged; only the specific
+    # rejection status is now more diagnostic.
     exact_index, all_usable = evidence_pool
     ipc304 = EvidenceRecord(
         dataset_citation_key="Section 304 in The Indian Penal Code, 1860",
@@ -422,9 +523,56 @@ def test_correction_that_changes_the_citation_itself_is_rejected_not_shipped(evi
     record = run_case(case, "C", generator, verifier, corrector,
                        exact_index=exact_index_with_304, all_usable=all_usable_with_304, config=config)
 
-    assert record["correction"]["status"] == "correction_failed"
+    assert record["correction"]["status"] == "correction_unauthorized_addition"
     assert record["correction"]["reverification"] is None
-    assert record["final_field"]["source"] == "correction_failed"
+    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["text"] == original_text
+
+
+def test_correction_hallucinating_an_extra_new_citation_is_rejected_not_shipped(
+    evidence_pool, config
+):
+    """(real, reproduced safety gap — fixed) `_scope_violation()` only
+    verifies that every EXISTING unflagged claim's text survives — it has
+    no concept of "no new citation may be introduced." A corrector that
+    correctly fixes the flagged claim but ALSO hallucinates an entirely new,
+    never-requested sentence citing a provision nobody asked about (a real,
+    plausible LLM failure mode distinct from the citation-swap case above:
+    here the ORIGINAL flagged claim's own fix is genuinely correct) would
+    previously pass the scope check outright — the new sentence isn't a
+    baseline claim, so nothing required it to be absent — and ship as
+    status="corrected", with the hallucinated citation silently entering
+    `final_field.text` while never being extracted as a claim, never
+    evidence-matched, and never verified at all. Must now be rejected as
+    correction_unauthorized_addition, same as the citation-swap case,
+    before any re-verification is attempted."""
+    exact_index, all_usable = evidence_pool
+    original_text = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    fixed_flagged_sentence = "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
+    # The flagged claim's own fix (fixed_flagged_sentence) is genuinely
+    # correct — the problem is purely the extra, never-requested sentence
+    # appended after it, citing a provision (Section 34) nobody asked about
+    # and that never appeared anywhere in the original field.
+    corrected_text = (
+        f"{fixed_flagged_sentence} Section 34 of the Indian Penal Code, 1860 also applies here."
+    )
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(original_text)
+    verifier = ScriptedVerifier({
+        original_text: _vr(CONTRADICTED, confidence=0.88),
+        # Deliberately NOT scripting fixed_flagged_sentence with ENTAILED,
+        # nor the hallucinated Section 34 sentence at all: if the buggy code
+        # path re-verifies either, ScriptedVerifier raises on the unexpected
+        # hypothesis, failing the test loudly rather than silently shipping.
+    })
+    corrector = ScriptedCorrector(corrected_text)
+
+    record = run_case(case, "C", generator, verifier, corrector,
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["correction"]["reverification"] is None
+    assert record["final_field"]["source"] == "correction_unauthorized_addition"
     assert record["final_field"]["text"] == original_text
 
 
@@ -549,6 +697,43 @@ def test_deterministic_seed_threads_through_output_record(evidence_pool, config)
     assert record["reproducibility"]["seed"] == config["seed"]
     assert record["generated_field"]["generation_params"]["seed"] == config["seed"]
     assert record["correction"]["corr_meta"]["seed"] == config["seed"]
+
+
+def test_reproducibility_block_records_evidence_pool_and_scope_check_config(
+    evidence_pool, config
+):
+    """Ablation-readiness regression test: `use_evidence_v1`,
+    `atomic_scope_check`, and `narrow_reverification_hypothesis` must be
+    self-describing from the output record alone — before this fix, only
+    `premise_framing` was recorded here, so a `correction_scope_violation`/
+    `corrected`/`correction_ordinal_ambiguous` outcome (or an
+    `evidence.usable_evidence_pool_size` value) could not be attributed to
+    which scope-check mode or evidence pool actually produced it without
+    also archiving the exact config.yaml used for that run. Checks both a
+    mode-C run (all three populated) and a mode-A run (the two
+    correction-only knobs correctly stay None — mode A never runs
+    correction, so claiming a scope-check mode was "active" would be
+    misleading)."""
+    exact_index, all_usable = evidence_pool
+    cfg = {
+        **config,
+        "use_evidence_v1": True,
+        "correction": {"atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True},
+    }
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+
+    record_c = run_case(case, "C", FakeGenerator(text), ScriptedVerifier({text: _vr(ENTAILED)}),
+                        corrector=None, exact_index=exact_index, all_usable=all_usable, config=cfg)
+    assert record_c["reproducibility"]["use_evidence_v1"] is True
+    assert record_c["reproducibility"]["atomic_scope_check"] == "assertion_spans"
+    assert record_c["reproducibility"]["narrow_reverification_hypothesis"] is True
+
+    record_a = run_case(case, "A", FakeGenerator(text), verifier=None, corrector=None,
+                        exact_index=exact_index, all_usable=all_usable, config=cfg)
+    assert record_a["reproducibility"]["use_evidence_v1"] is True  # evidence pool is loaded regardless of mode
+    assert record_a["reproducibility"]["atomic_scope_check"] is None  # mode A never runs correction
+    assert record_a["reproducibility"]["narrow_reverification_hypothesis"] is None
 
 
 # ---------------------------------------------------------------------------
@@ -707,6 +892,59 @@ def test_scope_violation_still_caught_when_shared_citation_claim_altered(
     assert record["correction"]["status"] == "correction_scope_violation"
     assert record["correction"]["reverification"] is None
     assert record["final_field"]["source"] == "correction_scope_violation"
+    assert record["final_field"]["text"] == original_text
+
+
+def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
+    shared_citation_evidence_pool, config
+):
+    """(real, reproduced safety gap — fixed) The ordinal-position replacement
+    lookup assumes same-citation-identity siblings keep their RELATIVE ORDER
+    in the corrected text; _scope_violation only checks presence, never
+    order. Before the ordinal-integrity check, a corrector that reorders the
+    two same-citation sentences (moves the newly-corrected claim_b ahead of
+    the untouched claim_a) passed the scope check (both texts still present
+    verbatim) and then had "replacement" silently resolve to claim_a's own
+    UNTOUCHED original sentence (the Nth same-identity slot in reading order
+    no longer denotes the same claim it did in the baseline) — which was
+    then "re-verified" (trivially, since it was never actually edited) and
+    shipped as status="corrected" with a genuine-looking ENTAILED
+    confirmation that was never computed against the real correction at
+    all. This is a fabricated safety confirmation, strictly worse than an
+    honest rejection. Must now be caught as "correction_ordinal_ambiguous",
+    never silently reclassified as "corrected"."""
+    exact_index, all_usable = shared_citation_evidence_pool
+    claim_a = "Section 420 of the Indian Penal Code, 1860 is one of the provisions relied upon in this case."
+    claim_b_original = "Section 420 of the Indian Penal Code, 1860 requires no proof of dishonest intention."
+    claim_b_corrected = "Section 420 of the Indian Penal Code, 1860 requires proof of dishonest intention to deceive."
+    original_text = f"{claim_a} {claim_b_original}"
+    # REORDERED: the corrected claim_b now comes FIRST, the untouched
+    # claim_a comes SECOND — both texts are still individually present
+    # verbatim (the scope check alone would pass this), only their relative
+    # order changed.
+    reordered_corrected_text = f"{claim_b_corrected} {claim_a}"
+
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(original_text)
+    verifier = ScriptedVerifier({
+        claim_a: _vr(ENTAILED, confidence=0.95),
+        claim_b_original: _vr(CONTRADICTED, confidence=0.9),
+        # Deliberately nothing scripted for claim_b_corrected: if the bug
+        # regresses, the buggy ordinal lookup would re-verify claim_a
+        # (already scripted, so it would NOT raise) instead of ever asking
+        # about the real edit — the assertions below, not an unscripted-
+        # hypothesis error, are what catch the regression.
+    })
+    corrector = ScriptedCorrector(reordered_corrected_text)
+
+    record = run_case(case, "C", generator, verifier, corrector,
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    assert record["correction"]["status"] == "correction_ordinal_ambiguous"
+    assert record["correction"]["reverification"] is None
+    # Never shipped as if it were a confirmed correction: falls back to the
+    # original, unedited field, exactly like scope_violation/correction_failed.
+    assert record["final_field"]["source"] == "correction_ordinal_ambiguous"
     assert record["final_field"]["text"] == original_text
 
 
@@ -968,6 +1206,57 @@ def test_assertion_spans_still_rejects_when_sibling_description_changes(
                        exact_index=exact_index, all_usable=all_usable, config=cfg)
     assert record["correction"]["status"] == "correction_scope_violation"
     assert record["correction"]["reverification"] is None
+
+
+def test_assertion_spans_catches_sibling_provision_number_changed_to_a_superstring(
+    respectively_evidence_pool, config
+):
+    """(real, reproduced safety gap — fixed) `_scope_violation`'s
+    assertion_spans check used plain Python `in` containment, which treats
+    a bare provision-number fragment like "34" as "present" even when the
+    corrected text instead says "134" — a genuinely different, unauthorized
+    provision for an UNFLAGGED sibling claim, since "34" is trivially a
+    substring of "134". Before the `_fragment_present` word-boundary fix,
+    this exact case shipped as a "corrected" or "correction_failed" record
+    (never flagged), silently allowing a sibling's own citation identity to
+    change. It must now be caught as correction_scope_violation, the same
+    as any other unauthorized sibling edit."""
+    exact_index, all_usable = respectively_evidence_pool
+    original_text = (
+        "The case was governed by sections 302, 149, 323, and 34 of the Indian Penal "
+        "Code, 1860, which respectively deal with murder, criminal conspiracy, "
+        "voluntarily causing hurt, and abetting the commission of a non-cognizable "
+        "offense."
+    )
+    # 302 (flagged, authorized edit) gets a corrected gloss; 34 (unflagged
+    # sibling) is silently renumbered to 134 while its own description text
+    # is left byte-identical -- the attack this test pins.
+    corrected_text = (
+        "The case was governed by sections 302, 149, 323, and 134 of the Indian Penal "
+        "Code, 1860, which respectively deal with culpable homicide, criminal conspiracy, "
+        "voluntarily causing hurt, and abetting the commission of a non-cognizable "
+        "offense."
+    )
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(original_text)
+    verifier = PremiseAwareScriptedVerifier({
+        ("murder", original_text): _vr(
+            NOT_ENOUGH_INFORMATION, confidence=0.5, sub_reason="low_confidence"),  # 302: triggers
+        ("unlawful assembly", original_text): _vr(ENTAILED, confidence=0.95),      # 149: does not trigger
+        ("voluntarily causes hurt", original_text): _vr(ENTAILED, confidence=0.95),  # 323: does not trigger
+        ("furtherance of common intention", original_text): _vr(ENTAILED, confidence=0.95),  # 34: does not trigger
+        # Deliberately no corrected_text entries: the scope violation must
+        # be caught BEFORE any re-verification call.
+    })
+    cfg = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": "assertion_spans"}}
+    corrector = ScriptedCorrector(corrected_text)
+
+    record = run_case(case, "C", generator, verifier, corrector,
+                       exact_index=exact_index, all_usable=all_usable, config=cfg)
+    assert record["correction"]["status"] == "correction_scope_violation"
+    assert record["correction"]["reverification"] is None
+    assert record["final_field"]["text"] == original_text
+    assert record["final_field"]["source"] == "correction_scope_violation"
 
 
 def test_assertion_spans_still_rejects_when_sibling_number_silently_changes(
@@ -1390,3 +1679,123 @@ def test_sibling_regression_check_does_not_run_under_legacy_mode(
 
     assert record["correction"]["status"] == "corrected"
     assert record["correction"]["sibling_regressions"] == []
+
+
+def test_sibling_regression_check_excludes_a_pre_existing_independently_flagged_sibling(
+    two_claim_evidence_pool, config
+):
+    """(real, reproduced failure-categorization bug — fixed) A field can
+    have TWO independently CONTRADICTED claims; only the FIRST ever drives
+    correction (documented v0 simplification — multi-claim-per-field
+    correction is out of scope). The SECOND, untouched, still-CONTRADICTED
+    claim is a pre-existing, independent failure this correction attempt
+    never touched — not a regression CAUSED by fixing the first claim.
+    Before excluding already-flagged siblings, _reverify_sibling_regressions
+    re-checked EVERY unflagged sibling indiscriminately, found this second
+    claim genuinely (and unsurprisingly — it was never edited) still
+    CONTRADICTED, and mislabeled a otherwise-successful correction as
+    status="correction_sibling_regression" — conflating "my edit broke
+    something" with "something else was already broken." This corrupts any
+    future failure-category decomposition trying to attribute causes. Must
+    now correctly report status="corrected": the first claim's own fix is
+    genuine and no NEW regression was introduced by it."""
+    exact_index, all_usable = two_claim_evidence_pool
+    flagged_sentence = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    # Independently, pre-existingly broken — CONTRADICTED in the baseline,
+    # before any correction attempt runs, and never touched by the
+    # corrector (byte-identical in corrected_text).
+    other_broken_sentence = "Section 21 of the Indian Penal Code, 1860 has no application whatsoever."
+    original_text = f"{flagged_sentence} {other_broken_sentence}"
+    corrected_flagged_sentence = "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
+    corrected_text = f"{corrected_flagged_sentence} {other_broken_sentence}"
+
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(original_text)
+    verifier = ScriptedVerifier({
+        flagged_sentence: _vr(CONTRADICTED, confidence=0.88),          # triggers correction (first)
+        other_broken_sentence: _vr(CONTRADICTED, confidence=0.85),     # also flagged, but never targeted
+        corrected_flagged_sentence: _vr(ENTAILED, confidence=0.93),    # the genuine, successful fix
+        # If the bug regresses, the sibling-regression re-check would call
+        # verify() again with (premise, other_broken_sentence) — already
+        # scripted above (same deterministic premise+hypothesis), so it
+        # would NOT raise, it would silently reconfirm CONTRADICTED and
+        # mislabel the status. The status assertion below, not an
+        # unscripted-hypothesis error, is what catches this regression.
+    })
+    cfg = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": "assertion_spans"}}
+    corrector = ScriptedCorrector(corrected_text)
+
+    record = run_case(case, "C", generator, verifier, corrector,
+                       exact_index=exact_index, all_usable=all_usable, config=cfg)
+
+    assert record["correction"]["status"] == "corrected"
+    assert record["correction"]["sibling_regressions"] == []
+    assert record["final_field"]["source"] == "corrected"
+    assert record["final_field"]["text"] == corrected_text
+    # The second claim's own still-CONTRADICTED verdict remains fully
+    # visible in its own claim record — nothing is hidden, only correctly
+    # NOT conflated with "this correction caused a regression."
+    other_claim = next(c for c in record["claims"] if c["claim_text"] == other_broken_sentence)
+    assert other_claim["verdict"] == CONTRADICTED
+
+
+# ---------------------------------------------------------------------------
+# Negation safety gate (mock-verifier wiring test — see
+# test_correction_path_real_integration.py for the real-model confirmation
+# that a negated claim genuinely reaches CONTRADICTED).
+# ---------------------------------------------------------------------------
+
+def test_negation_flagged_contradicted_claim_never_triggers_correction(evidence_pool, config):
+    """A CONTRADICTED verdict whose claim_text matches a known negation
+    pattern must be excluded from the correction-trigger list — never
+    silently rewritten into an affirmative statement. Uses a
+    NoCallCorrector (raises if ever invoked) to prove the correction
+    ATTEMPT itself is suppressed, not merely its outcome."""
+    exact_index, all_usable = evidence_pool
+    negated_text = "Section 302 of the Indian Penal Code, 1860 does not apply to this case."
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(negated_text)
+    verifier = ScriptedVerifier({negated_text: _vr(CONTRADICTED, confidence=0.95)})
+
+    class NoCallCorrector:
+        def correct(self, *args, **kwargs):
+            raise AssertionError("corrector.correct() must never be called")
+
+    record = run_case(case, "C", generator, verifier, NoCallCorrector(),
+                       exact_index=exact_index, all_usable=all_usable, config=config)
+
+    claim = record["claims"][0]
+    assert claim["verdict"] == CONTRADICTED
+    assert claim["negation_contradiction_caveat"] is True
+    assert record["correction"]["status"] == "not_triggered"
+    assert record["correction"]["triggered_for_claim_id"] is None
+    assert record["final_field"]["source"] == "original"
+
+
+def test_negation_caveat_field_defaults_correctly_for_non_negated_and_no_evidence_claims(
+    two_claim_evidence_pool, config
+):
+    """negation_contradiction_caveat must be: None before verification (mode
+    A) / before matching (NO_EVIDENCE claims); False for a genuine
+    CONTRADICTED verdict with no negation marker; False for an ENTAILED
+    verdict regardless of wording. Only True for the specific
+    CONTRADICTED-plus-negation-marker combination."""
+    exact_index, all_usable = two_claim_evidence_pool
+    plain_contradicted = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    plain_entailed = "Section 21 of the Indian Penal Code, 1860 defines public servants."
+    text = f"{plain_contradicted} {plain_entailed}"
+    case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
+
+    record_a = run_case(case, "A", FakeGenerator(text), verifier=None, corrector=None,
+                        exact_index=exact_index, all_usable=all_usable, config=config)
+    assert record_a["claims"][0]["negation_contradiction_caveat"] is None
+
+    verifier = ScriptedVerifier({
+        plain_contradicted: _vr(CONTRADICTED, confidence=0.9),
+        plain_entailed: _vr(ENTAILED, confidence=0.95),
+    })
+    record_b = run_case(case, "B", FakeGenerator(text), verifier, corrector=None,
+                        exact_index=exact_index, all_usable=all_usable, config=config)
+    by_text = {c["claim_text"]: c for c in record_b["claims"]}
+    assert by_text[plain_contradicted]["negation_contradiction_caveat"] is False
+    assert by_text[plain_entailed]["negation_contradiction_caveat"] is False
