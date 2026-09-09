@@ -19,6 +19,7 @@ Full pytest (205/205) and `run_mvp.py --check` pass with the config exactly as s
 | `use_evidence_v1` | `false` | **`true`** | ✅ Yes |
 | `correction.atomic_scope_check` | `false` | **`"assertion_spans"`** | ✅ Yes |
 | `correction.narrow_reverification_hypothesis` | `false` | **`true`** | ✅ Yes |
+| `verification.narrow_primary_hypothesis` | `false` | **`true`** (added 2026-09-09) | ✅ Yes |
 | `verification.confidence_threshold` | `0.70` | `0.70` | No — evidence supports keeping it |
 | Sibling-regression protection | — | Always active when either atomic-scope mode is on | Not independently toggleable |
 | Citation-identity preservation on correction | — | Always active | Not independently toggleable, never was |
@@ -198,6 +199,54 @@ above) — no historical output is affected. See
 This is the lowest-risk of the four changed defaults: it only ever narrows the *hypothesis*
 verified, never the evidence trusted, and the ENTAILED-only shipping gate applies identically
 regardless.
+
+---
+
+## 5. `verification.narrow_primary_hypothesis`: false → **true** (added 2026-09-09)
+
+### What it does
+
+Extends the exact same technique in §4 above — verify a claim's narrower `assertion_text`
+instead of the full bundled `claim_text`, when a genuinely narrower one is available — to the
+**primary** verification pass, not just correction re-verification. This closes a gap
+`outputs/final_limitations_and_future_scope.md` §3a named explicitly as unaddressed: "the
+primary verification pass never uses the narrower `assertion_text` hypothesis."
+
+### Evidence
+
+`scripts/benchmark_narrow_primary_hypothesis.py` re-scored, on CPU, every unique real
+evidence-matched `(claim_text, evidence_id)` pair already committed under `outputs/*.jsonl` —
+**456 claims**, no fresh generation, under the current production "labeled" premise framing
+(see `outputs/narrow_primary_hypothesis_benchmark_report.md` for the full report):
+
+- **107/456 (23.5%)** claims have an actually-narrower `assertion_text` — the only population
+  this change can affect at all.
+- **31** flip NOT_ENOUGH_INFORMATION → ENTAILED. Every one of the first 10 (and a spot-check of
+  the rest) manually inspected: each is a genuine, faithful, verbatim isolation of one citation's
+  own clause from a bundled multi-citation sentence (e.g. "Section 323 IPC pertains to
+  voluntarily causing hurt" correctly isolated from a 4-citation bundle) — **not** the
+  "shallow"/spurious-entailment pattern `outputs/verifier_correction_diagnosis.md` §6 warned
+  labeled framing alone could produce on bundled sentences (that pattern was the *opposite*
+  direction: a full sentence entailed against an unrelated section's text).
+- **2** flip NEI → CONTRADICTED — new, legitimate correction triggers.
+- **0/456 safety-relevant reversals** (ENTAILED↔CONTRADICTED) anywhere in the dataset.
+
+### Why this is adopted, not just evaluated
+
+Same risk profile as §4: only narrows the hypothesis, never widens what counts as
+evidence-consistent (`assertion_text` is always a genuine substring of the model's own generated
+text), and the shipping/verdict gate is otherwise unchanged. Zero unsafe reversals across every
+real evidence-matched claim this project has ever produced is a stronger evidentiary bar than
+several of the other defaults above cleared at the time they were adopted.
+
+### Caveat, stated honestly
+
+This is CPU re-scoring of already-generated text, not a fresh end-to-end GPU run — it does not
+by itself measure the downstream effect on `correction` shipping rates (the 2 new
+NEI→CONTRADICTED claims are new correction *triggers*, not yet observed shipped corrections). A
+natural follow-up, not done in this session: a fresh Mode-C GPU batch under this flag to see
+whether the 1.8%-cumulative correction-shipping rate documented in
+`outputs/final_limitations_and_future_scope.md` §3a moves.
 
 ---
 

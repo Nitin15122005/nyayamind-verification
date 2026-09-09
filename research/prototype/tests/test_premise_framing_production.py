@@ -182,12 +182,14 @@ def test_resolve_defaults_to_bare_when_key_absent():
 def test_shipped_config_locks_the_2026_08_27_final_production_decision():
     """Guards the committed prototype.yaml itself against silent drift from
     the final production configuration decided in FINAL_PRODUCTION_CONFIG.md
-    (2026-08-27): premise_framing="labeled", use_evidence_v1=true,
-    atomic_scope_check="assertion_spans", narrow_reverification_hypothesis=
-    true, confidence_threshold unchanged at 0.70. See that document for the
-    full, quantitative justification of each value (evidence_v1_independent_
+    (2026-08-27, extended 2026-09-09): premise_framing="labeled",
+    use_evidence_v1=true, atomic_scope_check="assertion_spans",
+    narrow_reverification_hypothesis=true, narrow_primary_hypothesis=true,
+    confidence_threshold unchanged at 0.70. See that document for the full,
+    quantitative justification of each value (evidence_v1_independent_
     audit.md, final_gpu_validation.md, threshold_sensitivity_analysis.md,
-    and the targeted labeled-framing correction validation).
+    the targeted labeled-framing correction validation, and
+    narrow_primary_hypothesis_benchmark_report.md).
 
     Formerly named test_shipped_config_default_is_bare and asserted the
     OPPOSITE of every value below — renamed and rewritten, not just edited,
@@ -201,6 +203,7 @@ def test_shipped_config_locks_the_2026_08_27_final_production_decision():
     assert cfg["use_evidence_v1"] is True
     assert cfg["correction"]["atomic_scope_check"] == "assertion_spans"
     assert cfg["correction"]["narrow_reverification_hypothesis"] is True
+    assert cfg["verification"]["narrow_primary_hypothesis"] is True
     # Threshold explicitly NOT changed — threshold_sensitivity_analysis.md
     # found 0.70 within 0.002 macro-F1 of optimal under both framings.
     assert cfg["verification"]["confidence_threshold"] == 0.70

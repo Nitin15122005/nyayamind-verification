@@ -63,7 +63,11 @@ claim.evidence_text | NO_EVIDENCE
    v (Mode B/C only)
 [4] NLIVerifier.verify()                   -- src/verifier.py
    |  MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
-   |  premise=evidence_text, hypothesis=claim_text
+   |  premise=evidence_text (labeled framing: "<Provision> <N> of <Act>: <text>")
+   |  hypothesis=claim.assertion_text when narrower than claim_text and
+   |             config.verification.narrow_primary_hypothesis=true (production
+   |             default since 2026-09-09), else claim_text -- see
+   |             outputs/narrow_primary_hypothesis_benchmark_report.md
    |  ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION
    |  (low-confidence argmax is downgraded to NOT_ENOUGH_INFORMATION,
    |   sub_reason="low_confidence")

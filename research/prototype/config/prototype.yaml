@@ -192,6 +192,41 @@ verification:
   # that historical behaviour.
   premise_framing: "labeled"      # bare | labeled
 
+  # DEFAULT CHANGED TO true 2026-09-09. When True, the PRIMARY verification
+  # pass (not just correction re-verification, which already has its own
+  # equivalent correction.narrow_reverification_hypothesis flag) uses a
+  # claim's narrower `assertion_text` as the NLI hypothesis instead of the
+  # full `claim_text`, whenever one is available. This closes a documented,
+  # evidence-backed gap named in outputs/final_limitations_and_future_scope.md
+  # §3a: "the primary verification pass never uses the narrower
+  # assertion_text hypothesis" -- on real NyayaRAG data one physical
+  # sentence routinely backs multiple bundled claims, and verifying the
+  # full sentence dilutes the hypothesis with sibling citations' unrelated
+  # content. Never widens what counts as evidence-consistent --
+  # assertion_text is always a genuine substring of the model's own
+  # generated text, never synthesized.
+  #
+  # Evidence (see outputs/narrow_primary_hypothesis_benchmark_report.md,
+  # scripts/benchmark_narrow_primary_hypothesis.py): CPU-only re-scoring of
+  # every real evidence-matched claim already committed under outputs/
+  # (456 unique (claim_text, evidence_id) pairs, no fresh generation) under
+  # the current production labeled framing, comparing full claim_text vs.
+  # assertion_text as hypothesis:
+  #   - 107/456 (23.5%) claims have an actually-narrower assertion_text.
+  #   - Of those, 31 flip NOT_ENOUGH_INFORMATION -> ENTAILED (a real
+  #     coverage recovery -- manually inspected, every one is a genuine,
+  #     faithful, verbatim isolation of one citation's own clause from a
+  #     bundled multi-citation sentence, e.g. "Section 323 IPC pertains to
+  #     voluntarily causing hurt" correctly isolated from a 4-citation
+  #     bundle -- NOT the "shallow"/spurious-entailment pattern the
+  #     2026-08-26 diagnosis (outputs/verifier_correction_diagnosis.md §6)
+  #     warned labeled framing alone could produce on bundled sentences).
+  #   - 2/456 flip NEI -> CONTRADICTED (new, legitimate correction triggers).
+  #   - 0/456 safety-relevant reversals (ENTAILED<->CONTRADICTED) anywhere.
+  # Set to false to reproduce every evaluation output committed before
+  # 2026-09-09.
+  narrow_primary_hypothesis: true
+
 correction:
   max_attempts: 1
   max_reverifications: 1

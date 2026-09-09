@@ -286,7 +286,12 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     }
 
 
-def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_FRAMING_BARE) -> None:
+def apply_verification(
+    baseline: dict,
+    verifier,
+    premise_framing: str = PREMISE_FRAMING_BARE,
+    narrow_primary_hypothesis: bool = False,
+) -> None:
     """Mutates baseline['claims'] in place, filling verdict/confidence for
     every claim that has matched evidence. Claims with no evidence keep
     their NO_EVIDENCE verdict untouched — the verifier is never called for
@@ -296,6 +301,25 @@ def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_
     `premise_framing` defaults to bare so that any caller not yet passing it
     keeps the exact behaviour that produced the committed outputs; callers opt
     into the ablation by threading resolve_premise_framing(config) through.
+
+    `narrow_primary_hypothesis` (opt-in, default False — EXPERIMENTAL, not
+    yet the production default; see
+    outputs/narrow_primary_hypothesis_benchmark_report.md for the measured
+    comparison this default is based on): when True, and a claim has its
+    own narrower `assertion_text` (a verbatim, non-fabricated per-citation
+    clause/gloss — see claim_parser.py's `_assign_assertion_texts`), verify
+    THAT instead of the full `claim_text`. This is the exact same technique
+    `narrow_reverification_hypothesis` already applies during correction
+    re-verification (see apply_selective_correction below), extended here
+    to the PRIMARY verification pass — a documented, evidence-backed gap:
+    outputs/final_limitations_and_future_scope.md §3a names "the primary
+    verification pass never uses the narrower assertion_text hypothesis" as
+    a concrete next step, since on real NyayaRAG data one physical sentence
+    routinely backs multiple bundled claims, and verifying the full
+    sentence dilutes the hypothesis with sibling citations' unrelated
+    content. Never widens what counts as evidence-consistent —
+    assertion_text is always a genuine substring of the model's own
+    generated text, never synthesized.
     """
     if premise_framing not in PREMISE_FRAMINGS:
         raise ValueError(
@@ -304,8 +328,11 @@ def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_
     for rec in baseline["claims"]:
         if rec["evidence_text"] is None:
             continue  # already NO_EVIDENCE, verifier not invoked
+        hypothesis = rec["claim_text"]
+        if narrow_primary_hypothesis and rec.get("assertion_text") and rec["assertion_text"] != rec["claim_text"]:
+            hypothesis = rec["assertion_text"]
         result = verifier.verify(
-            premise=_premise_for_claim(rec, premise_framing), hypothesis=rec["claim_text"]
+            premise=_premise_for_claim(rec, premise_framing), hypothesis=hypothesis
         )
         rec["verdict"] = result.label
         rec["confidence"] = result.confidence
@@ -313,6 +340,7 @@ def apply_verification(baseline: dict, verifier, premise_framing: str = PREMISE_
         rec["verifier_model"] = result.verifier_model
         rec["raw_scores"] = result.raw_scores
         rec["input_truncated"] = result.input_truncated
+        rec["verified_hypothesis"] = hypothesis
         rec["negation_contradiction_caveat"] = (
             result.label == CONTRADICTED and _negation_marker_present(rec["claim_text"])
         )
@@ -863,7 +891,8 @@ def run_case(
     baseline["_verifier"] = verifier
 
     if mode in ("B", "C"):
-        apply_verification(baseline, verifier, resolve_premise_framing(config))
+        narrow_primary = bool((config.get("verification") or {}).get("narrow_primary_hypothesis", False))
+        apply_verification(baseline, verifier, resolve_premise_framing(config), narrow_primary)
 
     correction_summary = {
         "triggered_for_claim_id": None,
@@ -955,6 +984,9 @@ def run_case(
             "narrow_reverification_hypothesis": bool((config.get("correction") or {}).get(
                 "narrow_reverification_hypothesis", False
             )) if mode == "C" else None,
+            "narrow_primary_hypothesis": bool((config.get("verification") or {}).get(
+                "narrow_primary_hypothesis", False
+            )) if mode in ("B", "C") else None,
             "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
             "software_versions": _software_versions(),
         },

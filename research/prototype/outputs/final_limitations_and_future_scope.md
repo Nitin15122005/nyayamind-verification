@@ -93,14 +93,26 @@ The dominant blockers, evidenced directly:
   history, including this session's (`final_gpu_validation.md` §4). `atomic_scope_check` and
   `narrow_reverification_hypothesis` mitigate but, per this session's own test, did not unlock
   either of the 2 scope-violation cases actually re-tested under them.
-- **The primary verification pass never uses the narrower `assertion_text` hypothesis** — only
+- **UPDATE 2026-09-09: partially addressed.** `verification.narrow_primary_hypothesis` (see
+  `FINAL_PRODUCTION_CONFIG.md` §5, `outputs/narrow_primary_hypothesis_benchmark_report.md`) now
+  extends `assertion_text`-based hypotheses to the PRIMARY verification pass, not just correction
+  re-verification, exactly as recommended below. CPU re-scoring of 456 real evidence-matched
+  claims: 107 (23.5%) had an actually-narrower assertion available, 31 flipped
+  NEI→ENTAILED (manually verified as genuine, not spurious), 0 unsafe reversals. **Not yet
+  done**: this uses only the single `assertion_text` field, not the richer `assertion_spans` list
+  (the "respectively"-pattern structure) — a claim whose only narrower representation is
+  `assertion_spans` still verifies against the full `claim_text` in the primary pass. Also not yet
+  measured: the downstream effect on Mode-C correction *shipping* rates (a fresh GPU batch, not
+  done in this session — see `FINAL_PRODUCTION_CONFIG.md` §5 caveat).
+- ~~The primary verification pass never uses the narrower `assertion_text` hypothesis~~ — only
   re-verification does. This session's assumption-gold comparison (§E of
   `final_research_results.md`) found labeled framing does NOT improve agreement on a
   bundled-sentence-heavy older claim set, consistent with this specific gap: labeled framing's
   provision label helps less when the surrounding hypothesis is still diluted by sibling
-  citations. **Concrete, evidence-backed next step**: extend `assertion_text`-based (or
+  citations. ~~**Concrete, evidence-backed next step**: extend `assertion_text`-based (or
   `assertion_spans`-based) hypotheses to the PRIMARY verification pass, not just correction
-  re-verification.
+  re-verification.~~ (superseded by the 2026-09-09 update above; assertion_spans-based primary
+  verification remains open.)
 - **Qwen correction quality itself** — most `correction_failed` outcomes in this project's history
   are the corrector returning the flagged sentence byte-unchanged (a no-op), not a bad edit. This
   is a generation-quality limitation of the 7B corrector model/prompt, not a pipeline defect.
