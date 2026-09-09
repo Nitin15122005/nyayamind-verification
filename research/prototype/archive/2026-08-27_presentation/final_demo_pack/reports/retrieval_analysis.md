@@ -52,3 +52,33 @@ The only measurable proxy is the **match-method ratio**: `exact_normalized` matc
 - 37 of the original top-100 v0 candidate citations were never attempted (search/lookup budget exhausted) — see `research/data/evidence/README.md` "Unresolved cases."
 - 4 v0 citations were attempted but dropped because an exact IndianKanoon document URL could not be individually confirmed.
 - Coverage is capped at the top ~143 citation keys by frequency, not the full ~8,100 distinct citations in the underlying NyayaRAG statute data, by design/task scope.
+
+## Addendum — 2026-09-09
+
+Two statements above are superseded by work done since 2026-08-27 (numbers
+above are otherwise still accurate as the 2026-08-27 snapshot):
+
+- **"Fuzzy matching is year-blind" (line above, "Known unresolved
+  categories") is now fixed**, not just documented — commit `adf54aa` added a
+  veto in `evidence_matcher.py` that rejects a fuzzy match when the claim and
+  candidate state explicit, disjoint years.
+- **"Zero confirmed parser or evidence-matcher defects across 797 real
+  claims" is no longer the complete picture.** Commit `c250a0e` found and
+  fixed a real parser defect: Art./Arts. citation abbreviations were not
+  resolved correctly. Isolated by running both parser versions in-memory on
+  the same 181 unique real generated texts (not diffing against
+  each experiment's own stored `claims`, which mixes parser versions across
+  months): **7 claims recovered net (795 → 802)**, strictly additive/corrective
+  on every real text — no claim count ever decreased. 2 of 181 texts were
+  affected. Full detail:
+  `research/prototype/outputs/article_abbreviation_fix_impact_report.md`.
+
+**Also new**: commit `6347c45` evaluated BM25 and embedding as alternative
+`fuzzy_method` retrieval signals and **rejected both** — at this corpus's
+scale (22 unique Acts), Jaccard is the only method tested that reaches 100%
+correct-reject on a 9-case safety set (BM25 and embedding both wrongly match
+legally-distinct Acts at their production-default thresholds, e.g. "Code of
+Civil Procedure" ↔ "Code of Criminal Procedure"), while also achieving the
+highest correct-accept rate of any method at full safety. Jaccard remains
+the production default. Full detail:
+`research/prototype/outputs/retrieval_signal_benchmark_report.md`.

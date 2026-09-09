@@ -91,6 +91,33 @@ section of that script — this comparison's scripts are not written to auto-dis
 batches, by design, so that every number here stays traceable to an explicit, reviewed
 source-file list.
 
+## Addendum — 2026-09-09
+
+`build_comparison_data.py` and `generate_figures.py` (in `scripts/`) each computed
+`PROTOTYPE` (the `research/prototype/` root, used to find `outputs/`) via
+`FINAL_COMPARISON.parent`, which was correct when this directory lived at
+`research/prototype/final_comparison/` but resolved one level short — to
+`research/prototype/archive/2026-08-27_presentation/`, which has no `outputs/`
+— after the 2026-08-27 freeze/reorg archived this whole directory one level
+deeper. Fixed in place this pass (`PROTOTYPE = FINAL_COMPARISON.parent.parent.parent`).
+Re-ran both scripts after the fix: every table and figure reproduced
+byte-for-byte identical to the committed versions (confirming this was a
+path bug, not a data change), except `tables/comparison_summary.md`, whose
+trailing "Project Author Statement" pointer (hand-appended after an earlier
+build, not written by the script itself) was restored after regeneration.
+
+Four commits since 2026-08-27 add new findings not reflected in this
+comparison's tables/figures (none touched the `outputs/*` files these
+scripts read, so no existing number changed): `adf54aa` (adversarial safety
+hardening — 5 gaps fixed), `6347c45` (BM25/embedding retrieval evaluated and
+rejected, Jaccard stays default), `c250a0e` (Art./Arts. parser fix, +7
+claims), and `bb2cd93` (`verification.narrow_primary_hypothesis` extended to
+primary verification, default flipped `true` — see
+`FINAL_BASELINE_COMPARISON.md`'s own addendum for why this specifically
+matters to that report's Limitations section). See
+`research/prototype/archive/2026-08-27_presentation/final_demo_pack/README.md`'s
+addendum for full detail and source-report pointers on all four.
+
 ## 7. Seeds, models, versions (unchanged from the project-wide record)
 
 | | Value |

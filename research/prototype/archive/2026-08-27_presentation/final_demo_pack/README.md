@@ -64,3 +64,76 @@ _See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequ
   (0.9946 live vs. 0.99457 committed)
 
 See `RUNBOOK.md` to regenerate any of the above.
+
+## Addendum — 2026-09-09 (post-freeze update, pack refreshed in place)
+
+This pack was built 2026-08-27 and is a frozen replay of that date's committed
+outputs (see "What this pack is and is not" above) — that framing still
+holds. Four commits since then changed real pipeline/config behavior; none of
+them altered any file this pack's `metadata/compute_metrics.py` reads
+(`outputs/final_metrics.json` and friends), so every number in
+`computed_metrics.json`, every figure, and every table was **re-run against
+current source data during this addendum pass and reproduced byte-for-byte
+identical to the 2026-08-27 committed versions** (`compute_metrics.py`'s own
+`Cross-checks all match: True` still holds). What follows is new information
+layered on top, not a correction of anything already stated as of 2026-08-27:
+
+1. **`adf54aa` — adversarial-hardening safety pass.** Five real safety gaps
+   found and fixed: bare trailing-abbreviation citations ("Section 100 CrPC")
+   now resolve via a trusted alias instead of a field-wide guess; fuzzy
+   evidence matching now vetoes candidates with explicit, disjoint years
+   (this closes the "fuzzy matching is year-blind" limitation noted in
+   `reports/retrieval_analysis.md`); a negation safety gate now excludes
+   negation-driven CONTRADICTED verdicts from triggering correction;
+   word-boundary-aware scope-violation matching (was falsely satisfiable by
+   e.g. "34" inside "134"); an unauthorized-citation-injection guard and an
+   ordinal-integrity guard. 231/231 tests pass.
+2. **`6347c45` — BM25/embedding retrieval evaluated, REJECTED.** Jaccard
+   remains the production `fuzzy_method` default. See
+   `research/prototype/outputs/retrieval_signal_benchmark_report.md`: at this
+   corpus's scale (22 unique Acts), Jaccard is the only method tested that
+   reaches 100% correct-reject on a 9-case safety set (BM25 and embedding
+   both wrongly match legally-distinct Acts, e.g. "Arbitration Act, 1940" vs
+   "Arbitration and Conciliation Act, 1996") while also having the best
+   correct-accept rate of any method at full safety.
+3. **`c250a0e` — Art./Arts. citation-abbreviation parser fix.** Recovered 7
+   claims net (795 → 802) across the 181 unique real generated texts this
+   project has ever produced, isolated by running both parser versions
+   in-memory on the same texts. See
+   `research/prototype/outputs/article_abbreviation_fix_impact_report.md`.
+   This supersedes the "Zero confirmed parser or evidence-matcher defects"
+   framing in `reports/retrieval_analysis.md` — see that report's own
+   addendum below.
+4. **`bb2cd93` — `narrow_primary_hypothesis` extended to primary
+   verification, default flipped to `true`.** In a CPU re-scoring benchmark
+   over 456 real evidence-matched claim/evidence pairs (verification-only,
+   no regeneration), 31/107 applicable claims recovered NEI → ENTAILED, 2/107
+   went NEI → CONTRADICTED, and **0 claims reversed between the two
+   safety-relevant labels (ENTAILED ↔ CONTRADICTED)**. See
+   `research/prototype/outputs/narrow_primary_hypothesis_benchmark_report.md`.
+   This is a fifth production-config change beyond the four documented in
+   `SYSTEM_STATUS.md`'s table and figure 15 (both explicitly dated
+   2026-08-27 and correctly left as-is) — see `FINAL_PRODUCTION_CONFIG.md`
+   §5 for the full decision record and `SYSTEM_STATUS.md`'s own addendum.
+   A dedicated fresh-GPU ablation isolating this lever landed during this
+   addendum pass: 15 genuinely fresh natural cases (never used in any prior
+   experiment), real Qwen generation + real DeBERTa verification through the
+   actual production pipeline, OLD (`narrow_primary_hypothesis=false`) vs
+   CURRENT (`=true`), everything else held identical. Result: 1/12
+   evidence-matched claims NEI → ENTAILED, 0 CONTRADICTED either arm, 0
+   corrections triggered/shipped either arm (so no shipping-safety
+   comparison is possible from this small sample). Directional, n=15, not a
+   statistically powered claim — consistent in direction with, but far
+   smaller than, the 456-claim CPU re-scoring result above. See
+   `research/prototype/outputs/narrow_primary_hypothesis_gpu_ablation_report.md`.
+
+**What was NOT re-run this pass:** any GPU generation. `live_demo/run_demo.py`
+and `examples/` — referenced by this README, `RUNBOOK.md`, and
+`ARTIFACT_INDEX.md` — no longer exist in this archived copy (removed by
+commit `61b240a`, predating the four commits above and unrelated to them);
+this is a pre-existing gap in the archived pack, not something this pass
+introduced or was able to reconstruct (their source generator scripts are
+also gone). `metadata/validate_pack.py` was fixed to resolve paths correctly
+from this pack's current archived location (see its own addendum note) but
+now fails on this same missing-`examples/` gap — see
+`metadata/validation_log.md`'s addendum for the exact result.

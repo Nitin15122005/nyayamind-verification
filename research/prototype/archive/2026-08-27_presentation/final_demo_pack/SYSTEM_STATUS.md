@@ -49,3 +49,58 @@ research/.venv/Scripts/python.exe research/prototype/scripts/run_mvp.py --check
 ```
 
 See `research/prototype/REPRODUCIBILITY.md` for the complete command reference, and `RUNBOOK.md` in this pack for demo-pack-specific regeneration commands.
+
+## Addendum — 2026-09-09
+
+**A fifth production-config value changed since the table above was built
+(2026-08-27)**, via commit `bb2cd93`:
+
+| Option | Value | Changed from 2026-08-27 default? | Decision record |
+|---|---|---|---|
+| `verification.narrow_primary_hypothesis` | `true` | Yes (was `false`) — new, added 2026-09-09 | `FINAL_PRODUCTION_CONFIG.md` §5 |
+
+This is a distinct setting from `correction.narrow_reverification_hypothesis`
+(already `true` since 2026-08-27, unchanged, still row 4 of the table above)
+— the new setting extends the same narrow-hypothesis idea to **primary**
+verification, not just correction re-verification. `reports/verifier_analysis.md`'s own addendum now supersedes that report's original
+"primary verification always hypothesizes the full `claim_text`" statement.
+`tests/test_premise_framing_production.py`'s shipped-config lock test was
+itself extended 2026-09-09 to additionally assert
+`cfg["verification"]["narrow_primary_hypothesis"] is True` — the lock
+described in this file's original table still holds, now with one more
+asserted field.
+
+Other new findings since 2026-08-27 (do not change any number already in
+this file, since none touched the config values the table above locks):
+`adf54aa` (5 adversarial safety gaps fixed), `6347c45` (BM25/embedding
+retrieval evaluated and rejected, Jaccard stays default), `c250a0e`
+(Art./Arts. parser fix, +7 claims). Full detail: `README.md`'s addendum.
+
+**This demo-pack build's own regeneration paths needed a fix this pass**:
+`metadata/compute_metrics.py`, `metadata/validate_pack.py`, and
+`figures/generate_figures.py` (in this pack) and
+`../final_comparison/scripts/{build_comparison_data,generate_figures}.py`
+each computed their repo-root via a hardcoded `Path(...).parents[N]` walk-up
+that was correct for this pack's original build location
+(`research/prototype/final_demo_pack/`) but broke silently — resolving to the
+wrong directory — after the whole pack was archived one level deeper
+(`research/prototype/archive/2026-08-27_presentation/final_demo_pack/`)
+during the 2026-08-27 freeze/reorg. Fixed in place this pass (see each
+script's own inline comment); re-running `compute_metrics.py`,
+`generate_figures.py`, and `tables/generate_tables.py` after the fix
+reproduced every existing figure/table/JSON byte-for-byte identical to the
+committed versions — confirming this was a path bug, not a data change.
+
+**`metadata/validate_pack.py` (path-fixed, re-run this pass) now runs
+further than before but still does not complete**: it crashes on
+`examples/cases.json`, because the `examples/` and `live_demo/` directories
+(and their generator scripts) were deleted from this pack in commit
+`61b240a` ("Reorganize evaluation workspace and finalize validation") while
+`README.md`, `RUNBOOK.md`, and `ARTIFACT_INDEX.md` still describe them as
+present. This predates and is unrelated to the four commits documented here.
+It was not fixed this pass — reconstructing hand-written case prose is out
+of scope for a metrics-regeneration pass, and the check was left as a hard
+failure rather than weakened to pass. All 21 checks that ran before the
+crash passed (JSON/CSV validity, all 16 figures present and non-trivial,
+every headline number spot-check). See `metadata/validation_log.md`'s own
+addendum for the exact re-run transcript.

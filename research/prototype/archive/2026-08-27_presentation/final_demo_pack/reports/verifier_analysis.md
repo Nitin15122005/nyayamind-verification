@@ -71,3 +71,36 @@ At the production threshold, both framings sit within 0.002 macro-F1 of their em
 - **CONTRADICTED** is rare on natural data (5-11 per batch out of 100+ claims) — most natural claims that resolve to a verdict at all land on NOT_ENOUGH_INFORMATION, reflecting genuinely ambiguous or under-specified generated text relative to the matched evidence, not necessarily a false claim.
 - **ENTAILED** on natural data only appears meaningfully under labeled framing (2 under bare vs. 16 under labeled, pooled) — bare framing structurally under-detects entailment because it never sees the provision label the claim is attributing to.
 - **NOT_ENOUGH_INFORMATION** is the default outcome when the model cannot confidently decide — it is the *safe* default (no correction is ever triggered by NEI alone, unless combined with `sub_reason: "low_confidence"`), not evidence that the claim is wrong.
+
+## Addendum — 2026-09-09
+
+**The "genuine counter-signal" section above contains one sentence that is
+now out of date.** It reads: "the PRIMARY verification pass always
+hypothesizes the full `claim_text`, never the narrower `assertion_text` used
+elsewhere... This is recorded in `FINAL_PRODUCTION_CONFIG.md` §1 as a real,
+unresolved counter-signal." That gap was closed by commit `bb2cd93`
+(2026-09-09): `verification.narrow_primary_hypothesis` now extends the
+narrow-hypothesis approach to primary verification too, default `true`
+(`FINAL_PRODUCTION_CONFIG.md` §5, `SYSTEM_STATUS.md` addendum). The original
+`assumption_gold_provisional` counter-signal numbers above (47.4% vs 52.6%)
+were computed under the *old* primary-verification behavior and are left
+unchanged here — this pass did not re-run the assumption-gold comparison
+under the new setting, so whether the counter-signal is actually resolved by
+this fix is not yet directly measured for that specific comparison.
+
+What **was** measured directly (CPU re-scoring, verification-only, no
+regeneration, over 456 real evidence-matched claim/evidence pairs where a
+narrower `assertion_text` exists for 107 of them): 31/107 recovered
+NEI → ENTAILED, 2/107 NEI → CONTRADICTED, and **0 reversals** between the two
+safety-relevant labels (ENTAILED ↔ CONTRADICTED) — i.e. the mechanism that
+was hypothesized as the likely explanation for the counter-signal was tested
+directly and shows a real coverage gain with no observed safety cost on this
+sample. Full detail, including case-level examples:
+`research/prototype/outputs/narrow_primary_hypothesis_benchmark_report.md`.
+A separately-launched fresh-GPU ablation on new natural cases (OLD vs
+CURRENT config, real generation) landed during this addendum pass: 15
+genuinely fresh cases, 1/12 evidence-matched claims NEI → ENTAILED, 0
+CONTRADICTED either arm, 0 corrections triggered/shipped either arm.
+Directional only (n=15), but consistent in direction with the CPU
+re-scoring result above.
+`research/prototype/outputs/narrow_primary_hypothesis_gpu_ablation_report.md`.

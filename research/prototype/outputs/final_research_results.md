@@ -203,8 +203,15 @@ labeled framing here, far fewer than the 14 the original bare-vs-assumption disa
 decision (which still rests primarily on the three stronger, more recent, less-bundled sources
 described there) and as a concrete, evidence-backed limitation in
 `final_limitations_and_future_scope.md`: the likely cause is that this older set is dominated by
-bundled multi-citation sentences, and the PRIMARY verification pass (unlike re-verification) always
-hypothesizes the full `claim_text`, never the narrower `assertion_text`.
+bundled multi-citation sentences, and at the time this analysis was run the PRIMARY verification
+pass (unlike re-verification) always hypothesized the full `claim_text`, never the narrower
+`assertion_text`.
+
+**UPDATE 2026-09-09**: `verification.narrow_primary_hypothesis` now extends `assertion_text`-based
+hypotheses to the primary verification pass (see `FINAL_PRODUCTION_CONFIG.md` §5 and
+`outputs/narrow_primary_hypothesis_benchmark_report.md`). This §E analysis was not rerun under the
+new default — it remains historical record of the diagnosis that motivated the fix, not a current
+measurement.
 
 ---
 

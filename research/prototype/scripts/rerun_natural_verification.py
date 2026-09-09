@@ -148,7 +148,11 @@ def main() -> int:
         "",
         "## Verdict distribution",
         "",
-        "| Verdict | bare premise (production) | labeled premise |",
+        # NOTE: "bare" was production when this script was written
+        # (2026-08-26); production has been "labeled" since 2026-08-27 (see
+        # FINAL_PRODUCTION_CONFIG.md). Labeled as "historical baseline" here
+        # so a future rerun never mislabels the current production framing.
+        "| Verdict | bare (historical baseline) | labeled |",
         "|---|---|---|",
     ]
     for lbl in (ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION):
@@ -159,7 +163,7 @@ def main() -> int:
         "",
         "| Premise framing | Claims triggering correction |",
         "|---|---|",
-        f"| bare (production) | {trig_bare}/{n} |",
+        f"| bare (historical baseline) | {trig_bare}/{n} |",
         f"| labeled | {trig_lab}/{n} |",
         "",
         "## Interpretation",

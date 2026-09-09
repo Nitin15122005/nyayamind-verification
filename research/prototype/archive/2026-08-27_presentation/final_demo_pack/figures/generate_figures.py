@@ -22,7 +22,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 HERE = Path(__file__).resolve().parent
-REPO_ROOT = HERE.parents[3]
+# parents[3] -> parents[5] (2026-09-09 addendum pass): this pack now lives one
+# level deeper (archive/2026-08-27_presentation/) than its original build
+# location, so the walk-up to repo root needs 2 more levels.
+REPO_ROOT = HERE.parents[5]
 METRICS_PATH = HERE.parent / "metadata" / "computed_metrics.json"
 CONFIG_PATH = REPO_ROOT / "research/prototype/config/prototype.yaml"
 

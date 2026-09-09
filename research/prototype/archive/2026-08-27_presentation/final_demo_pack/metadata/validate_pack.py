@@ -17,7 +17,11 @@ import re
 from pathlib import Path
 
 PACK_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PACK_ROOT.parents[3]
+# parents[3] -> parents[4] (2026-09-09 addendum pass): this pack now lives one
+# level deeper (archive/2026-08-27_presentation/) than its original build
+# location, so the walk-up to repo root needs 1 more level. (REPO_ROOT is
+# currently unused by this script's checks, but kept correct for future use.)
+REPO_ROOT = PACK_ROOT.parents[4]
 
 results = []
 

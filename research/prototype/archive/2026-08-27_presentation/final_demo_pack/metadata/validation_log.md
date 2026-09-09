@@ -36,3 +36,50 @@ Script: `research/prototype/final_demo_pack/metadata/validate_pack.py`
 _See root `README.md` § "Project Author Statement — 2026-09-03" for a subsequent status update from the project author._
 
 Note: `pytest research/prototype/tests/ -q` and `research/prototype/scripts/run_mvp.py --check` are full-repo checks, run separately (see RUNBOOK.md) and recorded in SYSTEM_STATUS.md, not duplicated by this demo-pack-scoped script.
+
+## Addendum — 2026-09-09 re-run (after fixing this pack's post-archive path bugs)
+
+Run: 2026-09-09 (this addendum pass). `compute_metrics.py`, `validate_pack.py`,
+and `figures/generate_figures.py` each had a `Path(...).parents[N]` /
+`DEMO_DIR` repo-root computation that was correct for this pack's original
+build location (`research/prototype/final_demo_pack/`) but silently resolved
+to the wrong directory after the pack was archived one level deeper
+(`research/prototype/archive/2026-08-27_presentation/final_demo_pack/`)
+during the 2026-08-27 freeze/reorg. Fixed in place this pass (see each
+script's own inline comment). `compute_metrics.py`, `generate_figures.py`,
+and `tables/generate_tables.py` were all re-run after the fix and reproduced
+every JSON/PNG/CSV byte-for-byte identical to the already-committed versions
+— confirming this was purely a path bug, not a data or numbers change.
+
+**`validate_pack.py`, re-run after the path fix, no longer crashes on its own
+`REPO_ROOT` (unused by its checks anyway) but does crash partway through**
+`spot_check_headline_numbers()`, on `PACK_ROOT / "examples/cases.json"`:
+
+```
+FileNotFoundError: ... final_demo_pack\examples\cases.json
+```
+
+Cause: the `examples/` and `live_demo/` directories (and their generator
+scripts, `find_candidates.py` / `build_cases_json.py` / `run_demo.py`) were
+deleted from this pack in commit `61b240a` ("Reorganize evaluation workspace
+and finalize validation") — predating and unrelated to the four commits this
+addendum pass otherwise documents — while `README.md`, `RUNBOOK.md`, and
+`ARTIFACT_INDEX.md` still describe them as present. **Not fixed this pass**:
+reconstructing hand-written case prose from deleted source data is out of
+scope for a metrics-regeneration pass, and this check was left as a hard
+failure rather than weakened (e.g. by catching the exception or removing the
+check) to force a pass. All checks that ran before the crash passed:
+
+- All 2 JSON files under `final_demo_pack/` parse (down from "All 4" in the
+  original 2026-08-27 log — 2 of those 4 were `examples/candidate_pool.json`
+  and `examples/cases.json`, both now missing for the reason above)
+- All 17 CSV files parse and are non-empty
+- 16/16 figure PNGs present and non-trivial size
+- 4/4 headline-number spot-checks against `computed_metrics.json` (unsafe
+  shipments 0/122, evidence coverage 63.2%→70.3%, 1 natural shipped
+  correction, threshold-sensitivity macro-F1 @0.70) — **all still match**
+
+Checks not reached: "All 8 exemplar cases present in cases.json",
+"No undisclaimed 'lawyer-verified' claims found" (this second check would
+likely still pass on the surviving `.md` files, but was not exercised
+because the script raises before reaching it).

@@ -28,10 +28,20 @@ import statistics
 from collections import Counter, defaultdict
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = Path(__file__).resolve().parents[6]
+# NOTE (2026-09-09 addendum pass): this pack was archived one level deeper
+# (research/prototype/archive/2026-08-27_presentation/final_demo_pack/...)
+# than its original build location (research/prototype/final_demo_pack/...)
+# during the 2026-08-27 repository freeze/reorg. The parents[] index above
+# was updated from 4 to 6 to still resolve to the actual repo root from the
+# new, deeper path -- verified by running this script and confirming
+# `research/prototype/outputs/final_metrics.json` etc. are found.
 OUT_DIR = REPO_ROOT / "research/prototype/outputs"
 EVID_DIR = REPO_ROOT / "research/data/evidence"
-DEMO_DIR = REPO_ROOT / "research/prototype/final_demo_pack"
+# DEMO_DIR updated (2026-09-09 addendum pass) to the pack's actual current
+# location under archive/2026-08-27_presentation/ (was
+# research/prototype/final_demo_pack/, which no longer exists post-reorg).
+DEMO_DIR = REPO_ROOT / "research/prototype/archive/2026-08-27_presentation/final_demo_pack"
 
 
 def load_json(rel_path: str):

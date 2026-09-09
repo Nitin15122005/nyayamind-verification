@@ -21,7 +21,11 @@ from math import comb
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 FINAL_COMPARISON = SCRIPT_DIR.parent
-PROTOTYPE = FINAL_COMPARISON.parent
+# PROTOTYPE updated (2026-09-09 addendum pass): this directory now lives one
+# level deeper (archive/2026-08-27_presentation/final_comparison/) than its
+# original build location (research/prototype/final_comparison/), so an extra
+# .parent is needed to still land on research/prototype/.
+PROTOTYPE = FINAL_COMPARISON.parent.parent.parent
 OUT = PROTOTYPE / "outputs"
 TABLES = FINAL_COMPARISON / "tables"
 TABLES.mkdir(exist_ok=True)

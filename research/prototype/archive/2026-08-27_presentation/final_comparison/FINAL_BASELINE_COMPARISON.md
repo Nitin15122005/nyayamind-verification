@@ -376,3 +376,57 @@ single most valuable next experiment — a larger, fresh, single-pass natural ba
 full CURRENT configuration — is not required to trust any number in this comparison, but
 would move the correction-shipping and joint-lever findings from "demonstrated possible" to
 "measured at a defensible sample size."
+
+## Addendum — 2026-09-09
+
+This report and its backing tables/figures (built 2026-08-27) remain an
+accurate historical ORIGINAL-vs-CURRENT-as-of-2026-08-27 comparison —
+`scripts/build_comparison_data.py` and `generate_figures.py` were re-run
+against current `outputs/*` this pass (after fixing a path-resolution bug
+introduced when this directory was archived a level deeper — see
+`RUN_COMPARISON.md`'s addendum) and reproduced every table/figure
+byte-for-byte identical to what's committed, confirming none of the four
+commits below touched any file this comparison's numbers trace to.
+
+**One specific line above is now directly superseded and should not be read
+as still-open**: under "Limitations", *"The assumption-gold counter-signal is
+real and unresolved: labeled framing agrees less with an older,
+bundled-sentence-heavy PROVISIONAL label set. The likely mechanism (primary
+verification never uses the narrower `assertion_text` hypothesis) is
+documented but not yet fixed or tested."* — commit `bb2cd93` (2026-09-09)
+implemented and tested exactly that mechanism:
+`verification.narrow_primary_hypothesis` now extends narrow-hypothesis
+verification to the primary verification pass (default `true`,
+`FINAL_PRODUCTION_CONFIG.md` §5). Measured on a 456-claim CPU re-scoring
+benchmark (verification-only, no regeneration): 31/107 applicable claims
+recovered NEI → ENTAILED, 2/107 NEI → CONTRADICTED, **0 reversals** between
+the two safety-relevant labels. This directly tests the hypothesized
+mechanism and finds a real coverage gain with no observed safety cost on
+this sample — but the assumption-gold comparison itself (47.4% vs 52.6%,
+`comparison_summary.csv` row 9) was **not re-run** under the new setting this
+pass, so whether it specifically resolves that counter-signal remains
+unmeasured; only the mechanism's general effect was tested. Full detail:
+`research/prototype/outputs/narrow_primary_hypothesis_benchmark_report.md`.
+
+The other three new commits add findings that do not touch anything else
+claimed above: `adf54aa` (5 adversarial safety gaps fixed — negation-driven
+CONTRADICTED excluded from correction triggers, year-blind fuzzy matching
+closed, citation-injection and ordinal-integrity guards added); `6347c45`
+(BM25/embedding retrieval evaluated and **rejected** — Jaccard stays
+production default, the only method tested with zero wrong-Act matches on a
+9-case safety set); `c250a0e` (an Art./Arts. citation-abbreviation parser
+fix recovered 7 claims net across every real generated text this project has
+ever produced — a genuine, small, previously-unconfirmed defect, so the
+claim-parser ablation row in this report's own Ablations table, dated to an
+earlier fix commit `223eb9d`, is not affected, but should not be read as "no
+further parser defects were ever found since").
+
+A fresh-GPU ablation isolating `narrow_primary_hypothesis` on new natural
+cases (OLD vs CURRENT config, real generation through the actual production
+pipeline) landed during this addendum pass: 15 genuinely fresh cases (never
+used in any prior experiment in this repo), 1/12 evidence-matched claims
+NEI → ENTAILED, 0 CONTRADICTED either arm, 0 corrections triggered/shipped
+either arm (so no shipping-safety comparison is possible from this small
+sample). Directional only, n=15, consistent in direction with — but far
+smaller than — the 456-claim CPU re-scoring result above. Full detail:
+`research/prototype/outputs/narrow_primary_hypothesis_gpu_ablation_report.md`.

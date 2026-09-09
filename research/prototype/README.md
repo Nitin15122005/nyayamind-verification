@@ -34,7 +34,12 @@ generated_field.text  (one paragraph, statutory grounding only)
    v
 [2] claim_parser.extract_claims()          -- src/claim_parser.py
    |  deterministic: split into sentences, keep only sentences with an
-   |  explicit "Section/Article/... N of/in <Act>" citation
+   |  explicit "Section/Article/... N of/in <Act>" citation. Recognizes the
+   |  abbreviated "Art."/"Arts." form of "Article"/"Articles" (the only
+   |  abbreviation actually observed in real generated text -- fixed
+   |  2026-09-09 after scanning all real generated output found a real
+   |  paragraph citing 4 Articles that extracted 0 claims; see
+   |  outputs/article_abbreviation_fix_impact_report.md).
    v
 claims[]  (one Claim per citation-bearing sentence)
    |

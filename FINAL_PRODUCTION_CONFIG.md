@@ -7,7 +7,9 @@ evaluated against **all completed experiments** (synthetic + every natural evalu
 project has run), never against synthetic results alone. Where the evidence justified a change,
 `config/prototype.yaml` was updated and a regression test was added locking the new value
 (`tests/test_premise_framing_production.py::test_shipped_config_locks_the_2026_08_27_final_production_decision`).
-Full pytest (205/205) and `run_mvp.py --check` pass with the config exactly as shipped.
+Full pytest (205/205 as of 2026-08-27; the suite has grown since as later commits added their
+own regression tests — see each commit's message for its own count) and `run_mvp.py --check`
+pass with the config exactly as shipped.
 
 ---
 
@@ -77,14 +79,17 @@ found labeled framing agrees *slightly less* (18/38, 47.4%) than the already-sto
 do (20/38, 52.6%), and only 2/38 claims flip to ENTAILED (`outputs/assumption_gold_bare_vs_labeled_metrics.json`).
 This is the opposite direction from sources 1-3 above. The most likely explanation, consistent
 with this project's own long-documented claim-bundling problem: this older set is dominated by
-bundled, multi-citation listing sentences, and the PRIMARY verification pass (unlike
-re-verification) always hypothesizes the full `claim_text`, never the narrower `assertion_text` —
-so labeled framing's provision label helps less when the surrounding sentence still dilutes the
-hypothesis with sibling citations' content. At n=38, against a provisional (not real) gold
-standard, and on an older claim set, this is not treated as outweighing sources 1-3, but it is
-recorded here in full rather than omitted, and it sharpens a concrete, evidence-backed item for
-future work (extending `assertion_text`-based hypotheses to the PRIMARY verification pass, not
-just re-verification) — see `outputs/final_limitations_and_future_scope.md`.
+bundled, multi-citation listing sentences, and at the time this section was written the PRIMARY
+verification pass (unlike re-verification) always hypothesized the full `claim_text`, never the
+narrower `assertion_text` — so labeled framing's provision label helped less when the surrounding
+sentence still diluted the hypothesis with sibling citations' content. At n=38, against a
+provisional (not real) gold standard, and on an older claim set, this was not treated as
+outweighing sources 1-3, but it was recorded here in full rather than omitted, and it sharpened a
+concrete, evidence-backed item for future work.
+
+**Addressed 2026-09-09 — see §5 below.** `verification.narrow_primary_hypothesis` now extends
+`assertion_text`-based hypotheses to the PRIMARY verification pass, not just re-verification.
+This paragraph's diagnosis is kept as historical record of why that change was made.
 
 ### What was NOT done
 
@@ -243,14 +248,31 @@ several of the other defaults above cleared at the time they were adopted.
 
 This is CPU re-scoring of already-generated text, not a fresh end-to-end GPU run — it does not
 by itself measure the downstream effect on `correction` shipping rates (the 2 new
-NEI→CONTRADICTED claims are new correction *triggers*, not yet observed shipped corrections). A
-natural follow-up, not done in this session: a fresh Mode-C GPU batch under this flag to see
-whether the 1.8%-cumulative correction-shipping rate documented in
-`outputs/final_limitations_and_future_scope.md` §3a moves.
+NEI→CONTRADICTED claims are new correction *triggers*, not yet observed shipped corrections).
+
+**Follow-up done 2026-09-09** (`scripts/run_narrow_primary_hypothesis_gpu_ablation.py`, see
+`outputs/narrow_primary_hypothesis_gpu_ablation_report.md`): a fresh, real end-to-end Mode-C GPU
+run (Qwen2.5-7B generation + DeBERTa verification + selective correction, through the actual
+production `pipeline.py`) on **15 genuinely fresh** natural cases never used in any prior
+experiment in this repo, isolating exactly this one lever (OLD=false vs CURRENT=true, everything
+else identical). Result, stated honestly:
+
+- **Verification recovery confirmed directionally**: 1/12 evidence-matched claims flipped
+  NEI → ENTAILED under CURRENT vs OLD — small-sample but consistent with the CPU benchmark's
+  mechanism and direction.
+- **Correction shipping remains genuinely unmeasured, NOT improved**: correction triggered
+  **0/15 times under BOTH arms** — this batch produced zero CONTRADICTED verdicts and zero
+  low-confidence-NEI triggers on either config, so the correction pathway was never even
+  entered. This is not a null result for the lever; it is an absence of the precondition
+  (a flagged claim) needed to observe one, at this sample size. **Do not read this as evidence
+  the 1.8%-cumulative correction-shipping rate improved or stayed flat — it was not exercised at
+  all in this batch.** A larger fresh batch (n>=50, matching the scale of
+  `outputs/final_gpu_validation.md`) is the natural next step to actually observe correction
+  behavior under this lever, not done in this session for time/GPU-cost reasons.
 
 ---
 
-## 5. `verification.confidence_threshold`: **unchanged at 0.70**
+## 6. `verification.confidence_threshold`: **unchanged at 0.70**
 
 `outputs/threshold_sensitivity_analysis.md`'s deterministic sweep (0.50–0.95, no re-inference —
 replayed against the already-computed 420-item controlled benchmark's stored softmax
@@ -267,7 +289,7 @@ it was not moved merely to chase a metric.
 
 ---
 
-## 6. Sibling-regression protection — not an independent config option
+## 7. Sibling-regression protection — not an independent config option
 
 `src/pipeline.py`'s `_reverify_sibling_regressions()` is **automatically active** whenever
 `atomic_scope_check` is truthy (either `true`/legacy-atomic or `"assertion_spans"`) — it is not a
@@ -282,7 +304,7 @@ it. Measured: 0 sibling regressions found in every triggered correction this ses
 
 ---
 
-## 7. Citation-identity preservation on correction — always on, was never a toggle
+## 8. Citation-identity preservation on correction — always on, was never a toggle
 
 `apply_selective_correction()`'s ordinal-position citation-identity matching
 (`_citation_identity()`, same-identity-claims ordinal lookup) is core, always-active pipeline
@@ -326,7 +348,7 @@ already broken." Fixed by excluding already-independently-flagged siblings from 
 
 ---
 
-## 7a. Negation safety gate — new, 2026-09-08
+## 8a. Negation safety gate — new, 2026-09-08
 
 Empirically confirmed (real `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`, real IPC evidence,
 during the same hardening campaign's adversarial claim-parser audit): a negated statutory claim
@@ -353,7 +375,7 @@ never widens what counts as ENTAILED/CONTRADICTED/NO_EVIDENCE for any other clai
 
 ---
 
-## 8. What would justify a *different* answer
+## 9. What would justify a *different* answer
 
 - **`premise_framing`**: a larger (50-100 case) fresh natural batch under the full final config
   showing the 1/10 shipped-correction rate holds or improves, OR any single unsafe shipment,
@@ -365,7 +387,7 @@ never widens what counts as ENTAILED/CONTRADICTED/NO_EVIDENCE for any other clai
   "no harm found" to a measured shipping-rate benefit specifically attributable to these two
   levers.
 
-## 9. Regression tests locking this configuration
+## 10. Regression tests locking this configuration
 
 - `tests/test_premise_framing_production.py::test_shipped_config_locks_the_2026_08_27_final_production_decision`
   — asserts `config/prototype.yaml` exactly matches every value in the summary table above.

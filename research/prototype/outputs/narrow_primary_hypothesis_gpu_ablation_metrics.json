@@ -1,0 +1,60 @@
+{
+  "config": {
+    "n_cases_requested": 15,
+    "n_cases_run": 15,
+    "document_ids": [
+      "1950_28",
+      "1950_50",
+      "1951_13",
+      "1951_21",
+      "1951_25",
+      "1951_31",
+      "1951_44",
+      "1951_54",
+      "1951_62",
+      "1951_71",
+      "1952_24",
+      "1952_40",
+      "1952_44",
+      "1952_47",
+      "1952_63"
+    ],
+    "evidence_pool_size": 136,
+    "premise_framing": "labeled",
+    "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+    "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  },
+  "OLD": {
+    "n_cases": 15,
+    "total_claims": 39,
+    "claims_with_evidence": 12,
+    "evidence_coverage": 0.3076923076923077,
+    "verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 12
+    },
+    "correction_status_distribution": {
+      "not_triggered": 15
+    },
+    "correction_triggered": 0,
+    "correction_shipped": 0,
+    "correction_shipping_rate_of_triggered": null
+  },
+  "CURRENT": {
+    "n_cases": 15,
+    "total_claims": 39,
+    "claims_with_evidence": 12,
+    "evidence_coverage": 0.3076923076923077,
+    "verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 11,
+      "ENTAILED": 1
+    },
+    "correction_status_distribution": {
+      "not_triggered": 15
+    },
+    "correction_triggered": 0,
+    "correction_shipped": 0,
+    "correction_shipping_rate_of_triggered": null
+  },
+  "runtime_seconds_total": 380.9714708328247,
+  "timestamp": "2026-09-09T10:10:28.462293+00:00"
+}

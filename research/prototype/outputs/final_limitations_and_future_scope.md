@@ -101,9 +101,18 @@ The dominant blockers, evidenced directly:
   NEI→ENTAILED (manually verified as genuine, not spurious), 0 unsafe reversals. **Not yet
   done**: this uses only the single `assertion_text` field, not the richer `assertion_spans` list
   (the "respectively"-pattern structure) — a claim whose only narrower representation is
-  `assertion_spans` still verifies against the full `claim_text` in the primary pass. Also not yet
-  measured: the downstream effect on Mode-C correction *shipping* rates (a fresh GPU batch, not
-  done in this session — see `FINAL_PRODUCTION_CONFIG.md` §5 caveat).
+  `assertion_spans` still verifies against the full `claim_text` in the primary pass.
+- **UPDATE 2026-09-09 (later same day): fresh GPU batch run, correction shipping still
+  unmeasured.** `scripts/run_narrow_primary_hypothesis_gpu_ablation.py` ran a real, fresh
+  end-to-end Mode-C GPU experiment (15 genuinely fresh natural cases, OLD vs CURRENT config,
+  isolating only this lever — see `outputs/narrow_primary_hypothesis_gpu_ablation_report.md`).
+  Verification recovery was directionally confirmed (1/12 evidence-matched claims flipped
+  NEI→ENTAILED). **Correction triggered 0/15 times under BOTH arms** — this batch produced zero
+  CONTRADICTED verdicts and zero low-confidence-NEI triggers on either config, so correction
+  shipping was never exercised at all, on either side of the ablation. This is honestly reported
+  as "not measured at this sample size", not as "no improvement" or "improvement confirmed" —
+  a larger fresh batch (n>=50) is needed to actually observe correction behavior under this
+  lever.
 - ~~The primary verification pass never uses the narrower `assertion_text` hypothesis~~ — only
   re-verification does. This session's assumption-gold comparison (§E of
   `final_research_results.md`) found labeled framing does NOT improve agreement on a
@@ -186,9 +195,14 @@ interpretive requirement for any downstream user, documented consistently since 
 
 ## 5. Recommended future scope, in priority order (evidence-backed, not speculative)
 
-1. **Extend narrow-hypothesis (`assertion_text`/`assertion_spans`) verification to the PRIMARY
-   pass**, not just correction re-verification — directly targets the bundled-sentence dilution
-   problem shown to still exist in §3a/§E.
+1. **PARTIALLY DONE 2026-09-09** (see §3a): extend narrow-hypothesis verification to the PRIMARY
+   pass, not just correction re-verification — directly targeted the bundled-sentence dilution
+   problem shown to exist in §3a/§E. `assertion_text`-based primary verification shipped
+   (`verification.narrow_primary_hypothesis`); a fresh GPU batch confirmed the verification-recovery
+   mechanism directionally (1/12 evidence-matched claims) but could not exercise correction
+   shipping at all (0/15 triggers on either arm — see `outputs/narrow_primary_hypothesis_gpu_ablation_report.md`).
+   **Still open**: the richer `assertion_spans`-based primary verification, and a larger (n>=50)
+   fresh batch actually powered to observe correction-shipping behavior under this lever.
 2. **A larger (50-100 case) fresh natural batch under the exact final production config**, to
    move the single most novel finding in this session (1/10 shipped) from "demonstrated possible"
    to "measured rate" — explicitly flagged as the needed follow-up in `FINAL_PRODUCTION_CONFIG.md`.

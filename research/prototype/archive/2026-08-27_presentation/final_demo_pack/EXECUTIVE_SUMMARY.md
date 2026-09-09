@@ -59,3 +59,39 @@ Any verifier verdict (ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION) reported
 - **NO_EVIDENCE never means "legally unsupported."** It means only "not in our ~136-record corpus" — see `reports/retrieval_analysis.md`.
 
 Full limitations statement: `research/prototype/outputs/final_limitations_and_future_scope.md`.
+
+## Addendum — 2026-09-09
+
+Everything above is the frozen 2026-08-27 result set and remains accurate as
+a historical snapshot — re-verified this pass by re-running
+`metadata/compute_metrics.py` against current `outputs/*` and confirming the
+output is byte-for-byte identical. Four commits since 2026-08-27 add new,
+separately-reported findings that do not change any number above (none
+touched `outputs/final_metrics.json` or its siblings that this summary's
+numbers trace to):
+
+- **`adf54aa`**: five adversarial safety gaps fixed (negation-driven
+  CONTRADICTED verdicts excluded from correction triggers, year-blind fuzzy
+  matching closed, citation-injection and ordinal-integrity guards added,
+  word-boundary-aware scope checking). 231/231 tests pass.
+- **`6347c45`**: BM25 and embedding retrieval signals were evaluated and
+  **rejected** — Jaccard stays the production default (it is the only method
+  tested with zero wrong-Act matches on a 9-case safety set). Negative
+  result, reported honestly. `outputs/retrieval_signal_benchmark_report.md`.
+- **`c250a0e`**: an Art./Arts. citation-abbreviation parser fix recovered 7
+  claims net across every real generated text this project has produced.
+  `outputs/article_abbreviation_fix_impact_report.md`.
+- **`bb2cd93`**: `verification.narrow_primary_hypothesis` (default now
+  `true`) extends the narrow-hypothesis idea already used in correction
+  re-verification to primary verification. A 456-claim CPU re-scoring
+  benchmark found 31/107 applicable claims recovered NEI → ENTAILED with
+  **0 unsafe reversals** (no ENTAILED↔CONTRADICTED flips).
+  `outputs/narrow_primary_hypothesis_benchmark_report.md`. A fresh-GPU
+  ablation on 15 genuinely-new natural cases (real generation, OLD vs
+  CURRENT config) landed during this addendum pass: 1/12 evidence-matched
+  claims NEI → ENTAILED, 0 corrections triggered either arm. Small (n=15)
+  and directional, but consistent in direction with the CPU result above.
+  `outputs/narrow_primary_hypothesis_gpu_ablation_report.md`.
+
+See `README.md`'s own addendum for the full list and `SYSTEM_STATUS.md`'s
+addendum for the updated production-config table.

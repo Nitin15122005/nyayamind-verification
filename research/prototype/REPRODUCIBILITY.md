@@ -149,13 +149,16 @@ this reproducibility pass except two dated, logged, evidence-based corrections t
 | `use_evidence_v1` | **`true`** (production default since 2026-08-27; 136-record pool) |
 | `correction.atomic_scope_check` | **`"assertion_spans"`** (production default since 2026-08-27) |
 | `correction.narrow_reverification_hypothesis` | **`true`** (production default since 2026-08-27) |
+| `verification.narrow_primary_hypothesis` | **`true`** (production default since 2026-09-09; see `FINAL_PRODUCTION_CONFIG.md` §5) |
 
 Every one of these has a dated, evidence-cited comment directly in `config/prototype.yaml`
 explaining why it is set the way it is, and `FINAL_PRODUCTION_CONFIG.md` is the full decision
-record. To reproduce any **pre-2026-08-27** committed result byte-for-byte, set all four back to
+record. To reproduce any **pre-2026-08-27** committed result byte-for-byte, set all five back to
 their old values (`use_evidence_v1: false`, `premise_framing: "bare"`,
-`atomic_scope_check: false`, `narrow_reverification_hypothesis: false`) — every historical output
-in `outputs/` was produced under exactly that combination, and
+`atomic_scope_check: false`, `narrow_reverification_hypothesis: false`,
+`narrow_primary_hypothesis: false` — the last did not exist before 2026-09-09, so it is simply
+absent/inert for any config predating that) — every historical output in `outputs/` was produced
+under exactly that combination, and
 `tests/test_premise_framing_production.py::test_shipped_config_can_still_reproduce_every_pre_2026_08_27_committed_output`
 pins that this combination still resolves correctly through the current code.
 

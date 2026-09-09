@@ -156,7 +156,12 @@ def main() -> int:
         "",
         "## Re-verification verdict on the corrected claim",
         "",
-        "| Verdict | bare premise (production) | labeled premise |",
+        # NOTE: "bare" was production at the time this script was written
+        # (2026-08-26); production has been "labeled" since 2026-08-27 (see
+        # FINAL_PRODUCTION_CONFIG.md). Labeled here as "historical baseline",
+        # not "(production)", so a future rerun of this script never
+        # mislabels the current production framing.
+        "| Verdict | bare (historical baseline) | labeled |",
         "|---|---|---|",
     ]
     for lbl in (ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION):
@@ -167,7 +172,7 @@ def main() -> int:
         "",
         "| Premise framing | Corrections shipped | Rate |",
         "|---|---|---|",
-        f"| bare (production) | {ship_bare}/{n} | {ship_bare / n:.1%} |",
+        f"| bare (historical baseline) | {ship_bare}/{n} | {ship_bare / n:.1%} |",
         f"| labeled | {ship_lab}/{n} | {ship_lab / n:.1%} |",
         "",
         "The gate is unchanged: a correction ships only if it re-verifies as ENTAILED and the",
