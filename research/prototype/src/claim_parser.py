@@ -33,7 +33,21 @@ from typing import Optional
 # provision number in that list becomes its own ExtractedCitation via
 # extract_citations() / extract_claims() below.
 _PROVISION_KEYWORDS = ("Section", "Article", "Order", "Rule", "Regulation", "Clause", "Schedule")
-_KEYWORD_PATTERN = "|".join(f"{kw}s?" for kw in _PROVISION_KEYWORDS)
+
+# Abbreviated keyword forms actually observed in real Qwen-generated
+# statutory_grounding text (scanned across every committed output under
+# outputs/: "Art."/"Arts." for "Article"/"Articles" occurs; "S."/"Sec."/
+# "Ss."/"O."/"r." for Section/Order/Rule never do — this generator
+# apparently only ever abbreviates "Article", so this map is scoped to
+# what's real, not a speculative full abbreviation scheme). The trailing
+# period is REQUIRED in the pattern (not made optional) so a bare "Art"/
+# "Arts" word can never accidentally trigger a citation match outside its
+# one real usage. Maps the abbreviated form to its canonical singular
+# keyword for _normalize_provision_type() below.
+_ABBREVIATED_KEYWORD_TO_CANONICAL = {"art": "article", "arts": "article"}
+_ABBREVIATED_KEYWORD_PATTERN = r"Arts?\."
+
+_KEYWORD_PATTERN = "|".join(f"{kw}s?" for kw in _PROVISION_KEYWORDS) + "|" + _ABBREVIATED_KEYWORD_PATTERN
 
 # One provision number, e.g. "302", "31A", "25F(1)", "9A".
 _NUMBER_ITEM_PATTERN = r"\d+[A-Za-z\-]*(?:\s*\([^)]+\))?"
@@ -61,7 +75,10 @@ _NUMBER_LIST_PATTERN = (
 _PART_QUALIFIER_PATTERN = r"(?:\s*,?\s*Part\s+[IVXLC]+[A-Za-z]?)?"
 
 CITATION_REGEX = re.compile(
-    rf"(?P<keyword>{_KEYWORD_PATTERN})\s+"
+    # \s* (not \s+): the abbreviated "Art."/"Arts." form is sometimes
+    # observed with NO space before the number in real generated text
+    # (e.g. "Art.227"), unlike the full keywords which always have one.
+    rf"(?P<keyword>{_KEYWORD_PATTERN})\s*"
     rf"(?P<numbers>{_NUMBER_LIST_PATTERN})"
     rf"(?P<part>{_PART_QUALIFIER_PATTERN})"
     r"\s+(?:in|of)\s+"
@@ -81,7 +98,7 @@ _PART_QUALIFIER_RE = re.compile(r"Part\s+([IVXLC]+[A-Za-z]?)", re.IGNORECASE)
 # sentence) or, failing that, extract_claims()'s field-wide fallback —
 # never by inventing one.
 BARE_CITATION_REGEX = re.compile(
-    rf"(?P<keyword>{_KEYWORD_PATTERN})\s+(?P<numbers>{_NUMBER_LIST_PATTERN})",
+    rf"(?P<keyword>{_KEYWORD_PATTERN})\s*(?P<numbers>{_NUMBER_LIST_PATTERN})",
     re.IGNORECASE,
 )
 
@@ -143,17 +160,20 @@ _PLAUSIBLE_YEAR_RE = re.compile(r"^(?:15|16|17|18|19|20)\d\d$")
 # letting the caller re-scan the remainder) keeps the first citation's act
 # clean and recovers the second citation instead of losing/merging it.
 _EMBEDDED_CITATION_RE = re.compile(
-    rf"\s*(?:,\s*)?(?:and|or)?\s*\b(?:{_KEYWORD_PATTERN})\s+\d",
+    rf"\s*(?:,\s*)?(?:and|or)?\s*\b(?:{_KEYWORD_PATTERN})\s*\d",
     re.IGNORECASE,
 )
 
 
 def _normalize_provision_type(raw: str) -> str:
-    """'Article'/'article' -> 'Article'; 'Articles'/'articles' -> 'Article'.
+    """'Article'/'article' -> 'Article'; 'Articles'/'articles' -> 'Article';
+    'Art.'/'Arts.' -> 'Article' (see _ABBREVIATED_KEYWORD_TO_CANONICAL).
     Evidence records store provision_type in singular form (see
     data_loader.EvidenceRecord), so plural keywords must be singularized
     here or every plural citation would silently fail evidence matching."""
-    lower = raw.lower()
+    lower = raw.lower().rstrip(".")
+    if lower in _ABBREVIATED_KEYWORD_TO_CANONICAL:
+        return _ABBREVIATED_KEYWORD_TO_CANONICAL[lower].capitalize()
     if lower.endswith("s") and lower[:-1] in _SINGULAR_PROVISION_TYPES:
         return lower[:-1].capitalize()
     return lower.capitalize()
@@ -163,6 +183,22 @@ def _normalize_provision_type(raw: str) -> str:
 # paragraphs this pipeline generates, and kept deliberately simple/auditable
 # rather than pulling in an NLP dependency for a one-field MVP.
 _SENTENCE_SPLIT_REGEX = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9])")
+
+# Known abbreviations that legitimately end in a period but are NEVER a
+# real sentence boundary in this pipeline's generated text. Found by
+# scanning every real Qwen-generated statutory_grounding paragraph
+# committed under outputs/ (181 unique texts): "Art."/"Arts." (Article/
+# Articles) is the only abbreviation actually observed there ("S."/"Sec."/
+# "Ss."/"O."/"r." never occur — this generator apparently only ever
+# abbreviates "Article", never "Section"/"Order"/"Rule" — so this list is
+# scoped to what's real, not speculative). A blind split on every ". "
+# shatters a single "...Art. 32...Art. 136..." sentence into fragments
+# that extract_citations() can no longer read the keyword-and-number
+# grammar out of (the keyword ends up in one fragment, the number in the
+# next), silently dropping every citation in the sentence — confirmed on a
+# real generated paragraph citing 4 Articles that extracted 0 claims
+# before this fix.
+_SENTENCE_BOUNDARY_ABBREVIATIONS = ("Art.", "Arts.")
 
 _STOPWORDS = {
     "the", "of", "and", "in", "for", "to", "a", "an", "this", "that",
@@ -431,8 +467,16 @@ def split_sentences(text: str) -> list[str]:
     text = text.strip()
     if not text:
         return []
-    parts = _SENTENCE_SPLIT_REGEX.split(text)
-    return [p.strip() for p in parts if p.strip()]
+    raw_parts = [p for p in _SENTENCE_SPLIT_REGEX.split(text) if p.strip()]
+    # Merge a split back together whenever it occurred right after a known
+    # non-terminal abbreviation (see _SENTENCE_BOUNDARY_ABBREVIATIONS above).
+    parts: list[str] = []
+    for part in raw_parts:
+        if parts and parts[-1].rstrip().endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS):
+            parts[-1] = parts[-1].rstrip() + " " + part.strip()
+        else:
+            parts.append(part.strip())
+    return parts
 
 
 def _citations_from_numbers(ptype: str, numbers_text: str, act_raw_clean: Optional[str], act_norm: str) -> list[ExtractedCitation]:

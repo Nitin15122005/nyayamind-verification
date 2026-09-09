@@ -1,0 +1,1640 @@
+{
+  "totals": {
+    "old_claims": 795,
+    "new_claims": 802,
+    "old_with_evidence": 531,
+    "new_with_evidence": 532
+  },
+  "unique_texts_checked": 181,
+  "per_case": [
+    {
+      "doc_id": "1975_58",
+      "source_file": "docker_run_A_n1.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_999",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_1020",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_898",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_641",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2011_625",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 5,
+      "new_claims_with_evidence": 5,
+      "delta": 0
+    },
+    {
+      "doc_id": "2014_66",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2000_1266",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_760",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_315",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_1150",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 14,
+      "new_claim_count": 14,
+      "old_claims_with_evidence": 12,
+      "new_claims_with_evidence": 12,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_2318",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_999",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_1641",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_677",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2023_710",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1978_206",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_622",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1954_121",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1962_210",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1989_215",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_174",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_826",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_731",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_1235",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_161",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_864",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_850",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_5",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_849",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2023_613",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_685",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1976_83",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2000_152",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_554",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1953_64",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1972_232",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 1,
+      "delta": 1
+    },
+    {
+      "doc_id": "1950_13",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1972_37",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_770",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_579",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2017_182",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_11",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 5,
+      "new_claims_with_evidence": 5,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_181",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_270",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 5,
+      "new_claims_with_evidence": 5,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_412",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_1348",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_1768",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_119",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_229",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_336",
+      "source_file": "final_gpu_validation_A.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2012_506",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_587",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_48",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 14,
+      "new_claim_count": 14,
+      "old_claims_with_evidence": 14,
+      "new_claims_with_evidence": 14,
+      "delta": 0
+    },
+    {
+      "doc_id": "1975_506",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 14,
+      "new_claim_count": 14,
+      "old_claims_with_evidence": 14,
+      "new_claims_with_evidence": 14,
+      "delta": 0
+    },
+    {
+      "doc_id": "2001_2",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_444",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_865",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_528",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 10,
+      "new_claims_with_evidence": 10,
+      "delta": 0
+    },
+    {
+      "doc_id": "2020_379",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1969_420",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1977_51",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1985_367",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2014_176",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2000_811",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_211",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2024_299",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 5,
+      "new_claims_with_evidence": 5,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_441",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2020_51",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1978_68",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_1270",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1982_49",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1983_178",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 6
+    },
+    {
+      "doc_id": "2007_299",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1985_364",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1962_348",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2001_502",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_544",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 11,
+      "new_claim_count": 11,
+      "old_claims_with_evidence": 9,
+      "new_claims_with_evidence": 9,
+      "delta": 0
+    },
+    {
+      "doc_id": "1997_1212",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2000_862",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "1978_196",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "1956_41",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1994_129",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_1002",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_1006",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 10,
+      "new_claims_with_evidence": 10,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_131",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_99",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 10,
+      "new_claims_with_evidence": 10,
+      "delta": 0
+    },
+    {
+      "doc_id": "2017_768",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_132",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2023_885",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_924",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_200",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_431",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2022_1043",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_2145",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2001_386",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_720",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1963_18",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 14,
+      "new_claim_count": 14,
+      "old_claims_with_evidence": 12,
+      "new_claims_with_evidence": 12,
+      "delta": 0
+    },
+    {
+      "doc_id": "1980_424",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1991_110",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2000_584",
+      "source_file": "natural_candidates_50_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_398",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_851",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_192",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_854",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_919",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_2063",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 9,
+      "new_claims_with_evidence": 9,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_1301",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_1240",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1988_402",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_231",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2001_160",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 12,
+      "new_claim_count": 12,
+      "old_claims_with_evidence": 7,
+      "new_claims_with_evidence": 7,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_1163",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2022_435",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 8,
+      "new_claims_with_evidence": 8,
+      "delta": 0
+    },
+    {
+      "doc_id": "2023_242",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2021_572",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1964_286",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1981_418",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_1864",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_311",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_841",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2020_346",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_974",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1974_205",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_815",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 14,
+      "new_claim_count": 14,
+      "old_claims_with_evidence": 10,
+      "new_claims_with_evidence": 10,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_1212",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_279",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_109",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_344",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_697",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2018_73",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1976_51",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1960_181",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1994_187",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_48",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_1139",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_165",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2019_432",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2022_356",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 7,
+      "new_claim_count": 7,
+      "old_claims_with_evidence": 7,
+      "new_claims_with_evidence": 7,
+      "delta": 0
+    },
+    {
+      "doc_id": "2024_300",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2010_606",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 13,
+      "new_claim_count": 13,
+      "old_claims_with_evidence": 13,
+      "new_claims_with_evidence": 13,
+      "delta": 0
+    },
+    {
+      "doc_id": "1972_413",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "1975_28",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "1989_189",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 5,
+      "new_claim_count": 5,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1992_179",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_1427",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "1997_1306",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 10,
+      "new_claim_count": 10,
+      "old_claims_with_evidence": 10,
+      "new_claims_with_evidence": 10,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_743",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1998_786",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "2001_843",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2002_828",
+      "source_file": "natural_candidates_batch2_gpu_bare.jsonl",
+      "old_claim_count": 8,
+      "new_claim_count": 8,
+      "old_claims_with_evidence": 7,
+      "new_claims_with_evidence": 7,
+      "delta": 0
+    },
+    {
+      "doc_id": "1975_58",
+      "source_file": "run_A_n1.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1992_534",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2009_1385",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2007_1517",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 7,
+      "new_claim_count": 7,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2024_244",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1987_609",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1954_7",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_772",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1992_31",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1994_650",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 0,
+      "new_claim_count": 0,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_360",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "2005_128",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1971_200",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "1982_43",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_1494",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1970_250",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1971_379",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1996_439",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 3,
+      "new_claims_with_evidence": 3,
+      "delta": 0
+    },
+    {
+      "doc_id": "1987_597",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2006_650",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 3,
+      "new_claim_count": 3,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "2003_967",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 2,
+      "new_claims_with_evidence": 2,
+      "delta": 0
+    },
+    {
+      "doc_id": "1962_184",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "1989_184",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "1952_17",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "1965_377",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 1,
+      "new_claim_count": 1,
+      "old_claims_with_evidence": 1,
+      "new_claims_with_evidence": 1,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_2662",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 2,
+      "new_claim_count": 2,
+      "old_claims_with_evidence": 0,
+      "new_claims_with_evidence": 0,
+      "delta": 0
+    },
+    {
+      "doc_id": "2004_632",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 6,
+      "new_claim_count": 6,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2023_26",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 9,
+      "new_claim_count": 9,
+      "old_claims_with_evidence": 6,
+      "new_claims_with_evidence": 6,
+      "delta": 0
+    },
+    {
+      "doc_id": "2008_2648",
+      "source_file": "run_A_n30.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    },
+    {
+      "doc_id": "1994_495",
+      "source_file": "run_C_targeted_1994_495.jsonl",
+      "old_claim_count": 4,
+      "new_claim_count": 4,
+      "old_claims_with_evidence": 4,
+      "new_claims_with_evidence": 4,
+      "delta": 0
+    }
+  ]
+}
