@@ -127,13 +127,22 @@ layered on top, not a correction of anything already stated as of 2026-08-27:
    smaller than, the 456-claim CPU re-scoring result above. See
    `research/prototype/outputs/narrow_primary_hypothesis_gpu_ablation_report.md`.
 
-**What was NOT re-run this pass:** any GPU generation. `live_demo/run_demo.py`
-and `examples/` — referenced by this README, `RUNBOOK.md`, and
-`ARTIFACT_INDEX.md` — no longer exist in this archived copy (removed by
-commit `61b240a`, predating the four commits above and unrelated to them);
-this is a pre-existing gap in the archived pack, not something this pass
-introduced or was able to reconstruct (their source generator scripts are
-also gone). `metadata/validate_pack.py` was fixed to resolve paths correctly
-from this pack's current archived location (see its own addendum note) but
-now fails on this same missing-`examples/` gap — see
-`metadata/validation_log.md`'s addendum for the exact result.
+**CORRECTION (2026-09-11)**: the paragraph originally here (2026-09-09 addendum
+pass) incorrectly claimed `live_demo/` and `examples/` were deleted by commit
+`61b240a` with their source generator scripts gone. That was wrong —
+`git show -M --name-status 61b240a` shows these paths were **renamed** (94-100%
+content similarity), not deleted: `final_demo_pack/examples/*` →
+`research/prototype/evaluation/examples/*` and `final_demo_pack/live_demo/*` →
+`research/prototype/evaluation/live_demo/*`. Both are fully intact there today,
+and `live_demo/` was actively extended afterward (commit `b83bb6b` added
+`common/` helpers and 6 more numbered per-stage demo scripts). The 8 example
+case studies, `cases.json`, `candidate_pool.json`, and `run_demo.py` (already
+updated for Stage 1-4's `assertion_text`/`assertion_spans`/narrow-hypothesis
+config) all still exist and work — see `research/prototype/evaluation/` directly
+rather than this archived pack for the live demo and example case studies.
+`metadata/validate_pack.py`'s failure on the missing `examples/` path (see
+`metadata/validation_log.md`'s addendum) is real for THIS archived copy
+specifically (the files were never copied into `archive/2026-08-27_presentation/`
+in the first place, only the top-level `final_demo_pack/` files were), but is not
+evidence of data loss — the content simply lives at `evaluation/` instead of
+inside this frozen archive snapshot.

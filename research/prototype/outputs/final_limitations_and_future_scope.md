@@ -201,8 +201,15 @@ interpretive requirement for any downstream user, documented consistently since 
    (`verification.narrow_primary_hypothesis`); a fresh GPU batch confirmed the verification-recovery
    mechanism directionally (1/12 evidence-matched claims) but could not exercise correction
    shipping at all (0/15 triggers on either arm — see `outputs/narrow_primary_hypothesis_gpu_ablation_report.md`).
-   **Still open**: the richer `assertion_spans`-based primary verification, and a larger (n>=50)
-   fresh batch actually powered to observe correction-shipping behavior under this lever.
+   **UPDATE 2026-09-11**: the richer `assertion_spans`-based primary verification
+   (`verification.assertion_span_primary_hypothesis`) is now implemented and evaluated — see
+   `FINAL_PRODUCTION_CONFIG.md` §5a and `outputs/assertion_spans_primary_hypothesis_benchmark_report.md`.
+   Clean directional signal (4/6 changed verdict, 0 unsafe reversals, every case manually verified
+   genuine) but n=6 is the ENTIRE real population found across this project's history — explicitly
+   reported as inconclusive, NOT adopted as default, rather than rounded up to a decision. A larger
+   (n>=50) fresh batch actually powered to observe correction-shipping behavior under the
+   `narrow_primary_hypothesis` lever remains open — see `outputs/narrow_primary_hypothesis_gpu_ablation_n100_report.md`
+   if a follow-up large batch has been run since this note was written.
 2. **A larger (50-100 case) fresh natural batch under the exact final production config**, to
    move the single most novel finding in this session (1/10 shipped) from "demonstrated possible"
    to "measured rate" — explicitly flagged as the needed follow-up in `FINAL_PRODUCTION_CONFIG.md`.

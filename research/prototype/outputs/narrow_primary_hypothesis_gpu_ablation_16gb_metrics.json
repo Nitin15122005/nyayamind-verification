@@ -1,0 +1,50 @@
+{
+  "config": {
+    "n_cases_total_in_output": 62,
+    "note": "Final checkpoint state after 16GB-laptop incremental resumable run (micro-test -> 10 -> 60 -> 62, stopped by memory guard/OS kill during case 63 generation, not retried further per task instruction). See outputs/16gb_final_execution_report.md for the full narrative.",
+    "evidence_pool_size": 136,
+    "premise_framing": "labeled",
+    "generation_model": "Qwen/Qwen2.5-7B-Instruct",
+    "verification_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  },
+  "OLD": {
+    "n_cases": 62,
+    "total_claims": 156,
+    "claims_with_evidence": 32,
+    "evidence_coverage": 0.20512820512820512,
+    "verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 26,
+      "ENTAILED": 5,
+      "CONTRADICTED": 1
+    },
+    "correction_status_distribution": {
+      "not_triggered": 58,
+      "correction_failed": 2,
+      "correction_scope_violation": 2
+    },
+    "correction_triggered": 4,
+    "correction_shipped": 0,
+    "correction_shipping_rate_of_triggered": 0.0
+  },
+  "CURRENT": {
+    "n_cases": 62,
+    "total_claims": 156,
+    "claims_with_evidence": 32,
+    "evidence_coverage": 0.20512820512820512,
+    "verdict_distribution": {
+      "NOT_ENOUGH_INFORMATION": 21,
+      "ENTAILED": 9,
+      "CONTRADICTED": 2
+    },
+    "correction_status_distribution": {
+      "not_triggered": 57,
+      "correction_failed": 3,
+      "correction_scope_violation": 1,
+      "correction_sibling_regression": 1
+    },
+    "correction_triggered": 5,
+    "correction_shipped": 0,
+    "correction_shipping_rate_of_triggered": 0.0
+  },
+  "timestamp": "2026-09-11T18:45:37.661450+00:00"
+}

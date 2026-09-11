@@ -91,16 +91,13 @@ script's own inline comment); re-running `compute_metrics.py`,
 reproduced every existing figure/table/JSON byte-for-byte identical to the
 committed versions — confirming this was a path bug, not a data change.
 
-**`metadata/validate_pack.py` (path-fixed, re-run this pass) now runs
-further than before but still does not complete**: it crashes on
-`examples/cases.json`, because the `examples/` and `live_demo/` directories
-(and their generator scripts) were deleted from this pack in commit
-`61b240a` ("Reorganize evaluation workspace and finalize validation") while
-`README.md`, `RUNBOOK.md`, and `ARTIFACT_INDEX.md` still describe them as
-present. This predates and is unrelated to the four commits documented here.
-It was not fixed this pass — reconstructing hand-written case prose is out
-of scope for a metrics-regeneration pass, and the check was left as a hard
-failure rather than weakened to pass. All 21 checks that ran before the
-crash passed (JSON/CSV validity, all 16 figures present and non-trivial,
-every headline number spot-check). See `metadata/validation_log.md`'s own
-addendum for the exact re-run transcript.
+**CORRECTION (2026-09-11)**: the paragraph originally here claimed
+`examples/`/`live_demo/` were deleted by commit `61b240a`. That was wrong —
+they were **renamed** to `research/prototype/evaluation/examples/` and
+`research/prototype/evaluation/live_demo/`, where both are fully intact
+(and `live_demo/` was actively extended afterward). `validate_pack.py` was
+fixed to read `examples/cases.json` from its real location via `REPO_ROOT`
+instead of the wrong `PACK_ROOT`-relative path, and now genuinely passes
+**25/25 checks** (not just the 21 that ran before the previous crash). See
+`metadata/validation_log.md`'s 2026-09-11 addendum and `README.md`'s own
+correction note for the full explanation.

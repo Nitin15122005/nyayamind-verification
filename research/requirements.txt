@@ -63,3 +63,10 @@ scipy==1.13.0
 scikit-learn==1.4.2
 joblib==1.4.2
 threadpoolctl==3.6.0
+
+# Added 2026-09-11 for scripts/run_narrow_primary_hypothesis_gpu_ablation.py's
+# memory guard (checks free system RAM before each case on memory-constrained
+# hosts; see outputs/16gb_memory_architecture_audit.md). Was already present
+# as an incidental transitive dependency in this venv; pinned explicitly now
+# that a committed script actually imports it directly.
+psutil==7.2.2

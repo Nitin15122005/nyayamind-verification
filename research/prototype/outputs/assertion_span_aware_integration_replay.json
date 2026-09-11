@@ -1,0 +1,123 @@
+{
+  "rows": [
+    {
+      "document_id": "1953_1",
+      "arm": "OLD",
+      "old_status": "correction_failed",
+      "new_status": "correction_failed",
+      "old_target_fragment": "Section 148 requires that where two or more persons commit the same act in furtherance of the common intention, each of them is liable for that act as if it had been committed by each of them separately.",
+      "new_target_fragment": "Section 148 requires that where two or more persons commit the same act in furtherance of the common intention, each of them is liable for that act as if it had been committed by each of them separately.",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "Section 148 requires that where two or more persons commit the same act in furtherance of the common intention, each of them is liable for that act as if it had been committed by each of them separately."
+      ]
+    },
+    {
+      "document_id": "1953_10",
+      "arm": "OLD",
+      "old_status": "correction_scope_violation",
+      "new_status": "correction_scope_violation",
+      "old_target_fragment": "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149.",
+      "new_target_fragment": "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149.",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149."
+      ]
+    },
+    {
+      "document_id": "1953_96",
+      "arm": "OLD",
+      "old_status": "correction_scope_violation",
+      "new_status": "correction_scope_violation",
+      "old_target_fragment": "19(1)",
+      "new_target_fragment": "19(1)",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "19(1)"
+      ]
+    },
+    {
+      "document_id": "1955_32",
+      "arm": "OLD",
+      "old_status": "correction_sibling_regression",
+      "new_status": "correction_sibling_regression",
+      "old_target_fragment": "Section 392 defines the act of dacoity",
+      "new_target_fragment": "Section 392 defines the act of dacoity",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "Section 392 defines the act of dacoity"
+      ]
+    },
+    {
+      "document_id": "1953_1",
+      "arm": "CURRENT",
+      "old_status": "correction_failed",
+      "new_status": "correction_failed",
+      "old_target_fragment": "sections 148, 149, 302, and 34, apply to this case.",
+      "new_target_fragment": "sections 148, 149, 302, and 34, apply to this case.",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "sections 148, 149, 302, and 34, apply to this case."
+      ]
+    },
+    {
+      "document_id": "1953_10",
+      "arm": "CURRENT",
+      "old_status": "correction_scope_violation",
+      "new_status": "correction_scope_violation",
+      "old_target_fragment": "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149.",
+      "new_target_fragment": "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149.",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "The statutory grounding of this case involves the Indian Penal Code, specifically Sections 302 and 149."
+      ]
+    },
+    {
+      "document_id": "1953_96",
+      "arm": "CURRENT",
+      "old_status": "correction_scope_violation",
+      "new_status": "correction_scope_violation",
+      "old_target_fragment": "19(1)",
+      "new_target_fragment": "19(1)",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "19(1)"
+      ]
+    },
+    {
+      "document_id": "1955_16",
+      "arm": "CURRENT",
+      "old_status": "correction_scope_violation",
+      "new_status": "correction_scope_violation",
+      "old_target_fragment": "Statutory Grounding: Sections 302 and 307 of the Indian Penal Code deal with murder and attempt to murder, respectively",
+      "new_target_fragment": "Statutory Grounding: Sections 302 and 307 of the Indian Penal Code deal with murder and attempt to murder, respectively",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "Statutory Grounding: Sections 302 and 307 of the Indian Penal Code deal with murder and attempt to murder, respectively"
+      ]
+    },
+    {
+      "document_id": "1955_32",
+      "arm": "CURRENT",
+      "old_status": "correction_sibling_regression",
+      "new_status": "correction_sibling_regression",
+      "old_target_fragment": "Section 395 prescribes the punishment for dacoity, which includes rigorous imprisonment for a term extending up to fourteen years and fine.",
+      "new_target_fragment": "Section 395 prescribes the punishment for dacoity, which includes rigorous imprisonment for a term extending up to fourteen years and fine.",
+      "target_matches": true,
+      "outcome_matches": true,
+      "new_assertion_spans": [
+        "Section 395 prescribes the punishment for dacoity, which includes rigorous imprisonment for a term extending up to fourteen years and fine."
+      ]
+    }
+  ],
+  "n_target_mismatch": 0,
+  "n_outcome_mismatch": 0
+}

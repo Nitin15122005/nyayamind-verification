@@ -73,6 +73,13 @@ claim.evidence_text | NO_EVIDENCE
    |             config.verification.narrow_primary_hypothesis=true (production
    |             default since 2026-09-09), else claim_text -- see
    |             outputs/narrow_primary_hypothesis_benchmark_report.md
+   |  For "respectively" claims (assertion_text left unnarrowed by design --
+   |  see assertion_spans instead), an EVALUATED-BUT-NOT-ADOPTED extension
+   |  exists: config.verification.assertion_span_primary_hypothesis builds
+   |  "<Provision> <N> <description>" from assertion_spans. n=6 (entire real
+   |  population found) was too small to promote past experimental/off --
+   |  see outputs/assertion_spans_primary_hypothesis_benchmark_report.md and
+   |  FINAL_PRODUCTION_CONFIG.md §5a.
    |  ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION
    |  (low-confidence argmax is downgraded to NOT_ENOUGH_INFORMATION,
    |   sub_reason="low_confidence")

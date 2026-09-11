@@ -119,7 +119,15 @@ def main() -> int:
     fmt.kv("use_evidence_v1", config["use_evidence_v1"])
     fmt.kv("atomic_scope_check", config["correction"]["atomic_scope_check"])
     fmt.kv("narrow_reverification_hypothesis", config["correction"]["narrow_reverification_hypothesis"])
+    fmt.kv("narrow_primary_hypothesis", config["verification"].get("narrow_primary_hypothesis", False))
+    fmt.kv("assertion_span_primary_hypothesis", config["verification"].get("assertion_span_primary_hypothesis", False))
     fmt.kv("confidence_threshold", config["verification"]["confidence_threshold"])
+    fmt.kv("correction.assertion_aware", config["correction"].get("assertion_aware", False))
+    if config["correction"].get("assertion_aware", False):
+        print("  WARNING: assertion_aware is True but this demo's stage [5] replay logic still "
+              "targets legacy correction-attempt records (see CORRECTION_DETAIL_FILES) -- it has "
+              "not been updated to replay assertion-aware records. Do not trust stage 5-7 output "
+              "under this flag until that is done.")
 
     print("\nLoading production evidence pool (real data, no model)...")
     exact_index, all_usable = ph.load_evidence_pool(config)
@@ -175,7 +183,13 @@ def main() -> int:
 
         fmt.stage(4, f"NLI verification (premise_framing={premise_framing!r}, real DeBERTa call per matched claim)", fmt.LIVE)
         baseline = {"document_id": rec["document_id"], "claims": claim_records}
-        pipeline.apply_verification(baseline, verifier, premise_framing=premise_framing)
+        pipeline.apply_verification(
+            baseline, verifier, premise_framing=premise_framing,
+            narrow_primary_hypothesis=config["verification"].get("narrow_primary_hypothesis", False),
+            assertion_span_primary_hypothesis=config["verification"].get(
+                "assertion_span_primary_hypothesis", False
+            ),
+        )
         fmt.claim_overview(claim_records)
         flagged_claim_id = None
         for cr in claim_records:

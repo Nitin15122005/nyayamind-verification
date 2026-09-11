@@ -122,8 +122,14 @@ def spot_check_headline_numbers():
         f"bare={macro_f1_bare}, labeled={macro_f1_labeled}",
     )
 
-    # Every example case document_id actually appears in cases.json
-    cases = json.loads((PACK_ROOT / "examples/cases.json").read_text(encoding="utf-8"))
+    # Every example case document_id actually appears in cases.json.
+    # NOTE (fixed 2026-09-11): examples/ was never copied into this archived
+    # pack -- it was renamed (commit 61b240a, unrelated to the 2026-08-27
+    # archive move) to research/prototype/evaluation/examples/, where it
+    # still lives today. PACK_ROOT / "examples/cases.json" was always wrong
+    # for this archived copy; read from its real location via REPO_ROOT.
+    cases_path = REPO_ROOT / "research/prototype/evaluation/examples/cases.json"
+    cases = json.loads(cases_path.read_text(encoding="utf-8"))
     check("All 8 exemplar cases present in cases.json", len(cases) == 8, f"found {len(cases)}")
 
 
@@ -154,28 +160,41 @@ def main():
 
     n_fail = sum(1 for r in results if not r["ok"])
     log_path = PACK_ROOT / "metadata" / "validation_log.md"
-    lines = [
-        "# Demo Pack Validation Log",
-        "",
-        f"Run: {datetime.datetime.now(datetime.timezone.utc).isoformat()}",
-        f"Script: `research/prototype/final_demo_pack/metadata/validate_pack.py`",
-        "",
-        f"**{len(results) - n_fail}/{len(results)} checks passed.**",
-        "",
-        "| Check | Result | Detail |",
-        "|---|---|---|",
+    # APPEND a new dated run-section rather than overwriting the whole file.
+    # Fixed 2026-09-11: this used to write_text() the entire file from
+    # scratch on every run, silently destroying every prior run's addenda
+    # (e.g. the 2026-09-09/2026-09-11 path-bug-fix history) each time this
+    # script was re-run -- discovered when a routine re-validation during
+    # the recovery pass wiped out that history a second time. Appending
+    # preserves the full audit trail automatically going forward; existing
+    # content (including any manually-added addenda) is never touched.
+    run_section = [
+        f"\n## Run — {datetime.datetime.now(datetime.timezone.utc).isoformat()}\n",
+        f"Script: `research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/validate_pack.py`\n",
+        f"\n**{len(results) - n_fail}/{len(results)} checks passed.**\n",
+        "\n| Check | Result | Detail |\n|---|---|---|\n",
     ]
     for r in results:
-        lines.append(f"| {r['check']} | {'PASS' if r['ok'] else 'FAIL'} | {r['detail']} |")
-    lines += [
-        "",
-        "Note: `pytest research/prototype/tests/ -q` and "
-        "`research/prototype/scripts/run_mvp.py --check` are full-repo checks, "
-        "run separately (see RUNBOOK.md) and recorded in SYSTEM_STATUS.md, not "
-        "duplicated by this demo-pack-scoped script.",
-    ]
-    log_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"\nWrote {log_path}")
+        run_section.append(f"| {r['check']} | {'PASS' if r['ok'] else 'FAIL'} | {r['detail']} |\n")
+
+    # newline="\n" (not the default): forces LF-only output even on Windows,
+    # where write_text() otherwise silently translates \n -> \r\n and turns
+    # every future run into a spurious whole-file diff against this repo's
+    # LF-normalized history (bit us once already this pass -- see the
+    # git-history note at the top of this fix).
+    if log_path.exists():
+        existing = log_path.read_text(encoding="utf-8")
+        log_path.write_text(
+            existing.rstrip("\n") + "\n" + "".join(run_section), encoding="utf-8", newline="\n"
+        )
+    else:
+        header = (
+            "# Demo Pack Validation Log\n\n"
+            "Each run below is APPENDED, never overwriting prior runs -- see "
+            "each run's own timestamp for when it was current.\n"
+        )
+        log_path.write_text(header + "".join(run_section), encoding="utf-8", newline="\n")
+    print(f"\nAppended run to {log_path}")
     print(f"{len(results) - n_fail}/{len(results)} checks passed.")
     return 1 if n_fail else 0
 

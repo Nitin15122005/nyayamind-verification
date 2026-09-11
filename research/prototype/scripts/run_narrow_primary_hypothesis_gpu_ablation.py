@@ -23,12 +23,25 @@ independently per arm, via the REAL pipeline.py functions -- not
 reimplemented.
 
 Case selection: every document_id already used in ANY committed
-outputs/*.jsonl file in this repo (182 total, scanned generically, not
+outputs/*.jsonl file in this repo (scanned generically, not
 hand-maintained) is excluded. Of the remaining NyayaRAG cases with nonzero
 evidence overlap under the current (v1) pool, the first N by document_id
 sort order are selected -- deterministic, no cherry-picking on outcome.
 
-Output (outputs/, new prefix, nothing overwritten):
+CHECKPOINTED / RESUMABLE (added 2026-09-11 for the 16GB-laptop memory
+constraint, outputs/16gb_memory_architecture_audit.md): each case's result
+for both arms is appended to the output JSONL files immediately after that
+case completes, not held in memory until the end. On startup, any
+document_ids already present in BOTH arms' output files (for this exact
+--out-prefix) are treated as already-done and skipped -- so a killed/
+resumed run never recomputes or duplicates a completed case. A MEMORY GUARD
+checks free system RAM before each case (via psutil) and, if it falls below
+--min-free-gb, stops gracefully (writes final metrics from whatever
+completed, does not crash the machine, does not lose any already-computed
+case).
+
+Output (outputs/, new prefix by default, nothing overwritten; existing
+per-arm JSONL files are APPENDED to on resume, never truncated):
   narrow_primary_hypothesis_gpu_ablation_OLD.jsonl
   narrow_primary_hypothesis_gpu_ablation_CURRENT.jsonl
   narrow_primary_hypothesis_gpu_ablation_metrics.json
@@ -39,6 +52,7 @@ from __future__ import annotations
 import argparse
 import copy
 import datetime
+import gc
 import json
 import sys
 import time
@@ -78,6 +92,31 @@ def find_previously_used_ids(outputs: Path) -> set[str]:
     return used
 
 
+def load_checkpointed_ids(out_path: Path) -> set[str]:
+    """document_ids already present in one arm's output file -- used to
+    determine what's safe to skip on a resumed run. Malformed/partial last
+    lines (e.g. from a kill mid-write) are tolerated, not fatal."""
+    ids: set[str] = set()
+    if not out_path.exists():
+        return ids
+    for line in out_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            continue  # last line may be a partial write from a kill; skip it, don't crash
+        if isinstance(rec, dict) and "document_id" in rec:
+            ids.add(rec["document_id"])
+    return ids
+
+
+def free_memory_gb() -> float:
+    import psutil
+    return psutil.virtual_memory().available / (1024 ** 3)
+
+
 def build_final_field(baseline: dict, correction_summary: dict) -> dict:
     status = correction_summary["status"]
     if status == "corrected":
@@ -94,6 +133,11 @@ def main() -> int:
     ap.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
     ap.add_argument("--n-cases", type=int, default=15)
     ap.add_argument("--out-prefix", default="narrow_primary_hypothesis_gpu_ablation")
+    ap.add_argument("--min-free-gb", type=float, default=2.0,
+                     help="Stop gracefully (do not crash) if free system RAM falls below this "
+                          "before starting a case. Default 2.0GB -- chosen with headroom above "
+                          "the ~1.2-1.6GB margin observed to be too tight during model loading "
+                          "on this project's 16GB reference machine.")
     args = ap.parse_args()
 
     if args.device != "cuda":
@@ -104,6 +148,16 @@ def main() -> int:
     if not torch.cuda.is_available():
         print("ERROR: CUDA not available.", file=sys.stderr)
         return 2
+
+    import psutil
+    free_before_load = free_memory_gb()
+    print(f"Free system RAM before model load: {free_before_load:.2f} GB "
+          f"(guard threshold: {args.min_free_gb} GB)")
+    if free_before_load < args.min_free_gb:
+        print(f"ABORTING before loading any model: free RAM ({free_before_load:.2f}GB) is "
+              f"already below the {args.min_free_gb}GB guard threshold. Not attempting to load "
+              f"a 7B model into an already-insufficient memory budget.", file=sys.stderr)
+        return 3
 
     base_config = yaml.safe_load((_PROTOTYPE_ROOT / "config" / "prototype.yaml").read_text(encoding="utf-8"))
     repo_root = _PROTOTYPE_ROOT.parent.parent
@@ -130,12 +184,21 @@ def main() -> int:
     previously_used = find_previously_used_ids(outputs)
     print(f"document_ids already used in some prior experiment: {len(previously_used)}")
 
+    out_paths = {arm: outputs / f"{args.out_prefix}_{arm}.jsonl" for arm in ARMS}
+    checkpointed = {arm: load_checkpointed_ids(out_paths[arm]) for arm in ARMS}
+    already_done = checkpointed["OLD"] & checkpointed["CURRENT"]  # complete in BOTH arms
+    if already_done:
+        print(f"RESUMING: {len(already_done)} case(s) already checkpointed in both arms' "
+              f"output files for prefix {args.out_prefix!r}, will be skipped: "
+              f"{sorted(already_done)}")
+
     fresh = sorted(
-        {c.document_id: c for c in overlapping if c.document_id not in previously_used}.items()
+        {c.document_id: c for c in overlapping
+         if c.document_id not in previously_used and c.document_id not in already_done}.items()
     )
     selected = [c for _, c in fresh[: args.n_cases]]
-    print(f"Selected {len(selected)} genuinely fresh cases (deterministic, sorted by document_id): "
-          f"{[c.document_id for c in selected]}")
+    print(f"Selected {len(selected)} genuinely fresh, not-yet-checkpointed cases "
+          f"(deterministic, sorted by document_id): {[c.document_id for c in selected]}")
     if len(selected) < args.n_cases:
         print(f"WARNING: only {len(selected)} fresh cases available, requested {args.n_cases}", file=sys.stderr)
 
@@ -156,6 +219,7 @@ def main() -> int:
         seed=base_config["seed"],
     )
     generator.load()
+    print(f"Free system RAM after Qwen load: {free_memory_gb():.2f} GB")
 
     verifier = NLIVerifier(
         model_id=base_config["verification"]["model_id"],
@@ -164,6 +228,7 @@ def main() -> int:
         device=args.device,
     )
     verifier.load()
+    print(f"Free system RAM after DeBERTa load: {free_memory_gb():.2f} GB")
 
     corrector = SelectiveCorrector(
         generator=generator,
@@ -172,55 +237,93 @@ def main() -> int:
         do_sample=base_config["correction"]["do_sample"],
     )
 
-    records = {"OLD": [], "CURRENT": []}
+    out_files = {arm: out_paths[arm].open("a", encoding="utf-8") for arm in ARMS}
     t0 = time.time()
-    for i, case in enumerate(selected):
-        print(f"\n[{i+1}/{len(selected)}] {case.document_id}", flush=True)
-        t_gen0 = time.time()
-        baseline = pipeline.generate_and_parse(
-            case, generator, exact_index, all_usable,
-            base_config["evidence_matching"]["fuzzy_token_overlap_threshold"],
-        )
-        gen_time = time.time() - t_gen0
-        print(f"  generated + parsed in {gen_time:.1f}s, {len(baseline['claims'])} claims, "
-              f"{sum(1 for c in baseline['claims'] if c['evidence_text'])} with evidence")
+    n_completed_this_run = 0
+    stopped_early = False
+    try:
+        for i, case in enumerate(selected):
+            free_now = free_memory_gb()
+            print(f"\n[{i+1}/{len(selected)}] {case.document_id}  (free RAM: {free_now:.2f}GB)", flush=True)
+            if free_now < args.min_free_gb:
+                print(f"MEMORY GUARD TRIPPED: free RAM ({free_now:.2f}GB) < threshold "
+                      f"({args.min_free_gb}GB) before starting this case. Stopping gracefully -- "
+                      f"{n_completed_this_run} case(s) already safely checkpointed this run "
+                      f"(plus {len(already_done)} resumed from a prior run) are NOT lost.",
+                      file=sys.stderr)
+                stopped_early = True
+                break
 
-        for arm in ARMS:
-            arm_baseline = copy.deepcopy(baseline)
-            arm_baseline["_exact_index"] = exact_index
-            arm_baseline["_all_usable"] = all_usable
-            arm_baseline["_verifier"] = verifier
-
-            narrow_primary = arm_config[arm]["verification"]["narrow_primary_hypothesis"]
-            pipeline.apply_verification(
-                arm_baseline, verifier,
-                pipeline.resolve_premise_framing(arm_config[arm]), narrow_primary,
+            t_gen0 = time.time()
+            baseline = pipeline.generate_and_parse(
+                case, generator, exact_index, all_usable,
+                base_config["evidence_matching"]["fuzzy_token_overlap_threshold"],
             )
-            correction_summary = pipeline.apply_selective_correction(
-                arm_baseline, case, corrector, arm_config[arm]
-            )
-            final_field = build_final_field(arm_baseline, correction_summary)
+            gen_time = time.time() - t_gen0
+            print(f"  generated + parsed in {gen_time:.1f}s, {len(baseline['claims'])} claims, "
+                  f"{sum(1 for c in baseline['claims'] if c['evidence_text'])} with evidence")
 
-            record = {
-                "document_id": case.document_id,
-                "arm": arm,
-                "generated_field": arm_baseline["generated_field"],
-                "claims": [{k: v for k, v in c.items() if not k.startswith("_")} for c in arm_baseline["claims"]],
-                "correction": {k: v for k, v in correction_summary.items() if not k.startswith("_")},
-                "final_field": final_field,
-            }
-            records[arm].append(record)
-            n_ev = sum(1 for c in record["claims"] if c["evidence_text"])
-            n_ent = sum(1 for c in record["claims"] if c["verdict"] == ENTAILED)
-            n_con = sum(1 for c in record["claims"] if c["verdict"] == CONTRADICTED)
-            print(f"  [{arm}] evidence={n_ev} ENTAILED={n_ent} CONTRADICTED={n_con} "
-                  f"correction_status={correction_summary['status']}")
+            for arm in ARMS:
+                arm_baseline = copy.deepcopy(baseline)
+                arm_baseline["_exact_index"] = exact_index
+                arm_baseline["_all_usable"] = all_usable
+                arm_baseline["_verifier"] = verifier
+
+                narrow_primary = arm_config[arm]["verification"]["narrow_primary_hypothesis"]
+                pipeline.apply_verification(
+                    arm_baseline, verifier,
+                    pipeline.resolve_premise_framing(arm_config[arm]), narrow_primary,
+                )
+                correction_summary = pipeline.apply_selective_correction(
+                    arm_baseline, case, corrector, arm_config[arm]
+                )
+                final_field = build_final_field(arm_baseline, correction_summary)
+
+                record = {
+                    "document_id": case.document_id,
+                    "arm": arm,
+                    "generated_field": arm_baseline["generated_field"],
+                    "claims": [{k: v for k, v in c.items() if not k.startswith("_")} for c in arm_baseline["claims"]],
+                    "correction": {k: v for k, v in correction_summary.items() if not k.startswith("_")},
+                    "final_field": final_field,
+                }
+                # CHECKPOINT: write + flush immediately, not held until the
+                # end -- a kill after this point never loses this case.
+                out_files[arm].write(json.dumps(record, ensure_ascii=False) + "\n")
+                out_files[arm].flush()
+
+                n_ev = sum(1 for c in record["claims"] if c["evidence_text"])
+                n_ent = sum(1 for c in record["claims"] if c["verdict"] == ENTAILED)
+                n_con = sum(1 for c in record["claims"] if c["verdict"] == CONTRADICTED)
+                print(f"  [{arm}] evidence={n_ev} ENTAILED={n_ent} CONTRADICTED={n_con} "
+                      f"correction_status={correction_summary['status']}")
+
+            n_completed_this_run += 1
+            gc.collect()
+            if args.device == "cuda":
+                torch.cuda.empty_cache()
+    finally:
+        for f in out_files.values():
+            f.close()
 
     total_runtime = time.time() - t0
 
-    # ---- metrics ----
+    # ---- metrics: read back the FULL checkpointed files (resumed + this
+    # run's own cases), not just what happened in this process's memory ----
+    def load_all_records(arm: str) -> list[dict]:
+        recs = []
+        for line in out_paths[arm].read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                recs.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+        return recs
+
     def summarize(arm: str) -> dict:
-        recs = records[arm]
+        recs = load_all_records(arm)
         all_claims = [c for r in recs for c in r["claims"]]
         matched = [c for c in all_claims if c["evidence_text"]]
         verdicts = Counter(c["verdict"] for c in matched)
@@ -239,41 +342,42 @@ def main() -> int:
             "correction_shipping_rate_of_triggered": shipped / triggered if triggered else None,
         }
 
+    old_m, cur_m = summarize("OLD"), summarize("CURRENT")
     metrics = {
         "config": {
-            "n_cases_requested": args.n_cases, "n_cases_run": len(selected),
-            "document_ids": [c.document_id for c in selected],
+            "n_cases_requested_this_run": args.n_cases,
+            "n_cases_completed_this_run": n_completed_this_run,
+            "n_cases_resumed_from_checkpoint": len(already_done),
+            "n_cases_total_in_output": old_m["n_cases"],
+            "stopped_early_by_memory_guard": stopped_early,
+            "min_free_gb_threshold": args.min_free_gb,
             "evidence_pool_size": len(all_usable),
             "premise_framing": base_config["verification"]["premise_framing"],
             "generation_model": base_config["generation"]["model_id"],
             "verification_model": base_config["verification"]["model_id"],
         },
-        "OLD": summarize("OLD"),
-        "CURRENT": summarize("CURRENT"),
-        "runtime_seconds_total": total_runtime,
+        "OLD": old_m,
+        "CURRENT": cur_m,
+        "runtime_seconds_this_run": total_runtime,
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
 
-    for arm in ARMS:
-        out_path = outputs / f"{args.out_prefix}_{arm}.jsonl"
-        with out_path.open("w", encoding="utf-8") as f:
-            for r in records[arm]:
-                f.write(json.dumps(r, ensure_ascii=False) + "\n")
-        print(f"Wrote {out_path}")
-
     metrics_path = outputs / f"{args.out_prefix}_metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    print(f"\nWrote {out_paths['OLD']}")
+    print(f"Wrote {out_paths['CURRENT']}")
     print(f"Wrote {metrics_path}")
 
     # ---- report ----
-    old_m, cur_m = metrics["OLD"], metrics["CURRENT"]
     md = [
-        "# narrow_primary_hypothesis: fresh end-to-end GPU ablation\n\n",
+        "# narrow_primary_hypothesis: fresh end-to-end GPU ablation (checkpointed)\n\n",
         f"_Generated {metrics['timestamp']}_\n\n",
         f"Real Qwen2.5-7B generation + real DeBERTa verification + real selective correction, "
-        f"run through the ACTUAL production `pipeline.py` code (mode C), on **{len(selected)} "
-        f"genuinely fresh** NyayaRAG cases never used in any prior experiment in this repo "
-        f"(182 document_ids excluded by scanning every committed outputs/*.jsonl file).\n\n",
+        f"run through the ACTUAL production `pipeline.py` code (mode C). "
+        f"**{old_m['n_cases']} total cases in output** "
+        f"({len(already_done)} resumed from a prior checkpointed run + {n_completed_this_run} "
+        f"completed this run"
+        + (", STOPPED EARLY by the memory guard" if stopped_early else "") + ").\n\n",
         f"Generation is shared between arms (called once per case, deterministic greedy "
         f"decoding); only `verification.narrow_primary_hypothesis` differs "
         f"(OLD=false, matching the config immediately before Stage 4; CURRENT=true, exactly "
@@ -281,16 +385,11 @@ def main() -> int:
         f"mode, confidence threshold) is held identical between arms.\n\n",
         f"> Verdicts are a small public NLI model's output against a {len(all_usable)}-record "
         f"corpus. They are not legal-correctness determinations, and no lawyer ground truth "
-        f"exists. This is a SMALL sample (n={len(selected)} cases) -- directional evidence, "
-        f"not a statistically powered claim.\n\n",
+        f"exists.\n\n",
         "## Headline\n\n",
         "| Metric | OLD (pre-Stage-4) | CURRENT (shipped) |\n|---|---|---|\n",
         f"| Total claims | {old_m['total_claims']} | {cur_m['total_claims']} |\n",
         f"| Claims with evidence | {old_m['claims_with_evidence']} | {cur_m['claims_with_evidence']} |\n",
-        f"| Evidence coverage | "
-        f"{old_m['evidence_coverage']*100:.1f}%" if old_m['evidence_coverage'] else "n/a",
-        f" | {cur_m['evidence_coverage']*100:.1f}%" if cur_m['evidence_coverage'] else " | n/a",
-        " |\n",
         f"| ENTAILED | {old_m['verdict_distribution'].get('ENTAILED', 0)} | "
         f"{cur_m['verdict_distribution'].get('ENTAILED', 0)} |\n",
         f"| CONTRADICTED | {old_m['verdict_distribution'].get('CONTRADICTED', 0)} | "
@@ -308,9 +407,15 @@ def main() -> int:
     for s in all_statuses:
         md.append(f"| {s} | {old_m['correction_status_distribution'].get(s, 0)} | "
                    f"{cur_m['correction_status_distribution'].get(s, 0)} |\n")
+    if stopped_early:
+        md.append(
+            f"\n**This run was stopped early by the memory guard** (free RAM fell below "
+            f"{args.min_free_gb}GB). To continue, re-run the exact same command -- already-"
+            f"checkpointed cases are automatically skipped, no data is lost or duplicated.\n"
+        )
     md.append(
-        f"\nRuntime: {total_runtime:.1f}s total for {len(selected)} cases x 2 arms "
-        f"(generation shared, so this is NOT double the single-arm cost).\n\n"
+        f"\nRuntime this run: {total_runtime:.1f}s for {n_completed_this_run} newly-completed "
+        f"case(s) x 2 arms (generation shared, so this is NOT double the single-arm cost).\n\n"
         "## Interpretation\n\n"
         "This distinguishes VERIFICATION recovery (NEI -> ENTAILED/CONTRADICTED verdict "
         "changes) from actual CORRECTION SHIPPING (a rewritten field passing every safety "
@@ -330,7 +435,9 @@ def main() -> int:
           f"(triggered {old_m['correction_triggered']})")
     print(f"CURRENT: shipped {cur_m['correction_shipped']}/{cur_m['n_cases']} "
           f"(triggered {cur_m['correction_triggered']})")
-    print(f"Total runtime: {total_runtime:.1f}s")
+    print(f"Runtime this run: {total_runtime:.1f}s")
+    if stopped_early:
+        print("Stopped early by memory guard -- re-run the same command to continue.")
     return 0
 
 

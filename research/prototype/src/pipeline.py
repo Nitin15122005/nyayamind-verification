@@ -73,6 +73,25 @@ def _premise_for_claim(rec: dict, framing: str) -> str:
 
 MODES = ("A", "B", "C")
 
+# Default system prompt for ASSERTION-AWARE correction (correction.
+# assertion_aware: true — see apply_selective_correction_assertion_aware()).
+# Deliberately asks for ONE fragment, not a sentence or paragraph — the
+# narrower scope is the entire point of this correction mode (see that
+# function's docstring). Overridable via correction.assertion_span_system_prompt
+# in config, same pattern as the legacy correction.system_prompt.
+_DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT = (
+    "You are correcting one short factual fragment inside a sentence about "
+    "an Indian statute, in the \"Statutory Grounding\" section of a court "
+    "judgment summary. You will be given the case facts, the flagged "
+    "fragment (unsupported or contradicted by the cited law), and (if "
+    "available) the actual text of the relevant statute. Rewrite ONLY the "
+    "fragment so it is consistent with the statute text. Do not add a "
+    "citation, section number, or Act name that is not already present in "
+    "the fragment you were given. Output ONLY the corrected fragment as "
+    "plain text — no quotation marks, no surrounding sentence, no "
+    "explanation, nothing else."
+)
+
 
 def _should_trigger_correction(claim_record: dict) -> bool:
     """Per the approved design: trigger for CONTRADICTED (regardless of
@@ -286,11 +305,53 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     }
 
 
+def _assertion_spans_hypothesis(rec: dict) -> Optional[str]:
+    """Builds a narrower hypothesis from `assertion_spans` for the ONE case
+    `assertion_text` alone cannot narrow: a "respectively" claim (see
+    claim_parser.py's `_assign_respectively_spans`), where `assertion_text`
+    is left equal to the full `claim_text` by design (the split mechanism is
+    structurally different — a LIST of two independently-required verbatim
+    fragments, `[bare_number_span, description_item]`, not one contiguous
+    clause) but `assertion_spans` genuinely narrows to just this citation's
+    own provision number and its own paired description.
+
+    Returns None (caller falls back to claim_text/assertion_text) unless
+    ALL of: assertion_spans has exactly 2 fragments, the first is exactly
+    this claim's own provision number (confirms it's the respectively
+    shape, not some other future assertion_spans producer), and evidence
+    was matched (so `_evidence_provision` — the provision LABEL, not
+    invented — is available).
+
+    Construction: "<provision_type> <provision_number> <description_item>"
+    — e.g. "Section 302 murder". Every word is either the citation's own
+    provision label (already used verbatim elsewhere for labeled premise
+    framing) or `assertion_spans[-1]`, a genuine contiguous substring of
+    the model's own generated text. No word is invented and no verb is
+    synthesized — this is deliberately a plain juxtaposition, not a
+    grammatically smoothed sentence, so its NLI behavior can be measured
+    honestly rather than assumed (see
+    outputs/assertion_spans_primary_hypothesis_benchmark_report.md)."""
+    spans = rec.get("assertion_spans") or []
+    citation = rec.get("citation_extracted") or {}
+    provision = rec.get("_evidence_provision") or {}
+    if len(spans) != 2:
+        return None
+    if not citation.get("provision_number") or spans[0] != citation["provision_number"]:
+        return None
+    if not provision.get("provision_type") or not provision.get("provision_number"):
+        return None
+    description = spans[1]
+    if not description:
+        return None
+    return f"{provision['provision_type']} {provision['provision_number']} {description}"
+
+
 def apply_verification(
     baseline: dict,
     verifier,
     premise_framing: str = PREMISE_FRAMING_BARE,
     narrow_primary_hypothesis: bool = False,
+    assertion_span_primary_hypothesis: bool = False,
 ) -> None:
     """Mutates baseline['claims'] in place, filling verdict/confidence for
     every claim that has matched evidence. Claims with no evidence keep
@@ -302,8 +363,7 @@ def apply_verification(
     keeps the exact behaviour that produced the committed outputs; callers opt
     into the ablation by threading resolve_premise_framing(config) through.
 
-    `narrow_primary_hypothesis` (opt-in, default False — EXPERIMENTAL, not
-    yet the production default; see
+    `narrow_primary_hypothesis` (production default since 2026-09-09; see
     outputs/narrow_primary_hypothesis_benchmark_report.md for the measured
     comparison this default is based on): when True, and a claim has its
     own narrower `assertion_text` (a verbatim, non-fabricated per-citation
@@ -311,15 +371,19 @@ def apply_verification(
     THAT instead of the full `claim_text`. This is the exact same technique
     `narrow_reverification_hypothesis` already applies during correction
     re-verification (see apply_selective_correction below), extended here
-    to the PRIMARY verification pass — a documented, evidence-backed gap:
-    outputs/final_limitations_and_future_scope.md §3a names "the primary
-    verification pass never uses the narrower assertion_text hypothesis" as
-    a concrete next step, since on real NyayaRAG data one physical sentence
-    routinely backs multiple bundled claims, and verifying the full
-    sentence dilutes the hypothesis with sibling citations' unrelated
-    content. Never widens what counts as evidence-consistent —
-    assertion_text is always a genuine substring of the model's own
-    generated text, never synthesized.
+    to the PRIMARY verification pass. Never widens what counts as
+    evidence-consistent — assertion_text is always a genuine substring of
+    the model's own generated text, never synthesized.
+
+    `assertion_span_primary_hypothesis` (opt-in, default False —
+    EXPERIMENTAL, not yet the production default; see
+    outputs/assertion_spans_primary_hypothesis_benchmark_report.md for the
+    measured comparison this default is based on): extends the above to
+    "respectively" claims, the one case `assertion_text` alone leaves
+    unnarrowed. Only takes effect when `narrow_primary_hypothesis` is also
+    True and `assertion_text` did not already narrow the claim. See
+    `_assertion_spans_hypothesis()` above for exactly how the hypothesis is
+    built and why it never synthesizes content.
     """
     if premise_framing not in PREMISE_FRAMINGS:
         raise ValueError(
@@ -329,8 +393,18 @@ def apply_verification(
         if rec["evidence_text"] is None:
             continue  # already NO_EVIDENCE, verifier not invoked
         hypothesis = rec["claim_text"]
+        used_assertion_text = False
         if narrow_primary_hypothesis and rec.get("assertion_text") and rec["assertion_text"] != rec["claim_text"]:
             hypothesis = rec["assertion_text"]
+            used_assertion_text = True
+        if (
+            narrow_primary_hypothesis
+            and assertion_span_primary_hypothesis
+            and not used_assertion_text
+        ):
+            span_hypothesis = _assertion_spans_hypothesis(rec)
+            if span_hypothesis is not None:
+                hypothesis = span_hypothesis
         result = verifier.verify(
             premise=_premise_for_claim(rec, premise_framing), hypothesis=hypothesis
         )
@@ -454,6 +528,59 @@ def _scope_violation(
         if not _fragment_present(check_text, corrected_text):
             return True
     return False
+
+
+def _splice_assertion_correction(
+    original_field_text: str,
+    target_claim_text: str,
+    target_span: str,
+    corrected_fragment: str,
+) -> Optional[str]:
+    """Deterministic string splice used by ASSERTION-AWARE correction (see
+    apply_selective_correction_assertion_aware()) — NOT an LLM regeneration
+    step. Replaces `target_span` inside `target_claim_text`, then
+    replaces the resulting corrected claim text inside `original_field_text`,
+    both via a single exact-substring `.replace(..., 1)`.
+
+    `target_span` is the CONTENT fragment being corrected — for an ordinary
+    claim this is `assertion_text` (== `assertion_spans[-1]`, since
+    `assertion_spans` defaults to `[assertion_text]`); for a "respectively"
+    claim with a genuine 2-element `assertion_spans`
+    (`[bare_number_span, description_item]`, see claim_parser.py's
+    `_assign_respectively_spans`) this is `assertion_spans[-1]` — the
+    description item, never the bare number (a citation identifier, not
+    correctable content; see `apply_selective_correction_assertion_aware`'s
+    separate structural-span preservation check for that element).
+
+    Fails closed (returns None) rather than guessing whenever a `.replace`
+    would be ambiguous or impossible:
+      - `corrected_fragment` empty (the corrector returned nothing usable —
+        a real, observed LLM failure mode for a narrow "just the fragment"
+        instruction, distinct from a genuine no-op edit, which returns the
+        UNCHANGED fragment, not an empty one).
+      - `target_span` does not occur in `target_claim_text`
+        EXACTLY ONCE (should be structurally guaranteed by claim_parser.py,
+        which always defines assertion_text/assertion_spans elements as
+        genuine substrings of claim_text — checked explicitly anyway rather
+        than assumed, per this project's "a prompt/invariant is not an
+        enforcement mechanism" convention).
+      - the resulting corrected claim text does not occur, or occurs more
+        than once, inside `original_field_text` — guards against a
+        duplicate-sentence edge case where blind replacement could silently
+        edit the wrong occurrence.
+
+    A `.replace(..., 1)` on a non-unique match edits only the FIRST
+    occurrence silently, which would be worse than failing here — a
+    caller trusting the returned text as "only the target span changed"
+    when a different, unintended occurrence was actually spliced."""
+    if not corrected_fragment:
+        return None
+    if target_claim_text.count(target_span) != 1:
+        return None
+    corrected_claim_text = target_claim_text.replace(target_span, corrected_fragment, 1)
+    if original_field_text.count(target_claim_text) != 1:
+        return None
+    return original_field_text.replace(target_claim_text, corrected_claim_text, 1)
 
 
 def _citation_identity(citation) -> Optional[tuple]:
@@ -840,6 +967,366 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
     }
 
 
+def _correction_target_spans(rec: dict) -> Optional[tuple[list[str], str]]:
+    """Resolves a flagged claim's `assertion_spans` into (spans,
+    content_fragment) for ASSERTION-AWARE correction, or None (fail closed)
+    if the representation is missing or malformed.
+
+    `spans` is the claim's full `assertion_spans` list, falling back safely
+    to `[assertion_text or claim_text]` for any caller/claim predating this
+    field (same fallback convention as `_scope_violation`'s
+    `use_assertion_spans` path). `content_fragment` is ALWAYS `spans[-1]`:
+
+      - For an ordinary claim (the overwhelming majority — any claim not
+        produced by a "respectively" sentence), `assertion_spans` is a
+        1-element list equal to `[assertion_text]` (claim_parser.py's
+        `Claim.__post_init__` default, re-synced by `_assign_assertion_texts`
+        after narrowing) — so `spans[-1] == assertion_text`, identical to
+        this mechanism's original (pre-2026-09-12-continuation) behavior.
+      - For a "respectively" claim with a genuine 2-element
+        `assertion_spans` (`claim_parser.py`'s `_assign_respectively_spans`
+        constructs it as exactly `[bare_number_span, description_item]`,
+        in that order — verified directly against that function's source),
+        `spans[-1]` is the description item: the actual legal content this
+        claim asserts. `spans[0]` (the bare number) is a citation
+        IDENTIFIER, not correctable content — this pipeline already treats
+        any citation-identity change as `correction_unauthorized_addition`
+        elsewhere, so correcting the number itself is never in scope here;
+        the caller is responsible for verifying `spans[:-1]` (any
+        structural/identifier elements) survive the edit unchanged (see
+        `apply_selective_correction_assertion_aware`'s structural-span
+        check) — this function only resolves WHAT to correct, not whether
+        the surrounding structure survived.
+
+    Fails closed (returns None) if `spans` is empty or any element is
+    falsy/empty — a malformed representation must never be guessed at."""
+    spans = rec.get("assertion_spans") or [rec.get("assertion_text") or rec.get("claim_text")]
+    if not spans or any(not s for s in spans):
+        return None
+    return spans, spans[-1]
+
+
+def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, config: dict) -> dict:
+    """ASSERTION-AWARE correction (added 2026-09-12; extended 2026-09-12
+    continuation to consume the full parser-produced `assertion_spans`
+    representation, not just `assertion_text` — see `_correction_target_spans`).
+    Config-gated via correction.assertion_aware, default False — see
+    apply_selective_correction() above for the still-default LEGACY
+    whole-paragraph-regeneration path, preserved unmodified for controlled
+    ablation comparison, per this project's explicit rule to never delete a
+    still-relevant correction mechanism.
+
+    Instead of asking the LLM to regenerate the entire paragraph and then
+    CHECKING afterward that every unflagged sentence survived byte-for-byte,
+    this path asks the LLM to rewrite ONLY the flagged claim's own CONTENT
+    fragment — `assertion_spans[-1]`, a verbatim, non-fabricated sub-span of
+    `claim_text` (claim_parser.py's `_assign_assertion_texts` /
+    `_assign_respectively_spans`) — and SPLICES that fragment back via
+    deterministic, exact-substring Python string replacement
+    (`_splice_assertion_correction` — no LLM involved in the splice itself).
+    Every character of the paragraph outside the replaced span is therefore
+    GUARANTEED byte-identical to the original by construction, not merely
+    verified after the fact. For a multi-element `assertion_spans` (the
+    "respectively" pattern), the STRUCTURAL elements (`spans[:-1]` — e.g.
+    the citation's own bare provision number) are additionally verified to
+    survive the edit unchanged (see the dedicated check below) — a genuinely
+    new safety property the earlier `assertion_text`-only version of this
+    function could not express, because it never saw the structural element
+    at all.
+
+    This directly targets a real, documented failure mode: document
+    `1955_32` (see outputs/16gb_final_execution_report.md), where Qwen
+    produced a substantively CORRECT fix (a hallucinated "fourteen years"
+    corrected to the real statute's "ten years") under the legacy path in
+    BOTH ablation arms, but the fix was rejected — once by the scope check,
+    once by the independent sibling-regression check — purely because the
+    corrector's own whole-sentence regeneration did not reproduce an
+    unrelated sibling clause byte-for-byte. A splice-based edit to just the
+    "fourteen years" -> "ten years" span structurally cannot disturb that
+    sibling clause at all. (A real n=10 natural-data replay of this exact
+    mechanism, `outputs/assertion_aware_correction_experiment_report.md`,
+    found the splice DOES work exactly as designed on this case — but it
+    still did not ship, because the untouched sibling in that specific
+    sentence was ALSO independently wrong, a separate error this mechanism
+    was never meant to fix. See that report for the full, honest analysis.)
+
+    Still runs the SAME defensive safety-gate chain as the legacy path
+    (scope check, unauthorized-citation-injection check, ordinal-integrity
+    check, re-verification, sibling-regression check) — the splice's
+    structural guarantee is not treated as a substitute for verifying it,
+    matching this project's "a prompt/invariant is not an enforcement
+    mechanism" convention. The sibling-regression check in particular is
+    run UNCONDITIONALLY here (unlike the legacy path, which only runs it
+    when the scope check was itself relaxed) precisely because "this should
+    be safe by construction" is exactly the kind of claim this project's
+    own convention says to verify, not trust.
+
+    Fails closed with status `correction_span_invalid` when the claim's
+    `assertion_spans` representation is missing/malformed,
+    `correction_splice_unavailable` when the splice cannot be performed
+    unambiguously (see `_splice_assertion_correction`'s docstring), and
+    `correction_structural_span_lost` when a multi-element claim's
+    structural (non-content) span(s) do not survive the edit."""
+    flagged = [
+        rec for rec in baseline["claims"]
+        if _should_trigger_correction(rec) and not rec.get("negation_contradiction_caveat")
+    ]
+    original_field_text = baseline["generated_field"]["text"]
+    if not flagged:
+        return {
+            "triggered_for_claim_id": None,
+            "attempts": 0,
+            "status": "not_triggered",
+            "regenerated_text": None,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "correction_mode": "assertion_aware",
+        }
+
+    target = flagged[0]
+    resolved = _correction_target_spans(target)
+    if resolved is None:
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 0,
+            "status": "correction_span_invalid",
+            "regenerated_text": None,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "correction_mode": "assertion_aware",
+        }
+    target_spans, target_content_fragment = resolved
+    structural_spans = target_spans[:-1]  # e.g. a "respectively" claim's own bare number; [] for ordinary claims
+
+    corr_config = config.get("correction") or {}
+    assertion_span_prompt = corr_config.get(
+        "assertion_span_system_prompt", _DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT
+    )
+    assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 60))
+
+    corrected_fragment, corr_meta = corrector.correct_assertion_span(
+        case_text=case.case_text,
+        target_span=target_content_fragment,
+        evidence_text=target["evidence_text"],
+        assertion_span_system_prompt=assertion_span_prompt,
+        max_new_tokens=assertion_span_max_new_tokens,
+    )
+    corr_meta_dict = {
+        "model": corr_meta.model_id,
+        "max_new_tokens": corr_meta.max_new_tokens,
+        "do_sample": corr_meta.do_sample,
+        "seed": corr_meta.seed,
+        "corrected_at": corr_meta.corrected_at,
+    }
+
+    corrected_text = _splice_assertion_correction(
+        original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
+    )
+    if corrected_text is None:
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 1,
+            "status": "correction_splice_unavailable",
+            "regenerated_text": corrected_fragment,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+            "correction_mode": "assertion_aware",
+            "target_assertion_spans": target_spans,
+            "target_content_fragment": target_content_fragment,
+        }
+
+    # Structural-span preservation check — NEW, only meaningful for a
+    # multi-element assertion_spans (the "respectively" pattern): the
+    # citation's own bare number (or any other non-content element) must
+    # survive the edit unchanged, word-boundary-safe (see _fragment_present's
+    # own docstring for why plain `in` containment is unsafe here — the
+    # same "34" vs "134" gap that motivated that helper applies equally to
+    # a structural span). For an ordinary (1-element) claim, structural_spans
+    # is empty and this check trivially passes -- no behavior change there.
+    if structural_spans and not all(_fragment_present(s, corrected_text) for s in structural_spans):
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 1,
+            "status": "correction_structural_span_lost",
+            "regenerated_text": corrected_text,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+            "correction_mode": "assertion_aware",
+            "target_assertion_spans": target_spans,
+            "target_content_fragment": target_content_fragment,
+            "corrected_fragment": corrected_fragment,
+        }
+
+    # Defensive scope check — see this function's docstring: the splice
+    # already guarantees this structurally, but this is the actual
+    # enforcement mechanism, not the construction alone.
+    atomic_scope_check_mode = corr_config.get("atomic_scope_check", False)
+    use_assertion_text = bool(atomic_scope_check_mode)
+    use_assertion_spans = atomic_scope_check_mode == "assertion_spans"
+    if _scope_violation(
+        baseline["claims"], target["claim_id"], corrected_text,
+        use_assertion_text, use_assertion_spans,
+    ):
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 1,
+            "status": "correction_scope_violation",
+            "regenerated_text": corrected_text,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+            "correction_mode": "assertion_aware",
+            "target_assertion_spans": target_spans,
+            "target_content_fragment": target_content_fragment,
+            "corrected_fragment": corrected_fragment,
+        }
+
+    # Unauthorized-content-injection check — same rationale as the legacy
+    # path (see apply_selective_correction): the scope check above only
+    # verifies existing unflagged claims survive; it does not forbid a NEW
+    # hallucinated citation appearing inside the corrected fragment itself.
+    reverify_claims = claim_parser.extract_claims(corrected_text)
+    baseline_identities = {
+        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
+    }
+    baseline_identities.discard(None)
+    if any(
+        _citation_identity(c.citation_extracted) is not None
+        and _citation_identity(c.citation_extracted) not in baseline_identities
+        for c in reverify_claims
+    ):
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "attempts": 1,
+            "status": "correction_unauthorized_addition",
+            "regenerated_text": corrected_text,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+            "correction_mode": "assertion_aware",
+            "target_assertion_spans": target_spans,
+            "target_content_fragment": target_content_fragment,
+            "corrected_fragment": corrected_fragment,
+        }
+
+    # Ordinal-position matching + integrity check — identical technique to
+    # apply_selective_correction (see its comments for the full rationale).
+    target_identity = _citation_identity(target["citation_extracted"])
+    target_ordinal = None
+    same_identity_baseline: list[dict] = []
+    if target_identity is not None:
+        same_identity_baseline = [
+            rec for rec in baseline["claims"]
+            if _citation_identity(rec["citation_extracted"]) == target_identity
+        ]
+        target_ordinal = next(i for i, rec in enumerate(same_identity_baseline) if rec is target)
+
+    replacement = None
+    if target_identity is not None:
+        same_identity_reextracted = [
+            c for c in reverify_claims if _citation_identity(c.citation_extracted) == target_identity
+        ]
+        if target_ordinal < len(same_identity_reextracted):
+            replacement = same_identity_reextracted[target_ordinal]
+
+    if replacement is not None and target_identity is not None:
+        other_original_texts = {
+            rec["claim_text"] for rec in same_identity_baseline
+            if rec["claim_id"] != target["claim_id"]
+        }
+        if replacement.claim_text in other_original_texts:
+            return {
+                "triggered_for_claim_id": target["claim_id"],
+                "attempts": 1,
+                "status": "correction_ordinal_ambiguous",
+                "regenerated_text": corrected_text,
+                "original_field_text": original_field_text,
+                "reverification": None,
+                "corr_meta": corr_meta_dict,
+                "correction_mode": "assertion_aware",
+                "target_assertion_spans": target_spans,
+                "target_content_fragment": target_content_fragment,
+                "corrected_fragment": corrected_fragment,
+            }
+
+    reverification = None
+    status = "correction_failed"
+    if replacement is not None:
+        match = match_evidence(
+            replacement.citation_extracted,
+            baseline["_exact_index"],
+            baseline["_all_usable"],
+            config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+        )
+        if match.matched:
+            narrow_reverification = bool(corr_config.get("narrow_reverification_hypothesis", False))
+            reverify_hypothesis = replacement.claim_text
+            if narrow_reverification and replacement.assertion_text != replacement.claim_text:
+                reverify_hypothesis = replacement.assertion_text
+
+            result = baseline["_verifier"].verify(
+                premise=format_premise(
+                    match.evidence.canonical_text,
+                    framing=resolve_premise_framing(config),
+                    provision_type=match.evidence.provision_type,
+                    provision_number=match.evidence.provision_number,
+                    act=match.evidence.act,
+                ),
+                hypothesis=reverify_hypothesis,
+            )
+            reverification = {
+                "claim_text": replacement.claim_text,
+                "reverified_hypothesis": reverify_hypothesis,
+                "evidence_id": match.evidence.dataset_citation_key,
+                "evidence_match_method": match.match_method,
+                "verdict": result.label,
+                "confidence": result.confidence,
+                "sub_reason": result.sub_reason,
+                "raw_scores": result.raw_scores,
+                "input_truncated": result.input_truncated,
+            }
+            if result.label == ENTAILED:
+                status = "corrected"
+        else:
+            reverification = {
+                "claim_text": replacement.claim_text,
+                "evidence_id": None,
+                "evidence_match_method": match.match_method,
+                "verdict": NO_EVIDENCE,
+                "confidence": None,
+                "sub_reason": None,
+                "raw_scores": None,
+                "input_truncated": None,
+            }
+
+    # Independent sibling-regression safety net — run UNCONDITIONALLY here
+    # (see this function's docstring for why, unlike the legacy path).
+    sibling_regressions: list[dict] = []
+    if status == "corrected":
+        sibling_regressions = _reverify_sibling_regressions(
+            baseline, corrected_text, target["claim_id"], config
+        )
+        if sibling_regressions:
+            status = "correction_sibling_regression"
+
+    return {
+        "triggered_for_claim_id": target["claim_id"],
+        "attempts": 1,
+        "status": status,
+        "regenerated_text": corrected_text,
+        "original_field_text": original_field_text,
+        "reverification": reverification,
+        "sibling_regressions": sibling_regressions,
+        "corr_meta": corr_meta_dict,
+        "correction_mode": "assertion_aware",
+        "target_assertion_spans": target_spans,
+        "target_content_fragment": target_content_fragment,
+        "corrected_fragment": corrected_fragment,
+    }
+
+
 def _summarize_evidence(claims: list[dict], usable_pool_size: int) -> dict:
     with_evidence = sum(1 for c in claims if c["evidence_text"] is not None)
     return {
@@ -892,7 +1379,8 @@ def run_case(
 
     if mode in ("B", "C"):
         narrow_primary = bool((config.get("verification") or {}).get("narrow_primary_hypothesis", False))
-        apply_verification(baseline, verifier, resolve_premise_framing(config), narrow_primary)
+        span_primary = bool((config.get("verification") or {}).get("assertion_span_primary_hypothesis", False))
+        apply_verification(baseline, verifier, resolve_premise_framing(config), narrow_primary, span_primary)
 
     correction_summary = {
         "triggered_for_claim_id": None,
@@ -905,7 +1393,11 @@ def run_case(
     final_field = {"text": baseline["generated_field"]["text"], "source": "original"}
 
     if mode == "C":
-        correction_summary = apply_selective_correction(baseline, case, corrector, config)
+        assertion_aware_correction = bool((config.get("correction") or {}).get("assertion_aware", False))
+        if assertion_aware_correction:
+            correction_summary = apply_selective_correction_assertion_aware(baseline, case, corrector, config)
+        else:
+            correction_summary = apply_selective_correction(baseline, case, corrector, config)
         if correction_summary["status"] == "corrected":
             final_field = {"text": correction_summary["regenerated_text"], "source": "corrected"}
         elif correction_summary["status"] == "correction_failed":
@@ -939,6 +1431,25 @@ def run_case(
             # either way; both texts retained in correction_summary for
             # inspection.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_unauthorized_addition"}
+        elif correction_summary["status"] == "correction_splice_unavailable":
+            # ASSERTION-AWARE mode only: the deterministic splice could not
+            # be performed unambiguously (see _splice_assertion_correction).
+            # Never ship a text this pipeline did not itself construct
+            # unambiguously; both the flagged fragment and the corrector's
+            # raw output are retained in correction_summary for inspection.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_splice_unavailable"}
+        elif correction_summary["status"] == "correction_span_invalid":
+            # ASSERTION-AWARE mode only: the flagged claim's assertion_spans
+            # representation was missing/malformed (see
+            # _correction_target_spans) — never guess at what to correct.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_span_invalid"}
+        elif correction_summary["status"] == "correction_structural_span_lost":
+            # ASSERTION-AWARE mode only, multi-element assertion_spans (the
+            # "respectively" pattern): a structural (non-content) span —
+            # e.g. the citation's own bare provision number — did not
+            # survive the edit. Never ship a correction that silently drops
+            # part of the citation's own identity.
+            final_field = {"text": baseline["generated_field"]["text"], "source": "correction_structural_span_lost"}
         # "not_triggered": final_field stays as original (already set above)
 
     verifier_model_id = getattr(verifier, "model_id", None) if verifier is not None else None
@@ -987,6 +1498,12 @@ def run_case(
             "narrow_primary_hypothesis": bool((config.get("verification") or {}).get(
                 "narrow_primary_hypothesis", False
             )) if mode in ("B", "C") else None,
+            "assertion_span_primary_hypothesis": bool((config.get("verification") or {}).get(
+                "assertion_span_primary_hypothesis", False
+            )) if mode in ("B", "C") else None,
+            "assertion_aware_correction": bool((config.get("correction") or {}).get(
+                "assertion_aware", False
+            )) if mode == "C" else None,
             "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
             "software_versions": _software_versions(),
         },

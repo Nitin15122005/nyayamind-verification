@@ -155,3 +155,37 @@ final_comparison/
     ├── CASES_INDEX.md
     └── case_01..07_*.md
 ```
+
+## 9. Addendum — 2026-09-11 (post-freeze research completion pass)
+
+Four commits landed on top of the frozen ORIGINAL/CURRENT comparison above
+since 2026-08-27: `adf54aa` (safety hardening), `6347c45` (BM25/embedding
+retrieval evaluated, REJECTED), `c250a0e` (Art./Arts. parser fix, +7
+claims), `bb2cd93` (`narrow_primary_hypothesis`, production default since).
+This pass added a fifth evaluated lever and attempted a large fresh
+correction-shipping batch:
+
+- **`verification.assertion_span_primary_hypothesis`** (new, OFF by
+  default): extends `narrow_primary_hypothesis` to "respectively" claims.
+  CPU-benchmarked against the entire real population of such claims found
+  in this project's history (n=6) — 4/6 changed verdict, 0 unsafe
+  reversals, every case manually verified genuine. **Not adopted as
+  default**: n=6 is too small for a production decision, reported as
+  inconclusive rather than rounded up. See
+  `FINAL_PRODUCTION_CONFIG.md` §5a and
+  `outputs/assertion_spans_primary_hypothesis_benchmark_report.md`.
+- **Large fresh GPU batch (target n=100, fallback to 50/30) — BLOCKED**:
+  three consecutive attempts all failed during model loading due to a
+  verified host memory constraint (15.7GB total RAM, ~5.3-5.5GB free,
+  insufficient for loading Qwen2.5-7B-Instruct in 4-bit), independent of
+  requested batch size. Not a code defect — see
+  `outputs/gpu_experiment_memory_constraint.md` for the full diagnostic.
+  The prior session's n=15 batch remains the only fresh GPU data for the
+  `narrow_primary_hypothesis` lever; correction-shipping impact at a
+  statistically meaningful scale remains genuinely unmeasured.
+
+No table/figure in this directory was regenerated this pass — the source
+data (`outputs/final_metrics.json` and friends) is unchanged by either of
+the above (the new lever is off by default; the blocked batch produced no
+new committed data), so regeneration would reproduce byte-for-byte
+identical output, as already verified for the 2026-09-09 pass.

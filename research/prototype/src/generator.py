@@ -64,7 +64,20 @@ class StatuteGroundingGenerator:
 
     def load(self) -> None:
         """Deferred model load — see module docstring. Not fine-tuning
-        anything: from_pretrained only, no Trainer, no gradient updates."""
+        anything: from_pretrained only, no Trainer, no gradient updates.
+
+        `low_cpu_mem_usage=True` and the `gc`/CUDA-cache clear immediately
+        before `from_pretrained()` were added 2026-09-11 (16GB-laptop memory
+        audit, outputs/16gb_memory_architecture_audit.md): `transformers`
+        4.40.2 already defaults `low_cpu_mem_usage` to True whenever
+        `device_map` is set (true here), so this makes an implicit default
+        explicit rather than changing behavior; the gc/cache clear releases
+        any allocator-cached memory left over from `import torch`/CUDA
+        context init before the single largest transient allocation
+        (~3.9GB per safetensors shard) that loading this model requires.
+        Neither changes model identity, weights, quantization config, or
+        output — purely loading-mechanics, safe to always run."""
+        import gc
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
@@ -84,10 +97,13 @@ class StatuteGroundingGenerator:
             llm_int8_skip_modules=[],
         )
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        gc.collect()
+        torch.cuda.empty_cache()
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
             quantization_config=bnb_config,
             device_map=self.device_map,
+            low_cpu_mem_usage=True,
         )
         self._model.eval()
 

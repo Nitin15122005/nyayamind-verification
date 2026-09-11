@@ -227,6 +227,23 @@ verification:
   # 2026-09-09.
   narrow_primary_hypothesis: true
 
+  # EXPERIMENTAL, OFF BY DEFAULT (added 2026-09-11) -- see
+  # outputs/assertion_spans_primary_hypothesis_benchmark_report.md for the
+  # measured comparison this default is based on. Extends
+  # narrow_primary_hypothesis above to "respectively" claims (see
+  # claim_parser.py's _assign_respectively_spans), the one case
+  # assertion_text alone cannot narrow -- assertion_text stays equal to the
+  # full claim_text for these by construction, since the split mechanism is
+  # a LIST of 2 independently-required verbatim fragments
+  # (assertion_spans = [bare_number_span, description_item]), not one
+  # contiguous clause. Only takes effect when narrow_primary_hypothesis is
+  # also true and assertion_text did not already narrow the claim. Builds
+  # the hypothesis as "<provision_type> <provision_number> <description>"
+  # (e.g. "Section 302 murder") -- see pipeline.py's
+  # _assertion_spans_hypothesis() docstring for exactly why every word is a
+  # genuine, non-fabricated substring, never synthesized.
+  assertion_span_primary_hypothesis: false
+
 correction:
   max_attempts: 1
   max_reverifications: 1
@@ -337,6 +354,46 @@ correction:
   # "false" to exactly reproduce every evaluation output committed before
   # 2026-08-27.
   narrow_reverification_hypothesis: true
+
+  # ASSERTION-AWARE correction (added 2026-09-12). When True, correction
+  # rewrites ONLY the flagged claim's own `assertion_text` fragment (via
+  # SelectiveCorrector.correct_assertion_span()) and splices it back with a
+  # deterministic string replacement (pipeline.py's
+  # `_splice_assertion_correction`) instead of asking the LLM to regenerate
+  # the whole paragraph. See
+  # `apply_selective_correction_assertion_aware()` in pipeline.py for the
+  # full design rationale, and outputs/assertion_aware_correction_*.md for
+  # the controlled-benchmark and natural-data results.
+  #
+  # DEFAULT: false (legacy `apply_selective_correction()` — unchanged,
+  # still produces every historical committed result). This is a NEW,
+  # experimental mechanism evaluated alongside the legacy one for ablation
+  # comparison, not yet promoted to production — per this project's rule
+  # to never promote a new mechanism merely because it was implemented.
+  # Set to true to use the new path; both paths share every other
+  # correction.* setting above (atomic_scope_check, narrow_reverification_
+  # hypothesis, etc.) except the two below, which are assertion-aware-only.
+  assertion_aware: false
+
+  # Overridable system prompt for the assertion-aware path's narrower
+  # "rewrite just this fragment" instruction. Defaults to
+  # pipeline.py's `_DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT` when unset here.
+  assertion_span_system_prompt: >
+    You are correcting one short factual fragment inside a sentence about
+    an Indian statute, in the "Statutory Grounding" section of a court
+    judgment summary. You will be given the case facts, the flagged
+    fragment (unsupported or contradicted by the cited law), and (if
+    available) the actual text of the relevant statute. Rewrite ONLY the
+    fragment so it is consistent with the statute text. Do not add a
+    citation, section number, or Act name that is not already present in
+    the fragment you were given. Output ONLY the corrected fragment as
+    plain text — no quotation marks, no surrounding sentence, no
+    explanation, nothing else.
+
+  # Much smaller than the legacy correction.max_new_tokens (220), since the
+  # target is one short fragment (e.g. "fourteen years" -> "ten years"),
+  # not a full paragraph.
+  assertion_span_max_new_tokens: 60
 
 modes:
   - "A"   # generation only

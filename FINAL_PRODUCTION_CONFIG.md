@@ -22,6 +22,8 @@ pass with the config exactly as shipped.
 | `correction.atomic_scope_check` | `false` | **`"assertion_spans"`** | ✅ Yes |
 | `correction.narrow_reverification_hypothesis` | `false` | **`true`** | ✅ Yes |
 | `verification.narrow_primary_hypothesis` | `false` | **`true`** (added 2026-09-09) | ✅ Yes |
+| `verification.assertion_span_primary_hypothesis` | `false` | `false` (evaluated 2026-09-11, n=6 too small to adopt) | No — inconclusive at current sample size |
+| `correction.assertion_aware` | `false` | `false` (architecture completed 2026-09-12 — now consumes real `assertion_spans`, not just `assertion_text`; evaluated at small n — see §5b) | No — EXPERIMENTAL, not yet promoted |
 | `verification.confidence_threshold` | `0.70` | `0.70` | No — evidence supports keeping it |
 | Sibling-regression protection | — | Always active when either atomic-scope mode is on | Not independently toggleable |
 | Citation-identity preservation on correction | — | Always active | Not independently toggleable, never was |
@@ -269,6 +271,227 @@ else identical). Result, stated honestly:
   all in this batch.** A larger fresh batch (n>=50, matching the scale of
   `outputs/final_gpu_validation.md`) is the natural next step to actually observe correction
   behavior under this lever, not done in this session for time/GPU-cost reasons.
+
+**Follow-up done 2026-09-12** (`outputs/16gb_final_execution_report.md`, same script,
+checkpointed/resumable rewrite + a host-memory fix that unblocked this experiment on a 16GB
+laptop — see `outputs/16gb_memory_architecture_audit.md`): a real fresh n=62 batch, exceeding the
+n>=50 target above. Result, stated with the same honesty:
+
+- **Verification recovery, directionally consistent, not independently significant**: 5/32
+  evidence-matched claims changed verdict (4 NEI→ENTAILED, 1 NEI→CONTRADICTED), 0 unsafe
+  ENTAILED↔CONTRADICTED reversals. Exact sign test on the 4 discordant NEI↔ENTAILED pairs:
+  p≈0.125 — not significant at α=0.05 on its own, though directionally consistent with the much
+  larger n=456/107 CPU benchmark this lever was originally adopted on.
+- **Correction shipping: still 0** — 0/4 (OLD), 0/5 (CURRENT) triggered attempts shipped. This
+  DOES now answer the open question from 2026-09-09: at n=62, correction shipping is exercised
+  (unlike the n=15 batch) but does not change — the 1.8%-cumulative-historical rate is neither
+  improved nor worsened by this lever in this sample. A real case study (document `1955_32`)
+  shows Qwen producing a substantively correct fix in both arms, each rejected by a different
+  safety gate (scope-check vs. sibling-regression) — the corrector can produce correct text; the
+  bottleneck is shipping a bundled-sentence edit safely, not generation quality alone.
+- **Conclusion**: `narrow_primary_hypothesis` continues to recover verification confidence on
+  genuinely-supported claims without introducing unsafe reversals, across every real dataset this
+  project has tested it on (n=456/107, n=15/12, now n=62/32) — the production decision (§5 above)
+  is unaffected. It does not, on current evidence, move the correction-shipping rate.
+
+---
+
+## 5a. `verification.assertion_span_primary_hypothesis`: false → **evaluated, NOT adopted** (2026-09-11)
+
+### What it does
+
+Extends §5's `narrow_primary_hypothesis` to "respectively" claims (see `claim_parser.py`'s
+`_assign_respectively_spans`), the one case `assertion_text` alone cannot narrow — for these,
+`assertion_text` is left equal to the full `claim_text` by construction, while `assertion_spans`
+holds a 2-element list (`[bare_number_span, description_item]`). Builds the hypothesis as
+`"<provision_type> <provision_number> <description>"` (e.g. `"Section 302 murder"`) — every word
+traces to the citation's own provision label or a genuine substring of the model's generated text.
+
+### Evidence
+
+`scripts/benchmark_assertion_span_primary_hypothesis.py` re-scored, on CPU, every real
+evidence-matched "respectively" claim found across every committed `outputs/*.jsonl` file — the
+**entire population is n=6** (this pattern is rare in real generated text; see
+`outputs/assertion_spans_primary_hypothesis_benchmark_report.md`). Result: 4/6 changed verdict
+(3 NEI→ENTAILED, 1 NEI→CONTRADICTED), **0 unsafe ENTAILED↔CONTRADICTED reversals**. Every changed
+case manually inspected and found genuine — including a real positive finding: the one
+NEI→CONTRADICTED case correctly caught a genuine generation error (the model attributed "the
+identification of persons by sight" to Indian Evidence Act Section 27, which is actually about
+confession-derived discovery) that the diluted full-sentence hypothesis had let slip through as
+NEI.
+
+### Why NOT adopted despite a clean positive signal
+
+**n=6 is too small for a production decision, and this document says so explicitly rather than
+rounding up.** This is not a hedge — it is the correct application of the same evidentiary bar
+every other lever in this document was held to, several of which (§4, §5) required dozens to
+hundreds of real cases before being adopted. Unlike those, no larger real sample currently exists:
+this pattern's rarity means accumulating a meaningfully larger n requires either many more natural
+GPU experiments (this pattern shows up unpredictably, not on demand) or a deliberately-built
+controlled/synthetic benchmark targeting it specifically (analogous to
+`build_controlled_benchmark.py`), neither done this pass. `assertion_span_primary_hypothesis`
+remains `false` and is documented as an evaluated, available, off-by-default option — not deleted,
+not silently abandoned, revisit when more real data accumulates.
+
+### Implementation audit (2026-09-11 recovery pass — beyond the n=6 benchmark)
+
+Before accepting the n=6 result, the mechanism itself was adversarially stress-tested (5 new
+tests, `tests/test_assertion_span_primary_hypothesis.py::TestEndToEndAdversarialCoverage`) against
+negation, modality/exception clauses, three-citation lists, and structurally ambiguous input:
+
+- **Negation preserved**: `"...which respectively require proof of intent and do not require
+  proof of premeditation."` — the second item's `"do not require..."` survives verbatim; never
+  silently inverted to a false affirmative.
+- **Modal/exception clauses preserved**: `"...permit X unless Y"` / `"...prohibit X after Y"` —
+  both survive intact.
+- **Fail-closed confirmed on structurally ambiguous input**: a malformed "3 items, mixed citation
+  grouping" sentence never produces a false 2-element `assertion_spans` match — every claim either
+  gets a clean, correctly-paired 2-element list, or `_assertion_spans_hypothesis()` declines
+  (returns `None`) and the caller falls back to existing (safe) behavior. No garbage hypothesis
+  observed in any tested case.
+- **One real, non-bug nuance found and documented**: `_KNOWN_VERB_PREFIX_RE` only ever strips a
+  verb phrase from the FIRST item in a "which respectively deal with X and Y" list (a genuinely
+  shared prefix — correct to strip once); a later item's own distinct verb ("...and require Y") is
+  real content and is correctly preserved. This means hypothesis richness varies (sometimes a bare
+  noun phrase, sometimes a full clause) depending on sentence shape — **empirically verified on
+  real DeBERTa (CPU) to be safe either way**: both `"Section 302 proof of intent"` (verb-less) and
+  `"Section 302 requires proof of intent"` (verb-ful) correctly fail toward
+  NOT_ENOUGH_INFORMATION when genuinely unsupported (0.963 vs 0.997 confidence) — neither produces
+  a false ENTAILED/CONTRADICTED. Not fixed, because there is no evidence a fix would improve
+  anything and the shared verb-stripping logic is also used by the safety-critical scope-check
+  (changing it without evidence would risk that, not just this new lever).
+
+**Conclusion of this audit: the implementation does what it claims, fails closed on ambiguity, and
+has no found safety defect.** The decision to withhold production promotion remains about sample
+size (n=6), not implementation quality.
+
+---
+
+## 5b. `correction.assertion_aware`: false → **evaluated, NOT adopted** (2026-09-12)
+
+### What it does
+
+A new correction mechanism (`src/pipeline.py`'s
+`apply_selective_correction_assertion_aware()`, `src/corrector.py`'s
+`SelectiveCorrector.correct_assertion_span()`) that rewrites ONLY the
+flagged claim's own `assertion_text` fragment and splices it back via
+deterministic exact-substring replacement, instead of asking the LLM to
+regenerate the whole sentence/paragraph and checking afterward that
+unflagged content survived byte-for-byte (the legacy
+`apply_selective_correction()` path, unchanged, still production-default).
+Everything outside the target span is byte-identical to the original by
+construction. The legacy path is fully preserved for ablation comparison —
+this is config-gated (`correction.assertion_aware`), never a replacement.
+
+### Evidence
+
+**Implementation correctness** (controlled, deterministic, no-GPU benchmark
+— `outputs/assertion_aware_correction_controlled_benchmark.md`, 20 tests in
+`tests/test_assertion_aware_correction.py`): the splice mechanism and its
+full defensive safety-gate chain (scope check, unauthorized-citation
+check, ordinal-integrity check, UNCONDITIONAL sibling-regression check)
+behave exactly as designed against every tested input shape, including the
+core bundled-"while"-sentence motivating scenario.
+
+**Real natural-data correction-shipping result** (`outputs/assertion_aware_correction_experiment_report.md`,
+n=10 paired attempts — every case that triggered legacy correction in the
+committed n=62 batch, real Qwen2.5-7B + real DeBERTa):
+
+| Mechanism | Shipped |
+|---|---|
+| LEGACY | 0/10 |
+| ASSERTION-AWARE | 0/10 |
+
+**No shipping-rate improvement measured.** Investigated case-by-case
+(not left unexplained):
+- For 2 documents (1953_10, 1955_16), assertion-aware hit a NEW
+  `correction_scope_violation` legacy did not — because the flagged
+  claim's `assertion_text` was NOT narrowed by any real split pattern in
+  those sentences (multiple citations sharing one unstructured or
+  "respectively"-style clause), so splicing "only the assertion_text"
+  provided no isolation over legacy there. The current implementation
+  uses only `assertion_text`, not the more granular `assertion_spans`
+  (which exists specifically for "respectively" patterns) — a concrete,
+  evidence-backed follow-up, not implemented this session.
+- For the case that specifically motivated this mechanism (`1955_32`,
+  document real evidence confirms: Section 392 IPC = robbery, Section 395
+  IPC = dacoity, "up to ten years"), the splice worked exactly as
+  designed — a clean, correct, isolated fix each arm, sibling clause
+  byte-identical — but still did not ship, because the UNTOUCHED sibling
+  claim in the SAME bundled sentence was ALSO independently wrong (the
+  original text has two separate errors in one sentence, only one of
+  which is the first-flagged/targeted claim under this pipeline's v0
+  one-correction-per-field design), and the unconditional sibling-
+  regression check correctly refused to ship a fix that leaves a second,
+  independently-wrong claim standing. This is evidence the safety design
+  is substantively working, not evidence against the splice mechanism.
+
+### Why NOT adopted
+
+Zero measured improvement in correction-shipping rate at n=10, with the
+one case that could have benefited blocked by a genuinely separate issue.
+This is a real negative/preliminary result, reported honestly rather than
+reframed — see the task's own rule against promoting a new mechanism
+"merely because it was implemented." The mechanism is real, tested, safe
+(0 unsafe shipments, same as every historical batch), and available for
+further evaluation; it is simply not yet evidenced to move the outcome
+that motivated it.
+
+### What would justify promotion
+
+A larger natural-data batch (blocked on this 16GB machine at the moment —
+each additional case requires a full Qwen correction call) showing a
+measurable shipping-rate improvement, OR an extension to splice at the
+`assertion_spans` level (covering "respectively" and other multi-claim
+unsplit-clause patterns) tested with the same rigor as this pass.
+
+### UPDATE 2026-09-12 (same-day continuation) — architecture completed: now consumes assertion_spans, not just assertion_text
+
+The follow-up above ("extension to splice at the `assertion_spans` level")
+was implemented and tested this same day. `apply_selective_correction_assertion_aware()`
+now resolves its correction target via a new `_correction_target_spans()`
+helper that reads the claim's actual `assertion_spans` list (falling back
+safely to `[assertion_text]` for the ordinary case), always targets the
+LAST element (the content/description item — never the first, which for a
+"respectively" claim is the citation's own bare number, a structural
+identifier never eligible for correction), and adds a NEW safety check —
+`correction_structural_span_lost` — verifying any structural element
+survives the edit. A new fail-closed status, `correction_span_invalid`,
+rejects a missing/malformed `assertion_spans` representation outright
+rather than guessing.
+
+**Real "respectively" claim, confirmed against actual `claim_parser`
+output** (not invented): `extract_claims("Sections 302 and 34 of the "
+"Indian Penal Code, 1860, which respectively deal with theft and common "
+"intention.")` produces `assertion_spans=['302', 'theft']` for the Section
+302 claim. A new deterministic test
+(`test_multi_span_respectively_claim_ships_correction_preserving_structural_span`)
+confirms the mechanism now correctly targets `'theft'` (not the whole
+shared sentence), ships the fix, and leaves both the bare `'302'` and the
+sibling Section 34 claim's own content byte-identical. 6 new tests total
+(26 in the file; 302/302 full suite).
+
+**Verified against real data, not just inspection**: replayed the new code
+against all 9 triggered attempts from the already-committed n=10 batch
+using the ALREADY-RECORDED corrector outputs (no fresh Qwen call —
+`scripts/replay_assertion_span_aware_on_existing_data.py`,
+`outputs/assertion_span_aware_integration_replay.json`). Result: **0
+target-fragment mismatches, 0 outcome mismatches** across all 9 — every
+real case in this batch has a 1-element `assertion_spans` (confirmed
+directly, not assumed), so this refactor is a genuine architecture
+completion with zero behavior change on existing data. It has not yet been
+exercised on a FRESH, real Qwen-generated multi-span ("respectively")
+correction attempt — none exists in the current data, and generating one
+was judged not worth a new GPU run given this pass's time/resource budget;
+recorded as a known, honest gap rather than papered over.
+
+**Decision unchanged**: `correction.assertion_aware` remains `false` in
+production. The architecture is now complete and correctly built on the
+richer `assertion_spans` representation, but this does not by itself
+justify promotion — no natural-data evidence of a shipping-rate
+improvement exists yet (the n=10 result above is unaffected by this
+refactor), and per this project's own rule, an implementation is not
+promoted merely because it is architecturally sound.
 
 ---
 

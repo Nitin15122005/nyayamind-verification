@@ -1,0 +1,95 @@
+{
+  "target_document_ids": [
+    "1953_1",
+    "1953_10",
+    "1953_96",
+    "1955_16",
+    "1955_32"
+  ],
+  "n_paired_attempts": 10,
+  "legacy_shipped": 0,
+  "assertion_aware_shipped": 0,
+  "rows": [
+    {
+      "document_id": "1953_1",
+      "arm": "OLD",
+      "legacy_status": "correction_failed",
+      "assertion_aware_status": "correction_failed",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1953_10",
+      "arm": "OLD",
+      "legacy_status": "correction_failed",
+      "assertion_aware_status": "correction_scope_violation",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1953_96",
+      "arm": "OLD",
+      "legacy_status": "correction_scope_violation",
+      "assertion_aware_status": "correction_scope_violation",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1955_16",
+      "arm": "OLD",
+      "legacy_status": "not_triggered",
+      "assertion_aware_status": "not_triggered",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1955_32",
+      "arm": "OLD",
+      "legacy_status": "correction_scope_violation",
+      "assertion_aware_status": "correction_sibling_regression",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1953_1",
+      "arm": "CURRENT",
+      "legacy_status": "correction_failed",
+      "assertion_aware_status": "correction_failed",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1953_10",
+      "arm": "CURRENT",
+      "legacy_status": "correction_failed",
+      "assertion_aware_status": "correction_scope_violation",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1953_96",
+      "arm": "CURRENT",
+      "legacy_status": "correction_scope_violation",
+      "assertion_aware_status": "correction_scope_violation",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1955_16",
+      "arm": "CURRENT",
+      "legacy_status": "correction_failed",
+      "assertion_aware_status": "correction_scope_violation",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    },
+    {
+      "document_id": "1955_32",
+      "arm": "CURRENT",
+      "legacy_status": "correction_sibling_regression",
+      "assertion_aware_status": "correction_sibling_regression",
+      "legacy_shipped": false,
+      "assertion_aware_shipped": false
+    }
+  ],
+  "timestamp": "2026-09-11T21:25:25.360046+00:00"
+}

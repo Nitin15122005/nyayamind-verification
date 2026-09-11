@@ -1,5 +1,16 @@
 # Runbook — Regenerating This Demo Pack
 
+**CORRECTION (2026-09-11)**: every command path below originally assumed this
+pack still lived at `research/prototype/final_demo_pack/` — stale since the
+2026-08-27 archive reorg moved it to
+`research/prototype/archive/2026-08-27_presentation/final_demo_pack/`. Fixed
+below. Additionally, `examples/` and `live_demo/` were never part of this move
+at all: they live at `research/prototype/evaluation/examples/` and
+`research/prototype/evaluation/live_demo/` (renamed there by commit `61b240a`,
+still fully intact and actively maintained — see `final_demo_pack/README.md`'s
+own 2026-09-11 correction note for the full explanation). Commands below now
+point at the correct current locations.
+
 All commands assume the repo root (`D:/Programs/nyayamind-verification`) as the
 working directory and `research/.venv/Scripts/python.exe` as the interpreter
 (Windows; substitute `research/.venv/bin/python` on Linux/macOS). None of these
@@ -19,13 +30,13 @@ research/.venv/Scripts/python.exe -m pip install matplotlib==3.11.1
 
 (Pinned version noted here, not added to `research/requirements.txt`, so the
 frozen reproducibility file for the research pipeline stays untouched. See
-`research/prototype/final_demo_pack/metadata/requirements-demo.txt` for this
+`research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/requirements-demo.txt` for this
 pack's own dependency note.)
 
 ## 1. Regenerate the canonical computed metrics (do this first — everything else reads it)
 
 ```
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/metadata/compute_metrics.py
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/compute_metrics.py
 ```
 
 Writes `metadata/computed_metrics.json`. Prints `Cross-checks all match: True`
@@ -36,15 +47,15 @@ the mismatch first (see `DATA_LINEAGE.md`).
 ## 2. Regenerate figures + tables (independent of each other and of step 3/4 below)
 
 ```
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/figures/generate_figures.py
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/tables/generate_tables.py
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/figures/generate_figures.py
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/tables/generate_tables.py
 ```
 
 ## 3. Regenerate the exemplar-case candidate pool and case bundle
 
 ```
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/examples/find_candidates.py
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/examples/build_cases_json.py
+research/.venv/Scripts/python.exe research/prototype/evaluation/examples/find_candidates.py
+research/.venv/Scripts/python.exe research/prototype/evaluation/examples/build_cases_json.py
 ```
 
 The prose write-ups (`examples/case_01_*.md` .. `case_08_*.md`) are hand-written
@@ -56,7 +67,7 @@ materially, re-check the prose files still match `cases.json` and
 ## 4. Run the live demo
 
 ```
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/live_demo/run_demo.py
+research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/run_demo.py
 ```
 
 No GPU required (loads only the ~184M-parameter DeBERTa verifier, on CPU, in
@@ -78,7 +89,7 @@ research/.venv/Scripts/python.exe research/prototype/scripts/run_mvp.py \
 ```
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 research/.venv/Scripts/python.exe research/prototype/scripts/run_mvp.py --check
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/metadata/validate_pack.py
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/validate_pack.py
 ```
 
 The last command validates every generated JSON/CSV file parses, every figure
@@ -90,11 +101,11 @@ the last run's output.
 ## Full regeneration in one go
 
 ```
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/metadata/compute_metrics.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/figures/generate_figures.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/tables/generate_tables.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/examples/find_candidates.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/examples/build_cases_json.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/live_demo/run_demo.py && \
-research/.venv/Scripts/python.exe research/prototype/final_demo_pack/metadata/validate_pack.py
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/compute_metrics.py && \
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/figures/generate_figures.py && \
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/tables/generate_tables.py && \
+research/.venv/Scripts/python.exe research/prototype/evaluation/examples/find_candidates.py && \
+research/.venv/Scripts/python.exe research/prototype/evaluation/examples/build_cases_json.py && \
+research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/run_demo.py && \
+research/.venv/Scripts/python.exe research/prototype/archive/2026-08-27_presentation/final_demo_pack/metadata/validate_pack.py
 ```

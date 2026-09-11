@@ -1,0 +1,11 @@
+document_id,arm,mechanism,triggered_for_claim_id,parser,citation_mapping,retrieval,verification,correction_targeting,correction_generation,splice,safety_scope_citation_ordinal,reverification,safety_sibling_regression,shipped,first_failure_stage,status
+1953_1,OLD,assertion_aware,c5,ok,ok,ok,ok,ok,ok,ok,ok,fail,n/a,no,reverification,correction_failed
+1953_10,OLD,assertion_aware,c1,ok,ok,ok,ok,ok,ok,ok,fail,n/a,n/a,no,safety_scope_citation_ordinal,correction_scope_violation
+1953_96,OLD,assertion_aware,c2,ok,ok,ok,ok,ok,ok,ok,fail,n/a,n/a,no,safety_scope_citation_ordinal,correction_scope_violation
+1955_16,OLD,assertion_aware,,ok,ok,ok,ok,n/a,n/a,n/a,n/a,n/a,n/a,no,none (correctly not triggered),not_triggered
+1955_32,OLD,assertion_aware,c3,ok,ok,ok,ok,ok,ok,ok,ok,ok,fail,no,safety_sibling_regression,correction_sibling_regression
+1953_1,CURRENT,assertion_aware,c3,ok,ok,ok,ok,ok,ok,ok,ok,fail,n/a,no,reverification,correction_failed
+1953_10,CURRENT,assertion_aware,c1,ok,ok,ok,ok,ok,ok,ok,fail,n/a,n/a,no,safety_scope_citation_ordinal,correction_scope_violation
+1953_96,CURRENT,assertion_aware,c2,ok,ok,ok,ok,ok,ok,ok,fail,n/a,n/a,no,safety_scope_citation_ordinal,correction_scope_violation
+1955_16,CURRENT,assertion_aware,c2,ok,ok,ok,ok,ok,ok,ok,fail,n/a,n/a,no,safety_scope_citation_ordinal,correction_scope_violation
+1955_32,CURRENT,assertion_aware,c4,ok,ok,ok,ok,ok,ok,ok,ok,ok,fail,no,safety_sibling_regression,correction_sibling_regression
