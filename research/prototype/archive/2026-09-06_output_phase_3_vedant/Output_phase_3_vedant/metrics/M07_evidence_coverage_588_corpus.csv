@@ -1,0 +1,3 @@
+system,evidence_pool,n_matched,n_claims,coverage_pct,newly_covered,source_artifact
+baseline,v0 only,354,588,60.2,,research/prototype/outputs/evidence_coverage_v0_vs_v1.json
+modified,v0 + v1,390,588,66.3,36,research/prototype/outputs/evidence_coverage_v0_vs_v1.json

@@ -1,0 +1,7 @@
+document_id,evidence_id,baseline_verdict,baseline_confidence,span_verdict,span_confidence,changed
+2023_710,"Section 27 in The Indian Evidence Act, 1872",NOT_ENOUGH_INFORMATION,0.9729,CONTRADICTED,0.9925,yes
+2002_731,Article 14 in Constitution of India,NOT_ENOUGH_INFORMATION,0.9928,ENTAILED,0.8681,yes
+2002_731,Article 16 in Constitution of India,NOT_ENOUGH_INFORMATION,0.8681,NOT_ENOUGH_INFORMATION,0.7605,no
+2002_731,Article 15 in Constitution of India,NOT_ENOUGH_INFORMATION,0.9606,ENTAILED,0.9854,yes
+1975_28,"Section 302 in The Indian Penal Code, 1860",NOT_ENOUGH_INFORMATION,0.9932,ENTAILED,0.9826,yes
+1975_28,"Section 149 in The Indian Penal Code, 1860",NOT_ENOUGH_INFORMATION,0.9647,NOT_ENOUGH_INFORMATION,0.8458,no

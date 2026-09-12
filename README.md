@@ -5,6 +5,15 @@ LLM-generated Indian court judgment summaries, plus a reproduction of the
 **LegalSeg / RhetoricLLaMA** rhetorical-role-classification baseline it
 builds alongside.
 
+## Project Context
+
+**New to this repository (including a future Claude Code session)? Start at
+[`PROJECT_CONTEXT/01_PROJECT_BRAIN.md`](PROJECT_CONTEXT/01_PROJECT_BRAIN.md).**
+It is the compact, up-to-date mental model of what NyayaMind is, how it works, what was
+experimented on, what the results mean, what is production vs. experimental, and where every
+canonical artifact lives — with links to the rest of `PROJECT_CONTEXT/` and to the detailed
+documentation this file and the sections below only summarize.
+
 ## Project Author Statement — 2026-09-03
 
 **The project author confirms that professional legal review has since been

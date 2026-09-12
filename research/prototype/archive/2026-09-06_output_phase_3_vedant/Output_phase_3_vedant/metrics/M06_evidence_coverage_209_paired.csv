@@ -1,0 +1,3 @@
+system,system_label,arm,evidence_pool,evidence_pool_size,evidence_coverage,n_claims,n_matched,source_artifact
+baseline,"Baseline: NyayaMind v0 (bare premise · evidence v0, 59 rec)",Arm A,v0 only,59,0.631578947368421,209,132,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
+modified,"Modified: NyayaMind production (labeled premise · evidence v0+v1, 136 rec)",Arm B,v0 + v1,136,0.7033492822966507,209,147,research/prototype/evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json
