@@ -1,0 +1,886 @@
+{
+  "artifact_id": "GOLD01-V2-STRATIFIED",
+  "measurement": "GOLD-01 ORIGINAL(bare) vs LATEST(labeled), stratified by benchmark construction condition",
+  "evidence_grade": "GOLD",
+  "no_new_inference": true,
+  "source_artifacts": [
+    "metrics/gold01_v2_predictions_bare.jsonl",
+    "metrics/gold01_v2_predictions_labeled.jsonl"
+  ],
+  "attributed_conditions": [
+    "C2_negated_attributed",
+    "E2_verbatim_attributed",
+    "E4_paraphrase_attributed"
+  ],
+  "attributed_definition": "Conditions whose hypothesis explicitly names the provision, while the ORIGINAL 'bare' premise deliberately omits that identifier. The bare arm is structurally unable to entail these \u2014 by benchmark construction, not by model defect.",
+  "strata": {
+    "ALL_420": {
+      "n_items": 420,
+      "conditions_included": [
+        "C1_negated_bare",
+        "C2_negated_attributed",
+        "E1_verbatim",
+        "E2_verbatim_attributed",
+        "E3_paraphrase_bare",
+        "E4_paraphrase_attributed",
+        "N1_other_provision",
+        "N2_procedural_addition"
+      ],
+      "original_bare": {
+        "n": 420,
+        "accuracy": 0.7333333333333333,
+        "macro_f1_all_three_classes": 0.748664658664977,
+        "macro_f1_over_present_classes_only": 0.748664658664977,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.9787234042553191,
+            "recall": 0.5,
+            "f1": 0.6618705035971223,
+            "support": 184
+          },
+          "CONTRADICTED": {
+            "precision": 0.9537037037037037,
+            "recall": 0.8728813559322034,
+            "f1": 0.9115044247787611,
+            "support": 118
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.518348623853211,
+            "recall": 0.9576271186440678,
+            "f1": 0.6726190476190477,
+            "support": 118
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 420,
+        "accuracy": 0.9714285714285714,
+        "macro_f1_all_three_classes": 0.9683612674297155,
+        "macro_f1_over_present_classes_only": 0.9683612674297155,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.9735449735449735,
+            "recall": 1.0,
+            "f1": 0.9865951742627346,
+            "support": 184
+          },
+          "CONTRADICTED": {
+            "precision": 0.9649122807017544,
+            "recall": 0.9322033898305084,
+            "f1": 0.9482758620689654,
+            "support": 118
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.9743589743589743,
+            "recall": 0.9661016949152542,
+            "f1": 0.9702127659574468,
+            "support": 118
+          }
+        }
+      },
+      "delta_accuracy": 0.23809523809523814,
+      "items_fixed_by_latest": 100,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 100,
+        "improved": 100,
+        "worsened": 0,
+        "p_value": 1.5777218104420236e-30,
+        "test": "exact sign test (two-sided)"
+      }
+    },
+    "ATTRIBUTED_conditions": {
+      "n_items": 151,
+      "conditions_included": [
+        "C2_negated_attributed",
+        "E2_verbatim_attributed",
+        "E4_paraphrase_attributed"
+      ],
+      "original_bare": {
+        "n": 151,
+        "accuracy": 0.31788079470198677,
+        "macro_f1_all_three_classes": 0.29906542056074764,
+        "macro_f1_over_present_classes_only": 0.4485981308411215,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 92
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.8135593220338984,
+            "f1": 0.897196261682243,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 151,
+        "accuracy": 0.9735099337748344,
+        "macro_f1_all_three_classes": 0.6478785616523578,
+        "macro_f1_over_present_classes_only": 0.9718178424785368,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.9583333333333334,
+            "recall": 1.0,
+            "f1": 0.9787234042553191,
+            "support": 92
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.9322033898305084,
+            "f1": 0.9649122807017544,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 0.6556291390728477,
+      "items_fixed_by_latest": 99,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 99,
+        "improved": 99,
+        "worsened": 0,
+        "p_value": 3.1554436208840472e-30,
+        "test": "exact sign test (two-sided)"
+      }
+    },
+    "NON_ATTRIBUTED_conditions": {
+      "n_items": 269,
+      "conditions_included": [
+        "C1_negated_bare",
+        "E1_verbatim",
+        "E3_paraphrase_bare",
+        "N1_other_provision",
+        "N2_procedural_addition"
+      ],
+      "original_bare": {
+        "n": 269,
+        "accuracy": 0.966542750929368,
+        "macro_f1_all_three_classes": 0.9611913804240603,
+        "macro_f1_over_present_classes_only": 0.9611913804240603,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.9787234042553191,
+            "recall": 1.0,
+            "f1": 0.989247311827957,
+            "support": 92
+          },
+          "CONTRADICTED": {
+            "precision": 0.9166666666666666,
+            "recall": 0.9322033898305084,
+            "f1": 0.9243697478991596,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.9826086956521739,
+            "recall": 0.9576271186440678,
+            "f1": 0.9699570815450643,
+            "support": 118
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 269,
+        "accuracy": 0.9702602230483272,
+        "macro_f1_all_three_classes": 0.9656702501275166,
+        "macro_f1_over_present_classes_only": 0.9656702501275166,
+        "classes_present": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.989247311827957,
+            "recall": 1.0,
+            "f1": 0.9945945945945946,
+            "support": 92
+          },
+          "CONTRADICTED": {
+            "precision": 0.9322033898305084,
+            "recall": 0.9322033898305084,
+            "f1": 0.9322033898305084,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.9743589743589743,
+            "recall": 0.9661016949152542,
+            "f1": 0.9702127659574468,
+            "support": 118
+          }
+        }
+      },
+      "delta_accuracy": 0.0037174721189591198,
+      "items_fixed_by_latest": 1,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 1,
+        "improved": 1,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)"
+      }
+    }
+  },
+  "per_condition": {
+    "C1_negated_bare": {
+      "n_items": 59,
+      "conditions_included": [
+        "C1_negated_bare"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 0.9322033898305084,
+        "macro_f1_all_three_classes": 0.3216374269005848,
+        "macro_f1_over_present_classes_only": 0.9649122807017544,
+        "classes_present": [
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.9322033898305084,
+            "f1": 0.9649122807017544,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 0.9322033898305084,
+        "macro_f1_all_three_classes": 0.3216374269005848,
+        "macro_f1_over_present_classes_only": 0.9649122807017544,
+        "classes_present": [
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.9322033898305084,
+            "f1": 0.9649122807017544,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 0.0,
+      "items_fixed_by_latest": 0,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 0,
+        "improved": 0,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)",
+        "note": "no discordant items"
+      },
+      "is_attributed": false
+    },
+    "C2_negated_attributed": {
+      "n_items": 59,
+      "conditions_included": [
+        "C2_negated_attributed"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 0.8135593220338984,
+        "macro_f1_all_three_classes": 0.29906542056074764,
+        "macro_f1_over_present_classes_only": 0.897196261682243,
+        "classes_present": [
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.8135593220338984,
+            "f1": 0.897196261682243,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 0.9322033898305084,
+        "macro_f1_all_three_classes": 0.3216374269005848,
+        "macro_f1_over_present_classes_only": 0.9649122807017544,
+        "classes_present": [
+          "CONTRADICTED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 1.0,
+            "recall": 0.9322033898305084,
+            "f1": 0.9649122807017544,
+            "support": 59
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 0.11864406779661008,
+      "items_fixed_by_latest": 7,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 7,
+        "improved": 7,
+        "worsened": 0,
+        "p_value": 0.015625,
+        "test": "exact sign test (two-sided)"
+      },
+      "is_attributed": true
+    },
+    "E1_verbatim": {
+      "n_items": 59,
+      "conditions_included": [
+        "E1_verbatim"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 59
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 59
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 0.0,
+      "items_fixed_by_latest": 0,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 0,
+        "improved": 0,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)",
+        "note": "no discordant items"
+      },
+      "is_attributed": false
+    },
+    "E2_verbatim_attributed": {
+      "n_items": 59,
+      "conditions_included": [
+        "E2_verbatim_attributed"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 0.0,
+        "macro_f1_all_three_classes": 0.0,
+        "macro_f1_over_present_classes_only": 0.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 59
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 59
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 1.0,
+      "items_fixed_by_latest": 59,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 59,
+        "improved": 59,
+        "worsened": 0,
+        "p_value": 3.469446951953614e-18,
+        "test": "exact sign test (two-sided)"
+      },
+      "is_attributed": true
+    },
+    "E3_paraphrase_bare": {
+      "n_items": 33,
+      "conditions_included": [
+        "E3_paraphrase_bare"
+      ],
+      "original_bare": {
+        "n": 33,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 33
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 33,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 33
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 0.0,
+      "items_fixed_by_latest": 0,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 0,
+        "improved": 0,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)",
+        "note": "no discordant items"
+      },
+      "is_attributed": false
+    },
+    "E4_paraphrase_attributed": {
+      "n_items": 33,
+      "conditions_included": [
+        "E4_paraphrase_attributed"
+      ],
+      "original_bare": {
+        "n": 33,
+        "accuracy": 0.0,
+        "macro_f1_all_three_classes": 0.0,
+        "macro_f1_over_present_classes_only": 0.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 33
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 33,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "ENTAILED"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 33
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          }
+        }
+      },
+      "delta_accuracy": 1.0,
+      "items_fixed_by_latest": 33,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 33,
+        "improved": 33,
+        "worsened": 0,
+        "p_value": 2.3283064365386963e-10,
+        "test": "exact sign test (two-sided)"
+      },
+      "is_attributed": true
+    },
+    "N1_other_provision": {
+      "n_items": 59,
+      "conditions_included": [
+        "N1_other_provision"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 0.9152542372881356,
+        "macro_f1_all_three_classes": 0.3185840707964602,
+        "macro_f1_over_present_classes_only": 0.9557522123893806,
+        "classes_present": [
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 1.0,
+            "recall": 0.9152542372881356,
+            "f1": 0.9557522123893806,
+            "support": 59
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 0.9322033898305084,
+        "macro_f1_all_three_classes": 0.3216374269005848,
+        "macro_f1_over_present_classes_only": 0.9649122807017544,
+        "classes_present": [
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 1.0,
+            "recall": 0.9322033898305084,
+            "f1": 0.9649122807017544,
+            "support": 59
+          }
+        }
+      },
+      "delta_accuracy": 0.016949152542372836,
+      "items_fixed_by_latest": 1,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 1,
+        "improved": 1,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)"
+      },
+      "is_attributed": false
+    },
+    "N2_procedural_addition": {
+      "n_items": 59,
+      "conditions_included": [
+        "N2_procedural_addition"
+      ],
+      "original_bare": {
+        "n": 59,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 59
+          }
+        }
+      },
+      "latest_labeled": {
+        "n": 59,
+        "accuracy": 1.0,
+        "macro_f1_all_three_classes": 0.3333333333333333,
+        "macro_f1_over_present_classes_only": 1.0,
+        "classes_present": [
+          "NOT_ENOUGH_INFORMATION"
+        ],
+        "per_class": {
+          "ENTAILED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "CONTRADICTED": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "NOT_ENOUGH_INFORMATION": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 59
+          }
+        }
+      },
+      "delta_accuracy": 0.0,
+      "items_fixed_by_latest": 0,
+      "items_broken_by_latest": 0,
+      "paired_sign_test": {
+        "n_discordant": 0,
+        "improved": 0,
+        "worsened": 0,
+        "p_value": 1.0,
+        "test": "exact sign test (two-sided)",
+        "note": "no discordant items"
+      },
+      "is_attributed": false
+    }
+  },
+  "headline_attribution": {
+    "total_items_fixed_by_latest": 100,
+    "of_which_in_attributed_conditions": 99,
+    "share_of_gain_from_attributed_conditions": 0.99,
+    "items_fixed_in_non_attributed_conditions": 1,
+    "non_attributed_paired_sign_test": {
+      "n_discordant": 1,
+      "improved": 1,
+      "worsened": 0,
+      "p_value": 1.0,
+      "test": "exact sign test (two-sided)"
+    }
+  },
+  "REQUIRED_CAVEAT": "99.0% of every item the LATEST framing fixes on GOLD-01 lies in the attributed conditions, where the ORIGINAL bare premise was constructed to omit the very identifier the hypothesis asserts. On the 269 non-attributed items the two arms are near-identical (accuracy 0.9665 -> 0.9703, sign test p=1.0000). The headline macro F1 0.749 -> 0.968 must therefore always be reported WITH this stratification. It is strong evidence that labeled framing removes a premise/hypothesis mismatch; it is NOT evidence of a general +0.22 macro-F1 improvement in legal reasoning.",
+  "why_this_still_matters": "Real generated statutory claims ARE overwhelmingly attributed ('According to Section 302 of the IPC, ...'), so the attributed conditions are the realistic ones, not the artificial ones. The correct reading is: the ORIGINAL bare premise had a structural mismatch with how claims are actually phrased, and the LATEST framing fixes it. The caveat is about the SIZE and GENERALITY of the number, not about whether the change was worth making. Independent real-data corroboration is required to carry that argument \u2014 see the natural-data evidence in CHANGE_IMPACT_AUDIT.md.",
+  "timestamp_utc": "2026-09-18T11:39:25.624517+00:00",
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/stratify_gold01_by_condition.py"
+}

@@ -1,0 +1,628 @@
+{
+  "system_name": "NyayaMind Verification Prototype (research freeze)",
+  "commit_hash": "fb4e98fa6f62695dbac7ba6148ca20713347386d",
+  "commit_date": "2026-09-12T14:26:31+05:30",
+  "commit_subject": "Finalize NyayaMind research implementation",
+  "working_tree": "clean; src/ byte-identical to HEAD (git status --porcelain empty)",
+  "models": {
+    "generation": {
+      "model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "quantization": {
+        "load_in_4bit": true,
+        "bnb_4bit_use_double_quant": true,
+        "bnb_4bit_quant_type": "nf4",
+        "bnb_4bit_compute_dtype": "bfloat16"
+      },
+      "device_map": {
+        "": 0
+      },
+      "decoding": "greedy (do_sample=false)",
+      "max_new_tokens": 200,
+      "seeded": true,
+      "evidence": "config/prototype.yaml:64-72; src/generator.py:92-107,123-146"
+    },
+    "correction": {
+      "model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "strategy": "reuses the SAME already-loaded generation model instance; no second model is loaded",
+      "max_new_tokens": 220,
+      "do_sample": false,
+      "evidence": "config/prototype.yaml:250-252; src/corrector.py:5-8,31-41,55-56"
+    },
+    "verification": {
+      "model_id": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "dtype": "float16 on cuda, float32 on cpu",
+      "device_default": "cuda (hard-fails if CUDA absent; no silent CPU fallback)",
+      "max_sequence_length": 512,
+      "evidence": "config/prototype.yaml:136,146; src/verifier.py:110,139-161"
+    }
+  },
+  "configuration_path": "research/prototype/config/prototype.yaml",
+  "config_levers": {
+    "seed": 42,
+    "use_evidence_v1": true,
+    "premise_framing": "labeled",
+    "narrow_primary_hypothesis": true,
+    "assertion_span_primary_hypothesis": false,
+    "atomic_scope_check": "assertion_spans",
+    "narrow_reverification_hypothesis": true,
+    "correction.assertion_aware": false,
+    "correction.max_attempts": 1,
+    "correction.max_reverifications": 1,
+    "fuzzy_method": "jaccard",
+    "fuzzy_token_overlap_threshold": 0.8,
+    "confidence_threshold": 0.7,
+    "modes": [
+      "A",
+      "B",
+      "C"
+    ],
+    "_notes": {
+      "fuzzy_method": "value is correct behaviorally but comes from the match_evidence() function default, NOT from config - pipeline.py never reads evidence_matching.fuzzy_method (see DISCREPANCY D1)",
+      "correction.max_attempts": "declared in config but never read by src/ - single attempt is hardcoded (D4)",
+      "claim_parsing.citation_regex": "declared in config but never read; the config copy is stale vs the live CITATION_REGEX (D2)"
+    },
+    "evidence": "config/prototype.yaml:9,61,97,130,136,143,193,228,245,248-252,330,356,376,398-401"
+  },
+  "parser": {
+    "module": "research/prototype/src/claim_parser.py",
+    "deterministic": true,
+    "llm_used": false,
+    "entry_point": "extract_claims (claim_parser.py:1014)",
+    "extracts": [
+      "claim_id",
+      "claim_text",
+      "provision_type",
+      "provision_number",
+      "subsection",
+      "act_raw",
+      "act_norm",
+      "assertion_text",
+      "assertion_spans"
+    ],
+    "sentence_splitting": {
+      "function": "split_sentences (claim_parser.py:466)",
+      "regex": "(?<=[.!?])\\s+(?=[A-Z0-9])",
+      "abbreviation_remerge": [
+        "Art.",
+        "Arts."
+      ],
+      "evidence": "claim_parser.py:186,201,466-480"
+    },
+    "citation_regexes": {
+      "CITATION_REGEX": "claim_parser.py:76-86 - keyword + number-list + optional Part qualifier + (in|of) + act, IGNORECASE",
+      "BARE_CITATION_REGEX": "claim_parser.py:99-101 - keyword + number-list, no act clause",
+      "number_list": "claim_parser.py:54,59-62 - comma / and / & separated; one Claim per provision number",
+      "part_qualifier": "claim_parser.py:73 - '(?:\\s*,?\\s*Part\\s+[IVXLC]+[A-Za-z]?)?'",
+      "trailing_acronym": "claim_parser.py:362,373-376 - IPC / CrPC / CPC with no in/of connector",
+      "plausible_year_reject": "claim_parser.py:153 - '^(?:15|16|17|18|19|20)\\d\\d$', BARE path only",
+      "embedded_citation_cut": "claim_parser.py:161-164"
+    },
+    "art_abbreviation_handling": {
+      "map": {
+        "art": "article",
+        "arts": "article"
+      },
+      "pattern": "Arts?\\.  (trailing period REQUIRED so bare 'Art'/'Arts' never matches)",
+      "no_space_tolerated": "\\s* after keyword, because 'Art.227' occurs in real output",
+      "also_protects_sentence_splitting": true,
+      "evidence": "claim_parser.py:37-50,77-79,201"
+    },
+    "acronym_normalization": {
+      "function": "normalize_act (claim_parser.py:379)",
+      "steps": [
+        "lowercase",
+        "strip leading 'the'",
+        "strip parenthetical gloss",
+        "strip . and ,",
+        "collapse whitespace",
+        "apply _KNOWN_ACT_ALIASES"
+      ],
+      "aliases": {
+        "ipc": "indian penal code 1860",
+        "indian penal code": "indian penal code 1860",
+        "crpc": "code of criminal procedure 1973",
+        "code of criminal procedure": "code of criminal procedure 1973",
+        "cpc": "code of civil procedure 1908",
+        "code of civil procedure": "code of civil procedure 1908",
+        "id act": "industrial disputes act 1947",
+        "industrial disputes act": "industrial disputes act 1947",
+        "constitution": "constitution of india",
+        "evidence act": "indian evidence act 1872"
+      },
+      "symmetric": "the same function normalizes the evidence corpus act names (data_loader.py:59)",
+      "provision_type_singularization": "claim_parser.py:168-179",
+      "evidence": "claim_parser.py:311,313-336,379-396"
+    },
+    "truncation_handling": {
+      "act_name_over_capture": "_trim_act_name (claim_parser.py:260-308) - 4 independent candidate cut points, EARLIEST-WINS; returns (trimmed, consumed_length) so leftover text is re-scanned, not discarded",
+      "spurious_subspan_act": "_find_bare_act_mentions excludes spans already claimed by a full-form citation (claim_parser.py:555-575)",
+      "nli_input_truncation": "detected (never prevented) at verifier.py:195-196 as input_truncated; currently inert (~354/512 tokens worst case)"
+    },
+    "assertion_narrowing": {
+      "assertion_text": "_assign_assertion_texts (claim_parser.py:814) - 4 ordered conservative passes: semicolon (724), ' while ' (687), citation-keyword-boundary (750), parenthetical gloss (778); always a contiguous VERBATIM substring; falls back to full claim_text",
+      "assertion_spans": "_assign_respectively_spans (claim_parser.py:970) - [bare_number_span, description_item] for the 'respectively' pattern; fails closed on any ambiguity; defaults to [assertion_text]"
+    },
+    "negation_detection": {
+      "location": "src/pipeline.py (NOT the parser)",
+      "regex": "\\bneither\\b.{0,200}?\\bnor\\b | \\b(?:does|do|did)\\s+not\\s+apply\\b | \\b(?:is|are|was|were)\\s+not\\s+applicable\\b | \\bno\\s+longer\\s+appli(?:es|cable)\\b | \\bnot\\s+applicable\\b",
+      "flags": "IGNORECASE",
+      "effect": "sets negation_contradiction_caveat; excludes the claim from auto-correction ONLY; verdict/confidence/sub_reason untouched",
+      "evidence": "pipeline.py:146-161,419-421,714-717"
+    },
+    "act_inheritance": {
+      "step1": "same (provision_type, provision_number) resolved to exactly ONE distinct act elsewhere in the field",
+      "step2": "exactly ONE distinct act resolved anywhere in the field",
+      "otherwise": "left unresolved (act_norm=''), which can never match a corpus act -> NO_EVIDENCE. Never invented.",
+      "evidence": "claim_parser.py:1024-1037,1050-1084"
+    }
+  },
+  "retrieval": {
+    "module": "research/prototype/src/evidence_matcher.py",
+    "entry_point": "match_evidence (evidence_matcher.py:69)",
+    "ladder": [
+      {
+        "step": 1,
+        "name": "exact_normalized",
+        "key": "(provision_type, provision_number, subsection, act_norm)",
+        "evidence": "evidence_matcher.py:93-101"
+      },
+      {
+        "step": 2,
+        "name": "exact_normalized (subsection ignored)",
+        "evidence": "evidence_matcher.py:106-110"
+      },
+      {
+        "step": 3,
+        "name": "fuzzy",
+        "evidence": "evidence_matcher.py:112-136"
+      }
+    ],
+    "legal_identity_gate": "provision_type AND provision_number must match EXACTLY in every path; only the act NAME is ever fuzzed",
+    "year_conflict_veto": {
+      "regex": "\\b(1[5-9]\\d\\d|20\\d\\d)\\b",
+      "rule": "if BOTH sides name an explicit year and the year sets are disjoint, the pair can never fuzzy-match",
+      "reason": "act_significant_words() tokenizes with [a-z']+ and drops digits, so two same-named Acts differing only by year would cross-match at overlap 1.0",
+      "evidence": "evidence_matcher.py:27-49,116-122"
+    },
+    "fuzzy_method_live": "jaccard",
+    "jaccard": {
+      "function": "_token_overlap (evidence_matcher.py:59-66)",
+      "formula": "len(a & b) / len(a | b) over act_significant_words() token sets, with a digit-insensitive exact-set short-circuit to 1.0",
+      "threshold": 0.8,
+      "acceptance": "best_overlap >= threshold (evidence_matcher.py:134-135)",
+      "k": 1
+    },
+    "no_evidence_taxonomy": {
+      "function": "classify_no_evidence (evidence_matcher.py:170)",
+      "categories": [
+        "unresolved_act",
+        "genuinely_absent_no_such_provision_any_act",
+        "genuinely_absent_wrong_act_or_edition",
+        "parser_or_matcher_defect_candidate"
+      ],
+      "live_behavior": false,
+      "note": "diagnostic/ablation instrumentation only; never read by any decision"
+    },
+    "evidence_pool": {
+      "loader": "data_loader.load_usable_evidence_from_config (data_loader.py:127)",
+      "files": [
+        {
+          "path": "research/data/evidence/canonical_statutes.jsonl",
+          "records": 63
+        },
+        {
+          "path": "research/data/evidence/evidence_audit.jsonl",
+          "records": 63
+        },
+        {
+          "path": "research/data/evidence/canonical_statutes_v1.jsonl",
+          "records": 82
+        },
+        {
+          "path": "research/data/evidence/evidence_audit_v1.jsonl",
+          "records": 82
+        }
+      ],
+      "usable_verdicts": [
+        "VERIFIED_EXACT",
+        "VERIFIED_CONTENT"
+      ],
+      "usable_pool_size_live": 136,
+      "usable_pool_size_v0_only": 59,
+      "merge_rule": "v1 records REPLACE same-keyed v0 records (data_loader.py:115); 59 + 78 - 1 overlap = 136",
+      "composition": {
+        "Section": 105,
+        "Article": 28,
+        "Rule": 3
+      },
+      "top_acts": {
+        "The Indian Penal Code, 1860": 42,
+        "Constitution of India": 28,
+        "The Code of Criminal Procedure, 1973": 13,
+        "The Land Acquisition Act, 1894": 9,
+        "The Income Tax Act, 1961": 9
+      },
+      "method": "counted by parsing every non-blank line of each JSONL as JSON, then executing the real loader with the shipped config"
+    },
+    "retrieval_signals": {
+      "module": "research/prototype/src/retrieval_signals.py",
+      "backends": [
+        "bm25 (rank_bm25.BM25Okapi over act_significant_words token bags)",
+        "embedding (sentence-transformers/all-MiniLM-L6-v2, CPU, lazy)"
+      ],
+      "wired_into_pipeline": false,
+      "reason": "all four pipeline.py match_evidence() call sites (181, 678, 878, 1256) pass only 4 positional args, so fuzzy_method falls back to its function default 'jaccard' and fuzzy_act_index stays None; 'fuzzy_method' never appears in pipeline.py",
+      "only_consumer": "research/prototype/scripts/benchmark_retrieval_signals.py:139-142",
+      "installed_in_current_env": false,
+      "safety_invariant": "can only re-score act-name similarity; exact provision identity + year veto are applied BEFORE any score is consulted, so similarity can never override citation identity (retrieval_signals.py:4-12)"
+    }
+  },
+  "verifier": {
+    "module": "research/prototype/src/verifier.py",
+    "labels": [
+      "ENTAILED",
+      "CONTRADICTED",
+      "NOT_ENOUGH_INFORMATION",
+      "NO_EVIDENCE"
+    ],
+    "label_mapping": {
+      "entailment": "ENTAILED",
+      "contradiction": "CONTRADICTED",
+      "neutral": "NOT_ENOUGH_INFORMATION"
+    },
+    "label_order_source": "read from model.config.id2label at load time; raises on an unexpected label rather than guessing (verifier.py:162-173)",
+    "premise_template_labeled": "{provision_type} {provision_number} of {act}: {evidence_text}",
+    "premise_fallback": "returns bare evidence_text if provision_type, provision_number or act is missing (verifier.py:76-77)",
+    "premise_label_source": "the MATCHED EVIDENCE RECORD's own identity (_evidence_provision), deliberately NOT the claim's citation_extracted (pipeline.py:55-71)",
+    "hypothesis_rules": [
+      "default: claim_text",
+      "narrow_primary_hypothesis=true AND assertion_text != claim_text -> assertion_text",
+      "assertion_span_primary_hypothesis (OFF): would build '{provision_type} {provision_number} {description}' from a 2-element assertion_spans via _assertion_spans_hypothesis (pipeline.py:308)"
+    ],
+    "confidence_threshold": 0.7,
+    "threshold_rule": "argmax confidence < 0.70 -> verdict downgraded to NOT_ENOUGH_INFORMATION with sub_reason='low_confidence' (verifier.py:220-222)",
+    "truncation_detection": "untruncated tokenization probe; input_truncated recorded but never alters the verdict (verifier.py:184-196)",
+    "raw_scores_recorded": true,
+    "disclaimer": "NLI statistical confidence, not a legal-correctness determination.",
+    "evidence": "verifier.py:27-35,43-78,108-231; pipeline.py:349-421"
+  },
+  "correction": {
+    "live_path": "apply_selective_correction (pipeline.py:697) - LEGACY whole-paragraph regeneration",
+    "dormant_path": "apply_selective_correction_assertion_aware (pipeline.py:1009) - fragment splice; gated off by correction.assertion_aware=false",
+    "dispatch": "pipeline.py:1394-1400",
+    "trigger_rule": "_should_trigger_correction (pipeline.py:96): CONTRADICTED (any confidence) OR NOT_ENOUGH_INFORMATION with sub_reason=='low_confidence'; never NO_EVIDENCE; never a high-confidence genuine neutral",
+    "trigger_exclusion": "claims with negation_contradiction_caveat==True are excluded (pipeline.py:714-717)",
+    "target": "first flagged claim only (pipeline.py:730); multi-claim correction is out of scope for this prototype (pipeline.py:17-22)",
+    "attempts": 1,
+    "model_reuse": "SelectiveCorrector wraps the already-loaded generator; raises if not loaded (corrector.py:50-51)",
+    "seeded": "torch.manual_seed(generator.seed) (corrector.py:81)",
+    "live_system_prompt": "You are revising a single sentence in the \"Statutory Grounding\" section of an Indian court judgment summary. You will be given the full original paragraph, one flagged sentence that is unsupported or contradicted by the cited law, and (if available) the actual text of the relevant statute. Rewrite ONLY the flagged sentence so it is consistent with the statute text provided. Return the FULL paragraph with every other sentence copied verbatim/unchanged, and only the flagged sentence modified. Output only the paragraph, nothing else.",
+    "live_user_prompt_shape": "Case facts:\\n{case_text}\\n\\nOriginal Statutory Grounding paragraph:\\n{original_field_text}\\n\\nFlagged sentence (unsupported or contradicted):\\n{flagged_claim_text}\\n\\n{evidence_block}\\nRewrite the full paragraph, changing ONLY the flagged sentence.",
+    "evidence_block": "'Actual statute text:\\n{evidence_text}\\n' or 'No supporting statute text is available in the evidence corpus for this claim.\\n'",
+    "statuses": [
+      "not_triggered",
+      "corrected",
+      "correction_failed",
+      "correction_scope_violation",
+      "correction_sibling_regression",
+      "correction_ordinal_ambiguous",
+      "correction_unauthorized_addition",
+      "correction_splice_unavailable",
+      "correction_span_invalid",
+      "correction_structural_span_lost"
+    ],
+    "evidence": "config/prototype.yaml:247-261; src/corrector.py:43-97; src/pipeline.py:697-968,1394-1443"
+  },
+  "safety_gates": [
+    {
+      "id": "G0",
+      "name": "NO_EVIDENCE short-circuit",
+      "function": "pipeline.py:290-291,399-400",
+      "blocks": "verifying any claim with no premise; NO_EVIDENCE is fixed regardless of mode",
+      "live": true
+    },
+    {
+      "id": "G1",
+      "name": "Negation carve-out",
+      "function": "_negation_marker_present (pipeline.py:160); applied pipeline.py:714-717",
+      "blocks": "auto-correcting a CONTRADICTED verdict driven by grammatical negation; verdict itself untouched",
+      "live": true
+    },
+    {
+      "id": "G2",
+      "name": "Trigger policy",
+      "function": "_should_trigger_correction (pipeline.py:96)",
+      "blocks": "correcting a high-confidence genuine neutral NEI, or any NO_EVIDENCE claim",
+      "live": true
+    },
+    {
+      "id": "G3",
+      "name": "Scope violation (atomic_scope_check=assertion_spans)",
+      "function": "_scope_violation (pipeline.py:462); applied pipeline.py:751-754",
+      "blocks": "any correction where an unflagged claim's required fragments do not ALL survive verbatim -> correction_scope_violation",
+      "live": true
+    },
+    {
+      "id": "G3a",
+      "name": "Word-boundary fragment check",
+      "function": "_fragment_present (pipeline.py:423)",
+      "blocks": "the '34' matching inside '134' class of silent sibling corruption that plain `in` containment missed",
+      "live": true
+    },
+    {
+      "id": "G4",
+      "name": "Unauthorized citation addition / injection",
+      "function": "pipeline.py:769-790 with _citation_identity (pipeline.py:586)",
+      "blocks": "any citation identity in the corrected text with no baseline counterpart - a hallucinated new citation, or the flagged citation swapped for a different provision -> correction_unauthorized_addition",
+      "live": true
+    },
+    {
+      "id": "G5",
+      "name": "Ordinal-position integrity",
+      "function": "pipeline.py:850-873",
+      "blocks": "a sibling reorder that would make an untouched sibling be re-verified as if it were the edit, shipping a fabricated ENTAILED confirmation -> correction_ordinal_ambiguous",
+      "live": true
+    },
+    {
+      "id": "G6",
+      "name": "Sibling regression",
+      "function": "_reverify_sibling_regressions (pipeline.py:601); applied pipeline.py:945-951",
+      "blocks": "a correction that preserved each sibling's required fragment but changed the surrounding sentence enough that a sibling now genuinely re-verifies CONTRADICTED -> correction_sibling_regression",
+      "live": true
+    },
+    {
+      "id": "G7",
+      "name": "Re-verification acceptance",
+      "function": "pipeline.py:931-932",
+      "blocks": "shipping any correction that does not re-verify ENTAILED; NEI/CONTRADICTED/unmatched all stay correction_failed",
+      "live": true
+    },
+    {
+      "id": "G8",
+      "name": "Structural-span preservation",
+      "function": "pipeline.py:1147-1157",
+      "blocks": "a multi-element assertion_spans claim losing its structural span (e.g. the bare provision number) -> correction_structural_span_lost",
+      "live": false
+    },
+    {
+      "id": "G9",
+      "name": "Splice determinism",
+      "function": "_splice_assertion_correction (pipeline.py:533); applied pipeline.py:1125-1135",
+      "blocks": "shipping text the pipeline did not construct unambiguously: empty fragment, span not occurring exactly once, or corrected claim text not occurring exactly once -> correction_splice_unavailable",
+      "live": false
+    },
+    {
+      "id": "G10",
+      "name": "Span representation validity",
+      "function": "_correction_target_spans (pipeline.py:970); applied pipeline.py:1084-1093",
+      "blocks": "correcting when assertion_spans is missing or malformed -> correction_span_invalid",
+      "live": false
+    },
+    {
+      "id": "G11",
+      "name": "Premise-framing validation",
+      "function": "resolve_premise_framing (pipeline.py:38); verifier.py:72-73; pipeline.py:385-388",
+      "blocks": "a typo silently producing a bare-framing run mislabelled as a labeled ablation; raises naming the value",
+      "live": true
+    },
+    {
+      "id": "G12",
+      "name": "NLI label-order validation",
+      "function": "verifier.py:162-173",
+      "blocks": "guessing label indices for a differently-ordered or unexpected checkpoint; raises",
+      "live": true
+    },
+    {
+      "id": "G13",
+      "name": "No silent CPU fallback",
+      "function": "verifier.py:139-145; generator.py:84-90",
+      "blocks": "a misconfigured GPU run silently becoming an impractically slow CPU run",
+      "live": true
+    },
+    {
+      "id": "G14",
+      "name": "Act never invented",
+      "function": "claim_parser.py:407-411,577-596,1050-1084",
+      "blocks": "guessing an Act for a bare citation; an act mentioned AFTER the citation is never used; unresolved -> NO_EVIDENCE",
+      "live": true
+    },
+    {
+      "id": "G15",
+      "name": "Respectively fail-closed",
+      "function": "_assign_respectively_spans (claim_parser.py:970)",
+      "blocks": "guessing a citation-to-description mapping on any ambiguity or count mismatch",
+      "live": true
+    },
+    {
+      "id": "G16",
+      "name": "Year-conflict veto",
+      "function": "_year_conflict (evidence_matcher.py:48); applied :121",
+      "blocks": "fuzzy-matching two legally distinct enactments differing only by year",
+      "live": true
+    },
+    {
+      "id": "G17",
+      "name": "Legal-identity gate",
+      "function": "evidence_matcher.py:93-122",
+      "blocks": "any fuzziness in provision type/number; only the act name is ever fuzzed",
+      "live": true
+    },
+    {
+      "id": "G18",
+      "name": "Truncation detection",
+      "function": "verifier.py:195-196",
+      "blocks": "nothing - instrumentation only; flags when a premise's trailing proviso could have been cut (currently inert, ~354/512 tokens)",
+      "live": true
+    }
+  ],
+  "reverification": {
+    "reparse": "claim_parser.extract_claims(corrected_text) - the same deterministic parser (pipeline.py:770)",
+    "replacement_lookup": "ordinal position among same-citation-identity claims via _citation_identity (pipeline.py:586, 806-825)",
+    "rematch": "match_evidence() on the re-extracted citation - the corrected sentence must independently re-earn its evidence (pipeline.py:878-883)",
+    "premise_framing": "identical to the original verdict's framing (resolve_premise_framing at pipeline.py:906)",
+    "narrow_reverification_hypothesis": {
+      "value": true,
+      "rule": "if replacement.assertion_text != replacement.claim_text, verify the narrower verbatim assertion_text instead of the full sentence",
+      "rationale": "on a bundled sentence the full sentence dilutes the hypothesis with sibling citations' content; measured real example 0.54 NEI on full sentence vs 0.999 ENTAILED on the narrow fragment, same evidence, same corrected text",
+      "never_widens": "assertion_text is always a genuine substring of the model's own corrected output",
+      "evidence": "pipeline.py:889-902; config/prototype.yaml:356"
+    },
+    "acceptance": "ENTAILED is the ONLY accepting label (pipeline.py:931-932)",
+    "attempts": 1
+  },
+  "final_assembly": {
+    "field": "final_field = {text, source}",
+    "initial": "{'text': baseline generated text, 'source': 'original'} (pipeline.py:1409)",
+    "mode_A": "always original",
+    "mode_B": "always original - verification is diagnostic and can never change the output (pipeline.py:5-8,1411)",
+    "mode_C": "corrected text shipped ONLY when status=='corrected'; every other status ships the ORIGINAL with source naming the specific rejection reason",
+    "rejected_text_retained": "in correction_summary.regenerated_text for inspection; never discarded",
+    "record_keys": [
+      "document_id",
+      "case_text",
+      "generated_field",
+      "claims",
+      "evidence",
+      "verification",
+      "correction",
+      "final_field",
+      "reproducibility"
+    ],
+    "reproducibility_stamps": [
+      "mode",
+      "seed",
+      "generation_model",
+      "verification_model",
+      "quantization",
+      "confidence_threshold",
+      "premise_framing",
+      "use_evidence_v1",
+      "atomic_scope_check",
+      "narrow_reverification_hypothesis",
+      "narrow_primary_hypothesis",
+      "assertion_span_primary_hypothesis",
+      "assertion_aware_correction",
+      "timestamp",
+      "software_versions"
+    ],
+    "evidence": "pipeline.py:1401-1508"
+  },
+  "datasets": {
+    "evidence_corpus": {
+      "v0_canonical": "research/data/evidence/canonical_statutes.jsonl (63 records)",
+      "v0_audit": "research/data/evidence/evidence_audit.jsonl (63 records)",
+      "v1_canonical": "research/data/evidence/canonical_statutes_v1.jsonl (82 records)",
+      "v1_audit": "research/data/evidence/evidence_audit_v1.jsonl (82 records)",
+      "usable_live": 136,
+      "usable_v0_only": 59
+    },
+    "cases": {
+      "files": [
+        "research/data/nyayarag/CaseText_Statutes/SCI_56k_multi_5k_summarised_w_sections.json",
+        "research/data/nyayarag/CaseText_Statutes/SCI_56k_single_5k_summarised_w_sections.json"
+      ],
+      "loader": "data_loader.load_nyayarag_cases (data_loader.py:157); selection via select_cases_with_evidence_overlap (data_loader.py:180)",
+      "usage_constraint": "NyayaRAG's own `sections` free-text VALUES are never read as evidence - only the citation KEYS, and only for case selection (data_loader.py:9-14)"
+    }
+  },
+  "tests": {
+    "command": "cd research/prototype && python -m pytest tests/ -q",
+    "observed_pass": 290,
+    "observed_fail": 0,
+    "observed_error": 0,
+    "observed_skipped": 1,
+    "exit_code": 0,
+    "duration_seconds": 140.09,
+    "test_files": 17,
+    "skipped_detail": "tests/test_retrieval_signals.py skipped entirely at import (pytest.importorskip('rank_bm25') at line 21); that file holds 12 test functions",
+    "note": "Documented figure is 302 (PROJECT_CONTEXT/11_CURRENT_STATUS.md:12,41; 09_REPRODUCIBILITY.md:16). 290 observed + 12 skipped = 302 - fully reconciled; the delta is entirely the missing rank_bm25 / sentence-transformers optional deps, NOT a regression. Ran under a heavily skewed environment (see `environment`): the repo's pinned venv (Python 3.11.9 / torch 2.2.2+cu121 / transformers 4.40.2 / accelerate 0.29.3 / bitsandbytes 0.43.1) no longer exists. The suite still passes because it mocks the LLMs; only test_correction_path_real_integration.py loads a real CPU DeBERTa. The Qwen generation path CANNOT be exercised here - generator.load() raises without CUDA and bitsandbytes is absent. 204 warnings, all datetime.utcnow() / torch.jit.script deprecations."
+  },
+  "environment": {
+    "python": "3.13.1 (AMD64)",
+    "torch": "2.13.0+cpu",
+    "transformers": "5.15.1",
+    "numpy": "2.2.6",
+    "pandas": "3.0.2",
+    "pyyaml": "6.0.3",
+    "pytest": "9.1.1",
+    "accelerate": "not installed",
+    "bitsandbytes": "not installed",
+    "sentence_transformers": "not installed",
+    "rank_bm25": "not installed",
+    "gpu": false,
+    "cuda_available": false,
+    "pinned_venv_status": "research/.venv (Python 3.11.9 / torch 2.2.2+cu121 / transformers 4.40.2 / accelerate 0.29.3 / bitsandbytes 0.43.1) NO LONGER EXISTS",
+    "documented_hardware": {
+      "system_ram_total_gb": 15.7,
+      "system_ram_free_gb_observed": "5.1-5.9",
+      "gpu": "NVIDIA RTX 4050 Laptop",
+      "vram_mib": 6141,
+      "bottleneck": "host system RAM, never VRAM",
+      "model_load_time_seconds": 13,
+      "ram_delta_during_load_mb": "300-600",
+      "batch_size": 1,
+      "concurrency": "single process, single thread, plain for-loop",
+      "device_map": "{'': 0} - 100% GPU, no CPU offloading",
+      "per_case_latency": "UNDETERMINED - not recorded in the audited outputs",
+      "evidence": "outputs/16gb_memory_architecture_audit.md; outputs/16gb_final_execution_report.md"
+    }
+  },
+  "discrepancies": [
+    {
+      "id": "D1",
+      "severity": "high",
+      "summary": "evidence_matching.fuzzy_method / fuzzy_bm25_threshold / fuzzy_embedding_threshold / embedding_model_id (config/prototype.yaml:130-133) are NEVER read by pipeline.py. All four match_evidence() call sites pass 4 positional args, so 'jaccard' comes from the function default. BM25/embedding retrieval is unreachable from production. Editing that config key changes nothing."
+    },
+    {
+      "id": "D2",
+      "severity": "medium",
+      "summary": "claim_parsing.citation_regex and claim_parsing.stopwords (config/prototype.yaml:92-93) are never read - claim_parser.py hardcodes CITATION_REGEX (:76-86) and _STOPWORDS (:203-206). The config's citation_regex is materially STALE: it lacks the Arts?\\. abbreviation branch, the plural keyword s?, the comma/and/& number-LIST grammar, and the Part-qualifier group."
+    },
+    {
+      "id": "D3",
+      "severity": "medium",
+      "summary": "pipeline.py:1353-1357 hardcodes a shipped disclaimer saying '59-record ... evidence corpus' while the live pool under use_evidence_v1=true is 136. The same record's evidence.usable_evidence_pool_size correctly reports 136, so every output record contradicts itself. Cosmetic (never read by a decision) but it ships in the JSONL."
+    },
+    {
+      "id": "D4",
+      "severity": "low",
+      "summary": "correction.max_attempts and correction.max_reverifications (config/prototype.yaml:248-249) are never read by src/. Single attempt and single re-verification are hardcoded."
+    },
+    {
+      "id": "D5",
+      "severity": "low",
+      "summary": "evidence_matching.top_k: 1 (config/prototype.yaml:96) is never read; k=1 is structural."
+    },
+    {
+      "id": "D6",
+      "severity": "low",
+      "summary": "No verification.device config key exists. NLIVerifier defaults to device='cuda' and run_mvp.py does not override it; a CPU run requires editing a script."
+    },
+    {
+      "id": "D7",
+      "severity": "info",
+      "summary": "Documented 302 tests vs 290 observed - fully reconciled as 290 + 12 skipped (test_retrieval_signals.py, missing optional deps). Not a defect."
+    }
+  ],
+  "evidence": {
+    "method": "Read-only inspection of the working tree at HEAD fb4e98f (git status --porcelain empty, git diff HEAD on src/ empty), plus one pytest run and one execution of the real evidence loader to count records. No repository file was created, modified, deleted, renamed, or committed.",
+    "primary_sources": [
+      "research/prototype/src/pipeline.py",
+      "research/prototype/src/claim_parser.py",
+      "research/prototype/src/evidence_matcher.py",
+      "research/prototype/src/verifier.py",
+      "research/prototype/src/corrector.py",
+      "research/prototype/src/generator.py",
+      "research/prototype/src/data_loader.py",
+      "research/prototype/src/retrieval_signals.py",
+      "research/prototype/config/prototype.yaml",
+      "research/prototype/scripts/run_mvp.py",
+      "research/data/evidence/*.jsonl",
+      "research/prototype/outputs/16gb_memory_architecture_audit.md",
+      "research/prototype/outputs/16gb_final_execution_report.md",
+      "FINAL_PRODUCTION_CONFIG.md",
+      "PROJECT_CONTEXT/09_REPRODUCIBILITY.md",
+      "PROJECT_CONTEXT/11_CURRENT_STATUS.md"
+    ]
+  }
+}

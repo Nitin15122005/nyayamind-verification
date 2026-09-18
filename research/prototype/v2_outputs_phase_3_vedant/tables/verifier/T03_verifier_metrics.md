@@ -1,0 +1,22 @@
+# T03_verifier_metrics
+
+GOLD-01 verifier metrics, n=420, fresh CPU rerun. Accuracy CI is Wilson; macro-F1 CI is a paired bootstrap (10,000 resamples, seed 20260918). Per-class CIs not computed.
+
+| metric | class | ORIGINAL (bare) | LATEST (labeled) | delta | support/n | ORIGINAL 95% CI | LATEST 95% CI |
+|---|---|---|---|---|---|---|---|
+| accuracy | - | 0.7333 | 0.9714 | 0.2381 | 420 | 0.6891-0.7734 | 0.9507-0.9836 |
+| macro F1 | - | 0.7487 | 0.9684 | 0.2197 | 420 | 0.7088-0.7877 | 0.9494-0.9847 |
+| precision | ENTAILED | 0.9787 | 0.9735 | -0.0052 | 184 | - | - |
+| recall | ENTAILED | 0.5000 | 1.0000 | 0.5000 | 184 | - | - |
+| f1 | ENTAILED | 0.6619 | 0.9866 | 0.3247 | 184 | - | - |
+| precision | CONTRADICTED | 0.9537 | 0.9649 | 0.0112 | 118 | - | - |
+| recall | CONTRADICTED | 0.8729 | 0.9322 | 0.0593 | 118 | - | - |
+| f1 | CONTRADICTED | 0.9115 | 0.9483 | 0.0368 | 118 | - | - |
+| precision | NOT_ENOUGH_INFORMATION | 0.5183 | 0.9744 | 0.4560 | 118 | - | - |
+| recall | NOT_ENOUGH_INFORMATION | 0.9576 | 0.9661 | 0.0085 | 118 | - | - |
+| f1 | NOT_ENOUGH_INFORMATION | 0.6726 | 0.9702 | 0.2976 | 118 | - | - |
+
+## Notes
+
+- Single-lever ablation of premise_framing. 99/100 of the fixed items are in the ATTRIBUTED conditions; on the 269 non-attributed items p=1.0 (see T05).
+- These terms (accuracy/precision/recall/F1) are legitimate here because GOLD-01 carries construction-rule gold labels.

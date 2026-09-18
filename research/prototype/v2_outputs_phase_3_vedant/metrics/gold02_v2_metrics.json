@@ -1,0 +1,170 @@
+{
+  "artifact_id": "GOLD02-V2-FRESH",
+  "benchmark_tag": "GOLD-02_synthetic_stress_set",
+  "design": "2x2 factorial: premise_framing x narrow_primary_hypothesis",
+  "comparison": "ORIGINAL verification config (bare, narrow=False) vs LATEST (labeled, narrow=True)",
+  "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+  "grade_note": "Gold class is CONTRADICTED-by-construction for all 59 items, re-derived and integrity-checked against the frozen fixture this run. Synthetic, not natural data: it probes whether contradiction is DETECTED, and says nothing about real-world legal accuracy. Single-class set, so only recall is well-defined \u2014 accuracy and macro F1 would be degenerate and are deliberately not reported.",
+  "n_items": 59,
+  "fixture_path": "outputs\\run_synthetic_stress.jsonl",
+  "fixture_sha256": "2dba39cc61eb94aa81daeff9817026ace0f531174e9312d49ce12522b3e9b516",
+  "fixture_integrity_check": {
+    "n_rederived": 59,
+    "n_fixture": 59,
+    "mismatches": [],
+    "verified": true
+  },
+  "evidence_pool": {
+    "canonical": "research\\data\\evidence\\canonical_statutes.jsonl",
+    "usable_records": 59,
+    "held_constant_across_cells": true,
+    "why": "synthetic claims are constructed FROM this pool; changing it changes the item set"
+  },
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "max_sequence_length": 512,
+  "device": "cpu",
+  "deterministic": true,
+  "seed_required": false,
+  "cells": {
+    "ORIGINAL_config": {
+      "premise_framing": "bare",
+      "narrow_primary_hypothesis": false,
+      "n_items": 59,
+      "n_evidence_matched": 44,
+      "n_no_evidence": 15,
+      "n_detected_contradicted": 21,
+      "contradiction_recall_all_items": 0.3559322033898305,
+      "contradiction_recall_all_items_ci95": [
+        0.2460329140381331,
+        0.48344504018145007
+      ],
+      "contradiction_recall_evidence_matched_only": 1.0,
+      "contradiction_recall_evidence_matched_only_ci95": [
+        0.9197043962415192,
+        1.0
+      ],
+      "verdict_distribution": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 21,
+        "NOT_ENOUGH_INFORMATION": 23
+      },
+      "n_triggers_correction": 31,
+      "elapsed_seconds": 90.92200064659119
+    },
+    "framing_only": {
+      "premise_framing": "labeled",
+      "narrow_primary_hypothesis": false,
+      "n_items": 59,
+      "n_evidence_matched": 44,
+      "n_no_evidence": 15,
+      "n_detected_contradicted": 27,
+      "contradiction_recall_all_items": 0.4576271186440678,
+      "contradiction_recall_all_items_ci95": [
+        0.3370130585185591,
+        0.5834216338989654
+      ],
+      "contradiction_recall_evidence_matched_only": 1.0,
+      "contradiction_recall_evidence_matched_only_ci95": [
+        0.9197043962415192,
+        1.0
+      ],
+      "verdict_distribution": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 27,
+        "NOT_ENOUGH_INFORMATION": 17
+      },
+      "n_triggers_correction": 36,
+      "elapsed_seconds": 105.92639207839966
+    },
+    "narrow_only": {
+      "premise_framing": "bare",
+      "narrow_primary_hypothesis": true,
+      "n_items": 59,
+      "n_evidence_matched": 44,
+      "n_no_evidence": 15,
+      "n_detected_contradicted": 21,
+      "contradiction_recall_all_items": 0.3559322033898305,
+      "contradiction_recall_all_items_ci95": [
+        0.2460329140381331,
+        0.48344504018145007
+      ],
+      "contradiction_recall_evidence_matched_only": 1.0,
+      "contradiction_recall_evidence_matched_only_ci95": [
+        0.9197043962415192,
+        1.0
+      ],
+      "verdict_distribution": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 21,
+        "NOT_ENOUGH_INFORMATION": 23
+      },
+      "n_triggers_correction": 31,
+      "elapsed_seconds": 144.19815468788147
+    },
+    "LATEST_config": {
+      "premise_framing": "labeled",
+      "narrow_primary_hypothesis": true,
+      "n_items": 59,
+      "n_evidence_matched": 44,
+      "n_no_evidence": 15,
+      "n_detected_contradicted": 27,
+      "contradiction_recall_all_items": 0.4576271186440678,
+      "contradiction_recall_all_items_ci95": [
+        0.3370130585185591,
+        0.5834216338989654
+      ],
+      "contradiction_recall_evidence_matched_only": 1.0,
+      "contradiction_recall_evidence_matched_only_ci95": [
+        0.9197043962415192,
+        1.0
+      ],
+      "verdict_distribution": {
+        "NO_EVIDENCE": 15,
+        "CONTRADICTED": 27,
+        "NOT_ENOUGH_INFORMATION": 17
+      },
+      "n_triggers_correction": 36,
+      "elapsed_seconds": 119.09893751144409
+    }
+  },
+  "headline_delta": {
+    "metric": "contradiction_recall_all_items",
+    "original": 0.3559322033898305,
+    "latest": 0.4576271186440678,
+    "absolute_delta": 0.1016949152542373
+  },
+  "statistics": {
+    "original_vs_latest_mcnemar": {
+      "b_only_A": 0,
+      "c_only_B": 6,
+      "n_discordant": 6,
+      "p_value": 0.03125,
+      "test": "McNemar exact binomial (two-sided)"
+    },
+    "main_effect_premise_framing_mcnemar": {
+      "b_only_A": 0,
+      "c_only_B": 6,
+      "n_discordant": 6,
+      "p_value": 0.03125,
+      "test": "McNemar exact binomial (two-sided)"
+    },
+    "main_effect_narrow_primary_mcnemar": {
+      "b_only_A": 0,
+      "c_only_B": 0,
+      "n_discordant": 0,
+      "p_value": 1.0,
+      "test": "McNemar exact binomial (two-sided)",
+      "note": "no discordant pairs"
+    }
+  },
+  "timestamp_utc": "2026-09-18T11:37:52.405004+00:00",
+  "environment": {
+    "python": "3.13.1",
+    "torch": "2.13.0+cpu",
+    "transformers": "5.15.1",
+    "cuda_available": false
+  },
+  "historical_comparison_reference": "research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold02_synthetic/gold02_metrics.json",
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/rerun_gold02_contradiction_original_vs_latest.py"
+}

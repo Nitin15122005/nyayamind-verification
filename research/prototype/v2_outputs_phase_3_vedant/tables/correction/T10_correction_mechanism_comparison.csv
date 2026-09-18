@@ -1,0 +1,6 @@
+outcome,LEGACY (production),"ASSERTION-AWARE (experimental, OFF)",note
+Corrections shipped,0,0,NULL - identical outcome
+status: correction_failed,5,2,differs
+status: correction_scope_violation,3,5,differs
+status: correction_sibling_regression,1,2,differs
+status: not_triggered,1,1,same

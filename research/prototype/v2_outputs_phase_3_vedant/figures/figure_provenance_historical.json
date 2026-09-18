@@ -1,0 +1,74 @@
+[
+  {
+    "figure": "figures/03_evidence_retrieval/F13_evidence_coverage_209_paired.png",
+    "source_artifact": "evaluation\\actual_outputs\\natural_data_runs\\209_paired\\paired_209_metrics.json",
+    "fields_used": "fresh_evidence_coverage_arm_A/B; evidence_change_counts",
+    "evidence_grade": "HISTORICAL / METRIC_ONLY",
+    "n": 209,
+    "caveat": "unlabelled natural data \u2014 coverage is a retrieval outcome, not accuracy",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/05_verdict/F16_verdict_distribution_209_paired.png",
+    "source_artifact": "evaluation\\actual_outputs\\natural_data_runs\\209_paired\\paired_209_metrics.json",
+    "fields_used": "fresh_verdict_distribution_arm_A/B",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": 209,
+    "caveat": "distribution only, no gold labels",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/06_correction/F17_correction_funnel_cumulative.png",
+    "source_artifact": "outputs/final_metrics.json",
+    "fields_used": "section_D_correction_safety_cumulative",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": 56,
+    "caveat": "zero-event safety result over a small denominator; Qwen-dependent, not rerunnable",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/06_correction/F18_synthetic_vs_natural_transfer_gap.png",
+    "source_artifact": "outputs/final_metrics.json",
+    "fields_used": "synthetic_vs_natural_correction_transfer_gap",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": "59 synthetic / 56 natural",
+    "caveat": "a LIMITATION figure, not a success metric",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/03_evidence_retrieval/F19_retrieval_method_safety.png",
+    "source_artifact": "outputs/retrieval_signal_benchmark_results.jsonl",
+    "fields_used": "method, kind, correct",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": "30 cases (9 adversarial)",
+    "caveat": "rates are over the adversarial subset, not over 30",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/08_ablation/F20_narrow_primary_hypothesis_shift.png",
+    "source_artifact": "outputs/narrow_primary_hypothesis_gpu_ablation_16gb_metrics.json",
+    "fields_used": "OLD/CURRENT verdict_distribution, correction counts",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": "62 docs / 32 claims per arm",
+    "caveat": "distribution shift only; null on GOLD-02; correction effect not significant",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/06_correction/F21_assertion_aware_null_result.png",
+    "source_artifact": "outputs/assertion_aware_correction_experiment_comparison.json",
+    "fields_used": "legacy_shipped, assertion_aware_shipped, rows[].status",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": 10,
+    "caveat": "NULL RESULT \u2014 never present as an improvement",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  },
+  {
+    "figure": "figures/07_safety/F22_safety_zero_event_outcomes.png",
+    "source_artifact": "outputs/final_metrics.json",
+    "fields_used": "section_D_correction_safety_cumulative",
+    "evidence_grade": "HISTORICAL / BEHAVIORAL",
+    "n": 56,
+    "caveat": "zero-event; upper bound ~5.2% by rule of three; not a safety proof",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_historical.py"
+  }
+]

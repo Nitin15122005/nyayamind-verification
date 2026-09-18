@@ -1,0 +1,119 @@
+[
+  {
+    "figure": "figures/01_overview/F01_headline_original_vs_latest.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json + gold02_v2_metrics.json + parser_original_vs_latest_v2.json + evidence_pool_composition_v2.json",
+    "fields_used": "headline values from each",
+    "evidence_grade": "MIXED (GOLD + DETERMINISTIC_SYNTHETIC)",
+    "n": "420 / 59 / 30 docs / structural",
+    "caveat": "five independent experiments; must not be averaged or read as one system score",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F03_verifier_accuracy_macro_f1.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.{bare,labeled}.{accuracy,macro_f1,accuracy_ci95_wilson}; statistics.mcnemar_accuracy",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F04_verifier_per_class_precision.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.{bare,labeled}.per_class.*.precision",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F05_verifier_per_class_recall.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.{bare,labeled}.per_class.*.recall",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F06_verifier_per_class_f1.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.{bare,labeled}.per_class.*.f1",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F07_confusion_original.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.bare.confusion_matrix",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F08_confusion_latest.png",
+    "source_artifact": "metrics/gold01_v2_metrics.json",
+    "fields_used": "results_by_framing.labeled.confusion_matrix",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "single-lever ablation (premise_framing)",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F11_gold01_stratified_by_condition.png",
+    "source_artifact": "metrics/gold01_v2_stratified_by_condition.json",
+    "fields_used": "strata.{ATTRIBUTED,NON_ATTRIBUTED}_conditions; headline_attribution",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "REQUIRED CAVEAT figure \u2014 headline is 99% attributable to attributed conditions",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F09_threshold_sensitivity.png",
+    "source_artifact": "metrics/threshold_sensitivity_v2.json",
+    "fields_used": "by_framing.*.sweep; framing_gap",
+    "evidence_grade": "GOLD",
+    "n": 420,
+    "caveat": "descriptive sensitivity analysis, no significance test",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/02_verifier/F10_contradiction_detection_2x2.png",
+    "source_artifact": "metrics/gold02_v2_metrics.json",
+    "fields_used": "cells.*.contradiction_recall_all_items; statistics",
+    "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+    "n": 59,
+    "caveat": "synthetic; single-class set so only recall is defined; narrow lever null on this set",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/03_evidence_retrieval/F12_evidence_pool_composition.png",
+    "source_artifact": "metrics/evidence_pool_composition_v2.json",
+    "fields_used": "original_v0.{usable_records,distinct_acts}; latest_v1_merged.{...}; reconciliation",
+    "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+    "n": "59->136 records",
+    "caveat": "input property, not an accuracy/coverage metric",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/04_parser/F14_parser_progression.png",
+    "source_artifact": "metrics/parser_original_vs_latest_v2.json",
+    "fields_used": "progression_claims_resolving_to_evidence; statistics",
+    "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+    "n": "30 documents",
+    "caveat": "no gold labels for extraction; coverage outcome only",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  },
+  {
+    "figure": "figures/04_parser/F15_parser_match_methods.png",
+    "source_artifact": "metrics/parser_original_vs_latest_v2.json",
+    "fields_used": "match_methods",
+    "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+    "n": "30 documents",
+    "caveat": "descriptive counts",
+    "generated_by": "v2_outputs_phase_3_vedant/scripts/build_v2_figures_core.py"
+  }
+]

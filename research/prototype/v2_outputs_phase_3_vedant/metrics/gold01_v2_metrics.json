@@ -1,0 +1,198 @@
+{
+  "artifact_id": "GOLD01-V2-FRESH",
+  "benchmark_tag": "GOLD-01_controlled_verifier_benchmark",
+  "comparison": "ORIGINAL (premise_framing=bare) vs LATEST (premise_framing=labeled)",
+  "comparison_scope": "SINGLE-LEVER ablation of verification.premise_framing. NOT a joint multi-lever original-vs-latest system comparison. All other settings held at HEAD production values.",
+  "original_arm": {
+    "name": "NyayaMind v0 verifier config",
+    "premise_framing": "bare"
+  },
+  "latest_arm": {
+    "name": "NyayaMind production verifier config",
+    "premise_framing": "labeled"
+  },
+  "evidence_grade": "GOLD",
+  "gold_label_source": "deterministic construction rule (never a model prediction)",
+  "n_items": 420,
+  "dataset_path": "outputs\\controlled_verifier_benchmark.jsonl",
+  "dataset_sha256": "962de21ee373bcfb685193902767c1c2c4f10acf592b08f561159503b4287f99",
+  "verifier_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "confidence_threshold": 0.7,
+  "max_sequence_length": 512,
+  "device": "cpu",
+  "deterministic": true,
+  "seed_required": false,
+  "seed_note": "greedy argmax over softmax; no sampling, so no inference seed exists. Bootstrap CI uses seed 20260918.",
+  "n_inference_failures": 0,
+  "n_inputs_truncated": 0,
+  "model_load_seconds": 98.82356786727905,
+  "results_by_framing": {
+    "bare": {
+      "n_items": 420,
+      "accuracy": 0.7333333333333333,
+      "macro_f1": 0.748664658664977,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 92,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 92
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 2,
+          "CONTRADICTED": 103,
+          "NOT_ENOUGH_INFORMATION": 13
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 5,
+          "NOT_ENOUGH_INFORMATION": 113
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9787234042553191,
+          "recall": 0.5,
+          "f1": 0.6618705035971223,
+          "support": 184,
+          "tp": 92,
+          "fp": 2,
+          "fn": 92
+        },
+        "CONTRADICTED": {
+          "precision": 0.9537037037037037,
+          "recall": 0.8728813559322034,
+          "f1": 0.9115044247787611,
+          "support": 118,
+          "tp": 103,
+          "fp": 5,
+          "fn": 15
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.518348623853211,
+          "recall": 0.9576271186440678,
+          "f1": 0.6726190476190477,
+          "support": 118,
+          "tp": 113,
+          "fp": 105,
+          "fn": 5
+        }
+      },
+      "elapsed_seconds": 112.73573660850525,
+      "accuracy_ci95_wilson": [
+        0.6890655117845962,
+        0.7733715526435857
+      ]
+    },
+    "labeled": {
+      "n_items": 420,
+      "accuracy": 0.9714285714285714,
+      "macro_f1": 0.9683612674297155,
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 184,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 5,
+          "CONTRADICTED": 110,
+          "NOT_ENOUGH_INFORMATION": 3
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 4,
+          "NOT_ENOUGH_INFORMATION": 114
+        }
+      },
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9735449735449735,
+          "recall": 1.0,
+          "f1": 0.9865951742627346,
+          "support": 184,
+          "tp": 184,
+          "fp": 5,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 0.9649122807017544,
+          "recall": 0.9322033898305084,
+          "f1": 0.9482758620689654,
+          "support": 118,
+          "tp": 110,
+          "fp": 4,
+          "fn": 8
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9661016949152542,
+          "f1": 0.9702127659574468,
+          "support": 118,
+          "tp": 114,
+          "fp": 3,
+          "fn": 4
+        }
+      },
+      "elapsed_seconds": 471.48509669303894,
+      "accuracy_ci95_wilson": [
+        0.9507298242189398,
+        0.9835817957482035
+      ]
+    }
+  },
+  "deltas": {
+    "accuracy": 0.23809523809523814,
+    "macro_f1": 0.2196966087647385,
+    "per_class_f1": {
+      "ENTAILED": 0.3247246706656123,
+      "CONTRADICTED": 0.03677143729020427,
+      "NOT_ENOUGH_INFORMATION": 0.2975937183383991
+    },
+    "per_class_recall": {
+      "ENTAILED": 0.5,
+      "CONTRADICTED": 0.05932203389830504,
+      "NOT_ENOUGH_INFORMATION": 0.008474576271186418
+    },
+    "per_class_precision": {
+      "ENTAILED": -0.005178430710345627,
+      "CONTRADICTED": 0.011208576998050668,
+      "NOT_ENOUGH_INFORMATION": 0.45601035050576333
+    }
+  },
+  "statistics": {
+    "mcnemar_accuracy": {
+      "b_only_A_correct": 0,
+      "c_only_B_correct": 100,
+      "n_discordant": 100,
+      "p_value": 1.5777218104420236e-30,
+      "test": "McNemar exact binomial (two-sided)"
+    },
+    "bootstrap_macro_f1": {
+      "resamples": 10000,
+      "seed": 20260918,
+      "bare_macro_f1_ci95": [
+        0.7087771607028373,
+        0.7876613960472019
+      ],
+      "labeled_macro_f1_ci95": [
+        0.9494480665485362,
+        0.9846718914524882
+      ],
+      "delta_macro_f1_ci95_paired": [
+        0.18367727880484422,
+        0.2574748709292428
+      ]
+    }
+  },
+  "timestamp_utc": "2026-09-18T11:29:18.030525+00:00",
+  "environment": {
+    "python": "3.13.1",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "torch": "2.13.0+cpu",
+    "transformers": "5.15.1",
+    "cuda_available": false
+  },
+  "environment_note": "This rerun executed on a DIFFERENT software stack than the historical GOLD-01 run (historical: Python 3.11.9 / torch 2.2.2+cu121; here: see `environment`). Any difference from the historical numbers is therefore a cross-stack reproduction difference, not a system change.",
+  "historical_comparison_reference": "research/prototype/evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json",
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/rerun_gold01_verifier_original_vs_latest.py"
+}

@@ -1,0 +1,33 @@
+# T02_model_and_config_comparison
+
+Model and configuration, ORIGINAL vs LATEST. Sources: `git show 0e37525:...config/prototype.yaml` and `config/prototype.yaml` @ HEAD, both verified against the source that reads them.
+
+| setting | ORIGINAL (0e37525) | LATEST (fb4e98f) | status |
+|---|---|---|---|
+| Generation model | Qwen/Qwen2.5-7B-Instruct | Qwen/Qwen2.5-7B-Instruct | UNCHANGED |
+| Generation quantization | 4-bit NF4, double-quant, bfloat16 | 4-bit NF4, double-quant, bfloat16 | UNCHANGED |
+| Generation decoding | greedy, 200 new tokens, seed 42 | greedy, 200 new tokens, seed 42 | UNCHANGED |
+| Correction model | Qwen/Qwen2.5-7B-Instruct (same loaded instance reused) | Qwen/Qwen2.5-7B-Instruct (same loaded instance reused) | UNCHANGED |
+| Verification model | MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli | MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli | UNCHANGED |
+| Model revision pin | none (UNDETERMINED) | none (UNDETERMINED) | UNCHANGED |
+| confidence_threshold | 0.70 | 0.70 | UNCHANGED |
+| max_sequence_length | 512 | 512 | UNCHANGED |
+| fuzzy_token_overlap_threshold | 0.8 | 0.8 | UNCHANGED |
+| evidence_matching.top_k | 1 | 1 (config key never read) | UNCHANGED |
+| premise_framing | bare (raw statute text) | labeled ("<Type> <N> of <Act>: <text>") | CHANGED |
+| use_evidence_v1 | false (59 usable records, 10 Acts) | true (136 usable records, 22 Acts) | CHANGED |
+| narrow_primary_hypothesis | false (full claim sentence) | true (narrow assertion_text) | CHANGED |
+| atomic_scope_check | false (full-sentence scope check) | "assertion_spans" | CHANGED |
+| narrow_reverification_hypothesis | false | true | CHANGED |
+| assertion_span_primary_hypothesis | did not exist | false (EXPERIMENTAL, OFF) | ADDED, NOT PROMOTED |
+| correction.assertion_aware | did not exist | false (EXPERIMENTAL, OFF) | ADDED, NOT PROMOTED |
+| evidence_matching.fuzzy_method | did not exist (Jaccard hardcoded) | "jaccard" (config key NEVER READ - see D1) | ADDED BUT INERT |
+| Claim parser size | 17,150 bytes | 56,697 bytes | CHANGED |
+| Claim fields | claim_id, claim_text, citation_extracted | + assertion_text, assertion_spans | CHANGED |
+| Safety gates active | 1 (full-sentence scope check) | scope(span), unauthorized citation, ordinal integrity, sibling regression, negation, year-conflict | CHANGED |
+| Year-conflict veto | absent | active, unconditional | ADDED |
+
+## Notes
+
+- THE MODELS ARE UNCHANGED. Every measured difference is a system, pipeline or configuration change - never a different or better underlying model.
+- `evidence_matching.fuzzy_method` is never read by any call site, so BM25/embedding retrieval is unreachable from production whatever this key says.

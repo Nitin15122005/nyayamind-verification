@@ -1,0 +1,103 @@
+{
+  "artifact_id": "EVIDENCE-POOL-V2",
+  "measurement": "evidence pool composition, ORIGINAL (v0-only) vs LATEST (v0+v1 merged)",
+  "lever": "use_evidence_v1 (false -> true)",
+  "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+  "grade_note": "A deterministic structural count over read-only evidence files using the production loader. This is an INPUT property of the system, not a retrieval outcome \u2014 it is not an accuracy, precision, recall or coverage measurement.",
+  "deterministic": true,
+  "model_used": null,
+  "usable_evidence_verdicts": [
+    "VERIFIED_CONTENT",
+    "VERIFIED_EXACT"
+  ],
+  "original_v0": {
+    "files": [
+      "research\\data\\evidence\\canonical_statutes.jsonl",
+      "research\\data\\evidence\\evidence_audit.jsonl"
+    ],
+    "records_in_file": 63,
+    "usable_records": 59,
+    "verdict_breakdown": {
+      "VERIFIED_EXACT": 25,
+      "VERIFIED_CONTENT": 34
+    },
+    "distinct_acts": 10,
+    "distinct_provision_types": {
+      "Article": 16,
+      "Section": 43
+    }
+  },
+  "latest_v1_merged": {
+    "files": [
+      "research\\data\\evidence\\canonical_statutes.jsonl",
+      "research\\data\\evidence\\evidence_audit.jsonl",
+      "research\\data\\evidence\\canonical_statutes_v1.jsonl",
+      "research\\data\\evidence\\evidence_audit_v1.jsonl"
+    ],
+    "records_in_supplement_file": 82,
+    "usable_records": 136,
+    "verdict_breakdown": {
+      "VERIFIED_EXACT": 103,
+      "VERIFIED_CONTENT": 33
+    },
+    "distinct_acts": 22,
+    "distinct_provision_types": {
+      "Article": 28,
+      "Section": 105,
+      "Rule": 3
+    }
+  },
+  "delta": {
+    "usable_records": 77,
+    "distinct_acts": 12
+  },
+  "supplement_composition": {
+    "supplement_file_records": 82,
+    "supplement_file_usable": 78,
+    "keys_overlapping_v0_corrections": 3,
+    "corrections": [
+      {
+        "dataset_citation_key": "Section 100 in The Code of Civil Procedure, 1908",
+        "v0_verdict": "INVALID",
+        "v1_verdict": "VERIFIED_EXACT",
+        "was_usable_in_v0": false,
+        "usable_in_v1": true,
+        "effect": "PROMOTED_TO_USABLE"
+      },
+      {
+        "dataset_citation_key": "Section 161 in The Indian Penal Code, 1860",
+        "v0_verdict": "UNRESOLVED",
+        "v1_verdict": "VERIFIED_EXACT",
+        "was_usable_in_v0": false,
+        "usable_in_v1": true,
+        "effect": "PROMOTED_TO_USABLE"
+      },
+      {
+        "dataset_citation_key": "Section 256 in The Income Tax Act, 1961",
+        "v0_verdict": "VERIFIED_CONTENT",
+        "v1_verdict": "VERIFIED_EXACT",
+        "was_usable_in_v0": true,
+        "usable_in_v1": true,
+        "effect": "VERDICT_UPGRADE_ONLY"
+      }
+    ],
+    "genuinely_new_keys": 79,
+    "genuinely_new_keys_usable": 75
+  },
+  "reconciliation": {
+    "v0_usable": 59,
+    "plus_new_usable_keys": 75,
+    "plus_promoted_from_unusable": 2,
+    "equals_latest_usable": 136,
+    "observed_latest_usable": 136,
+    "reconciles": true
+  },
+  "documentation_discrepancy": {
+    "config_comment": "config/prototype.yaml states the pool expands 'from 59 to 136 records (78 new VERIFIED_EXACT + the 59 v0 records, with 3 v0 corrections applied)'.",
+    "issue": "59 + 78 = 137, not 136. The '78' is the count of USABLE records inside the v1 supplement FILE, not the count of records ADDED to the pool.",
+    "correct_decomposition": "59 v0 usable + 75 genuinely-new usable keys + 2 keys promoted from unusable by a v0 correction = 136.",
+    "severity": "documentation imprecision only \u2014 the pool size itself (136) is correct"
+  },
+  "timestamp_utc": "2026-09-18T11:19:19.049142+00:00",
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/compute_evidence_pool_composition.py"
+}

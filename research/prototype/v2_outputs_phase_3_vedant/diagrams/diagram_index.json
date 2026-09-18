@@ -1,0 +1,100 @@
+[
+  {
+    "diagram_file": "diagrams/01_original_architecture/D01_original_architecture.png",
+    "title": "ORIGINAL NyayaMind architecture",
+    "what_it_shows": "End-to-end stages of the original codebase, and what it lacked",
+    "source_of_truth": "git show 0e37525:research/prototype/src/{pipeline,claim_parser,evidence_matcher,verifier,corrector}.py",
+    "original_or_latest_or_both": "ORIGINAL"
+  },
+  {
+    "diagram_file": "diagrams/02_latest_architecture/D02_latest_architecture.png",
+    "title": "LATEST NyayaMind architecture",
+    "what_it_shows": "End-to-end stages at HEAD with new/changed components marked",
+    "source_of_truth": "research/prototype/src/ @ fb4e98f; config/prototype.yaml",
+    "original_or_latest_or_both": "LATEST"
+  },
+  {
+    "diagram_file": "diagrams/03_side_by_side/D03_original_vs_latest_side_by_side.png",
+    "title": "ORIGINAL vs LATEST side by side",
+    "what_it_shows": "Stage-for-stage comparison with changed components highlighted and the unchanged-models banner",
+    "source_of_truth": "0e37525 and fb4e98f source; config/prototype.yaml",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/04_end_to_end_pipeline/D04_complete_latest_pipeline.png",
+    "title": "Complete LATEST pipeline",
+    "what_it_shows": "All 26 stages in execution order with function references",
+    "source_of_truth": "research/prototype/src/pipeline.py, claim_parser.py, evidence_matcher.py, verifier.py, corrector.py @ fb4e98f",
+    "original_or_latest_or_both": "LATEST"
+  },
+  {
+    "diagram_file": "diagrams/05_claim_parsing/D05_claim_parsing_flow.png",
+    "title": "Claim parsing flow",
+    "what_it_shows": "Stages 3-7 with the ORIGINAL limitation beside each step",
+    "source_of_truth": "claim_parser.py:466/597/379/814/970/1050 @ fb4e98f; 0e37525:claim_parser.py",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/06_evidence_retrieval/D06_evidence_retrieval_flow.png",
+    "title": "Evidence retrieval flow",
+    "what_it_shows": "The match ladder, the year-conflict veto, the Jaccard threshold, and both pool sizes",
+    "source_of_truth": "evidence_matcher.py:48/59/69/121/170 @ fb4e98f",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/07_nli_verification/D07_nli_verification_flow.png",
+    "title": "NLI verification flow",
+    "what_it_shows": "Premise construction bare vs labeled (literal template), hypothesis selection, threshold downgrade",
+    "source_of_truth": "verifier.py:78/178/218-222; pipeline.py:55/401-412 @ fb4e98f",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/08_verdict/D08_verdict_assignment.png",
+    "title": "Verdict assignment",
+    "what_it_shows": "Four verdicts, the confidence downgrade, and the negation caveat",
+    "source_of_truth": "verifier.py:218-222; pipeline.py:160/419 @ fb4e98f",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/09_correction_reverification/D09_correction_and_reverification.png",
+    "title": "Correction and re-verification",
+    "what_it_shows": "Trigger \u2192 rewrite \u2192 gate chain \u2192 re-verify \u2192 ship or reject",
+    "source_of_truth": "pipeline.py:714-730/462/769-790/806-873/878-932/601/945; corrector.py:43 @ fb4e98f",
+    "original_or_latest_or_both": "LATEST"
+  },
+  {
+    "diagram_file": "diagrams/10_safety/D10_safety_gate_chain.png",
+    "title": "Safety gate chain",
+    "what_it_shows": "Every gate, when it was added, and whether it existed at ORIGINAL",
+    "source_of_truth": "pipeline.py:133-153/601/769-790/806-873/160/419/1151; evidence_matcher.py:48 \u2014 commits 0e37525/100e263/adf54aa/8cf8fa9",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/11_final_answer/D11_final_answer_assembly.png",
+    "title": "Final answer assembly",
+    "what_it_shows": "How final_field is produced and what final_field.source records",
+    "source_of_truth": "pipeline.py:1401-1508 @ fb4e98f",
+    "original_or_latest_or_both": "BOTH"
+  },
+  {
+    "diagram_file": "diagrams/12_data_flow/D12_data_flow.png",
+    "title": "Data flow",
+    "what_it_shows": "Inputs, pipeline, outputs, and the read-only guarantees",
+    "source_of_truth": "config/prototype.yaml paths; data_loader.py docstring @ fb4e98f",
+    "original_or_latest_or_both": "LATEST"
+  },
+  {
+    "diagram_file": "diagrams/13_new_components/D13_new_components.png",
+    "title": "New components at LATEST",
+    "what_it_shows": "Everything added since ORIGINAL, grouped by subsystem, with production status",
+    "source_of_truth": "config/prototype.yaml live values; src/ @ fb4e98f; change inventory",
+    "original_or_latest_or_both": "LATEST"
+  },
+  {
+    "diagram_file": "diagrams/14_flaw_fix_behavior/D14_flaw_fix_behavior.png",
+    "title": "Flaw \u2192 Fix \u2192 Latest behaviour",
+    "what_it_shows": "The six best-evidenced changes, with honest evidence strength per row",
+    "source_of_truth": "V2 metrics + change inventory; src/ @ fb4e98f",
+    "original_or_latest_or_both": "BOTH"
+  }
+]

@@ -1,0 +1,745 @@
+{
+  "artifact_id": "THRESHOLD-SENS-V2",
+  "measurement": "macro F1 vs confidence_threshold, ORIGINAL (bare) vs LATEST (labeled), GOLD-01 n=420",
+  "evidence_grade": "GOLD",
+  "grade_note": "Derived deterministically from the fresh GOLD-01 gold-labelled run's stored softmax distributions. No new inference; no model reloaded. Descriptive sensitivity analysis \u2014 no significance test is attached to a threshold sweep.",
+  "no_new_inference": true,
+  "source_artifacts": [
+    "metrics/gold01_v2_predictions_bare.jsonl",
+    "metrics/gold01_v2_predictions_labeled.jsonl"
+  ],
+  "verdict_rule_replayed": "verdict = map(argmax(raw_scores)); if argmax_confidence < threshold -> NOT_ENOUGH_INFORMATION (src/verifier.py:218-222)",
+  "sweep_range": {
+    "min": 0.34,
+    "max": 0.99,
+    "step": 0.01,
+    "floor_note": "argmax of 3 classes always exceeds 1/3, so thresholds <= 0.3333 are inert"
+  },
+  "production_threshold": 0.7,
+  "replay_sanity_check": {
+    "bare": {
+      "n": 420,
+      "replay_matches_stored_verdicts": 420,
+      "exact": true,
+      "source_file": "metrics\\gold01_v2_predictions_bare.jsonl"
+    },
+    "labeled": {
+      "n": 420,
+      "replay_matches_stored_verdicts": 420,
+      "exact": true,
+      "source_file": "metrics\\gold01_v2_predictions_labeled.jsonl"
+    }
+  },
+  "by_framing": {
+    "bare": {
+      "sweep": [
+        {
+          "threshold": 0.34,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.35,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.36,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.37,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.38,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.39,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.4,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.41,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.42,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.43,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.44,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.45,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.46,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.47,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.48,
+          "macro_f1": 0.7486008750382407,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.49,
+          "macro_f1": 0.7487050297622986,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.5,
+          "macro_f1": 0.7487050297622986,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.51,
+          "macro_f1": 0.7487050297622986,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.52,
+          "macro_f1": 0.7487050297622986,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.53,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.54,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.55,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.56,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.57,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.58,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.59,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.6,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.61,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.62,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.63,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.64,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.65,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.66,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.67,
+          "macro_f1": 0.7508148246478323,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.68,
+          "macro_f1": 0.7509323095800432,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.69,
+          "macro_f1": 0.7509323095800432,
+          "accuracy": 0.7357142857142858
+        },
+        {
+          "threshold": 0.7,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.71,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.72,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.73,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.74,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.75,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.76,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.77,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.78,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.79,
+          "macro_f1": 0.748664658664977,
+          "accuracy": 0.7333333333333333
+        },
+        {
+          "threshold": 0.8,
+          "macro_f1": 0.7463867718881274,
+          "accuracy": 0.7309523809523809
+        },
+        {
+          "threshold": 0.81,
+          "macro_f1": 0.7440984237124249,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.82,
+          "macro_f1": 0.7440984237124249,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.83,
+          "macro_f1": 0.7442374362500717,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.84,
+          "macro_f1": 0.7442374362500717,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.85,
+          "macro_f1": 0.7419422655659534,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.86,
+          "macro_f1": 0.7419422655659534,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.87,
+          "macro_f1": 0.7419422655659534,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.88,
+          "macro_f1": 0.7419422655659534,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.89,
+          "macro_f1": 0.7445941765261668,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.9,
+          "macro_f1": 0.7445941765261668,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.91,
+          "macro_f1": 0.7445941765261668,
+          "accuracy": 0.7285714285714285
+        },
+        {
+          "threshold": 0.92,
+          "macro_f1": 0.742284732091485,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.93,
+          "macro_f1": 0.742284732091485,
+          "accuracy": 0.7261904761904762
+        },
+        {
+          "threshold": 0.94,
+          "macro_f1": 0.7379104911988964,
+          "accuracy": 0.7214285714285714
+        },
+        {
+          "threshold": 0.95,
+          "macro_f1": 0.7379104911988964,
+          "accuracy": 0.7214285714285714
+        },
+        {
+          "threshold": 0.96,
+          "macro_f1": 0.7333489813571182,
+          "accuracy": 0.7166666666666667
+        },
+        {
+          "threshold": 0.97,
+          "macro_f1": 0.7241219743414651,
+          "accuracy": 0.7071428571428572
+        },
+        {
+          "threshold": 0.98,
+          "macro_f1": 0.6934572842829723,
+          "accuracy": 0.6761904761904762
+        },
+        {
+          "threshold": 0.99,
+          "macro_f1": 0.6023576018551029,
+          "accuracy": 0.5952380952380952
+        }
+      ],
+      "best": {
+        "threshold": 0.68,
+        "macro_f1": 0.7509323095800432,
+        "accuracy": 0.7357142857142858
+      },
+      "at_production_threshold": {
+        "threshold": 0.7,
+        "macro_f1": 0.748664658664977,
+        "accuracy": 0.7333333333333333
+      },
+      "gap_to_optimum_macro_f1": 0.0022676509150661994,
+      "plateau_within_0.005_macro_f1": {
+        "min_threshold": 0.34,
+        "max_threshold": 0.8,
+        "n_thresholds": 47
+      }
+    },
+    "labeled": {
+      "sweep": [
+        {
+          "threshold": 0.34,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.35,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.36,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.37,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.38,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.39,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.4,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.41,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.42,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.43,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.44,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.45,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.46,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.47,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.48,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.49,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.5,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.51,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.52,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.53,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.54,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.55,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.56,
+          "macro_f1": 0.9652446263640666,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.57,
+          "macro_f1": 0.9670457324529225,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.58,
+          "macro_f1": 0.9665220923157877,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.59,
+          "macro_f1": 0.9665220923157877,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.6,
+          "macro_f1": 0.9665220923157877,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.61,
+          "macro_f1": 0.966015015710756,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.62,
+          "macro_f1": 0.966015015710756,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.63,
+          "macro_f1": 0.966015015710756,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.64,
+          "macro_f1": 0.966015015710756,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.65,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.66,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.67,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.68,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.69,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.7,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.71,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.72,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.73,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.74,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.75,
+          "macro_f1": 0.9683612674297155,
+          "accuracy": 0.9714285714285714
+        },
+        {
+          "threshold": 0.76,
+          "macro_f1": 0.9654732709669775,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.77,
+          "macro_f1": 0.9654732709669775,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.78,
+          "macro_f1": 0.9654732709669775,
+          "accuracy": 0.969047619047619
+        },
+        {
+          "threshold": 0.79,
+          "macro_f1": 0.9625836418336798,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.8,
+          "macro_f1": 0.9625836418336798,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.81,
+          "macro_f1": 0.9625836418336798,
+          "accuracy": 0.9666666666666667
+        },
+        {
+          "threshold": 0.82,
+          "macro_f1": 0.9596920613779774,
+          "accuracy": 0.9642857142857143
+        },
+        {
+          "threshold": 0.83,
+          "macro_f1": 0.9567982103545777,
+          "accuracy": 0.9619047619047619
+        },
+        {
+          "threshold": 0.84,
+          "macro_f1": 0.9596164041472943,
+          "accuracy": 0.9642857142857143
+        },
+        {
+          "threshold": 0.85,
+          "macro_f1": 0.9596164041472943,
+          "accuracy": 0.9642857142857143
+        },
+        {
+          "threshold": 0.86,
+          "macro_f1": 0.9596164041472943,
+          "accuracy": 0.9642857142857143
+        },
+        {
+          "threshold": 0.87,
+          "macro_f1": 0.9567185201862575,
+          "accuracy": 0.9619047619047619
+        },
+        {
+          "threshold": 0.88,
+          "macro_f1": 0.9567185201862575,
+          "accuracy": 0.9619047619047619
+        },
+        {
+          "threshold": 0.89,
+          "macro_f1": 0.953817613949225,
+          "accuracy": 0.9595238095238096
+        },
+        {
+          "threshold": 0.9,
+          "macro_f1": 0.9476070094366884,
+          "accuracy": 0.9547619047619048
+        },
+        {
+          "threshold": 0.91,
+          "macro_f1": 0.9476070094366884,
+          "accuracy": 0.9547619047619048
+        },
+        {
+          "threshold": 0.92,
+          "macro_f1": 0.9476070094366884,
+          "accuracy": 0.9547619047619048
+        },
+        {
+          "threshold": 0.93,
+          "macro_f1": 0.9450538281786806,
+          "accuracy": 0.9523809523809523
+        },
+        {
+          "threshold": 0.94,
+          "macro_f1": 0.9435381903642773,
+          "accuracy": 0.95
+        },
+        {
+          "threshold": 0.95,
+          "macro_f1": 0.9417195611349425,
+          "accuracy": 0.9476190476190476
+        },
+        {
+          "threshold": 0.96,
+          "macro_f1": 0.9374486782157238,
+          "accuracy": 0.9428571428571428
+        },
+        {
+          "threshold": 0.97,
+          "macro_f1": 0.9247299624488668,
+          "accuracy": 0.9285714285714286
+        },
+        {
+          "threshold": 0.98,
+          "macro_f1": 0.8850751402079079,
+          "accuracy": 0.8833333333333333
+        },
+        {
+          "threshold": 0.99,
+          "macro_f1": 0.820510143381784,
+          "accuracy": 0.8095238095238095
+        }
+      ],
+      "best": {
+        "threshold": 0.65,
+        "macro_f1": 0.9683612674297155,
+        "accuracy": 0.9714285714285714
+      },
+      "at_production_threshold": {
+        "threshold": 0.7,
+        "macro_f1": 0.9683612674297155,
+        "accuracy": 0.9714285714285714
+      },
+      "gap_to_optimum_macro_f1": 0.0,
+      "plateau_within_0.005_macro_f1": {
+        "min_threshold": 0.34,
+        "max_threshold": 0.78,
+        "n_thresholds": 45
+      }
+    }
+  },
+  "framing_gap": {
+    "description": "labeled macro F1 minus bare macro F1, at every threshold in the sweep",
+    "min_gap": 0.19161785592493563,
+    "min_gap_at_threshold": 0.98,
+    "max_gap": 0.2196966087647385,
+    "labeled_beats_bare_at_every_threshold": true,
+    "interpretation": "If the labeled arm leads at every threshold, the ORIGINAL->LATEST verifier result is not an artifact of the chosen threshold."
+  },
+  "timestamp_utc": "2026-09-18T11:38:08.777167+00:00",
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/compute_threshold_sensitivity_v2.py"
+}

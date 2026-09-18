@@ -1,0 +1,382 @@
+{
+  "manifest_id": "ORIGINAL_SYSTEM_MANIFEST_V2",
+  "generated_utc": "2026-09-18",
+  "IMPORTANT_READ_FIRST": "'Original NyayaMind' has TWO defensible readings in this repository and they are NOT the same system. Both are documented below. O-CODE is the original historical CODEBASE (root commit 0e37525). O-CFG is 'NyayaMind v0', the CONFIGURATION baseline the project's own documentation uses (HEAD code, five levers at their un-evidenced defaults). Almost every controlled experiment in this project measures O-CFG; exactly one (the claim-parser comparison) measures O-CODE. Never quote a number from one as if it described the other.",
+  "systems": [
+    {
+      "system_name": "O-CODE — Original NyayaMind historical codebase (Prototype v0, initial release)",
+      "commit_hash": "0e375250a107bd569c7cd641e50a7be3f9f59d26",
+      "commit_date": "2026-08-13T14:00:01+05:30",
+      "commit_author": "Nitin Sharma <nitin.sharma1512@outlook.com>",
+      "commit_subject": "Initial release: legal claim verification prototype",
+      "is_root_commit": true,
+      "is_squashed_import": true,
+      "model": {
+        "generation": "Qwen/Qwen2.5-7B-Instruct",
+        "generation_quantization": "bitsandbytes 4-bit nf4, double_quant=true, compute_dtype=bfloat16, device_map={\"\": 0}",
+        "generation_decoding": "greedy (do_sample=false), max_new_tokens=200, temperature=1.0 (inert), top_p=1.0 (inert), torch.manual_seed(42)",
+        "verification_nli": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli (fp16, CUDA)",
+        "correction": "Qwen/Qwen2.5-7B-Instruct — SAME loaded instance reused from generation, max_new_tokens=220, greedy",
+        "cpu_fallback": "disallowed; both loaders raise RuntimeError if torch.cuda.is_available() is False"
+      },
+      "model_revision": "UNDETERMINED — no `revision=` argument passed to any from_pretrained() call (src/generator.py:86-91, src/verifier.py:74-82); HF checkpoints are unpinned",
+      "configuration_path": "research/prototype/config/prototype.yaml",
+      "configuration_values": {
+        "seed": 42,
+        "usable_evidence_verdicts": [
+          "VERIFIED_EXACT",
+          "VERIFIED_CONTENT"
+        ],
+        "generation.max_new_tokens": 200,
+        "generation.do_sample": false,
+        "evidence_matching.top_k": 1,
+        "evidence_matching.fuzzy_token_overlap_threshold": 0.8,
+        "verification.confidence_threshold": 0.7,
+        "verification.max_sequence_length": 512,
+        "correction.max_attempts": 1,
+        "correction.max_reverifications": 1,
+        "correction.max_new_tokens": 220,
+        "correction.do_sample": false,
+        "modes": [
+          "A",
+          "B",
+          "C"
+        ],
+        "ABSENT_KEYS": [
+          "use_evidence_v1",
+          "premise_framing",
+          "narrow_primary_hypothesis",
+          "assertion_span_primary_hypothesis",
+          "correction.atomic_scope_check",
+          "correction.narrow_reverification_hypothesis",
+          "correction.assertion_aware",
+          "evidence_matching.fuzzy_method",
+          "paths.canonical_statutes_v1",
+          "paths.evidence_audit_v1"
+        ]
+      },
+      "parser_version": {
+        "file": "research/prototype/src/claim_parser.py",
+        "size_bytes": 17150,
+        "provision_keywords": [
+          "Section",
+          "Article",
+          "Order",
+          "Rule",
+          "Regulation",
+          "Clause",
+          "Schedule"
+        ],
+        "plural_support": true,
+        "number_list_support": true,
+        "bare_citation_support": true,
+        "act_resolution": "sentence-level unambiguous, then field-wide unambiguous; never invented",
+        "claims_per_sentence": "one Claim per citation; claim_text is the full sentence",
+        "NOT_SUPPORTED": [
+          "assertion_text",
+          "assertion_spans",
+          "Art./Arts. abbreviation",
+          "acronym/alias normalization (IPC/CrPC/CPC)",
+          "parenthetical-abbreviation stripping",
+          "embedded-citation detection",
+          "sentence-boundary abbreviation protection",
+          "plausible-year validation"
+        ]
+      },
+      "retrieval_method": {
+        "ladder": [
+          "exact_normalized on (provision_type, provision_number, subsection, act_norm)",
+          "exact_normalized with subsection ignored",
+          "fuzzy: same provision_type+provision_number, Jaccard act-word overlap >= 0.8"
+        ],
+        "similarity": "jaccard only (len(a&b)/len(a|b) over act_significant_words)",
+        "top_k": 1,
+        "year_conflict_veto": false,
+        "evidence_pool_files": [
+          "research/data/evidence/canonical_statutes.jsonl",
+          "research/data/evidence/evidence_audit.jsonl"
+        ],
+        "evidence_pool_total_records": 63,
+        "evidence_pool_usable_records": 59,
+        "evidence_pool_audit_distribution": {
+          "VERIFIED_EXACT": 25,
+          "VERIFIED_CONTENT": 34,
+          "INVALID": 1,
+          "SOURCE_ONLY": 2,
+          "UNRESOLVED": 1
+        }
+      },
+      "verifier_method": {
+        "premise": "raw canonical_text, UNLABELED (equivalent to HEAD premise_framing='bare')",
+        "hypothesis": "full claim_text sentence (no narrowing)",
+        "max_sequence_length": 512,
+        "truncation": "HF pair truncation, uninstrumented",
+        "label_mapping": {
+          "entailment": "ENTAILED",
+          "contradiction": "CONTRADICTED",
+          "neutral": "NOT_ENOUGH_INFORMATION"
+        },
+        "label_order_source": "model.config.id2label read at load time; ValueError on any unexpected label",
+        "confidence_threshold": 0.7,
+        "downgrade_rule": "argmax confidence < 0.70 -> NOT_ENOUGH_INFORMATION with sub_reason='low_confidence'",
+        "verdicts": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION",
+          "NO_EVIDENCE"
+        ],
+        "no_evidence_handling": "assigned pre-verification; verifier never invoked"
+      },
+      "correction_method": {
+        "mechanism": "whole-paragraph LLM regeneration, instructed to change ONLY the flagged sentence",
+        "model_reuse": "same loaded generator model/tokenizer",
+        "trigger": "CONTRADICTED (any confidence) OR NOT_ENOUGH_INFORMATION with sub_reason=='low_confidence'; never NO_EVIDENCE; never high-confidence genuine neutral",
+        "scope": "first flagged claim only, max 1 attempt",
+        "ship_gate": "status=='corrected' iff re-verification verdict == ENTAILED",
+        "reverification": "present — re-parse full corrected text, first-match replacement by (provision_type, provision_number, act_norm), re-match evidence, re-verify with bare premise + full-sentence hypothesis; max 1 pass",
+        "terminal_statuses": [
+          "not_triggered",
+          "correction_scope_violation",
+          "correction_failed",
+          "corrected"
+        ]
+      },
+      "safety_gates": {
+        "scope_unflagged_claim_preservation": "PRESENT — pipeline.py:133-153, full claim_text must reappear verbatim; violation discards corrected text",
+        "citation_injection_unauthorized_addition": "ABSENT (added adf54aa 2026-09-09)",
+        "ordinal_ambiguity": "ABSENT (added adf54aa 2026-09-09)",
+        "sibling_regression": "ABSENT (added 100e263 2026-08-27)",
+        "structural_span": "ABSENT (added 8cf8fa9 2026-09-12)",
+        "negation_gate": "ABSENT (added adf54aa 2026-09-09)",
+        "year_conflict_veto": "ABSENT (added adf54aa 2026-09-09)"
+      },
+      "prompts": {
+        "generation_system": "You are drafting only the \"Statutory Grounding\" section of an Indian court judgment summary. Given the case facts, write ONE short paragraph (3-6 sentences) naming the specific statutes, sections, or articles that apply to this case and briefly stating what each one requires. Output ONLY that paragraph. Do not include an issue, arguments, decision, or explanation. Do not use markdown or headings.",
+        "generation_user_template": "Case facts:\n{case_text}\n\nStatutory Grounding:",
+        "correction_system": "You are revising a single sentence in the \"Statutory Grounding\" section of an Indian court judgment summary. You will be given the full original paragraph, one flagged sentence that is unsupported or contradicted by the cited law, and (if available) the actual text of the relevant statute. Rewrite ONLY the flagged sentence so it is consistent with the statute text provided. Return the FULL paragraph with every other sentence copied verbatim/unchanged, and only the flagged sentence modified. Output only the paragraph, nothing else.",
+        "correction_user_template": "Case facts:\n{case_text}\n\nOriginal Statutory Grounding paragraph:\n{original_field_text}\n\nFlagged sentence (unsupported or contradicted):\n{flagged_claim_text}\n\nActual statute text:\n{evidence_text}\n\nRewrite the full paragraph, changing ONLY the flagged sentence.",
+        "correction_user_no_evidence_variant": "No supporting statute text is available in the evidence corpus for this claim.",
+        "nli_premise_template": "NONE — raw canonical_text passed directly as the premise string",
+        "nli_hypothesis_template": "NONE — raw claim_text passed directly as the hypothesis string",
+        "chat_wrapper": "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) for both generation and correction"
+      },
+      "datasets": [
+        {
+          "name": "Canonical statute evidence (v0)",
+          "path": "research/data/evidence/canonical_statutes.jsonl + evidence_audit.jsonl",
+          "records": 63,
+          "usable": 59,
+          "role": "sole source of NLI premises"
+        },
+        {
+          "name": "NyayaRAG CaseText_Statutes",
+          "path": "research/data/nyayarag/CaseText_Statutes/SCI_56k_multi_5k_summarised_w_sections.json, SCI_56k_single_5k_summarised_w_sections.json",
+          "source": "HF L-NLProc/NyayaRAG, 3.CaseText_Statutes.zip",
+          "role": "case inputs; only document_id, summarized_text and sections KEYS are read"
+        },
+        {
+          "name": "LegalSeg (submodule)",
+          "path": "baseline/LegalSeg @ af1b45c52cab22a71ddea0bf13c987741b16f042",
+          "role": "RhetoricLLaMA reproduction only"
+        },
+        {
+          "name": "RhetoricLLaMA baseline",
+          "path": "meta-llama/Llama-2-7b-chat-hf + L-NLProc/LegalSeg_RhetoricLLaMA LoRA",
+          "role": "DIFFERENT TASK — rhetorical-role classification; NOT a NyayaMind quantitative baseline"
+        }
+      ],
+      "evaluation_references": [
+        "research/prototype/outputs/eval_30_report.md — 30 cases, 88 claims, 38/88 (43.2%) evidence coverage, verdicts {ENTAILED:0, CONTRADICTED:0, NEI:38, NO_EVIDENCE:50}, correction trigger 0/30",
+        "research/prototype/outputs/run_A_n30.jsonl / run_B_n30.jsonl / run_C_n30.jsonl — 30 records each, paired A/B/C",
+        "research/prototype/outputs/run_A_n1.jsonl, run_C_n1.jsonl, run_C_targeted_1994_495.jsonl",
+        "research/prototype/outputs/docker_run_A_n1.jsonl, docker_run_C_n1.jsonl",
+        "research/prototype/outputs/gold_annotation.jsonl — 88 rows, human annotation protocol prepared but LEFT BLANK",
+        "research/prototype/scripts/run_eval_30.py — N_CASES=30, SELECTION_SEED=42, one generate_and_parse per case shared across A/B/C",
+        "research/prototype/scripts/run_mvp.py — MAX_ALLOWED_CASES=5 hard cap",
+        "research/prototype/tests/{test_claim_parser_and_evidence_matcher,test_pipeline_mock,test_correction_path_real_integration}.py",
+        "research/prototype/outputs/parser_fix_before_after_n30.json (committed at 223eb9d) — 'old' arm = this system's parser: 88 claims / 38 with evidence"
+      ],
+      "reconstruction_evidence": [
+        "git rev-list --max-parents=0 HEAD -> single root 0e375250a107bd569c7cd641e50a7be3f9f59d26",
+        "git cat-file -p 0e37525 -> no parent line; author==committer Nitin Sharma, epoch 1786609801 +0530",
+        "git show-ref -> only refs/heads/main and refs/remotes/origin/{HEAD,main}, all at fb4e98f; git tag -l empty",
+        "git ls-tree -r -l 0e37525 -> 47 files including completed run_*_n30.jsonl and eval_30_report.md (squashed-import evidence)",
+        "git show 0e37525:research/prototype/src/*.py — full read of all 7 modules + config",
+        "git show 0e37525:research/data/evidence/evidence_audit.jsonl | audit_verdict recount -> 25+34 usable = 59",
+        "git diff --stat 0e37525 HEAD -- research/data/evidence/canonical_statutes.jsonl evidence_audit.jsonl -> EMPTY (never modified)",
+        "git log -S per gate/lever -> first-introduction commits (see discrepancy register)",
+        "0e37525:README.md:113,118 contradict 0e37525:src/claim_parser.py:347-386 and 0e37525:outputs/run_*_n30.jsonl (stale-doc evidence of squash)"
+      ]
+    },
+    {
+      "system_name": "O-CFG — NyayaMind v0, configuration baseline (HEAD code, five levers at un-evidenced defaults)",
+      "commit_hash": "fb4e98fa6f62695dbac7ba6148ca20713347386d",
+      "commit_date": "2026-09-12T14:26:31+05:30",
+      "commit_author": "Nitin Sharma <nitin.sharma1512@outlook.com>",
+      "commit_subject": "Finalize NyayaMind research implementation",
+      "is_root_commit": false,
+      "is_squashed_import": false,
+      "definition_source": "PROJECT_CONTEXT/01_PROJECT_BRAIN.md:31-35",
+      "nominal_label": "pre-2026-08-27 baseline (SEE DISCREPANCY D-1: this label is NOT accurate for HEAD code)",
+      "model": {
+        "generation": "Qwen/Qwen2.5-7B-Instruct",
+        "generation_quantization": "bitsandbytes 4-bit nf4, double_quant=true, compute_dtype=bfloat16, device_map={\"\": 0}",
+        "generation_decoding": "greedy (do_sample=false), max_new_tokens=200, seed 42",
+        "verification_nli": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+        "correction": "Qwen/Qwen2.5-7B-Instruct — same loaded instance, max_new_tokens=220, greedy",
+        "identical_to_O_CODE": true
+      },
+      "model_revision": "UNDETERMINED — still no `revision=` pin at HEAD",
+      "configuration_path": "research/prototype/config/prototype.yaml (with the five levers set to their code defaults)",
+      "configuration_values": {
+        "seed": 42,
+        "use_evidence_v1": false,
+        "verification.premise_framing": "bare",
+        "verification.narrow_primary_hypothesis": false,
+        "verification.assertion_span_primary_hypothesis": false,
+        "verification.confidence_threshold": 0.7,
+        "verification.max_sequence_length": 512,
+        "correction.atomic_scope_check": false,
+        "correction.narrow_reverification_hypothesis": false,
+        "correction.assertion_aware": false,
+        "correction.max_attempts": 1,
+        "correction.max_reverifications": 1,
+        "correction.max_new_tokens": 220,
+        "evidence_matching.fuzzy_method": "jaccard",
+        "evidence_matching.fuzzy_token_overlap_threshold": 0.8,
+        "evidence_matching.top_k": 1
+      },
+      "lever_code_defaults_verified": {
+        "premise_framing": "pipeline.py:46 -> PREMISE_FRAMING_BARE",
+        "use_evidence_v1": "pipeline.py:1493 -> False",
+        "atomic_scope_check": "pipeline.py:747, 1165 -> False",
+        "narrow_reverification_hypothesis": "pipeline.py:900, 1264 -> False",
+        "narrow_primary_hypothesis": "pipeline.py:1381 -> False"
+      },
+      "parser_version": {
+        "file": "research/prototype/src/claim_parser.py",
+        "size_bytes": 56697,
+        "note": "HEAD parser, UNCHANGED by any lever — includes Art./Arts., acronym/alias normalization, trailing-abbrev stripping, assertion_text and assertion_spans. The latter two are COMPUTED but NOT CONSUMED under O-CFG."
+      },
+      "retrieval_method": {
+        "ladder": [
+          "exact_normalized",
+          "exact_normalized subsection-ignored",
+          "fuzzy jaccard >= 0.8 (post year-conflict veto)"
+        ],
+        "similarity": "jaccard (config default; bm25/embedding available but rejected)",
+        "year_conflict_veto": "ACTIVE — unconditional, evidence_matcher.py:116-122, NOT lever-controllable",
+        "token_overlap_digit_stripped_equality_shortcut": "ACTIVE — evidence_matcher.py:62-65, HEAD-only",
+        "evidence_pool_files": [
+          "research/data/evidence/canonical_statutes.jsonl",
+          "research/data/evidence/evidence_audit.jsonl"
+        ],
+        "evidence_pool_usable_records": 59,
+        "v1_pool_present_but_not_loaded": {
+          "files": [
+            "canonical_statutes_v1.jsonl",
+            "evidence_audit_v1.jsonl"
+          ],
+          "records": 82,
+          "usable": 78,
+          "merged_union_if_enabled": 136
+        }
+      },
+      "verifier_method": {
+        "premise": "raw canonical_text (format_premise returns evidence_text unchanged under bare — verifier.py:74-75)",
+        "hypothesis": "full claim_text (narrowing branch skipped — pipeline.py:397)",
+        "labeled_template_not_used": "f\"{provision_type} {provision_number} of {act}: {evidence_text}\" (verifier.py:78)",
+        "confidence_threshold": 0.7,
+        "downgrade_rule": "argmax < 0.70 -> NOT_ENOUGH_INFORMATION, sub_reason='low_confidence'",
+        "verdicts": [
+          "ENTAILED",
+          "CONTRADICTED",
+          "NOT_ENOUGH_INFORMATION",
+          "NO_EVIDENCE"
+        ],
+        "extra_instrumentation_vs_O_CODE": [
+          "raw_scores",
+          "input_truncated",
+          "verified_hypothesis",
+          "negation_contradiction_caveat"
+        ]
+      },
+      "correction_method": {
+        "mechanism": "legacy whole-paragraph LLM regeneration (assertion_aware=false)",
+        "prompts_identical_to_O_CODE": true,
+        "trigger": "CONTRADICTED or low-confidence NEI, MINUS any claim with negation_contradiction_caveat==True (pipeline.py:713-716)",
+        "scope": "first flagged claim only, max 1 attempt",
+        "ship_gate": "status=='corrected' iff re-verification verdict == ENTAILED",
+        "reverification": "present, 1 pass; replacement located by ordinal-position-among-same-citation-identity (pipeline.py:811-826); bare premise, full-sentence hypothesis",
+        "terminal_statuses": [
+          "not_triggered",
+          "correction_scope_violation",
+          "correction_unauthorized_addition",
+          "correction_ordinal_ambiguous",
+          "correction_failed",
+          "corrected"
+        ]
+      },
+      "safety_gates": {
+        "scope_unflagged_claim_preservation": "ACTIVE in LEGACY full-sentence mode (atomic_scope_check=false) — pipeline.py:747-753",
+        "citation_injection_unauthorized_addition": "ACTIVE — ALWAYS ON, NOT lever-controllable (pipeline.py:775-793)",
+        "ordinal_ambiguity": "ACTIVE — ALWAYS ON, NOT lever-controllable (pipeline.py:852-866)",
+        "sibling_regression": "INACTIVE — gated on truthy atomic_scope_check (pipeline.py:947); confirmed by comparison_config.json ORIGINAL.sibling_regression_protection",
+        "structural_span": "INACTIVE — assertion-aware path only (pipeline.py:1151), assertion_aware=false",
+        "negation_gate": "ACTIVE — ALWAYS ON, NOT lever-controllable (pipeline.py:418-420 sets the caveat, 713-716 consumes it)",
+        "year_conflict_veto": "ACTIVE — ALWAYS ON, NOT lever-controllable (evidence_matcher.py:116-122)"
+      },
+      "prompts": {
+        "generation_system": "IDENTICAL to O-CODE (config/prototype.yaml:77-83)",
+        "generation_user_template": "Case facts:\n{case_text}\n\nStatutory Grounding:",
+        "correction_system": "IDENTICAL to O-CODE (config/prototype.yaml:253-261)",
+        "assertion_span_system_prompt": "PRESENT in config (lines 381-391) but NEVER USED (assertion_aware=false)",
+        "nli_premise_template": "NONE under bare framing — raw canonical_text",
+        "nli_hypothesis_template": "NONE — full claim_text"
+      },
+      "datasets": [
+        {
+          "name": "Canonical statute evidence (v0 only)",
+          "path": "research/data/evidence/canonical_statutes.jsonl + evidence_audit.jsonl",
+          "usable": 59,
+          "role": "sole source of NLI premises under use_evidence_v1=false"
+        },
+        {
+          "name": "Evidence v1 supplement (NOT LOADED)",
+          "path": "research/data/evidence/canonical_statutes_v1.jsonl + evidence_audit_v1.jsonl",
+          "records": 82,
+          "usable": 78
+        },
+        {
+          "name": "NyayaRAG CaseText_Statutes",
+          "path": "research/data/nyayarag/CaseText_Statutes/*.json",
+          "role": "case inputs"
+        }
+      ],
+      "evaluation_references": [
+        "research/prototype/results_phase3/tables/ablation/ablation_results.md — full 13-lever ablation table",
+        "PROJECT_CONTEXT/04_EXPERIMENTS_AND_RESULTS.md — experiment map with grades",
+        "evaluation/actual_outputs/gold_benchmark_runs/gold01_controlled/gold01_metrics.json — premise_framing 420-item, macro F1 0.7487->0.9684, McNemar p=4.16e-23",
+        "evaluation/actual_outputs/gold_benchmark_runs/gold02_synthetic/gold02_metrics.json — synthetic stress, recall 0.356->0.458",
+        "evaluation/actual_outputs/natural_data_runs/209_paired/paired_209_metrics.json — use_evidence_v1, coverage 0.6316->0.7033, McNemar p=3.01e-04",
+        "evaluation/ablation/scope_check_replay_fresh.json — atomic_scope_check, 1/11 unblocked",
+        "outputs/narrow_primary_hypothesis_gpu_ablation_16gb_metrics.json — narrow_primary_hypothesis, fresh GPU n=62",
+        "outputs/threshold_sensitivity_analysis.md — confidence_threshold sweep 0.50-0.95 on 420 items",
+        "research/prototype/archive/2026-08-27_presentation/final_comparison/comparison_config.json — machine-readable ORIGINAL vs CURRENT definition",
+        "research/prototype/FINAL_PRODUCTION_CONFIG.md — per-lever promotion decision record"
+      ],
+      "reconstruction_evidence": [
+        "PROJECT_CONTEXT/01_PROJECT_BRAIN.md:31-35 — the five-lever definition, quoted verbatim in section 1.2",
+        "HEAD:research/prototype/src/pipeline.py:46,747,900,1165,1264,1381,1493 — every lever's code-level default read directly",
+        "HEAD:research/prototype/config/prototype.yaml:61,130,143,193,228,245,330,356,376 — current production values",
+        "HEAD:research/prototype/src/verifier.py:74-78 — format_premise bare vs labeled",
+        "HEAD:research/prototype/src/evidence_matcher.py:116-122 — unconditional year-conflict veto",
+        "HEAD:research/prototype/src/pipeline.py:418-420, 713-716 — unconditional negation gate",
+        "HEAD:research/prototype/src/pipeline.py:775-793, 852-866 — unconditional injection and ordinal guards",
+        "HEAD:research/prototype/src/pipeline.py:947 — sibling-regression net gated on truthy atomic_scope_check",
+        "evidence pool recount from working tree: v0 usable 59, v1 usable 78, merged union 136",
+        "git log -S per lever: use_evidence_v1/atomic_scope_check/narrow_reverification_hypothesis first at 100e263 (2026-08-27); premise_framing first at fe8b15b (2026-08-26); narrow_primary_hypothesis first at bb2cd93 (2026-09-09)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+stratum,n,ORIGINAL accuracy,LATEST accuracy,delta,items fixed,items broken,sign test p,verdict
+ALL_420,420,0.7333,0.9714,0.2381,100,0,1.578e-30,significant
+ATTRIBUTED_conditions,151,0.3179,0.9735,0.6556,99,0,3.155e-30,significant
+NON_ATTRIBUTED_conditions,269,0.9665,0.9703,0.0037,1,0,1,NOT SIGNIFICANT
+  C1_negated_bare,59,0.9322,0.9322,0.0000,0,0,1,NOT SIGNIFICANT
+  C2_negated_attributed [ATTRIBUTED],59,0.8136,0.9322,0.1186,7,0,0.01562,significant
+  E1_verbatim,59,1.0000,1.0000,0.0000,0,0,1,NOT SIGNIFICANT
+  E2_verbatim_attributed [ATTRIBUTED],59,0.0000,1.0000,1.0000,59,0,3.469e-18,significant
+  E3_paraphrase_bare,33,1.0000,1.0000,0.0000,0,0,1,NOT SIGNIFICANT
+  E4_paraphrase_attributed [ATTRIBUTED],33,0.0000,1.0000,1.0000,33,0,2.328e-10,significant
+  N1_other_provision,59,0.9153,0.9322,0.0169,1,0,1,NOT SIGNIFICANT
+  N2_procedural_addition,59,1.0000,1.0000,0.0000,0,0,1,NOT SIGNIFICANT

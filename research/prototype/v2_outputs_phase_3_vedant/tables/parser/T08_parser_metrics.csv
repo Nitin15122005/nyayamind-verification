@@ -1,0 +1,4 @@
+arm,claims extracted,claims resolving to evidence,proportion resolved,exact matches,fuzzy matches,no evidence
+ORIGINAL (0e37525),88,38,0.4318,24,14,50
+INTERMEDIATE (223eb9d),93,54,0.5806,52,2,39
+LATEST (HEAD fb4e98f),93,57,0.6129,55,2,36

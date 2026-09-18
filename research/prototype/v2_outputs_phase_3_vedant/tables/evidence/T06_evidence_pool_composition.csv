@@ -1,0 +1,12 @@
+property,ORIGINAL (v0),LATEST (v0+v1 merged),delta
+Records in v0 file,63,-,-
+Usable records,59,136,+77
+Distinct Acts,10,22,+12
+VERIFIED_EXACT,25,103,-
+VERIFIED_CONTENT,34,33,-
+Records in v1 supplement file,-,82,-
+  of which usable,-,78,-
+  genuinely new keys,-,79,-
+  new keys that are usable,-,75,-
+  v0 keys corrected,-,3,-
+RECONCILIATION,59 v0 usable,+ 75 new + 2 promoted = 136,reconciles: True

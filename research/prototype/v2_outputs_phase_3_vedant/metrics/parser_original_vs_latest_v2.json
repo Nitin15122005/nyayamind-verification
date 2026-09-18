@@ -1,0 +1,204 @@
+{
+  "artifact_id": "PARSER-V2-FRESH",
+  "comparison": "ORIGINAL CODEBASE (0e37525) vs LATEST CODEBASE (HEAD) \u2014 claim parser + evidence matcher",
+  "comparison_scope": "Isolates the deterministic parsing/matching front half of the pipeline. Evidence pool held at v0 in BOTH arms so the parser/matcher change is the only thing varying. The supplementary 'latest parser + v1 pool' figure varies TWO levers and must never be quoted as a parser-only effect.",
+  "evidence_grade": "DETERMINISTIC_SYNTHETIC",
+  "grade_note": "Deterministic re-execution of real committed code over real already-generated text. There are NO gold labels for claim extraction here: 'matched' means the extracted citation resolved to a record in the audited evidence pool, which is a retrieval/coverage outcome, NOT a correctness label. Do not call any number here accuracy, precision, recall or F1.",
+  "deterministic": true,
+  "seed_required": false,
+  "models_used": null,
+  "gpu_required": false,
+  "arms": {
+    "ORIGINAL_0e37525": {
+      "commit": "0e375250a107bd569c7cd641e50a7be3f9f59d26",
+      "commit_short": "0e37525",
+      "commit_date": "2026-08-13T14:00:01+05:30",
+      "role": "ORIGINAL NyayaMind codebase (root commit)",
+      "capabilities_absent": [
+        "assertion_text",
+        "assertion_spans",
+        "Art./Arts. abbreviation",
+        "acronym/alias normalization"
+      ]
+    },
+    "INTERMEDIATE_223eb9d": {
+      "commit": "223eb9dd60d7f8415309a25c2a8aa1557faa7017",
+      "commit_short": "223eb9d",
+      "commit_date": "2026-08-25T18:56:11+05:30",
+      "role": "the parser-fix commit the HISTORICAL n=30 artifact measured (outputs/parser_fix_before_after_n30.json). Included so this script reconciles with, rather than appears to contradict, that artifact."
+    },
+    "LATEST_HEAD": {
+      "commit": "fb4e98fa6f62695dbac7ba6148ca20713347386d",
+      "modules_path": "research/prototype/src/",
+      "role": "LATEST NyayaMind codebase"
+    }
+  },
+  "module_provenance": {
+    "ORIGINAL_0e37525": {
+      "research/prototype/src/__init__.py": {
+        "blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "bytes": 0
+      },
+      "research/prototype/src/claim_parser.py": {
+        "blob_sha": "ee03b0594f0160a94b7885b2d8f60a4c235ef540",
+        "bytes": 17150
+      },
+      "research/prototype/src/evidence_matcher.py": {
+        "blob_sha": "4ea54bd1f54907037ddceadee54704f2cc14f90e",
+        "bytes": 3156
+      },
+      "research/prototype/src/data_loader.py": {
+        "blob_sha": "da9a2fbfa039e762e3a69f6cb49a6728b520b318",
+        "bytes": 5566
+      }
+    },
+    "INTERMEDIATE_223eb9d": {
+      "research/prototype/src/__init__.py": {
+        "blob_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "bytes": 0
+      },
+      "research/prototype/src/claim_parser.py": {
+        "blob_sha": "ae582b010177ea3229ea67ae548ec177e079c4d1",
+        "bytes": 27653
+      },
+      "research/prototype/src/evidence_matcher.py": {
+        "blob_sha": "dac6e63c64a70b4a342480f514018b19d9f8b483",
+        "bytes": 3330
+      },
+      "research/prototype/src/data_loader.py": {
+        "blob_sha": "da9a2fbfa039e762e3a69f6cb49a6728b520b318",
+        "bytes": 5566
+      }
+    },
+    "LATEST_HEAD": {
+      "path": "research/prototype/src/ (working tree at HEAD)"
+    }
+  },
+  "input": {
+    "path": "outputs\\run_A_n30.jsonl",
+    "n_documents": 30,
+    "note": "already-generated Qwen2.5-7B output; no regeneration performed"
+  },
+  "evidence_pool_both_arms": {
+    "canonical": "research\\data\\evidence\\canonical_statutes.jsonl",
+    "audit": "research\\data\\evidence\\evidence_audit.jsonl",
+    "usable_records_by_arm": {
+      "ORIGINAL_0e37525": 59,
+      "INTERMEDIATE_223eb9d": 59,
+      "LATEST_HEAD": 59
+    },
+    "fuzzy_token_overlap_threshold": 0.8
+  },
+  "totals": {
+    "orig_claims": 88,
+    "intermediate_claims": 93,
+    "latest_claims": 93,
+    "orig_matched": 38,
+    "intermediate_matched": 54,
+    "latest_matched": 57,
+    "latest_v1_matched": 61,
+    "latest_claims_with_assertion_text": 93
+  },
+  "progression_claims_resolving_to_evidence": {
+    "ORIGINAL_0e37525": 38,
+    "INTERMEDIATE_223eb9d": 54,
+    "LATEST_HEAD": 57,
+    "denominator_claims_extracted": {
+      "ORIGINAL_0e37525": 88,
+      "INTERMEDIATE_223eb9d": 93,
+      "LATEST_HEAD": 93
+    }
+  },
+  "match_methods": {
+    "ORIGINAL_0e37525": {
+      "exact_normalized": 24,
+      "no_evidence": 50,
+      "fuzzy": 14
+    },
+    "INTERMEDIATE_223eb9d": {
+      "exact_normalized": 52,
+      "no_evidence": 39,
+      "fuzzy": 2
+    },
+    "LATEST_HEAD": {
+      "exact_normalized": 55,
+      "no_evidence": 36,
+      "fuzzy": 2
+    }
+  },
+  "per_document_outcome_original_to_latest": {
+    "n_documents": 30,
+    "improved": 10,
+    "worsened": 0,
+    "unchanged": 20
+  },
+  "statistics": {
+    "original_to_latest": {
+      "n_discordant": 10,
+      "n_improved": 10,
+      "n_worsened": 0,
+      "p_value": 0.001953125,
+      "test": "exact sign test (two-sided)",
+      "unchanged": 20,
+      "from": "ORIGINAL_0e37525",
+      "to": "LATEST_HEAD"
+    },
+    "original_to_intermediate": {
+      "n_discordant": 7,
+      "n_improved": 7,
+      "n_worsened": 0,
+      "p_value": 0.015625,
+      "test": "exact sign test (two-sided)",
+      "unchanged": 23,
+      "from": "ORIGINAL_0e37525",
+      "to": "INTERMEDIATE_223eb9d"
+    },
+    "intermediate_to_latest": {
+      "n_discordant": 3,
+      "n_improved": 3,
+      "n_worsened": 0,
+      "p_value": 0.25,
+      "test": "exact sign test (two-sided)",
+      "unchanged": 27,
+      "from": "INTERMEDIATE_223eb9d",
+      "to": "LATEST_HEAD"
+    }
+  },
+  "reconciliation_against_committed_artifacts": {
+    "ORIGINAL_arm": {
+      "fresh_value_claims_matched": 38,
+      "fresh_value_claims_extracted": 88,
+      "historical_artifacts": [
+        "0e37525:research/prototype/outputs/eval_30_report.md \u2014 30 cases, 88 claims, 38/88 evidence coverage",
+        "outputs/parser_fix_before_after_n30.json \u2014 totals.old_claims=88, totals.old_with_evidence=38"
+      ],
+      "status": "EXACT_REPRODUCTION (88 claims / 38 matched)"
+    },
+    "LATEST_arm": {
+      "fresh_value_claims_matched": 57,
+      "fresh_value_claims_extracted": 93,
+      "historical_artifact": "outputs/parser_fix_before_after_n30_v2_postfix.json \u2014 totals.new_claims=93, totals.new_with_evidence=57",
+      "status": "EXACT_REPRODUCTION (93 claims / 57 matched)"
+    },
+    "INTERMEDIATE_arm": {
+      "fresh_value_claims_matched": 54,
+      "historical_artifact": "outputs/parser_fix_before_after_n30.json \u2014 totals.new_with_evidence=51 (committed AT 223eb9d)",
+      "status": "DISCREPANCY_UNRESOLVED",
+      "delta": 3,
+      "investigation": "Re-executing the COMMITTED 223eb9d parser source over the same 30 texts yields 54 claims resolving to evidence, where the artifact committed at that same commit records 51. Component isolation rules out the matcher and loader: holding the parser at 223eb9d and swapping the evidence_matcher/data_loader between 223eb9d and HEAD gives 54 either way, and holding the parser at HEAD gives 57 either way \u2014 so the entire 54->57 movement is parser-side and the matcher changes are inert on this data. The counting rule is also identical (claims whose evidence_id is not None). The most likely explanation is that the artifact was generated from a working tree whose parser differed slightly from the source finally committed at 223eb9d. Recorded, not resolved.",
+      "impact_on_conclusions": "None of the ORIGINAL->LATEST conclusions depend on this arm: both endpoints reproduce their committed artifacts exactly. The intermediate arm is reported for attribution only."
+    }
+  },
+  "supplementary_two_lever": {
+    "description": "latest parser + v1 evidence pool (parser AND use_evidence_v1 both changed)",
+    "latest_matched_with_v1_pool": 61,
+    "warning": "TWO levers vary here \u2014 not attributable to the parser alone"
+  },
+  "new_capability_note": "93 of 93 latest-arm claims carry an assertion_text span. The ORIGINAL parser had no such field at all (Claim = claim_id, claim_text, citation_extracted), so this is a new capability with no original-arm counterpart \u2014 a capability count, not an improvement metric.",
+  "timestamp_utc": "2026-09-18T11:35:17.029807+00:00",
+  "environment": {
+    "python": "3.13.1",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "generated_by": "v2_outputs_phase_3_vedant/scripts/rerun_parser_original_vs_latest.py"
+}

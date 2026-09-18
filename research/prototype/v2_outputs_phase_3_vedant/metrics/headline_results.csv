@@ -1,0 +1,11 @@
+metric,original,latest,delta,n,dataset,evidence_grade,statistical_test,freshness,caveat
+Verifier accuracy,0.7333,0.9714,0.2381,420,GOLD-01,GOLD,McNemar exact p=1.578e-30,V2 FRESH,Single-lever ablation of premise_framing. 99/100 of the fixed items are in the ATTRIBUTED conditions; on the 269 non-attributed items p=1.0 (see T05).
+Verifier macro F1,0.7487,0.9684,0.2197,420,GOLD-01,GOLD,"paired bootstrap CI [0.1837, 0.2575]",V2 FRESH,Single-lever ablation of premise_framing. 99/100 of the fixed items are in the ATTRIBUTED conditions; on the 269 non-attributed items p=1.0 (see T05).
+"Verifier accuracy, NON-attributed items only",0.9665,0.9703,0.0037,269,GOLD-01,GOLD,exact sign test p=1.0,V2 FRESH,NOT SIGNIFICANT. This is where the headline does NOT hold.
+Contradiction recall,0.3559,0.4576,0.1017,59,GOLD-02 synthetic,DETERMINISTIC_SYNTHETIC,McNemar exact p=0.0312,V2 FRESH,Single-class set: only recall is defined. 15/59 are NO_EVIDENCE in every cell.
+Claims resolving to evidence,38,57,+19,30 documents / 88-93 claims,run_A_n30 generated text,DETERMINISTIC_SYNTHETIC,sign test p=0.0020 (+10/-0 docs),V2 FRESH,"Coverage outcome, NOT a correctness label. No gold extraction labels exist."
+Usable evidence records,59,136,+77,structural,canonical_statutes(+v1),DETERMINISTIC_SYNTHETIC,n/a (exact count),V2 FRESH,"An INPUT property, not a retrieval outcome."
+Distinct Acts covered,10,22,+12,structural,canonical_statutes(+v1),DETERMINISTIC_SYNTHETIC,n/a,V2 FRESH,An INPUT property.
+Evidence coverage (paired natural claims),0.6316,0.7033,0.0718,209,209-claim paired natural,HISTORICAL / METRIC_ONLY,"McNemar exact p=6.104e-05 (15 gained, 0 lost)",HISTORICAL,"Unlabelled natural data - coverage is a retrieval outcome, never accuracy."
+Corrections shipped (cumulative natural),n/a (single cumulative figure),1/56,n/a,56 attempts,all natural correction attempts,HISTORICAL / BEHAVIORAL,descriptive,HISTORICAL,"Qwen-dependent, RERUN_INFEASIBLE here. 1.8% shipped rate."
+Unsafe corrections shipped,n/a,0/56,n/a,56 attempts,all natural correction attempts,HISTORICAL / BEHAVIORAL,zero-event; rule-of-three 95% upper bound ~5.2%,HISTORICAL,Zero-event over a SMALL denominator. Not a proof of safety.

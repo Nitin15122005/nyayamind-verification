@@ -1,0 +1,15 @@
+limitation,scope,severity,what it means for the reader
+No lawyer-validated ground truth,PROJECT-WIDE,CRITICAL,No accuracy figure anywhere is a legal-correctness determination - all are NLI agreement against audited statute text.
+GOLD-01 headline is construction-dependent,verifier,HIGH,99/100 of the gain is in attributed conditions; non-attributed p=1.0.
+No gold labels for claim extraction,parser,HIGH,"'Resolving to evidence' is coverage, never precision/recall of extraction."
+Correction evidence is thin and historical,correction,HIGH,1/56 shipped; mechanism comparisons at n=6 and n=10; none rerunnable here.
+Safety results are zero-event,safety,HIGH,"0 unsafe in 56 attempts; rule-of-three 95% upper bound ~5.2%. Most gates have regression tests, not measurements."
+No joint multi-lever experiment,all levers,HIGH,Four levers flipped in one commit; joint effect confounded; no additive/interaction claim is made.
+Generation subsystem unmeasured in V2,generation,MEDIUM,"No GPU, Qwen uncached - fresh evidence covers only the deterministic and verification-side subsystems."
+Model identity unpinned,all models,MEDIUM,No from_pretrained() call pins a revision SHA; exact weight identity for historical results is UNDETERMINED.
+O-CFG is a retrospective construct,baseline definition,MEDIUM,The five levers never coexisted at their defaults in any real production state.
+Configuration baseline is more gated than history,baseline definition,MEDIUM,Four safety gates are unconditional and not lever-controllable (C-1).
+Small samples throughout,correction / assertion-span work,MEDIUM,"n=3, n=6, n=10, n=11 appear in promoted-lever evidence."
+No formal red-team evaluation,safety,MEDIUM,None exists in this project.
+Docker reproducibility,infrastructure,LOW,ENVIRONMENT_BLOCKED and inherited; not re-tested and not claimed.
+Parser INTERMEDIATE arm discrepancy,parser,LOW,54 vs the artifact's 51 at the same commit; both endpoints reproduce exactly (P-1).
