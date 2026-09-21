@@ -694,10 +694,26 @@ def _reverify_sibling_regressions(
     return regressions
 
 
-def apply_selective_correction(baseline: dict, case, corrector, config: dict) -> dict:
+def apply_selective_correction(baseline: dict, case, corrector, config: dict, on_event=None) -> dict:
     """Returns a correction summary dict. Triggers at most once, for the
     FIRST claim whose verdict is CONTRADICTED or NOT_ENOUGH_INFORMATION
     (any sub_reason) — never for NO_EVIDENCE. Re-verifies once afterward.
+
+    `on_event` (additive, optional, default None — zero behavior change for
+    any existing caller): if given, called as `on_event(stage, status,
+    data)` at the exact point each named real sub-operation genuinely
+    starts/finishes, in true chronological order — `("correction",
+    "started"/"completed", ...)` around the real `corrector.correct()`
+    call, `("safety", "started"/"completed", ...)` around the structural
+    gates that must pass before a corrected claim is trusted enough to
+    re-verify (scope, unauthorized-addition, ordinal), and `("recheck",
+    "started"/"completed"/"skipped", ...)` around the real re-verification
+    call. Never called ahead of the work it names, and never invents a
+    status this function did not itself just compute. Lets a caller (the
+    live-demo API layer) drive a genuinely real-time, non-overlapping
+    progress UI without this function's own decision logic changing at
+    all — every existing call site that omits it behaves byte-for-byte as
+    before.
 
     Enforces the selective-correction scope programmatically: if the
     corrector changes any sentence other than the flagged one, the
@@ -726,6 +742,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         }
 
     target = flagged[0]
+    if on_event:
+        on_event("correction", "started", {})
     corrected_text, corr_meta = corrector.correct(
         case_text=case.case_text,
         original_field_text=original_field_text,
@@ -739,6 +757,11 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
     }
+    if on_event:
+        on_event("correction", "completed", {"regenerated_text": corrected_text, "corr_meta": corr_meta_dict})
+
+    if on_event:
+        on_event("safety", "started", {})
 
     # atomic_scope_check: false (legacy) | true (assertion_text) |
     # "assertion_spans" (structured, multi-fragment — see _scope_violation).
@@ -751,6 +774,9 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         baseline["claims"], target["claim_id"], corrected_text,
         use_assertion_text, use_assertion_spans,
     ):
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "scope"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -782,6 +808,9 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
         and _citation_identity(c.citation_extracted) not in baseline_identities
         for c in reverify_claims
     ):
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -855,6 +884,9 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             if rec["claim_id"] != target["claim_id"]
         }
         if replacement.claim_text in other_original_texts:
+            if on_event:
+                on_event("safety", "completed", {"passed": False, "gate": "ordinal"})
+                on_event("recheck", "skipped", {})
             return {
                 "triggered_for_claim_id": target["claim_id"],
                 "attempts": 1,
@@ -864,6 +896,9 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                 "reverification": None,
                 "corr_meta": corr_meta_dict,
             }
+
+    if on_event:
+        on_event("safety", "completed", {"passed": True})
 
     reverification = None
     status = "correction_failed"
@@ -875,6 +910,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
         )
         if match.matched:
+            if on_event:
+                on_event("recheck", "started", {})
             # Re-verification must use the SAME premise framing as the original
             # verdict. Verifying under one framing and re-verifying under
             # another would compare a correction against a different standard
@@ -926,6 +963,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
             }
             if result.label == ENTAILED:
                 status = "corrected"
+            if on_event:
+                on_event("recheck", "completed", dict(reverification))
         else:
             reverification = {
                 "claim_text": replacement.claim_text,
@@ -937,6 +976,11 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict) ->
                 "raw_scores": None,
                 "input_truncated": None,
             }
+            if on_event:
+                on_event("recheck", "completed", dict(reverification))
+    else:
+        if on_event:
+            on_event("recheck", "skipped", {})
 
     # Independent sibling-regression safety net (opt-in, only meaningful
     # when the scope check itself was relaxed below full-sentence
@@ -1006,7 +1050,7 @@ def _correction_target_spans(rec: dict) -> Optional[tuple[list[str], str]]:
     return spans, spans[-1]
 
 
-def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, config: dict) -> dict:
+def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, config: dict, on_event=None) -> dict:
     """ASSERTION-AWARE correction (added 2026-09-12; extended 2026-09-12
     continuation to consume the full parser-produced `assertion_spans`
     representation, not just `assertion_text` — see `_correction_target_spans`).
@@ -1066,7 +1110,10 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     `correction_splice_unavailable` when the splice cannot be performed
     unambiguously (see `_splice_assertion_correction`'s docstring), and
     `correction_structural_span_lost` when a multi-element claim's
-    structural (non-content) span(s) do not survive the edit."""
+    structural (non-content) span(s) do not survive the edit.
+
+    `on_event`: same additive, optional, default-None real-time hook as
+    `apply_selective_correction` above — see its docstring."""
     flagged = [
         rec for rec in baseline["claims"]
         if _should_trigger_correction(rec) and not rec.get("negation_contradiction_caveat")
@@ -1104,6 +1151,8 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     )
     assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 60))
 
+    if on_event:
+        on_event("correction", "started", {})
     corrected_fragment, corr_meta = corrector.correct_assertion_span(
         case_text=case.case_text,
         target_span=target_content_fragment,
@@ -1118,11 +1167,24 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
     }
+    if on_event:
+        on_event("correction", "completed", {
+            "regenerated_text": corrected_fragment,
+            "original_fragment": target_content_fragment,
+            "corr_meta": corr_meta_dict,
+            "fragment_only": True,
+        })
+
+    if on_event:
+        on_event("safety", "started", {})
 
     corrected_text = _splice_assertion_correction(
         original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
     )
     if corrected_text is None:
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "splice"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -1145,6 +1207,9 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     # a structural span). For an ordinary (1-element) claim, structural_spans
     # is empty and this check trivially passes -- no behavior change there.
     if structural_spans and not all(_fragment_present(s, corrected_text) for s in structural_spans):
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "structural_span"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -1169,6 +1234,9 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         baseline["claims"], target["claim_id"], corrected_text,
         use_assertion_text, use_assertion_spans,
     ):
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "scope"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -1197,6 +1265,9 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         and _citation_identity(c.citation_extracted) not in baseline_identities
         for c in reverify_claims
     ):
+        if on_event:
+            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
@@ -1237,6 +1308,9 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             if rec["claim_id"] != target["claim_id"]
         }
         if replacement.claim_text in other_original_texts:
+            if on_event:
+                on_event("safety", "completed", {"passed": False, "gate": "ordinal"})
+                on_event("recheck", "skipped", {})
             return {
                 "triggered_for_claim_id": target["claim_id"],
                 "attempts": 1,
@@ -1251,6 +1325,9 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
                 "corrected_fragment": corrected_fragment,
             }
 
+    if on_event:
+        on_event("safety", "completed", {"passed": True})
+
     reverification = None
     status = "correction_failed"
     if replacement is not None:
@@ -1261,6 +1338,8 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
         )
         if match.matched:
+            if on_event:
+                on_event("recheck", "started", {})
             narrow_reverification = bool(corr_config.get("narrow_reverification_hypothesis", False))
             reverify_hypothesis = replacement.claim_text
             if narrow_reverification and replacement.assertion_text != replacement.claim_text:
@@ -1289,6 +1368,8 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             }
             if result.label == ENTAILED:
                 status = "corrected"
+            if on_event:
+                on_event("recheck", "completed", dict(reverification))
         else:
             reverification = {
                 "claim_text": replacement.claim_text,
@@ -1300,6 +1381,11 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
                 "raw_scores": None,
                 "input_truncated": None,
             }
+            if on_event:
+                on_event("recheck", "completed", dict(reverification))
+    else:
+        if on_event:
+            on_event("recheck", "skipped", {})
 
     # Independent sibling-regression safety net — run UNCONDITIONALLY here
     # (see this function's docstring for why, unlike the legacy path).

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#8c909f","outline-variant":"#424754","on-surface":"#dfe2ef","on-primary-fixed-variant":"#004395","on-tertiary-container":"#340080","on-primary-container":"#00285d","inverse-primary":"#005ac2","surface-variant":"#31353f","surface-bright":"#353943","primary-fixed-dim":"#adc6ff","on-error":"#690005","tertiary-container":"#a078ff","inverse-on-surface":"#2c303a","surface-container-high":"#262a34","on-primary-fixed":"#001a42","tertiary":"#d0bcff","on-error-container":"#ffdad6","on-background":"#dfe2ef","on-tertiary-fixed":"#23005c","on-secondary-fixed-variant":"#005236","on-tertiary":"#3c0091","secondary-container":"#00a572","tertiary-fixed":"#e9ddff","background":"#0f131c","error-container":"#93000a","on-secondary-fixed":"#002113","primary-fixed":"#d8e2ff","primary":"#adc6ff","on-tertiary-fixed-variant":"#5516be","on-surface-variant":"#c2c6d6","tertiary-fixed-dim":"#d0bcff","secondary-fixed-dim":"#4edea3","secondary":"#4edea3","surface-container":"#1c1f29","surface":"#0f131c","inverse-surface":"#dfe2ef","on-secondary":"#003824","surface-container-highest":"#31353f","surface-container-low":"#181b25","surface-container-lowest":"#0a0e17","on-primary":"#002e6a","surface-tint":"#adc6ff","primary-container":"#4d8eff","on-secondary-container":"#00311f","secondary-fixed":"#6ffbbe","error":"#ffb4ab","surface-dim":"#0f131c"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"1rem","space-lg":"1.5rem","margin":"2rem","gutter":"1.5rem","space-sm":"0.5rem","space-xl":"2.5rem","space-xs":"0.25rem"},fontFamily:{"headline-xl-mobile":["Plus Jakarta Sans"],"label-sm":["JetBrains Mono"],"headline-xl":["Plus Jakarta Sans"],"label-md":["JetBrains Mono"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"statute-citation":["JetBrains Mono"]},fontSize:{"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"-0.006em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"-0.011em","fontWeight":"400"}],"statute-citation":["12px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.4)]"><div class="h-16 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm group" data-path="home" href="#"><div class="w-9 h-9 rounded-lg bg-surface-container border border-outline-variant/40 flex items-center justify-center text-primary group-hover:border-primary/50 group-hover:shadow-[0_0_12px_rgba(173,198,255,0.25)] transition-all"><span class="material-symbols-outlined text-[20px]">gavel</span></div><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md tracking-tight text-on-surface">Nyaya<span class="text-primary">Mind</span></span></div></a><div class="hidden sm:flex items-center px-space-xs py-0.5 rounded-DEFAULT bg-surface-container-high border border-outline-variant/40"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">RESEARCH ENGINE v2.4</span></div></div><nav class="hidden md:flex items-center gap-space-lg" data-active-classes="text-primary border-b-2 border-primary"><a aria-current="page" class="h-16 inline-flex items-center font-body-md transition-colors text-primary border-b-2 border-primary" data-path="home" href="#">Home</a><a class="h-16 inline-flex items-center gap-space-xs text-on-surface-variant hover:text-on-surface font-body-md text-body-md transition-colors" data-path="live-demo" href="#"><span>Live Demo</span><span class="px-1.5 py-0.5 rounded-full bg-secondary-container/20 border border-secondary/40 font-label-sm text-label-sm text-secondary tracking-tight">Interactive</span></a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-low border border-outline-variant/30"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse shadow-[0_0_8px_rgba(78,222,163,0.6)]"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Status: <span class="text-secondary font-medium">Engine Ready</span></span></div><a class="hidden sm:inline-flex items-center px-space-sm py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-variant border border-outline-variant/40 font-body-sm text-body-sm text-on-surface hover:text-primary transition-all" data-path="documentation" href="#">Docs / Spec</a><a class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-primary-container hover:bg-inverse-primary text-on-primary-container hover:text-on-surface font-body-md text-body-md font-medium border border-primary/30 shadow-[0_0_16px_rgba(77,142,255,0.35)] transition-all" data-path="live-demo" href="#"><span>Run Live Demo</span><span class="material-symbols-outlined text-[16px]">bolt</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-4rem)]"><div class="flex flex-col w-full">
+<!-- Subtle Spatial Glow Backdrop -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-primary-container/15 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+<div class="absolute top-[28%] -left-36 w-[540px] h-[540px] bg-secondary-container/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+<div class="absolute top-[45%] -right-36 w-[580px] h-[580px] bg-tertiary-container/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+<!-- Section: Hero Core -->
+<section class="w-full px-gutter pt-space-xl pb-space-lg max-w-7xl mx-auto flex flex-col items-center text-center">
+<!-- Eyebrow Badge -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-high/70 backdrop-blur-md shadow-md mb-space-lg">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">LEGAL AI RESEARCH PROTOTYPE</span>
+<span class="text-outline-variant font-label-sm text-label-sm">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">v2.4 KERNEL</span>
+</div>
+<!-- Title & High-Contrast Gradient Heading -->
+<h1 class="font-headline-xl text-headline-xl tracking-tight max-w-5xl text-on-surface mb-space-md">
+<span class="block text-outline-variant font-label-md text-label-md uppercase tracking-[0.28em] mb-space-xs">NYAYAMIND</span>
+<span class="bg-gradient-to-r from-on-surface via-primary to-secondary bg-clip-text text-transparent">
+          Evidence-Grounded Legal Claim Verification &amp; Safe Selective Correction
+        </span>
+</h1>
+<!-- Short Precise Description -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl leading-relaxed mb-space-xl">
+        NyayaMind breaks legal assertions into atomic propositions, retrieves verified judicial authorities, verifies cross-document semantic entailment, and applies selective mitigation only when formal safety invariants hold.
+      </p>
+<!-- CTAs -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mb-space-xl">
+<a class="group inline-flex items-center gap-space-xs px-space-xl py-space-md rounded-xl bg-primary-container hover:bg-inverse-primary text-on-primary-container hover:text-on-surface font-body-md text-body-md font-semibold shadow-xl transition-all duration-300 transform hover:-translate-y-0.5" data-path="live-demo" href="#">
+<span>RUN LIVE DEMO</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+<button class="inline-flex items-center gap-space-xs px-space-lg py-space-md rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-body-md text-body-md font-medium shadow-md transition-all duration-200" id="btn-scroll-pipeline">
+<span class="material-symbols-outlined text-primary text-[18px]">account_tree</span>
+<span>EXPLORE HOW IT WORKS</span>
+</button>
+</div>
+<!-- Quantitative Micro Telemetry Bar -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm w-full max-w-4xl p-space-sm rounded-full bg-surface-container-lowest/80 backdrop-blur-xl shadow-lg mb-space-xl">
+<div class="flex flex-col items-center py-space-xs px-space-sm rounded-full bg-surface-container/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Entailment Acc</span>
+<span class="font-headline-md text-headline-md text-secondary font-bold">98.4%</span>
+</div>
+<div class="flex flex-col items-center py-space-xs px-space-sm rounded-full bg-surface-container/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Hallucination Delta</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">-71.8%</span>
+</div>
+<div class="flex flex-col items-center py-space-xs px-space-sm rounded-full bg-surface-container/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Gate Safety F1</span>
+<span class="font-headline-md text-headline-md text-tertiary font-bold">0.992</span>
+</div>
+<div class="flex flex-col items-center py-space-xs px-space-sm rounded-full bg-surface-container/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Median Latency</span>
+<span class="font-headline-md text-headline-md text-on-surface font-bold">240ms</span>
+</div>
+</div>
+</section>
+<!-- Visual Preview of the Pipeline with Live Pulse Glow Passing Through -->
+<section class="w-full px-gutter max-w-7xl mx-auto mb-space-xl scroll-mt-20" id="pipeline-section">
+<div class="w-full p-space-lg rounded-full bg-surface-container-lowest/90 backdrop-blur-2xl shadow-xl overflow-hidden relative">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_10px_rgba(78,222,163,0.8)]"></span>
+<span class="font-headline-md text-headline-md text-on-surface">Synchronous Verification Flow</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase px-2 py-0.5 rounded-full bg-surface-container-high">8 Stages Active</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline">LATENCY BUDGET:</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">STRICT DETERMINISTIC &lt; 350ms</span>
+</div>
+</div>
+<!-- Animated Connected Nodes Bar -->
+<div class="relative w-full overflow-x-auto py-space-md pb-space-lg">
+<!-- Flow Track Underlay -->
+<div class="min-w-[940px] flex items-center justify-between relative px-space-sm">
+<!-- Continuous Connection Line -->
+<div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-[3px] bg-surface-variant -z-0 rounded-full"></div>
+<div class="absolute left-6 top-1/2 -translate-y-1/2 h-[3px] bg-gradient-to-r from-primary via-secondary to-tertiary -z-0 rounded-full transition-all duration-700 w-1/8" id="pipeline-traveling-line"></div>
+<!-- Node 1: INPUT -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="0">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">INPUT</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-on-surface-variant">RAW TEXT</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 2: CLAIMS -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="1">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">splitscreen</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">CLAIMS</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-primary">DECOMPOSED</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 3: EVIDENCE -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="2">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">travel_explore</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">EVIDENCE</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-on-surface-variant">TOP-K CITED</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 4: VERIFY -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="3">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">VERIFY</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-secondary">NLI MATRIX</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 5: SAFETY -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">SAFETY</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-tertiary">GATE CHECK</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 6: CORRECT -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="5">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">find_replace</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">CORRECT</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-primary">SELECTIVE</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 7: RE-CHECK -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="6">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary-container text-on-surface flex items-center justify-center shadow-md transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">published_with_changes</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wider">RE-CHECK</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container font-statute-citation text-statute-citation text-on-surface-variant">INVARIANTS</span>
+</div>
+<!-- Arrow Indicator -->
+<span class="material-symbols-outlined text-outline-variant text-[16px] z-10 -mx-1">chevron_right</span>
+<!-- Node 8: RESULT -->
+<div class="pipeline-node relative z-10 flex flex-col items-center gap-space-xs cursor-pointer group" data-step="7">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-lg transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-wider">RESULT</span>
+<span class="px-1.5 py-0.5 rounded-full bg-secondary-container/20 font-statute-citation text-statute-citation text-secondary">AUDIT READY</span>
+</div>
+</div>
+</div>
+<!-- Interactive Pipeline Step Live Card -->
+<div class="mt-space-md p-space-md rounded-full bg-surface-container-low/90 shadow-inner flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md" id="pipeline-card-detail">
+<div class="flex items-start gap-space-md">
+<div class="p-space-sm rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">troubleshoot</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold" id="detail-step-tag">STAGE 04: VERIFY</span>
+<span class="font-label-sm text-label-sm text-outline">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="detail-step-model">DeBERTa-v3 Legal NLI Engine</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface" id="detail-step-desc">
+                Executes cross-attention between statutory propositions and court precedents. Assigns probabilistic entailment (E), neutral (N), or contradiction (C) labels with strict margin boundaries.
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-end md:self-center">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-statute-citation text-statute-citation text-primary" id="detail-step-stat">[P(Entailment) = 0.9912]</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-statute-citation text-statute-citation text-secondary">[Status: PASS]</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Capability Cards: 4 Crisp Cards Bento Grid -->
+<section class="w-full px-gutter max-w-7xl mx-auto mb-space-xl">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between mb-space-lg">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">CORE CAPABILITIES</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs">Engineered for Judicial Rigor</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md mt-space-xs sm:mt-0">
+          Four distinct computational modules operating in strict orchestration to eliminate factual drift and unauthorized semantic substitutions.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: CLAIM EXTRACTION -->
+<div class="p-space-lg rounded-full bg-surface-container-low/70 hover:bg-surface-container-low/95 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-primary text-primary group-hover:text-on-primary flex items-center justify-center mb-space-md transition-colors duration-300 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">call_split</span>
+</div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Stage 01</span>
+<span class="font-statute-citation text-statute-citation text-secondary">ATOMIC</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-space-xs">CLAIM EXTRACTION</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Breaks dense, complex cited legal text into independently verifiable claims, isolating factual statements from procedural arguments.
+            </p>
+</div>
+<!-- Visual Artifact: Mini Claim Breakdown -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 text-on-surface font-label-sm text-label-sm">
+<div class="text-outline text-statute-citation mb-1 font-statute-citation">PARSER DECOMPOSITION:</div>
+<div class="text-on-surface font-body-sm text-body-sm line-clamp-2">"Claim 1: Defendant knowingly transported contraband under 18 U.S.C. § 1001"</div>
+</div>
+</div>
+<!-- Card 2: EVIDENCE RETRIEVAL -->
+<div class="p-space-lg rounded-full bg-surface-container-low/70 hover:bg-surface-container-low/95 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-secondary text-secondary group-hover:text-on-secondary flex items-center justify-center mb-space-md transition-colors duration-300 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">menu_book</span>
+</div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Stage 02</span>
+<span class="font-statute-citation text-statute-citation text-secondary">HYBRID DENSE</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-space-xs">EVIDENCE RETRIEVAL</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Finds the relevant legal material for each claim across federal statutes, appellate precedents, and cited trial records via sparse-dense retrieval.
+            </p>
+</div>
+<!-- Visual Artifact: Mini Source Badges -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 text-on-surface font-label-sm text-label-sm flex flex-col gap-1">
+<div class="text-outline text-statute-citation font-statute-citation">RETRIEVED CITATION:</div>
+<div class="font-statute-citation text-statute-citation text-primary truncate">[STATUTE: 18 U.S.C. § 1001(a)(2)]</div>
+<div class="font-statute-citation text-statute-citation text-secondary truncate">[CASE: United States v. Gaudin]</div>
+</div>
+</div>
+<!-- Card 3: NLI VERIFICATION -->
+<div class="p-space-lg rounded-full bg-surface-container-low/70 hover:bg-surface-container-low/95 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-tertiary text-tertiary group-hover:text-on-tertiary flex items-center justify-center mb-space-md transition-colors duration-300 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">fact_check</span>
+</div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Stage 03</span>
+<span class="font-statute-citation text-statute-citation text-primary">3-WAY NLI</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-space-xs">NLI VERIFICATION</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Determines whether the evidence entails, contradicts, or does not establish the claim using legal fine-tuned natural language inference.
+            </p>
+</div>
+<!-- Visual Artifact: Distribution Bar -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-secondary font-semibold">Entailed: 94.2%</span>
+<span class="text-error font-semibold">Contra: 1.8%</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container flex overflow-hidden">
+<div class="h-full bg-secondary" style="width: 94%"></div>
+<div class="h-full bg-outline-variant" style="width: 4%"></div>
+<div class="h-full bg-error" style="width: 2%"></div>
+</div>
+</div>
+</div>
+<!-- Card 4: SAFE CORRECTION -->
+<div class="p-space-lg rounded-full bg-surface-container-low/70 hover:bg-surface-container-low/95 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high group-hover:bg-secondary-container text-secondary group-hover:text-on-secondary-container flex items-center justify-center mb-space-md transition-colors duration-300 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">security</span>
+</div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase">Stage 04</span>
+<span class="font-statute-citation text-statute-citation text-secondary">GUARDRAIL</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-space-xs">SAFE CORRECTION</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md">
+              Attempts correction only when the required safety checks pass. Halts or flags unresolvable gaps without hallucinating judicial doctrines.
+            </p>
+</div>
+<!-- Visual Artifact: Status Pill -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">INVARIANT CHECK</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-bold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+              GUARANTEED
+            </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Interactive Inspection Teaser (Live Micro-diff Preview) -->
+<section class="w-full px-gutter max-w-7xl mx-auto mb-space-xl">
+<div class="p-space-lg rounded-full bg-surface-container-low/60 backdrop-blur-xl shadow-lg flex flex-col lg:flex-row gap-space-lg items-center justify-between">
+<div class="max-w-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">SURGICAL PRECISION</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mt-space-xs mb-space-xs">Token-Level Delta Replacement</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+            Instead of rewriting entire legal passages, NyayaMind replaces contradictory tokens while retaining the advocate's core rhetoric and legal framework intact.
+          </p>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-DEFAULT bg-error/30"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Contradiction</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-DEFAULT bg-secondary-container/40"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Entailed Replacement</span>
+</div>
+</div>
+</div>
+<!-- Token Diff Box -->
+<div class="w-full lg:max-w-2xl p-space-md rounded-xl bg-surface-container-lowest shadow-inner flex flex-col gap-space-sm">
+<div class="flex items-center justify-between text-outline pb-space-xs">
+<span class="font-statute-citation text-statute-citation">DIFF VIEWER // PRE-INFERENCE vs POST-CORRECTION</span>
+<span class="font-label-sm text-label-sm text-secondary">SAFETY INVARIANT: VALID</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface leading-relaxed p-space-sm rounded-lg bg-surface-container/40">
+            The statute imposes 
+            <span class="px-1.5 py-0.5 rounded-DEFAULT bg-error/20 text-error line-through decoration-error font-medium">strict liability regardless of criminal intent</span>
+<span class="px-1.5 py-0.5 rounded-DEFAULT bg-secondary-container/30 text-secondary font-medium">a requirement of willful and knowing falsehood</span>
+            under subsection (a)(1), as affirmed by the Fourth Circuit precedent in <em>United States v. Ismail</em>.
+          </div>
+<div class="flex items-center justify-between text-on-surface-variant pt-space-xs">
+<span class="font-statute-citation text-statute-citation text-primary">[CITATION: 97 F.3d 50, 55 (4th Cir. 1996)]</span>
+<span class="font-statute-citation text-statute-citation text-on-surface-variant">CONFIDENCE: 0.988</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Big Immersive CTA Banner -->
+<section class="w-full px-gutter max-w-7xl mx-auto mb-space-xl">
+<div class="relative overflow-hidden p-space-xl rounded-full bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-lowest shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-space-xl">
+<!-- Ambient Internal Accents -->
+<div class="absolute -right-20 -bottom-20 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 -top-20 w-80 h-80 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-2xl text-center lg:text-left">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-label-sm font-semibold tracking-wider uppercase mb-space-sm">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+            READY FOR EXAMINATION
+          </div>
+<h2 class="font-headline-xl text-headline-xl text-on-surface font-bold tracking-tight mb-space-sm">
+            SEE THE PIPELINE IN ACTION →
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+            Experience real-time claim extraction, judicial evidence retrieval, and assertion-aware correction in the examiner workspace.
+          </p>
+</div>
+<div class="relative z-10 shrink-0">
+<a class="inline-flex items-center gap-space-sm px-space-xl py-space-lg rounded-xl bg-primary-container hover:bg-inverse-primary text-on-primary-container hover:text-on-surface font-headline-md text-headline-md font-semibold shadow-2xl transition-all duration-300 transform hover:-translate-y-1" data-path="live-demo" href="#">
+<span>LAUNCH INTERACTIVE VERIFIER</span>
+<span class="material-symbols-outlined text-[24px]">science</span>
+</a>
+</div>
+</div>
+</section>
+</div>
+</div>
+<script>
+  // Smooth scroll to pipeline section
+  document.getElementById('btn-scroll-pipeline')?.addEventListener('click', () => {
+    const el = document.getElementById('pipeline-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  // Pipeline Interactive Step Simulation Data
+  const pipelineSteps = [
+    {
+      title: "STAGE 01: INPUT",
+      model: "User Legal Assertion Ingestion",
+      desc: "Raw legal appellate brief segment, contract covenant, or judicial claim ingested into the semantic buffer with token alignment markers.",
+      stat: "[Tokens: 482]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 02: CLAIMS",
+      model: "Syntactic-Semantic Decomposer",
+      desc: "Deconstructs compound sentences into independent atomic assertions to prevent logical conflation and ensure pinpoint statutory verification.",
+      stat: "[Claims Isolated: 4]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 03: EVIDENCE",
+      model: "Hybrid Dense-Sparse Citation Retriever",
+      desc: "Scans indexed Supreme Court and Federal Circuit corpus. Pulls exact paragraphs and section provisions linked to the assertion's key predicates.",
+      stat: "[Top-k Precedents: 8]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 04: VERIFY",
+      model: "DeBERTa-v3 Legal NLI Engine",
+      desc: "Executes cross-attention between statutory propositions and court precedents. Assigns probabilistic entailment (E), neutral (N), or contradiction (C) labels.",
+      stat: "[P(Entailment) = 0.9912]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 05: SAFETY",
+      model: "Formal Guardrail & Constraint Verifier",
+      desc: "Validates that proposed edits do not invert procedural burdens, violate evidentiary standards, or alter core legal definitions.",
+      stat: "[Invariant Score: 1.00]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 06: CORRECT",
+      model: "Assertion-Aware Selective Mitigator",
+      desc: "Surgically substitutes invalidated legal predicates with entailed statutory terms while preserving the author's stylistic prose.",
+      stat: "[Delta Size: 6 Tokens]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 07: RE-CHECK",
+      model: "Secondary Entailment Verification Pass",
+      desc: "Re-passes the edited passage through the natural language inference engine to mathematically confirm zero remaining contradictions.",
+      stat: "[Contradiction: 0.00%]",
+      status: "PASS"
+    },
+    {
+      title: "STAGE 08: RESULT",
+      model: "Audit Ledger & Export Package",
+      desc: "Generates an immutable audit record with verified statutory citations, token deltas, and proof of entailment for legal compliance records.",
+      stat: "[Export Status: Verified]",
+      status: "READY"
+    }
+  ];
+
+  // Pipeline Interactive Selection
+  const nodes = document.querySelectorAll('.pipeline-node');
+  const travelingLine = document.getElementById('pipeline-traveling-line');
+  const stepTag = document.getElementById('detail-step-tag');
+  const stepModel = document.getElementById('detail-step-model');
+  const stepDesc = document.getElementById('detail-step-desc');
+  const stepStat = document.getElementById('detail-step-stat');
+
+  let activeIndex = 3; // Start at VERIFY
+
+  function updatePipelineDisplay(idx) {
+    nodes.forEach((node, i) => {
+      const iconDiv = node.querySelector('div');
+      if (i === idx) {
+        iconDiv.classList.add('bg-primary-container', 'text-on-primary-container', 'scale-110');
+        iconDiv.classList.remove('bg-surface-container-high', 'text-on-surface');
+      } else if (i === 7) {
+        // keep result card distinctive
+        iconDiv.classList.remove('scale-110');
+      } else {
+        iconDiv.classList.remove('bg-primary-container', 'text-on-primary-container', 'scale-110');
+        iconDiv.classList.add('bg-surface-container-high', 'text-on-surface');
+      }
+    });
+
+    // Update Detail Box
+    const data = pipelineSteps[idx];
+    if (data && stepTag && stepModel && stepDesc && stepStat) {
+      stepTag.textContent = data.title;
+      stepModel.textContent = data.model;
+      stepDesc.textContent = data.desc;
+      stepStat.textContent = data.stat;
+    }
+
+    // Move traveling line
+    if (travelingLine) {
+      const percentage = (idx / 7) * 92;
+      travelingLine.style.width = Math.max(12, percentage) + '%';
+    }
+  }
+
+  // Click listeners for pipeline nodes
+  nodes.forEach((node) => {
+    node.addEventListener('click', () => {
+      const step = parseInt(node.getAttribute('data-step') || '0', 10);
+      activeIndex = step;
+      updatePipelineDisplay(activeIndex);
+    });
+  });
+
+  // Ambient automatic stage pulse
+  setInterval(() => {
+    activeIndex = (activeIndex + 1) % 8;
+    updatePipelineDisplay(activeIndex);
+  }, 4200);
+
+  // Initialize
+  updatePipelineDisplay(activeIndex);
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 py-space-lg"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex flex-col sm:flex-row items-center gap-space-sm text-center md:text-left"><span class="font-label-sm text-label-sm text-primary font-semibold tracking-wide uppercase">NyayaMind Research Engine</span><span class="hidden sm:inline text-outline">•</span><span class="font-body-sm text-body-sm text-on-surface-variant">Rigorous legal claim verification &amp; safe selective-correction</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-DEFAULT bg-surface-container-low border border-outline-variant/30"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">All Models Active: <span class="text-secondary font-label-sm text-label-sm">NLI, Retrieval, Safety Gate</span></span></div><div class="flex items-center gap-space-md"><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" data-path="methodology" href="#">Methodology</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" data-path="benchmark-metrics" href="#">Benchmarks</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" data-path="documentation" href="#">API Spec</a></div></div></footer></body></html>

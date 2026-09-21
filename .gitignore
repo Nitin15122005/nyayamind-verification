@@ -31,3 +31,7 @@ scratchpad/
 # committed.
 **/.cache/huggingface/
 **/huggingface_cache/
+
+# Node/Vite dependencies and builds
+node_modules/
+dist/

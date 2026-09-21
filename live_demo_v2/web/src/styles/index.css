@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    overflow-x: hidden;
+  }
+  body {
+    background: #050914;
+    position: relative;
+  }
+  /* Layered ambient background -- purely decorative, sits behind every
+     panel (z-index negative) and never affects text contrast since all
+     content renders inside opaque/glass surfaces on top of it.
+
+     Layer 1 (base): deep navy/black, matching the logo's own dark base.
+     Layer 2 (orbs): huge, extremely soft radial fields in the logo's own
+     palette (judicial blue, cyan, a restrained touch of violet, and warm
+     gold echoing the statue/scales metalwork) -- atmospheric lighting, not
+     colored circles. Blue/cyan sit toward the upper-left (near the brand
+     mark in the header); gold sits toward the lower-right, per the
+     logo-integration brief. Animated with one slow (36s) drift; disabled
+     under prefers-reduced-motion below. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -10vh -10vw;
+    z-index: -2;
+    background:
+      radial-gradient(50rem 38rem at 10% -6%, rgba(37, 99, 235, 0.16), transparent 58%),
+      radial-gradient(42rem 34rem at 88% 6%, rgba(6, 200, 235, 0.09), transparent 55%),
+      radial-gradient(38rem 30rem at 58% 46%, rgba(139, 92, 246, 0.045), transparent 55%),
+      radial-gradient(46rem 36rem at 84% 96%, rgba(217, 160, 65, 0.06), transparent 55%),
+      linear-gradient(180deg, #070c18 0%, #050914 55%, #03050c 100%);
+    background-repeat: no-repeat;
+    animation: bgDrift 36s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  /* Layer 4: a very faint structural grid, masked to fade out toward the
+     bottom of the viewport so it reads as an atmospheric texture rather
+     than graph paper. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 68px 68px;
+    mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, black 35%, transparent 88%);
+    pointer-events: none;
+  }
+  ::selection {
+    background: rgba(59, 130, 246, 0.35);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+}
+
+@keyframes bgDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.04);
+  }
+}
+
+@keyframes particleDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: var(--p-op, 0.3);
+  }
+  50% {
+    transform: translate3d(3px, -12px, 0);
+    opacity: calc(var(--p-op, 0.3) * 1.7);
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translate3d(-30%, -10%, 0) rotate(18deg);
+  }
+  100% {
+    transform: translate3d(30%, 10%, 0) rotate(18deg);
+  }
+}
+
+/* The page must remain beautiful even fully static -- the animated layers
+   are a bonus, never load-bearing for the design. */
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+  .ambient-particle {
+    animation: none !important;
+    opacity: var(--p-op, 0.3) !important;
+  }
+  .ambient-sweep {
+    display: none;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  }
+  .glass-panel-solid {
+    background: #0d1527;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
