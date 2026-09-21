@@ -1,11 +1,11 @@
-# NyayaMind Live Demo v2
+# NyayaMind Live Demo
 
 Two processes, run from the repo root.
 
 ## 1. Backend (real pipeline API)
 
 ```bash
-research/.venv/Scripts/python.exe live_demo_v2/server/app.py
+research/.venv/Scripts/python.exe live_demo/server/app.py
 ```
 
 Serves on `http://127.0.0.1:8421`. Loads the production config, the real evidence pool, and the
@@ -19,7 +19,7 @@ lines as each pipeline stage actually executes.
 ## 2. Frontend
 
 ```bash
-cd live_demo_v2/web
+cd live_demo/web
 npm install   # first time only
 npm run dev
 ```
