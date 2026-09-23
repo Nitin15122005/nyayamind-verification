@@ -1104,6 +1104,7 @@ def run_streaming(
 
     correction_summary = {
         "triggered_for_claim_id": None,
+        "trigger_reason": None,
         "attempts": 0,
         "status": "not_applicable_mode_" + mode,
         "regenerated_text": None,

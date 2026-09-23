@@ -39,11 +39,17 @@ function doneDetail(key, data) {
       const counts = {};
       for (const c of claims) counts[c.verdict] = (counts[c.verdict] || 0) + 1;
       const parts = Object.entries(counts).map(([k, v]) => `${v} ${k.toLowerCase().replace(/_/g, " ")}`);
+      const triggers = claims.filter((c) => c.correction_trigger);
+      if (triggers.length) {
+        const reasons = [...new Set(triggers.map((c) => c.correction_trigger_reason).filter(Boolean))];
+        const reasonText = reasons.length ? ` (${reasons.join(", ")})` : "";
+        parts.push(`${triggers.length} correction trigger${triggers.length === 1 ? "" : "s"}${reasonText}`);
+      }
       return parts.join(", ") || "No claims to verify";
     }
     case "correction":
       if (!data.triggered) return "Not triggered";
-      return "Candidate correction generated";
+      return data.trigger_reason ? `Candidate correction generated (${data.trigger_reason})` : "Candidate correction generated";
     case "safety":
       if (!data.triggered) return "Not required";
       if (data.passed === false) return "Blocked -- see detail";

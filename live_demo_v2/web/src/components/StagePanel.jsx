@@ -109,32 +109,144 @@ function EvidenceView({ data, underlying }) {
   );
 }
 
+
+function TraceRow({ label, value, tone = "neutral" }) {
+  const toneClass = {
+    neutral: "border-white/10 bg-white/[0.03] text-ink-secondary",
+    pass: "border-entail/25 bg-entail/10 text-entail",
+    warn: "border-warn/25 bg-warn/10 text-warn",
+    block: "border-contra/25 bg-contra/10 text-contra",
+    judicial: "border-judicial/25 bg-judicial/10 text-judicial-soft",
+  }[tone] || "border-white/10 bg-white/[0.03] text-ink-secondary";
+
+  return (
+    <div className={"flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2 " + toneClass}>
+      <span className="font-mono text-[11px] uppercase tracking-wider opacity-80">{label}</span>
+      <span className="font-mono text-xs font-semibold">{value}</span>
+    </div>
+  );
+}
+
+function VerificationTrace({ claim, underlying }) {
+  const triggered = Boolean(claim.correction_trigger);
+  const triggerReason = claim.correction_trigger_reason || "none";
+  const subReason =
+    claim.sub_reason ||
+    (claim.verdict === "NO_EVIDENCE" ? "not_applicable" : "genuine_high_confidence");
+
+  return (
+    <div className="mt-4 rounded-lg border border-white/8 bg-black/10 p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-ink-secondary">
+          Decision trace
+        </p>
+        <span className={
+          "rounded-full border px-2.5 py-1 font-mono text-[11px] font-semibold " +
+          (triggered
+            ? "border-warn/30 bg-warn/10 text-warn"
+            : "border-entail/25 bg-entail/10 text-entail")
+        }>
+          {triggered ? "CORRECTION ELIGIBLE" : "CORRECTION NOT ELIGIBLE"}
+        </span>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <TraceRow label="Verdict" value={claim.verdict || "not verified"} tone={claim.verdict === "CONTRADICTED" ? "block" : claim.verdict === "ENTAILED" ? "pass" : "neutral"} />
+        <TraceRow label="Confidence" value={typeof claim.confidence === "number" ? claim.confidence.toFixed(4) : "—"} />
+        <TraceRow label="Sub-reason" value={subReason} />
+        <TraceRow label="Trigger reason" value={triggerReason} tone={triggered ? "warn" : "neutral"} />
+      </div>
+
+      <div className="mt-3 rounded-md border border-white/8 bg-white/[0.02] p-3">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">Policy evaluation</p>
+        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+          {triggered
+            ? triggerReason === "contradicted"
+              ? "CONTRADICTED is an approved automatic-correction trigger."
+              : "NOT_ENOUGH_INFORMATION is eligible only because sub_reason = low_confidence."
+            : claim.verdict === "NOT_ENOUGH_INFORMATION"
+              ? "High-confidence NEI is treated as genuine uncertainty and does not trigger correction."
+              : claim.verdict === "NO_EVIDENCE"
+                ? "NO_EVIDENCE has no NLI premise and never triggers correction."
+                : "This verdict does not satisfy an approved correction trigger."}
+        </p>
+      </div>
+
+      {underlying && (
+        <>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <TraceRow label="Verifier model" value={claim.verifier_model || "unknown"} />
+            <TraceRow label="Evidence method" value={claim.evidence_match_method || "none"} />
+            <TraceRow label="Input truncated" value={claim.input_truncated === null || claim.input_truncated === undefined ? "not recorded" : String(claim.input_truncated)} />
+            <TraceRow label="Claim ID" value={claim.claim_id || "unknown"} />
+          </div>
+
+          {claim.assertion_text && claim.assertion_text !== claim.claim_text && (
+            <div className="mt-3 rounded-md border border-judicial/20 bg-judicial/5 p-3">
+              <p className="font-mono text-[11px] uppercase tracking-wider text-judicial-soft">Narrow assertion candidate</p>
+              <p className="mt-1 text-sm leading-6 text-ink-secondary">{claim.assertion_text}</p>
+            </div>
+          )}
+
+          {Array.isArray(claim.assertion_spans) && claim.assertion_spans.length > 0 && (
+            <div className="mt-3 rounded-md border border-white/8 bg-white/[0.02] p-3">
+              <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">Assertion spans</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {claim.assertion_spans.map((span, i) => (
+                  <span key={i} className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-xs text-ink-secondary">
+                    {span}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {claim.raw_scores && (
+            <div className="mt-3">
+              <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-ink-muted">Raw NLI scores</p>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {Object.entries(claim.raw_scores).map(([k, v]) => (
+                  <TraceRow key={k} label={k} value={typeof v === "number" ? v.toFixed(4) : String(v)} />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 function VerificationView({ data, underlying }) {
   const claims = data?.claims || [];
   if (claims.length === 0) return <EmptyClaims />;
   return (
     <div className="flex flex-col gap-3">
+      <div className="rounded-lg border border-judicial/20 bg-judicial/5 p-4">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-judicial-soft">Correction trigger policy</p>
+        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+          Trigger only for <span className="text-ink-primary">CONTRADICTED</span> or
+          <span className="text-ink-primary"> NOT_ENOUGH_INFORMATION + low_confidence</span>.
+          Genuine high-confidence NEI and NO_EVIDENCE do not trigger.
+        </p>
+      </div>
       {claims.map((c, idx) => (
         <div
           key={c.claim_id}
           className="animate-rise-in rounded-lg border border-white/8 bg-white/[0.02] p-5"
-          style={{ animationDelay: `${idx * 50}ms` }}
+          style={{ animationDelay: idx * 50 + "ms" }}
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-mono text-xs text-judicial-soft">{citationLabel(c.citation_extracted)}</span>
             <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
           </div>
           <p className="mt-2.5 text-lg font-medium leading-[1.65] text-ink-primary">{c.claim_text}</p>
-          {c.evidence_text && <p className="mt-2 text-lg leading-[1.65] text-ink-secondary">{c.evidence_text}</p>}
-          {underlying && c.raw_scores && (
-            <div className="mt-3 flex gap-3 font-mono text-xs text-ink-secondary">
-              {Object.entries(c.raw_scores).map(([k, v]) => (
-                <span key={k}>
-                  {k}: {typeof v === "number" ? v.toFixed(4) : String(v)}
-                </span>
-              ))}
+          {c.evidence_text && (
+            <div className="mt-2 border-l-2 border-entail/40 pl-4">
+              <p className="text-lg leading-[1.65] text-ink-secondary">{c.evidence_text}</p>
             </div>
           )}
+          <VerificationTrace claim={c} underlying={underlying} />
         </div>
       ))}
     </div>
@@ -143,19 +255,35 @@ function VerificationView({ data, underlying }) {
 
 function CorrectionView({ data, underlying }) {
   if (!data?.triggered) {
-    return <p className="text-base text-ink-secondary">No correction was attempted for this run.</p>;
+    return (
+      <div className="rounded-lg border border-entail/20 bg-entail/5 p-4">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-entail">Correction decision</p>
+        <p className="mt-1 text-sm text-ink-secondary">
+          No correction was attempted because no claim had an approved trigger reason.
+        </p>
+      </div>
+    );
   }
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm text-ink-secondary">
-        A candidate correction was generated for the flagged claim. It has not yet been validated or shipped --
-        see Safety and Re-check.
-      </p>
+      <div className="rounded-lg border border-warn/25 bg-warn/10 p-4">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-warn">Correction decision</p>
+        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+          Claim <span className="font-mono text-ink-primary">{data.triggered_for_claim_id || "unknown"}</span>
+          {" "}was selected because the approved trigger reason is{" "}
+          <span className="font-mono font-semibold text-warn">{data.trigger_reason || "unknown"}</span>.
+        </p>
+      </div>
       <div className="glass-panel-solid rounded-lg p-6">
         <CorrectionDiff before={data.original_field_text} after={data.regenerated_text} />
       </div>
       {underlying && (
-        <p className="font-mono text-xs text-ink-secondary">model: {data.corr_meta?.model}</p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <TraceRow label="Attempts" value={String(data.attempts ?? "—")} />
+          <TraceRow label="Correction mode" value={data.correction_mode || "unknown"} />
+          <TraceRow label="Model" value={data.corr_meta?.model || "unknown"} />
+          <TraceRow label="Fragment only" value={String(Boolean(data.fragment_only))} />
+        </div>
       )}
     </div>
   );

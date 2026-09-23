@@ -93,31 +93,41 @@ _DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT = (
 )
 
 
-def _should_trigger_correction(claim_record: dict) -> bool:
-    """Per the approved design: trigger for CONTRADICTED (regardless of
-    confidence), or for NOT_ENOUGH_INFORMATION specifically when it's the
-    low-confidence downgrade (sub_reason == "low_confidence") — NOT for a
-    genuine high-confidence "neutral" NLI prediction, which is a legitimate
-    NEI verdict on its own, not a flagged failure. NO_EVIDENCE never
-    triggers, regardless of this function (callers only pass claims that
-    already have evidence).
+def _correction_trigger_reason(claim_record: dict) -> Optional[str]:
+    """Return the single approved reason a claim may enter auto-correction.
 
-    Deliberately does NOT also check `negation_contradiction_caveat` (see
-    apply_verification) — this function answers "was this claim already a
-    problem in the baseline," which is also reused by
-    _reverify_sibling_regressions() to identify pre-existing failures to
-    exclude from its own, separate check. Whether a negation-flagged
-    CONTRADICTED verdict is trusted enough to actually ATTEMPT an automatic
-    correction on is a narrower, different question, applied only at the
-    one call site in apply_selective_correction() that builds the
-    correction-trigger list."""
-    verdict = claim_record["verdict"]
+    A genuine high-confidence NEI is a valid uncertainty result, not an
+    automatic correction request.
+
+    Returns "contradicted", "low_confidence_nei", or None.
+    """
+    verdict = claim_record.get("verdict")
     if verdict == CONTRADICTED:
-        return True
-    if verdict == NOT_ENOUGH_INFORMATION and claim_record.get("sub_reason") == "low_confidence":
-        return True
-    return False
+        return "contradicted"
+    if (
+        verdict == NOT_ENOUGH_INFORMATION
+        and claim_record.get("sub_reason") == "low_confidence"
+    ):
+        return "low_confidence_nei"
+    return None
 
+
+def _should_trigger_correction(claim_record: dict) -> bool:
+    """Single boolean wrapper around the approved correction trigger policy.
+    """
+    return _correction_trigger_reason(claim_record) is not None
+
+
+def _annotate_correction_triggers(claims: list[dict]) -> None:
+    """Attach auditable correction eligibility to each verified claim.
+
+    These fields are presentation/debugging data only; they do not change
+    verdict, confidence, or the correction policy.
+    """
+    for claim in claims:
+        reason = _correction_trigger_reason(claim)
+        claim["correction_trigger"] = reason is not None
+        claim["correction_trigger_reason"] = reason
 
 # A claim asserting that a provision does NOT apply/is not applicable
 # ("Neither Section 302 nor Section 304 ... applies to this case.") is
@@ -418,6 +428,7 @@ def apply_verification(
         rec["negation_contradiction_caveat"] = (
             result.label == CONTRADICTED and _negation_marker_present(rec["claim_text"])
         )
+    _annotate_correction_triggers(baseline["claims"])
 
 
 def _fragment_present(fragment: str, text: str) -> bool:
@@ -696,8 +707,9 @@ def _reverify_sibling_regressions(
 
 def apply_selective_correction(baseline: dict, case, corrector, config: dict, on_event=None) -> dict:
     """Returns a correction summary dict. Triggers at most once, for the
-    FIRST claim whose verdict is CONTRADICTED or NOT_ENOUGH_INFORMATION
-    (any sub_reason) — never for NO_EVIDENCE. Re-verifies once afterward.
+    FIRST claim whose approved correction trigger is CONTRADICTED or
+    low-confidence NOT_ENOUGH_INFORMATION. Genuine high-confidence NEI and
+    NO_EVIDENCE never trigger. Re-verifies once afterward.
 
     `on_event` (additive, optional, default None — zero behavior change for
     any existing caller): if given, called as `on_event(stage, status,
@@ -734,6 +746,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     if not flagged:
         return {
             "triggered_for_claim_id": None,
+            "trigger_reason": None,
             "attempts": 0,
             "status": "not_triggered",
             "regenerated_text": None,
@@ -742,8 +755,12 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
         }
 
     target = flagged[0]
-    if on_event:
-        on_event("correction", "started", {})
+    trigger_reason = _correction_trigger_reason(target)
+    if trigger_reason is None:
+        raise RuntimeError(
+            "Correction invariant violated: selected target has no approved trigger reason."
+        )
+    if on_event:        on_event("correction", "started", {})
     corrected_text, corr_meta = corrector.correct(
         case_text=case.case_text,
         original_field_text=original_field_text,
@@ -779,6 +796,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
+            "trigger_reason": trigger_reason,
             "attempts": 1,
             "status": "correction_scope_violation",
             "regenerated_text": corrected_text,
@@ -997,6 +1015,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
 
     return {
         "triggered_for_claim_id": target["claim_id"],
+        "trigger_reason": trigger_reason,
         "attempts": 1,
         "status": status,
         "regenerated_text": corrected_text,
@@ -1131,10 +1150,16 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         }
 
     target = flagged[0]
+    trigger_reason = _correction_trigger_reason(target)
+    if trigger_reason is None:
+        raise RuntimeError(
+            "Assertion-aware correction invariant violated: selected target has no approved trigger reason."
+        )
     resolved = _correction_target_spans(target)
     if resolved is None:
         return {
             "triggered_for_claim_id": target["claim_id"],
+            "trigger_reason": trigger_reason,
             "attempts": 0,
             "status": "correction_span_invalid",
             "regenerated_text": None,
