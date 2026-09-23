@@ -60,12 +60,22 @@ class SelectiveCorrector:
             if evidence_text
             else "No supporting statute text is available in the evidence corpus for this claim.\n"
         )
+        # IMPORTANT: do not feed the full paragraph/case facts to the legacy
+        # correction prompt. The previous version did so even though the model
+        # was asked for one sentence; the observed failure was exactly that it
+        # leaked a neighboring fragment ("intention.") into the returned
+        # sentence. The target sentence + audited statute are the minimum
+        # sufficient context for this correction.
         user_prompt = (
-            f"Case facts:\n{case_text}\n\n"
-            f"Original Statutory Grounding paragraph:\n{original_field_text}\n\n"
             f"Flagged sentence (unsupported or contradicted):\n{flagged_claim_text}\n\n"
             f"{evidence_block}\n"
-            "Rewrite the full paragraph, changing ONLY the flagged sentence."
+            "Rewrite ONLY the flagged sentence so it is consistent with the statute text. "
+            "Return ONLY the corrected sentence, not the paragraph. Preserve the sentence's "
+            "subject, scope, conditions, citation identity, and grammatical role; change only "
+            "the unsupported or contradicted legal fact. Do not copy any neighboring sentence "
+            "or fragment. Do not add a citation, section number, Act name, or fact that is not "
+            "needed to correct this sentence. Output exactly ONE complete grammatical sentence "
+            "and nothing else."
         )
         messages = [
             {"role": "system", "content": self.system_prompt.strip()},

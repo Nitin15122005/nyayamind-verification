@@ -88,3 +88,41 @@ def test_unknown_verdict_fails_closed():
     claim = _claim("UNKNOWN", None)
     assert pipeline._correction_trigger_reason(claim) is None
     assert pipeline._should_trigger_correction(claim) is False
+
+
+def test_legacy_sentence_splice_replaces_only_unique_target_sentence():
+    original = (
+        "Section 302 provides punishment for murder. "
+        "Section 34 requires common intention."
+    )
+    corrected = pipeline._splice_flagged_sentence(
+        original,
+        "Section 302 provides punishment for murder.",
+        "Section 302 provides punishment for murder with imprisonment for life.",
+    )
+    assert corrected == (
+        "Section 302 provides punishment for murder with imprisonment for life. "
+        "Section 34 requires common intention."
+    )
+
+
+def test_legacy_sentence_splice_fails_closed_on_duplicate_target():
+    original = (
+        "Section 302 provides punishment for murder. "
+        "Section 34 requires common intention. "
+        "Section 302 provides punishment for murder."
+    )
+    assert pipeline._splice_flagged_sentence(
+        original,
+        "Section 302 provides punishment for murder.",
+        "Corrected Section 302 sentence.",
+    ) is None
+
+
+def test_legacy_sentence_splice_fails_closed_on_empty_correction():
+    original = "Section 302 provides punishment for murder."
+    assert pipeline._splice_flagged_sentence(
+        original,
+        "Section 302 provides punishment for murder.",
+        "",
+    ) is None

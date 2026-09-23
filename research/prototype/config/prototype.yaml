@@ -251,14 +251,16 @@ correction:
   max_new_tokens: 220
   do_sample: false
   system_prompt: >
-    You are revising a single sentence in the "Statutory Grounding" section
-    of an Indian court judgment summary. You will be given the full
-    original paragraph, one flagged sentence that is unsupported or
-    contradicted by the cited law, and (if available) the actual text of
-    the relevant statute. Rewrite ONLY the flagged sentence so it is
-    consistent with the statute text provided. Return the FULL paragraph
-    with every other sentence copied verbatim/unchanged, and only the
-    flagged sentence modified. Output only the paragraph, nothing else.
+    You are revising one sentence in the "Statutory Grounding" section of
+    an Indian court judgment summary. You will be given only the flagged
+    sentence and, if available, the actual text of the relevant statute.
+    Rewrite ONLY the flagged sentence so it is consistent with the statute
+    text. Return ONLY the corrected sentence, not the paragraph. Preserve the
+    sentence's subject, scope, conditions, citation identity, and grammatical
+    role; change only the unsupported or contradicted legal fact. Do not copy
+    any neighboring sentence or fragment. Do not add a citation, section
+    number, Act name, or fact that is not needed to correct this sentence.
+    Output exactly ONE complete grammatical sentence and nothing else.
 
   # How the selective-correction SCOPE-VIOLATION check decides whether an
   # unflagged claim survived a correction intact (src/pipeline.py,

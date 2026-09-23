@@ -474,6 +474,7 @@ _GATE_TO_STATUS = {
     "unauthorized_addition": "correction_unauthorized_addition",
     "ordinal": "correction_ordinal_ambiguous",
     "splice": "correction_splice_unavailable",
+    "sentence_splice": "correction_splice_unavailable",
     "structural_span": "correction_structural_span_lost",
 }
 

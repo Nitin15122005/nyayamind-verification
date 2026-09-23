@@ -594,6 +594,30 @@ def _splice_assertion_correction(
     return original_field_text.replace(target_claim_text, corrected_claim_text, 1)
 
 
+def _splice_flagged_sentence(
+    original_field_text: str,
+    target_claim_text: str,
+    corrected_sentence: str,
+) -> Optional[str]:
+    """Deterministically splice a corrected FULL SENTENCE into the original paragraph.
+
+    The legacy corrector is intentionally still full-sentence aware, not
+    assertion-fragment aware. The LLM is now asked to return only the
+    corrected flagged sentence, and this helper puts that sentence back into
+    the original paragraph. This prevents a legacy correction from
+    accidentally copying a fragment from a neighboring sentence.
+
+    Fails closed when the corrected sentence is empty or the target sentence
+    is not present exactly once. No paragraph reconstruction is performed.
+    """
+    corrected_sentence = corrected_sentence.strip()
+    if not corrected_sentence:
+        return None
+    if original_field_text.count(target_claim_text) != 1:
+        return None
+    return original_field_text.replace(target_claim_text, corrected_sentence, 1)
+
+
 def _citation_identity(citation) -> Optional[tuple]:
     """(provision_type, provision_number, act_norm) — the same three fields
     the replacement-matching logic below always required, extracted once so
@@ -761,11 +785,20 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             "Correction invariant violated: selected target has no approved trigger reason."
         )
     if on_event:        on_event("correction", "started", {})
-    corrected_text, corr_meta = corrector.correct(
+    corrected_sentence, corr_meta = corrector.correct(
         case_text=case.case_text,
         original_field_text=original_field_text,
         flagged_claim_text=target["claim_text"],
         evidence_text=target["evidence_text"],  # may be None (contradicted-with-no-evidence is impossible by construction, but kept defensive)
+    )
+    # Legacy mode remains sentence-level, not assertion-aware: the model
+    # proposes only the flagged sentence, then deterministic code splices
+    # that complete sentence back into the untouched paragraph. This removes
+    # the observed failure mode where a whole-paragraph generation leaked a
+    # neighboring fragment (for example, a trailing "intention.") into the
+    # corrected sentence.
+    corrected_text = _splice_flagged_sentence(
+        original_field_text, target["claim_text"], corrected_sentence
     )
     corr_meta_dict = {
         "model": corr_meta.model_id,
@@ -775,7 +808,28 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
         "corrected_at": corr_meta.corrected_at,
     }
     if on_event:
-        on_event("correction", "completed", {"regenerated_text": corrected_text, "corr_meta": corr_meta_dict})
+        on_event("correction", "completed", {
+            "regenerated_text": corrected_sentence,
+            "corrected_paragraph": corrected_text,
+            "corr_meta": corr_meta_dict,
+            "sentence_only": True,
+        })
+
+    if corrected_text is None:
+        if on_event:
+            on_event("safety", "started", {})
+            on_event("safety", "completed", {"passed": False, "gate": "sentence_splice"})
+            on_event("recheck", "skipped", {})
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "trigger_reason": trigger_reason,
+            "attempts": 1,
+            "status": "correction_sentence_splice_unavailable",
+            "regenerated_text": corrected_sentence,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+        }
 
     if on_event:
         on_event("safety", "started", {})
