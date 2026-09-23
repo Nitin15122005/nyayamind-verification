@@ -114,16 +114,23 @@ export default function LiveDemo() {
   const runStatus = running ? "running" : hasStarted ? "complete" : "ready";
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen">
       <NavBar />
 
-      <main className="mx-auto flex w-[96vw] max-w-[2200px] flex-1 flex-col gap-7 px-1 py-8 sm:py-10">
-        <div className="grid flex-1 grid-cols-1 gap-7 lg:grid-cols-[65fr_35fr]">
+      <main className="mx-auto flex w-[94vw] max-w-[1440px] flex-1 flex-col gap-3 px-1 py-4 sm:py-5">
+        <div className="mb-0.5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-judicial">Live verification workspace</p>
+          <h1 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink-primary sm:text-2xl">Verify a legal claim</h1>
+          <p className="mt-1 max-w-2xl text-xs leading-5 text-ink-secondary">
+            Paste a legal passage or choose a prepared evaluation scenario. Follow the real pipeline as it extracts claims, retrieves evidence, verifies them, and applies safety-gated correction.
+          </p>
+        </div>
+        <div className="grid flex-1 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.85fr)]">
           {/* LEFT: Verification workspace */}
-          <div className="flex flex-col gap-7">
-            <section className="glass-panel rounded-2xl p-6 sm:p-8">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <label className="font-mono text-sm uppercase tracking-wider text-ink-secondary">Legal Input</label>
+          <div className="flex flex-col gap-3">
+            <section className="glass-panel rounded-xl p-3 sm:p-4">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <label className="text-xs font-semibold uppercase tracking-[0.14em] text-judicial">Legal Input</label>
                 <div className="flex items-center gap-2.5">
                   <SampleMenu examples={examples} onPick={handlePickSample} disabled={running} />
                   {(inputText || hasStarted) && (
@@ -131,7 +138,7 @@ export default function LiveDemo() {
                       type="button"
                       onClick={handleReset}
                       disabled={running}
-                      className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-2 font-body text-sm font-medium text-ink-secondary transition-colors hover:border-white/25 hover:text-ink-primary disabled:opacity-40"
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-body text-xs font-semibold text-ink-secondary transition-colors hover:border-white/25 hover:text-ink-primary disabled:opacity-40"
                     >
                       Reset
                     </button>
@@ -143,21 +150,21 @@ export default function LiveDemo() {
                 onChange={handleTextChange}
                 disabled={running}
                 placeholder="Paste a legal statement or generated legal passage…"
-                className="h-52 w-full resize-none rounded-xl border border-white/10 bg-canvas-subtle px-5 py-4 font-body text-lg font-medium leading-[1.65] text-ink-primary placeholder:font-normal placeholder:text-ink-muted focus:border-judicial focus:outline-none focus:ring-3 focus:ring-judicial/15"
+                className="h-44 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 font-body text-xs leading-5 text-ink-primary placeholder:font-normal placeholder:text-ink-muted focus:border-judicial focus:bg-white focus:outline-none focus:ring-4 focus:ring-judicial/10"
               />
-              <div className="mt-4 flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <input
                   value={citation}
                   onChange={(e) => setCitation(e.target.value)}
                   disabled={running}
                   placeholder="Citation / authority (optional)"
-                  className="w-full max-w-xs rounded-md border border-white/10 bg-canvas-subtle px-3.5 py-2.5 font-body text-sm text-ink-primary placeholder:text-ink-muted focus:border-judicial focus:outline-none sm:w-72"
+                  className="w-full max-w-xs rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-body text-xs text-ink-primary placeholder:text-ink-muted focus:border-judicial focus:outline-none sm:w-72"
                 />
                 <button
                   type="button"
                   onClick={handleRun}
                   disabled={running || !inputText.trim()}
-                  className="rounded-lg bg-gradient-to-br from-judicial to-judicial-dim px-7 py-3.5 font-body text-base font-semibold text-white shadow-glow-judicial transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                  className="rounded-lg bg-primary-container px-4 py-2 font-body text-xs font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
                 >
                   {running ? "Running…" : "Run Verification →"}
                 </button>
@@ -174,7 +181,7 @@ export default function LiveDemo() {
           </div>
 
           {/* RIGHT: canonical live execution pipeline */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:sticky lg:top-20 lg:self-start">
             <LiveProcessingFeed
               stageOrder={STAGE_ORDER}
               stageStatus={stageStatus}

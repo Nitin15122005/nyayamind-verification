@@ -7,39 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: "#090D16",
-        "canvas-subtle": "#0D1527",
-        surface: "#0f131c",
-        "surface-elevated": "rgba(15, 23, 42, 0.72)",
-        "surface-container": "#1c1f29",
-        "surface-container-high": "#262a34",
+        canvas: "#F8F9F7",
+        "canvas-subtle": "#FFFFFF",
+        surface: "#FFFFFF",
+        "primary-fixed": "#DCE8F7",
+        "primary-container": "#0F172A",
+        "surface-elevated": "#FFFFFF",
+        "surface-container": "#F1F3F1",
+        "surface-container-high": "#E8EBE8",
         border: {
-          DEFAULT: "rgba(255, 255, 255, 0.08)",
-          active: "rgba(59, 130, 246, 0.35)",
+          DEFAULT: "#DDE2E0",
+          active: "rgba(0, 88, 190, 0.25)",
         },
         ink: {
-          primary: "#F8FAFC",
-          secondary: "#94A3B8",
+          primary: "#0F172A",
+          secondary: "#475569",
           muted: "#64748B",
         },
         judicial: {
-          DEFAULT: "#3B82F6",
-          dim: "#2563EB",
-          soft: "#adc6ff",
+          DEFAULT: "#0058BE",
+          dim: "#00479A",
+          soft: "#0058BE",
         },
         entail: {
-          DEFAULT: "#10B981",
+          DEFAULT: "#059669",
           soft: "rgba(16, 185, 129, 0.15)",
         },
         contra: {
-          DEFAULT: "#EF4444",
+          DEFAULT: "#DC2626",
           soft: "rgba(239, 68, 68, 0.15)",
         },
         warn: {
-          DEFAULT: "#F59E0B",
+          DEFAULT: "#D97706",
           soft: "rgba(245, 158, 11, 0.15)",
         },
-        tertiary: "#d0bcff",
+        tertiary: "#B45309",
       },
       fontFamily: {
         display: ["Plus Jakarta Sans", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -68,9 +70,9 @@ export default {
         modal: "24px",
       },
       boxShadow: {
-        "glow-judicial": "0 8px 32px -4px rgba(59, 130, 246, 0.22)",
-        "glow-entail": "0 8px 32px -4px rgba(16, 185, 129, 0.18)",
-        "glow-contra": "0 8px 32px -4px rgba(239, 68, 68, 0.22)",
+        "glow-judicial": "0 8px 24px -8px rgba(0, 88, 190, 0.24)",
+        "glow-entail": "0 8px 24px -8px rgba(5, 150, 105, 0.16)",
+        "glow-contra": "0 8px 24px -8px rgba(220, 38, 38, 0.16)",
       },
       keyframes: {
         pulseGlow: {

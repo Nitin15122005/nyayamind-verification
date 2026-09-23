@@ -86,19 +86,19 @@ function Row({ stageKey, status, data, isLast, clickable, isViewed, onSelect }) 
         : "";
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-2.5 nm-feed-row">
       <div className="flex flex-col items-center">
         <span
-          className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-sm transition-all duration-300 ${
+          className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 text-[10px] transition-all duration-300 ${
             isDone
               ? "border-entail bg-entail/15 text-entail"
               : isSkipped
-                ? "border-white/15 bg-white/[0.03] text-ink-muted"
+                ? "border-slate-200 bg-slate-50 text-ink-muted"
                 : isActive
                   ? "border-judicial bg-judicial/15 text-judicial-soft shadow-glow-judicial animate-pulse-glow"
                   : isError
                     ? "border-contra bg-contra/15 text-contra"
-                    : "border-white/15 bg-transparent text-ink-muted"
+                    : "border-slate-200 bg-transparent text-ink-muted"
           }`}
         >
           {isDone && "✓"}
@@ -108,7 +108,7 @@ function Row({ stageKey, status, data, isLast, clickable, isViewed, onSelect }) 
         </span>
         {!isLast && (
           <span
-            className={`w-px flex-1 min-h-[26px] transition-colors duration-500 ${
+            className={`w-px flex-1 min-h-[22px] transition-colors duration-500 ${
               isDone || isSkipped ? "bg-entail/30" : isActive ? "bg-judicial/40" : "bg-white/10"
             }`}
           />
@@ -118,14 +118,14 @@ function Row({ stageKey, status, data, isLast, clickable, isViewed, onSelect }) 
         type="button"
         disabled={!clickable}
         onClick={() => clickable && onSelect(stageKey)}
-        className={`mb-5 flex-1 rounded-lg px-3 py-1.5 text-left transition-colors ${
-          clickable ? "cursor-pointer hover:bg-white/[0.04]" : "cursor-default"
+        className={`mb-2.5 flex-1 rounded-lg px-2 py-0.5 text-left transition-colors ${
+          clickable ? "cursor-pointer hover:bg-slate-50" : "cursor-default"
         } ${isViewed ? "bg-judicial/[0.08] ring-1 ring-judicial/30" : ""} ${isPending ? "opacity-40" : "opacity-100"}`}
       >
-        <p className={`text-base font-medium ${isActive || isDone ? "text-ink-primary" : "text-ink-secondary"}`}>
+        <p className={`text-xs font-medium ${isActive || isDone ? "text-ink-primary" : "text-ink-secondary"}`}>
           {LABELS[stageKey]}
         </p>
-        {detail && <p className="mt-0.5 text-sm text-ink-secondary">{detail}</p>}
+        {detail && <p className="mt-0.5 text-[11px] leading-4 text-ink-secondary">{detail}</p>}
       </button>
     </div>
   );
@@ -136,20 +136,20 @@ export default function LiveProcessingFeed({ stageOrder, stageStatus, stageData,
   const meta = STATUS_META[runStatus] || STATUS_META.ready;
 
   return (
-    <div className="glass-panel flex flex-col rounded-2xl p-6 sm:p-7">
-      <div className="mb-6 flex items-center justify-between border-b border-white/8 pb-4">
-        <h3 className="font-display text-base font-semibold uppercase tracking-wider text-ink-primary">
+    <div className="glass-panel flex flex-col rounded-xl p-3 sm:p-4">
+      <div className="mb-2 flex items-center justify-between border-b border-slate-200 pb-2">
+        <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-ink-primary">
           Live Processing
         </h3>
-        <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono text-xs font-semibold tracking-wider text-ink-secondary">
+        <span className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-ink-secondary">
           <span className={`h-2 w-2 rounded-full ${meta.dot}`} />
           {meta.label}
         </span>
       </div>
       {!hasStarted ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-1.5 py-14 text-center">
-          <p className="text-base font-medium text-ink-secondary">Ready to run</p>
-          <p className="max-w-[220px] text-sm text-ink-secondary">
+        <div className="flex flex-1 flex-col items-center justify-center gap-1.5 py-10 text-center">
+          <p className="text-xs font-medium text-ink-secondary">Ready to run</p>
+          <p className="max-w-[210px] text-[11px] text-ink-secondary">
             Run the pipeline to see each stage execute, live.
           </p>
         </div>

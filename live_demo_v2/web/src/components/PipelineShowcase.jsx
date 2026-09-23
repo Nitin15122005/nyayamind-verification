@@ -23,33 +23,33 @@ export default function PipelineShowcase() {
   }, []);
 
   return (
-    <div className="glass-panel relative flex flex-col gap-1 rounded-2xl p-8">
+    <div className="glass-panel relative flex flex-col gap-0 rounded-xl p-4 nm-pipeline">
       {STEPS.map((step, idx) => {
         const isActive = idx === active;
         const isPast = idx < active;
         return (
-          <div key={step.label} className="flex items-start gap-5 py-3">
+          <div key={step.label} className="flex items-start gap-2.5 py-1.5">
             <div className="flex flex-col items-center">
               <span
-                className={`flex h-4 w-4 shrink-0 rounded-full border-2 transition-all duration-500 ${
+                className={`flex h-3 w-3 shrink-0 rounded-full border-2 transition-all duration-500 ${
                   isActive
                     ? "border-judicial bg-judicial shadow-glow-judicial"
                     : isPast
                       ? "border-entail/60 bg-entail/60"
-                      : "border-white/15 bg-transparent"
+                      : "border-slate-200 bg-transparent"
                 }`}
               />
               {idx < STEPS.length - 1 && (
                 <span
-                  className={`my-1 h-9 w-px transition-colors duration-500 ${
+                  className={`my-0.5 h-5 w-px transition-colors duration-500 ${
                     isPast ? "bg-entail/40" : "bg-white/10"
                   }`}
                 />
               )}
             </div>
-            <div className={`transition-opacity duration-500 ${isActive ? "opacity-100" : "opacity-50"}`}>
-              <p className="font-body text-lg font-semibold tracking-wide text-ink-primary">{step.label}</p>
-              <p className="text-sm text-ink-secondary">{step.detail}</p>
+            <div className={`transition-opacity duration-500 ${isActive ? "opacity-100 nm-pipeline-active" : "opacity-45"}`}>
+              <p className="font-body text-xs font-semibold tracking-wide text-ink-primary">{step.label}</p>
+              <p className="text-[11px] leading-4 text-ink-secondary">{step.detail}</p>
             </div>
           </div>
         );

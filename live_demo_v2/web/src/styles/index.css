@@ -10,7 +10,7 @@
     overflow-x: hidden;
   }
   body {
-    background: #050914;
+    background: #F8F9F7;
     position: relative;
   }
   /* Layered ambient background -- purely decorative, sits behind every
@@ -31,28 +31,23 @@
     inset: -10vh -10vw;
     z-index: -2;
     background:
-      radial-gradient(50rem 38rem at 10% -6%, rgba(37, 99, 235, 0.16), transparent 58%),
-      radial-gradient(42rem 34rem at 88% 6%, rgba(6, 200, 235, 0.09), transparent 55%),
-      radial-gradient(38rem 30rem at 58% 46%, rgba(139, 92, 246, 0.045), transparent 55%),
-      radial-gradient(46rem 36rem at 84% 96%, rgba(217, 160, 65, 0.06), transparent 55%),
-      linear-gradient(180deg, #070c18 0%, #050914 55%, #03050c 100%);
+      radial-gradient(42rem 30rem at 8% -8%, rgba(0, 88, 190, 0.055), transparent 60%),
+      radial-gradient(36rem 28rem at 92% 8%, rgba(37, 99, 235, 0.035), transparent 58%),
+      linear-gradient(180deg, #FFFFFF 0%, #F8F9F7 62%, #F3F5F3 100%);
     background-repeat: no-repeat;
-    animation: bgDrift 36s ease-in-out infinite alternate;
     pointer-events: none;
   }
-  /* Layer 4: a very faint structural grid, masked to fade out toward the
-     bottom of the viewport so it reads as an atmospheric texture rather
-     than graph paper. */
+  /* Subtle structural texture for the light research workspace. */
   body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-    background-size: 68px 68px;
-    mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, black 35%, transparent 88%);
+      linear-gradient(rgba(15, 23, 42, 0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.018) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, black 25%, transparent 82%);
     pointer-events: none;
   }
   ::selection {
@@ -118,17 +113,69 @@
 
 @layer components {
   .glass-panel {
-    background: rgba(15, 23, 42, 0.65);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    border: 1px solid #E1E5E3;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.055);
   }
   .glass-panel-solid {
-    background: #0d1527;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #FFFFFF;
+    border: 1px solid #E1E5E3;
   }
   .tnum {
     font-variant-numeric: tabular-nums;
   }
+}
+
+
+@keyframes nmStageIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes nmClaimIn {
+  0% { opacity: 0; transform: translateY(5px) scale(0.995); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes nmTraceIn {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes nmFeedIn {
+  0% { opacity: 0; transform: translateX(5px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes nmCheckPop {
+  0% { transform: scale(0.72); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes nmPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 88, 190, 0.10); }
+  50% { box-shadow: 0 0 0 5px rgba(0, 88, 190, 0); }
+}
+.nm-stage-enter { animation: nmStageIn 220ms ease-out both; }
+.nm-claim-card { animation: nmClaimIn 240ms ease-out both; transition: transform 160ms ease, box-shadow 160ms ease; }
+.nm-claim-card:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(15, 23, 42, 0.06); }
+.nm-trace { animation: nmTraceIn 220ms ease-out both; }
+.nm-feed-row { animation: nmFeedIn 220ms ease-out both; }
+.nm-feed-row:nth-child(2) { animation-delay: 25ms; }
+.nm-feed-row:nth-child(3) { animation-delay: 50ms; }
+.nm-feed-row:nth-child(4) { animation-delay: 75ms; }
+.nm-feed-row:nth-child(5) { animation-delay: 100ms; }
+.nm-feed-row:nth-child(6) { animation-delay: 125ms; }
+.nm-feed-row:nth-child(7) { animation-delay: 150ms; }
+.nm-feed-row:nth-child(8) { animation-delay: 175ms; }
+.nm-pipeline-active { animation: nmPulse 1.8s ease-in-out infinite; border-radius: 0.25rem; }
+@media (prefers-reduced-motion: reduce) {
+  .nm-stage-enter, .nm-claim-card, .nm-trace, .nm-feed-row, .nm-pipeline-active { animation: none !important; }
+}
+
+
+/* Final compact verification density. */
+.nm-verification-card {
+  min-height: 0;
+}
+.nm-verification-card .nm-trace {
+  line-height: 1.15;
 }

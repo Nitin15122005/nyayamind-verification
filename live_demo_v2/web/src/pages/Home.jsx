@@ -1,44 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, BookOpenCheck, ShieldCheck, Sparkles } from "lucide-react";
 import NavBar from "../components/NavBar.jsx";
 import PipelineShowcase from "../components/PipelineShowcase.jsx";
 import Lightbox from "../components/Lightbox.jsx";
 
 const FIGURES = [
-  {
-    src: "/figures/verification_accuracy.png",
-    title: "Verifier accuracy",
-    caption: "Verifier accuracy on a controlled, labeled benchmark.",
-  },
-  {
-    src: "/figures/correction_outcomes.png",
-    title: "Correction outcomes",
-    caption: "Correction outcomes across every evaluated candidate.",
-  },
-  {
-    src: "/figures/evidence_coverage.png",
-    title: "Evidence coverage",
-    caption: "Evidence coverage across the statute pool.",
-  },
+  { src: "/figures/verification_accuracy.png", title: "Verifier accuracy", caption: "Verifier accuracy on a controlled, labeled benchmark." },
+  { src: "/figures/correction_outcomes.png", title: "Correction outcomes", caption: "Correction outcomes across evaluated candidates." },
+  { src: "/figures/evidence_coverage.png", title: "Evidence coverage", caption: "Evidence coverage across the statute pool." },
 ];
 
 const CAPABILITIES = [
-  {
-    title: "Deterministic claim extraction",
-    body: "Every citation-bearing sentence becomes its own atomic, independently-checkable claim.",
-  },
-  {
-    title: "Evidence-grounded verification",
-    body: "Claims are checked against real statute text with an NLI model -- never a guess.",
-  },
-  {
-    title: "Programmatic safety gates",
-    body: "A correction ships only if every unflagged claim survives untouched and re-verification passes.",
-  },
-  {
-    title: "Selective, surgical correction",
-    body: "Only the flagged span is rewritten -- the rest of the paragraph is provably unchanged.",
-  },
+  ["Deterministic claim extraction", "Citation-bearing sentences are decomposed into independently checkable claims."],
+  ["Evidence-grounded verification", "Each claim is checked against retrieved statutory text using NLI verification."],
+  ["Programmatic safety gates", "A correction ships only when the required safety conditions pass."],
+  ["Selective correction", "Only the flagged sentence is rewritten; untouched claims are checked again."],
 ];
 
 export default function Home() {
@@ -47,81 +24,113 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <main className="mx-auto flex w-[94vw] max-w-[1440px] flex-col gap-9 pb-12">
+        <section className="flex flex-col items-center px-4 pt-7 text-center sm:pt-9 lg:pt-10">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-judicial">
+            <span className="h-2 w-2 rounded-full bg-judicial" />
+            Evidence-grounded legal verification
+          </div>
 
-      <main className="mx-auto flex w-[96vw] max-w-[2200px] flex-col gap-28 pb-32 pt-16 sm:pt-24">
-        <section className="grid items-center gap-16 lg:grid-cols-2">
-          <div className="flex flex-col items-start">
-            <h1 className="font-display text-6xl font-extrabold leading-[1.03] tracking-tight text-ink-primary sm:text-7xl lg:text-8xl">
-              NYAYAMIND
-            </h1>
-            <p className="mt-6 font-display text-2xl font-medium text-ink-secondary sm:text-3xl">
-              Evidence-Grounded Legal Claim Verification &amp; Safe Selective Correction
-            </p>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-secondary">
-              NyayaMind checks legal claims against retrieved evidence, verifies their relationship, and
-              applies correction only when safety conditions are satisfied.
-            </p>
+          <h1 className="max-w-4xl font-display text-2xl font-bold leading-[1.1] tracking-[-0.03em] text-ink-primary sm:text-2xl lg:text-[40px]">
+            Verify legal claims.
+            <br />
+            <span className="text-judicial">Correct only when it is safe.</span>
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-xs leading-5 text-ink-secondary sm:text-base">
+            NyayaMind decomposes legal text into atomic claims, grounds them against statutory
+            evidence, verifies each relationship, and applies selective correction only when its
+            safety gates pass.
+          </p>
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
             <Link
               to="/demo"
-              className="mt-10 rounded-xl bg-gradient-to-br from-judicial to-judicial-dim px-9 py-4 font-body text-lg font-semibold text-white shadow-glow-judicial transition-transform hover:scale-[1.03]"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary-container px-4 py-2.5 text-xs font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
             >
-              RUN LIVE DEMO →
+              Run Live Verification <ArrowRight className="h-4 w-4" />
             </Link>
+            <a
+              href="#architecture"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-ink-primary shadow-sm transition-colors hover:bg-slate-50"
+            >
+              Explore the pipeline
+            </a>
+          </div>
+        </section>
+
+        <section id="architecture" className="px-2 sm:px-4">
+          <div className="mb-4 flex flex-col gap-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-judicial">How it works</p>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-ink-primary sm:text-xl">
+              One legal passage. Multiple verification layers.
+            </h2>
+            <p className="max-w-2xl text-xs leading-5 text-ink-secondary">
+              A transparent pipeline from input to evidence, NLI verification, safety validation and final result.
+            </p>
           </div>
           <PipelineShowcase />
         </section>
 
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {CAPABILITIES.map((c) => (
-            <div key={c.title} className="glass-panel rounded-2xl p-7">
-              <h3 className="font-display text-lg font-semibold text-ink-primary">{c.title}</h3>
-              <p className="mt-3 text-base leading-relaxed text-ink-secondary">{c.body}</p>
+        <section className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {CAPABILITIES.map(([title, body], i) => (
+            <div key={title} className="glass-panel rounded-xl p-3">
+              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-xl bg-primary-fixed text-judicial">
+                {i === 0 ? <BookOpenCheck className="h-4 w-4" /> : i === 1 ? <Sparkles className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+              </div>
+              <h3 className="font-display text-xs font-semibold text-ink-primary">{title}</h3>
+              <p className="mt-1.5 text-[11px] leading-4 text-ink-secondary">{body}</p>
             </div>
           ))}
         </section>
 
         <section>
-          <h2 className="mb-9 text-center font-display text-3xl font-semibold text-ink-primary">
-            Measured on real evaluation data
-          </h2>
-          <div className="grid gap-7 sm:grid-cols-3">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-judicial">Evaluation</p>
+              <h2 className="mt-2 font-display text-xl font-semibold tracking-tight text-ink-primary">
+                Measured on real evaluation data
+              </h2>
+            </div>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3">
             {FIGURES.map((f) => (
               <button
                 key={f.src}
                 type="button"
                 onClick={() => setOpenFigure(f)}
-                className="glass-panel group overflow-hidden rounded-2xl text-left transition-transform hover:scale-[1.015] hover:shadow-glow-judicial"
+                className="glass-panel group overflow-hidden rounded-xl text-left transition-all hover:-translate-y-0.5 hover:shadow-lg"
               >
-                <div className="overflow-hidden bg-white/5">
-                  <img
-                    src={f.src}
-                    alt={f.caption}
-                    className="w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                  />
+                <div className="overflow-hidden bg-slate-50">
+                  <img src={f.src} alt={f.caption} className="w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]" />
                 </div>
-                <div className="px-5 py-5">
-                  <p className="text-lg font-medium text-ink-primary">{f.title}</p>
-                  <p className="mt-1 text-sm text-ink-secondary">{f.caption}</p>
+                <div className="border-t border-slate-200 px-3 py-3">
+                  <p className="text-sm font-semibold text-ink-primary">{f.title}</p>
+                  <p className="mt-1 text-[11px] leading-4 text-ink-secondary">{f.caption}</p>
                 </div>
               </button>
             ))}
           </div>
         </section>
 
-        <section className="flex flex-col items-center gap-5 rounded-2xl border border-judicial/20 bg-judicial/[0.06] px-10 py-16 text-center">
-          <h2 className="font-display text-4xl font-semibold text-ink-primary">See it verify a real claim.</h2>
-          <p className="max-w-lg text-lg text-ink-secondary">
-            Paste your own legal text, or run one of the prepared scenarios -- the real pipeline executes live.
+        <section className="glass-panel flex flex-col items-center rounded-2xl px-5 py-7 text-center sm:px-10">
+          <span className="mb-3 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-judicial">
+            Live research pipeline
+          </span>
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink-primary sm:text-2xl">
+            See a real claim move through the pipeline.
+          </h2>
+          <p className="mt-1.5 max-w-xl text-xs leading-5 text-ink-secondary">
+            Use a prepared scenario or paste your own legal passage and inspect every verification stage.
           </p>
           <Link
             to="/demo"
-            className="mt-3 rounded-xl bg-gradient-to-br from-judicial to-judicial-dim px-9 py-4 font-body text-lg font-semibold text-white shadow-glow-judicial transition-transform hover:scale-[1.03]"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg"
           >
-            RUN LIVE DEMO →
+            Open Live Demo <ArrowRight className="h-4 w-4" />
           </Link>
         </section>
       </main>
-
       <Lightbox figure={openFigure} onClose={() => setOpenFigure(null)} />
     </div>
   );

@@ -25,7 +25,7 @@ function citationLabel(citation) {
 
 function EmptyClaims() {
   return (
-    <p className="text-base text-ink-secondary">
+    <p className="text-xs text-ink-secondary">
       No citation-bearing statutory claims were found in this text.
     </p>
   );
@@ -36,26 +36,26 @@ function ClaimsView({ data, underlying }) {
   if (claims.length === 0) return <EmptyClaims />;
   const groups = groupBySentence(claims);
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-1.5">
       <p className="text-sm text-ink-secondary">
         {claims.length} claim{claims.length === 1 ? "" : "s"} extracted from {groups.length} sentence
         {groups.length === 1 ? "" : "s"}.
       </p>
       {underlying && (
-        <div className="glass-panel-solid rounded-lg p-6">
+        <div className="glass-panel-solid rounded-lg p-3">
           <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">Source text</p>
-          <p className="text-lg font-medium leading-[1.65] text-ink-primary">{data?.source_text}</p>
+          <p className="text-xs font-medium leading-5 text-ink-primary">{data?.source_text}</p>
         </div>
       )}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         {groups.map((g, idx) => (
-          <div key={idx} className="animate-rise-in rounded-lg border border-white/8 bg-white/[0.02] p-5" style={{ animationDelay: `${idx * 50}ms` }}>
-            <p className="text-lg font-medium leading-[1.65] text-ink-primary">{g.sentence}</p>
-            <div className="mt-3 flex flex-wrap gap-1.5">
+          <div key={idx} className="animate-rise-in rounded-lg border border-slate-200 bg-white p-2.5 nm-claim-card" style={{ animationDelay: `${idx * 50}ms` }}>
+            <p className="text-xs font-medium leading-5 text-ink-primary">{g.sentence}</p>
+            <div className="mt-2 flex flex-wrap gap-1">
               {g.claims.map((c) => (
                 <span
                   key={c.claim_id}
-                  className="rounded-full border border-judicial/25 bg-judicial/10 px-2.5 py-1 font-mono text-xs text-judicial-soft"
+                  className="rounded-full border border-judicial/25 bg-judicial/10 px-1.5 py-0.5 font-mono text-[9px] text-judicial-soft"
                 >
                   {citationLabel(c.citation_extracted)}
                 </span>
@@ -72,33 +72,33 @@ function EvidenceView({ data, underlying }) {
   const claims = data?.claims || [];
   if (claims.length === 0) return <EmptyClaims />;
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       {claims.map((c, idx) => (
         <div
           key={c.claim_id}
-          className="animate-rise-in rounded-lg border border-white/8 bg-white/[0.02] p-5"
+          className={`animate-rise-in rounded-lg border border-slate-200 bg-white p-2.5 nm-claim-card`}
           style={{ animationDelay: `${idx * 50}ms` }}
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="font-mono text-xs text-judicial-soft">{citationLabel(c.citation_extracted)}</span>
+            <span className="font-mono text-[10px] text-judicial-soft">{citationLabel(c.citation_extracted)}</span>
             {!c.evidence_text && (
-              <span className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-xs text-ink-secondary">
+              <span className="rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 font-mono text-[10px] text-ink-secondary">
                 NO EVIDENCE FOUND
               </span>
             )}
           </div>
-          <p className="mt-2.5 text-lg font-medium leading-[1.65] text-ink-primary">{c.claim_text}</p>
+          <p className="mt-1.5 text-xs font-medium leading-5 text-ink-primary">{c.claim_text}</p>
           {c.evidence_text ? (
-            <div className="mt-3 border-l-2 border-entail/40 pl-4">
-              <p className="text-lg leading-[1.65] text-ink-secondary">{c.evidence_text}</p>
+            <div className="mt-2 border-l-2 border-entail/40 pl-3">
+              <p className="text-xs leading-5 text-ink-secondary">{c.evidence_text}</p>
               {underlying && (
-                <p className="mt-1.5 font-mono text-xs uppercase tracking-wider text-ink-muted">
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink-muted">
                   matched via {c.evidence_match_method}
                 </p>
               )}
             </div>
           ) : (
-            <p className="mt-3 text-base text-ink-secondary">
+            <p className="mt-2 text-sm text-ink-secondary">
               No sufficient evidence found in the statute pool for this citation.
               {underlying && c.no_evidence_category ? ` (${c.no_evidence_category})` : ""}
             </p>
@@ -112,19 +112,34 @@ function EvidenceView({ data, underlying }) {
 
 function TraceRow({ label, value, tone = "neutral" }) {
   const toneClass = {
-    neutral: "border-white/10 bg-white/[0.03] text-ink-secondary",
+    neutral: "border-slate-200 bg-slate-50 text-ink-secondary",
     pass: "border-entail/25 bg-entail/10 text-entail",
     warn: "border-warn/25 bg-warn/10 text-warn",
     block: "border-contra/25 bg-contra/10 text-contra",
     judicial: "border-judicial/25 bg-judicial/10 text-judicial-soft",
-  }[tone] || "border-white/10 bg-white/[0.03] text-ink-secondary";
+  }[tone] || "border-slate-200 bg-slate-50 text-ink-secondary";
 
   return (
-    <div className={"flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2 " + toneClass}>
-      <span className="font-mono text-[11px] uppercase tracking-wider opacity-80">{label}</span>
-      <span className="font-mono text-xs font-semibold">{value}</span>
+    <div className={"flex flex-wrap items-center justify-between gap-1 rounded border px-1.5 py-0.5 " + toneClass}>
+      <span className="font-mono text-[8px] uppercase tracking-wide opacity-80">{label}</span>
+      <span className="font-mono text-[8px] font-semibold">{value}</span>
     </div>
   );
+}
+
+function claimCardClass(verdict) {
+  switch (verdict) {
+    case "CONTRADICTED":
+      return "border-contra/25 bg-red-50/70 border-l-4 border-l-contra";
+    case "ENTAILED":
+      return "border-entail/25 bg-emerald-50/70 border-l-4 border-l-entail";
+    case "NOT_ENOUGH_INFORMATION":
+      return "border-warn/25 bg-amber-50/70 border-l-4 border-l-warn";
+    case "NO_EVIDENCE":
+      return "border-slate-200 bg-slate-50/80 border-l-4 border-l-slate-300";
+    default:
+      return "border-slate-200 bg-white";
+  }
 }
 
 function VerificationTrace({ claim, underlying }) {
@@ -135,13 +150,13 @@ function VerificationTrace({ claim, underlying }) {
     (claim.verdict === "NO_EVIDENCE" ? "not_applicable" : "genuine_high_confidence");
 
   return (
-    <div className="mt-4 rounded-lg border border-white/8 bg-black/10 p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-ink-secondary">
+    <div className="mt-2.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5">
+      <div className="mb-1 flex items-center justify-between gap-1.5">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-secondary">
           Decision trace
         </p>
         <span className={
-          "rounded-full border px-2.5 py-1 font-mono text-[11px] font-semibold " +
+          "rounded-full border px-2 py-0.5 font-mono text-[10px] font-semibold " +
           (triggered
             ? "border-warn/30 bg-warn/10 text-warn"
             : "border-entail/25 bg-entail/10 text-entail")
@@ -150,16 +165,16 @@ function VerificationTrace({ claim, underlying }) {
         </span>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-0.5 sm:grid-cols-2">
         <TraceRow label="Verdict" value={claim.verdict || "not verified"} tone={claim.verdict === "CONTRADICTED" ? "block" : claim.verdict === "ENTAILED" ? "pass" : "neutral"} />
         <TraceRow label="Confidence" value={typeof claim.confidence === "number" ? claim.confidence.toFixed(4) : "—"} />
         <TraceRow label="Sub-reason" value={subReason} />
         <TraceRow label="Trigger reason" value={triggerReason} tone={triggered ? "warn" : "neutral"} />
       </div>
 
-      <div className="mt-3 rounded-md border border-white/8 bg-white/[0.02] p-3">
-        <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">Policy evaluation</p>
-        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+      <div className="mt-1 rounded border border-slate-200 bg-white p-1.5">
+        <p className="font-mono text-[8px] uppercase tracking-wider text-ink-muted">Policy evaluation</p>
+        <p className="mt-0.5 text-[10px] leading-4 text-ink-secondary">
           {triggered
             ? triggerReason === "contradicted"
               ? "CONTRADICTED is an approved automatic-correction trigger."
@@ -174,7 +189,7 @@ function VerificationTrace({ claim, underlying }) {
 
       {underlying && (
         <>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <div className="mt-1.5 grid gap-0.5 sm:grid-cols-2">
             <TraceRow label="Verifier model" value={claim.verifier_model || "unknown"} />
             <TraceRow label="Evidence method" value={claim.evidence_match_method || "none"} />
             <TraceRow label="Input truncated" value={claim.input_truncated === null || claim.input_truncated === undefined ? "not recorded" : String(claim.input_truncated)} />
@@ -182,18 +197,18 @@ function VerificationTrace({ claim, underlying }) {
           </div>
 
           {claim.assertion_text && claim.assertion_text !== claim.claim_text && (
-            <div className="mt-3 rounded-md border border-judicial/20 bg-judicial/5 p-3">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-judicial-soft">Narrow assertion candidate</p>
-              <p className="mt-1 text-sm leading-6 text-ink-secondary">{claim.assertion_text}</p>
+            <div className="mt-2 rounded-md border border-judicial/20 bg-judicial/5 p-2">
+              <p className="font-mono text-[9px] uppercase tracking-wider text-judicial-soft">Narrow assertion candidate</p>
+              <p className="mt-0.5 text-xs leading-5 text-ink-secondary">{claim.assertion_text}</p>
             </div>
           )}
 
           {Array.isArray(claim.assertion_spans) && claim.assertion_spans.length > 0 && (
-            <div className="mt-3 rounded-md border border-white/8 bg-white/[0.02] p-3">
+            <div className="mt-2 rounded-md border border-slate-200 bg-white p-2">
               <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">Assertion spans</p>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {claim.assertion_spans.map((span, i) => (
-                  <span key={i} className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-xs text-ink-secondary">
+                  <span key={i} className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[10px] text-ink-secondary">
                     {span}
                   </span>
                 ))}
@@ -202,8 +217,8 @@ function VerificationTrace({ claim, underlying }) {
           )}
 
           {claim.raw_scores && (
-            <div className="mt-3">
-              <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-ink-muted">Raw NLI scores</p>
+            <div className="mt-2">
+              <p className="mb-1 font-mono text-[9px] uppercase tracking-wider text-ink-muted">Raw NLI scores</p>
               <div className="grid gap-2 sm:grid-cols-3">
                 {Object.entries(claim.raw_scores).map(([k, v]) => (
                   <TraceRow key={k} label={k} value={typeof v === "number" ? v.toFixed(4) : String(v)} />
@@ -221,10 +236,10 @@ function VerificationView({ data, underlying }) {
   const claims = data?.claims || [];
   if (claims.length === 0) return <EmptyClaims />;
   return (
-    <div className="flex flex-col gap-3">
-      <div className="rounded-lg border border-judicial/20 bg-judicial/5 p-4">
+    <div className="flex flex-col gap-2">
+      <div className="rounded-md border border-judicial/20 bg-judicial/5 p-2">
         <p className="font-mono text-[11px] uppercase tracking-wider text-judicial-soft">Correction trigger policy</p>
-        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+        <p className="mt-0.5 text-[11px] leading-4 text-ink-secondary">
           Trigger only for <span className="text-ink-primary">CONTRADICTED</span> or
           <span className="text-ink-primary"> NOT_ENOUGH_INFORMATION + low_confidence</span>.
           Genuine high-confidence NEI and NO_EVIDENCE do not trigger.
@@ -233,17 +248,17 @@ function VerificationView({ data, underlying }) {
       {claims.map((c, idx) => (
         <div
           key={c.claim_id}
-          className="animate-rise-in rounded-lg border border-white/8 bg-white/[0.02] p-5"
+          className={`animate-rise-in rounded-md border p-2 nm-verification-card ${claimCardClass(c.verdict)}`}
           style={{ animationDelay: idx * 50 + "ms" }}
         >
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="font-mono text-xs text-judicial-soft">{citationLabel(c.citation_extracted)}</span>
+          <div className="flex flex-wrap items-center justify-between gap-1.5">
+            <span className="font-mono text-[9px] text-judicial-soft">{citationLabel(c.citation_extracted)}</span>
             <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
           </div>
-          <p className="mt-2.5 text-lg font-medium leading-[1.65] text-ink-primary">{c.claim_text}</p>
+          <p className="mt-1 text-xs font-medium leading-5 text-ink-primary">{c.claim_text}</p>
           {c.evidence_text && (
-            <div className="mt-2 border-l-2 border-entail/40 pl-4">
-              <p className="text-lg leading-[1.65] text-ink-secondary">{c.evidence_text}</p>
+            <div className="mt-1.5 border-l-2 border-entail/40 pl-2.5">
+              <p className="text-[11px] leading-4 text-ink-secondary">{c.evidence_text}</p>
             </div>
           )}
           <VerificationTrace claim={c} underlying={underlying} />
@@ -266,7 +281,7 @@ function CorrectionView({ data, underlying }) {
   }
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-lg border border-warn/25 bg-warn/10 p-4">
+      <div className="rounded-lg border border-warn/25 bg-warn/10 p-2.5">
         <p className="font-mono text-[11px] uppercase tracking-wider text-warn">Correction decision</p>
         <p className="mt-1 text-sm leading-6 text-ink-secondary">
           Claim <span className="font-mono text-ink-primary">{data.triggered_for_claim_id || "unknown"}</span>
@@ -274,7 +289,7 @@ function CorrectionView({ data, underlying }) {
           <span className="font-mono font-semibold text-warn">{data.trigger_reason || "unknown"}</span>.
         </p>
       </div>
-      <div className="glass-panel-solid rounded-lg p-6">
+      <div className="glass-panel-solid rounded-lg p-4">
         <CorrectionDiff before={data.original_field_text} after={data.regenerated_text} />
       </div>
       {underlying && (
@@ -292,7 +307,7 @@ function CorrectionView({ data, underlying }) {
 function SafetyView({ data }) {
   if (!data?.triggered) {
     return (
-      <p className="text-base text-ink-secondary">
+      <p className="text-xs text-ink-secondary">
         No claim met the correction trigger condition -- safety gates were not evaluated.
       </p>
     );
@@ -313,12 +328,12 @@ function RecheckView({ data }) {
   }
   if (!data.verdict) return <p className="text-base text-ink-secondary">The corrected text could not be re-verified.</p>;
   return (
-    <div className="glass-panel-solid flex flex-col gap-2 rounded-lg p-6">
+    <div className="glass-panel-solid flex flex-col gap-1.5 rounded-lg p-4">
       <div className="flex items-center gap-3">
         <VerdictBadge verdict={data.verdict} confidence={data.confidence} />
         <span className="text-sm text-ink-secondary">re-verified against its own evidence.</span>
       </div>
-      <p className="text-lg font-medium leading-[1.65] text-ink-primary">{data.claim_text}</p>
+      <p className="text-sm font-medium leading-6 text-ink-primary">{data.claim_text}</p>
     </div>
   );
 }
@@ -337,17 +352,17 @@ const STAGE_TITLES = {
 export default function StagePanel({ viewedStage, stageData, underlying, onToggleUnderlying, error }) {
   if (error) {
     return (
-      <div className="glass-panel rounded-2xl p-7">
+      <div className="glass-panel rounded-xl p-4">
         <p className="font-mono text-sm font-semibold uppercase tracking-wider text-contra">Run failed</p>
-        <p className="mt-2.5 text-lg text-ink-secondary">{error}</p>
+        <p className="mt-1.5 text-xs text-ink-secondary">{error}</p>
       </div>
     );
   }
 
   if (!viewedStage) {
     return (
-      <div className="glass-panel flex min-h-[320px] flex-1 flex-col items-center justify-center rounded-2xl p-8 text-center">
-        <p className="text-lg text-ink-secondary">
+      <div className="glass-panel flex min-h-[220px] flex-1 flex-col items-center justify-center rounded-xl p-5 text-center">
+        <p className="text-sm text-ink-secondary">
           Press <span className="text-ink-primary">Run Verification</span> to execute the real pipeline.
         </p>
       </div>
@@ -358,24 +373,24 @@ export default function StagePanel({ viewedStage, stageData, underlying, onToggl
   const canToggleUnderlying = ["claims", "evidence", "verification", "correction"].includes(viewedStage);
 
   return (
-    <div className="glass-panel flex-1 rounded-2xl p-6 sm:p-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div className="glass-panel flex-1 rounded-xl p-2.5 sm:p-3 nm-stage-enter">
+      <div className="mb-1.5 flex flex-wrap items-center justify-between gap-1.5">
         <div>
-          <p className="font-mono text-xs uppercase tracking-wider text-ink-secondary">Active Stage</p>
-          <h3 className="font-display text-2xl font-semibold text-ink-primary">{STAGE_TITLES[viewedStage]}</h3>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-ink-secondary">Active Stage</p>
+          <h3 className="font-display text-base font-semibold text-ink-primary">{STAGE_TITLES[viewedStage]}</h3>
         </div>
         {canToggleUnderlying && (
           <button
             type="button"
             onClick={onToggleUnderlying}
-            className="rounded-md border border-white/10 bg-white/[0.03] px-4 py-2.5 font-body text-sm font-medium text-ink-secondary transition-colors hover:border-judicial/50 hover:text-ink-primary"
+            className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 font-body text-[10px] font-medium text-ink-secondary transition-colors hover:border-judicial/50 hover:text-ink-primary"
           >
             {underlying ? "Hide Underlying Processing" : "Show Underlying Processing"}
           </button>
         )}
       </div>
 
-      {!data && <p className="text-lg text-ink-secondary">Waiting for this stage to complete…</p>}
+      {!data && <p className="text-sm text-ink-secondary">Waiting for this stage to complete…</p>}
 
       {data && viewedStage === "claims" && <ClaimsView data={data} underlying={underlying} />}
       {data && viewedStage === "evidence" && <EvidenceView data={data} underlying={underlying} />}

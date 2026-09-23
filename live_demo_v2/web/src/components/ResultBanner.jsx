@@ -97,12 +97,12 @@ export default function ResultBanner({ record, safetyChecks }) {
           </span>
         )}
         {counts.NO_EVIDENCE > 0 && (
-          <span className="rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-medium text-ink-secondary">
+          <span className="rounded-full border border-slate-200 bg-slate-100 px-3.5 py-1.5 text-sm font-medium text-ink-secondary">
             {counts.NO_EVIDENCE} no evidence found
           </span>
         )}
         {Object.values(counts).every((v) => !v) && (
-          <span className="rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-medium text-ink-secondary">
+          <span className="rounded-full border border-slate-200 bg-slate-100 px-3.5 py-1.5 text-sm font-medium text-ink-secondary">
             No citation-bearing statutory claims were found in this text.
           </span>
         )}
