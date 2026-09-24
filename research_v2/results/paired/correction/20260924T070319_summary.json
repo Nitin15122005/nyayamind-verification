@@ -1,0 +1,152 @@
+{
+  "pipeline_run": "D:\\Programs\\nyayamind-verification\\research_v2\\results\\runs\\20260924T010352_802240Z_full_pipeline",
+  "comparisons": {
+    "primary_stack": {
+      "left": {
+        "n_inputs": 50,
+        "triggers": 16,
+        "attempts": 16,
+        "accepted": 1,
+        "rejected_or_failed": 15,
+        "status_counts": {
+          "not_triggered": 34,
+          "correction_scope_violation": 14,
+          "corrected": 1,
+          "correction_failed": 1
+        },
+        "scope_gate_rejections": 14,
+        "citation_identity_rejections": 0,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 1,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "right": {
+        "n_inputs": 50,
+        "triggers": 20,
+        "attempts": 20,
+        "accepted": 3,
+        "rejected_or_failed": 17,
+        "status_counts": {
+          "not_triggered": 30,
+          "corrected": 3,
+          "correction_scope_violation": 12,
+          "correction_failed": 5
+        },
+        "scope_gate_rejections": 12,
+        "citation_identity_rejections": 0,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 5,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "n_paired_inputs": 50,
+      "n_same_flagged_case_and_claim": 0,
+      "common_case_contradictions_resolved_by_left": 0,
+      "common_case_contradictions_resolved_by_right": 0,
+      "interpretation": "Natural data have no independent correctness labels; acceptance and re-verification are observable policy outcomes, not legal correctness."
+    },
+    "same_deberta_verifier_generator_effect": {
+      "left": {
+        "n_inputs": 50,
+        "triggers": 16,
+        "attempts": 16,
+        "accepted": 1,
+        "rejected_or_failed": 15,
+        "status_counts": {
+          "not_triggered": 34,
+          "correction_scope_violation": 14,
+          "corrected": 1,
+          "correction_failed": 1
+        },
+        "scope_gate_rejections": 14,
+        "citation_identity_rejections": 0,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 1,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "right": {
+        "n_inputs": 50,
+        "triggers": 17,
+        "attempts": 17,
+        "accepted": 3,
+        "rejected_or_failed": 14,
+        "status_counts": {
+          "not_triggered": 33,
+          "correction_scope_violation": 9,
+          "correction_failed": 4,
+          "corrected": 3,
+          "correction_unauthorized_addition": 1
+        },
+        "scope_gate_rejections": 9,
+        "citation_identity_rejections": 1,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 4,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "n_paired_inputs": 50,
+      "n_same_flagged_case_and_claim": 0,
+      "common_case_contradictions_resolved_by_left": 0,
+      "common_case_contradictions_resolved_by_right": 0,
+      "interpretation": "Natural data have no independent correctness labels; acceptance and re-verification are observable policy outcomes, not legal correctness."
+    },
+    "same_modernbert_verifier_generator_effect": {
+      "left": {
+        "n_inputs": 50,
+        "triggers": 26,
+        "attempts": 26,
+        "accepted": 0,
+        "rejected_or_failed": 26,
+        "status_counts": {
+          "correction_scope_violation": 22,
+          "not_triggered": 24,
+          "correction_failed": 4
+        },
+        "scope_gate_rejections": 22,
+        "citation_identity_rejections": 0,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 4,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "right": {
+        "n_inputs": 50,
+        "triggers": 20,
+        "attempts": 20,
+        "accepted": 3,
+        "rejected_or_failed": 17,
+        "status_counts": {
+          "not_triggered": 30,
+          "corrected": 3,
+          "correction_scope_violation": 12,
+          "correction_failed": 5
+        },
+        "scope_gate_rejections": 12,
+        "citation_identity_rejections": 0,
+        "ordinal_gate_rejections": 0,
+        "sibling_regressions": 0,
+        "full_reverification_failures": 5,
+        "unsafe_shipments": 0,
+        "unsafe_shipments_per_attempt": 0.0,
+        "negation_caveat_claims": 0
+      },
+      "n_paired_inputs": 50,
+      "n_same_flagged_case_and_claim": 3,
+      "common_case_contradictions_resolved_by_left": 0,
+      "common_case_contradictions_resolved_by_right": 0,
+      "interpretation": "Natural data have no independent correctness labels; acceptance and re-verification are observable policy outcomes, not legal correctness."
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# Host used for this experiment (Windows, Python 3.11.9, CUDA-enabled RTX 4050).
+# Install the matching PyTorch CUDA wheel from the official PyTorch wheel index;
+# this file documents the tested versions rather than changing production pins.
+torch==2.11.0+cu128
+transformers==5.17.0
+huggingface_hub==1.32.0
+accelerate==1.15.0
+bitsandbytes==0.50.2
+hf-xet==1.6.0
+pytest==9.1.1
+PyYAML==6.0.3
+numpy==1.26.4

@@ -1,0 +1,28 @@
+{
+  "n_inputs": 50,
+  "n_claims": 239,
+  "evidence_coverage": 0.7112970711297071,
+  "verdict_counts": {
+    "ENTAILED": 0,
+    "CONTRADICTED": 0,
+    "NOT_ENOUGH_INFORMATION": 0,
+    "NO_EVIDENCE": 69
+  },
+  "correction_status_counts": {
+    "not_applicable_mode_A": 50
+  },
+  "correction_triggers": 0,
+  "corrections_attempted": 0,
+  "corrections_accepted": 0,
+  "corrections_rejected": 0,
+  "safety_gate_rejections": 0,
+  "sibling_regressions": 0,
+  "final_reverification_failures": 0,
+  "fail_closed_events": 0,
+  "unsafe_shipments": 0,
+  "generator": "Qwen/Qwen3-4B-Instruct-2507",
+  "verifier": null,
+  "condition": "A",
+  "runtime_seconds": 463.4149536000041,
+  "dataset": "research/prototype/outputs/final_gpu_validation_B.jsonl"
+}

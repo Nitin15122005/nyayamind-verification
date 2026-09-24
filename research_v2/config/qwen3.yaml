@@ -1,0 +1,13 @@
+﻿model_id: Qwen/Qwen3-4B-Instruct-2507
+runtime:
+  device: cuda:0
+  allow_cpu_fallback: false
+  quantization: 4bit_nf4
+  dtype: bfloat16
+  max_input_length: 8192
+  max_new_tokens: 200
+  temperature: 1.0
+  top_p: 1.0
+  do_sample: false
+  seed: 42
+  trust_remote_code: false

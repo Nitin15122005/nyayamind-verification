@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-09-24T01:44:55.161191+00:00",
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "python": "3.11.9",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.17.0",
+  "cuda_runtime": "12.8",
+  "cuda_available": true,
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "device": "cuda:0",
+  "models": {
+    "baseline_generator": "Qwen/Qwen2.5-7B-Instruct",
+    "baseline_verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+    "v2_generator": "Qwen/Qwen3-4B-Instruct-2507",
+    "v2_verifier": "tasksource/ModernBERT-large-nli"
+  },
+  "seed": 42,
+  "command": "research_v2/scripts/run_all.py --device cuda:0 --skip-sanity --skip-natural --skip-pipeline"
+}

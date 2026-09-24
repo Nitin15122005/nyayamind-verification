@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\Programs\nyayamind-verification\research_v2\scripts\run_gold01.py", line 4, in <module>
+    raise SystemExit(run("gold01"))
+                     ^^^^^^^^^^^^^
+  File "D:\Programs\nyayamind-verification\research_v2\scripts\_run_gold_common.py", line 52, in run
+    verifier, model_id = _verifier(args.model, args.device)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Programs\nyayamind-verification\research_v2\scripts\_run_gold_common.py", line 26, in _verifier
+    return NLIVerifier(model_id=BASELINE_MODEL, confidence_threshold=0.70,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Programs\nyayamind-verification\research\prototype\src\verifier.py", line 122, in __init__
+    raise ValueError(f"device must be 'cuda' or 'cpu', got {device!r}")
+ValueError: device must be 'cuda' or 'cpu', got 'cuda:0'

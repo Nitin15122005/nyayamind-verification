@@ -1,0 +1,24 @@
+{
+  "dataset": "research/prototype/outputs/natural_candidates_batch2_gpu_labeled.jsonl",
+  "baseline_model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "v2_model": "tasksource/ModernBERT-large-nli",
+  "n_paired_claims": 236,
+  "categories": {
+    "both_agree": 10,
+    "both_abstain": 204,
+    "model_disagreement_ground_truth_unavailable": 22
+  },
+  "baseline_verdicts": {
+    "ENTAILED": 17,
+    "CONTRADICTED": 3,
+    "NOT_ENOUGH_INFORMATION": 96,
+    "NO_EVIDENCE": 120
+  },
+  "v2_verdicts": {
+    "ENTAILED": 14,
+    "CONTRADICTED": 10,
+    "NOT_ENOUGH_INFORMATION": 92,
+    "NO_EVIDENCE": 120
+  },
+  "interpretation": "Agreement and distribution only; no ground truth, so no natural-data accuracy or correctness claim."
+}

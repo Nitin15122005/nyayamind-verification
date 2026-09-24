@@ -1,0 +1,6 @@
+# Downloaded local checkpoint assets and the isolated runtime environment.
+models/ModernBERT-large-nli/
+models/Qwen3-4B-Instruct-2507/
+.venv/
+__pycache__/
+*.py[cod]

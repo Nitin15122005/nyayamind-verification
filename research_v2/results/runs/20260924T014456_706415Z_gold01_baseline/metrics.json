@@ -1,0 +1,98 @@
+{
+  "n": 420,
+  "accuracy": 0.9714285714285714,
+  "macro_f1": 0.9683612674297156,
+  "weighted_f1": 0.9712265956463328,
+  "per_class": {
+    "ENTAILED": {
+      "precision": 0.9735449735449735,
+      "recall": 1.0,
+      "f1": 0.9865951742627346,
+      "support": 184,
+      "tp": 184,
+      "fp": 5,
+      "fn": 0
+    },
+    "CONTRADICTED": {
+      "precision": 0.9649122807017544,
+      "recall": 0.9322033898305084,
+      "f1": 0.9482758620689654,
+      "support": 118,
+      "tp": 110,
+      "fp": 4,
+      "fn": 8
+    },
+    "NOT_ENOUGH_INFORMATION": {
+      "precision": 0.9743589743589743,
+      "recall": 0.9661016949152542,
+      "f1": 0.9702127659574468,
+      "support": 118,
+      "tp": 114,
+      "fp": 3,
+      "fn": 4
+    }
+  },
+  "confusion_matrix": {
+    "ENTAILED": {
+      "ENTAILED": 184,
+      "CONTRADICTED": 0,
+      "NOT_ENOUGH_INFORMATION": 0
+    },
+    "CONTRADICTED": {
+      "ENTAILED": 5,
+      "CONTRADICTED": 110,
+      "NOT_ENOUGH_INFORMATION": 3
+    },
+    "NOT_ENOUGH_INFORMATION": {
+      "ENTAILED": 0,
+      "CONTRADICTED": 4,
+      "NOT_ENOUGH_INFORMATION": 114
+    }
+  },
+  "benchmark": "gold01",
+  "stack": "baseline",
+  "model_id": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "dataset_sha256": "aad8018bafc1d9e8b65b100b7cbbede6f22cfd29cf5c5d7863845443a632bfec",
+  "dataset_path": "research\\prototype\\evaluation\\expected_outputs\\controlled_benchmark_gold\\controlled_verifier_benchmark.jsonl",
+  "elapsed_seconds": 7.712744799930078,
+  "mean_latency_seconds": 0.018363678095071615,
+  "throughput_examples_per_second": 54.45532179462331,
+  "confidence_mean": 0.9692057291666667,
+  "confidence_distribution": {
+    "n": 420,
+    "min": 0.42822265625,
+    "p10": 0.92841796875,
+    "p25": 0.98486328125,
+    "median": 0.99462890625,
+    "p75": 0.99755859375,
+    "p90": 0.99853515625,
+    "max": 0.99951171875,
+    "histogram": {
+      "0.00-0.50": 1,
+      "0.50-0.70": 11,
+      "0.70-0.90": 22,
+      "0.90-1.00": 386
+    }
+  },
+  "low_confidence_rate": 0.02857142857142857,
+  "truncation_count": 0,
+  "peak_gpu_memory_bytes": 404175360,
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch_version": "2.11.0+cu128",
+  "cuda_version": "12.8",
+  "transformers_version": "5.17.0",
+  "timestamp_utc": "2026-09-24T01:45:12.705959+00:00",
+  "python": "3.11.9",
+  "device": "cuda:0",
+  "confidence_threshold": 0.7,
+  "model_revision": "6f5cf0a2b59cabb106aca4c287eed12e357e90eb",
+  "label_mapping": {
+    "0": "entailment",
+    "1": "neutral",
+    "2": "contradiction"
+  },
+  "max_sequence_length": 512,
+  "warmup_examples": 3,
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "command": "D:\\Programs\\nyayamind-verification\\research_v2\\scripts\\run_gold01.py --model baseline --device cuda:0 --run-id 20260924T014456_706415Z_gold01_baseline"
+}

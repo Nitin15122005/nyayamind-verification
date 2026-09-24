@@ -1,0 +1,65 @@
+[
+  {
+    "comparison": "generation_only",
+    "left": "baseline_A",
+    "right": "v2_A",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 50,
+    "n_verdict_disagreements": 33,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "primary_generation_verification",
+    "left": "baseline_baseline_B",
+    "right": "v2_v2_B",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 50,
+    "n_verdict_disagreements": 42,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "primary_selective_correction",
+    "left": "baseline_baseline_C",
+    "right": "v2_v2_C",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 50,
+    "n_verdict_disagreements": 42,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "generator_effect_with_deberta",
+    "left": "baseline_baseline_B",
+    "right": "v2_baseline_B",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 50,
+    "n_verdict_disagreements": 40,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "generator_effect_with_modernbert",
+    "left": "baseline_v2_B",
+    "right": "v2_v2_B",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 50,
+    "n_verdict_disagreements": 43,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "verifier_effect_qwen25",
+    "left": "baseline_baseline_B",
+    "right": "baseline_v2_B",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 0,
+    "n_verdict_disagreements": 15,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  },
+  {
+    "comparison": "verifier_effect_qwen3",
+    "left": "v2_baseline_B",
+    "right": "v2_v2_B",
+    "n_paired_inputs": 50,
+    "n_changed_final_outputs": 0,
+    "n_verdict_disagreements": 14,
+    "interpretation": "Natural-data behavior comparison only; no ground truth."
+  }
+]

@@ -1,0 +1,257 @@
+{
+  "benchmark": "gold01",
+  "baseline": {
+    "model": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+    "metrics": {
+      "n": 420,
+      "accuracy": 0.9714285714285714,
+      "macro_f1": 0.9683612674297156,
+      "weighted_f1": 0.9712265956463328,
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9735449735449735,
+          "recall": 1.0,
+          "f1": 0.9865951742627346,
+          "support": 184,
+          "tp": 184,
+          "fp": 5,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 0.9649122807017544,
+          "recall": 0.9322033898305084,
+          "f1": 0.9482758620689654,
+          "support": 118,
+          "tp": 110,
+          "fp": 4,
+          "fn": 8
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.9743589743589743,
+          "recall": 0.9661016949152542,
+          "f1": 0.9702127659574468,
+          "support": 118,
+          "tp": 114,
+          "fp": 3,
+          "fn": 4
+        }
+      },
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 184,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 5,
+          "CONTRADICTED": 110,
+          "NOT_ENOUGH_INFORMATION": 3
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 0,
+          "CONTRADICTED": 4,
+          "NOT_ENOUGH_INFORMATION": 114
+        }
+      },
+      "benchmark": "gold01",
+      "stack": "baseline",
+      "model_id": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+      "dataset_sha256": "aad8018bafc1d9e8b65b100b7cbbede6f22cfd29cf5c5d7863845443a632bfec",
+      "dataset_path": "research\\prototype\\evaluation\\expected_outputs\\controlled_benchmark_gold\\controlled_verifier_benchmark.jsonl",
+      "elapsed_seconds": 7.661804300048971,
+      "mean_latency_seconds": 0.018242391190592788,
+      "throughput_examples_per_second": 54.81737506625111,
+      "confidence_mean": 0.9692057291666667,
+      "confidence_distribution": {
+        "n": 420,
+        "min": 0.42822265625,
+        "p10": 0.92841796875,
+        "p25": 0.98486328125,
+        "median": 0.99462890625,
+        "p75": 0.99755859375,
+        "p90": 0.99853515625,
+        "max": 0.99951171875,
+        "histogram": {
+          "0.00-0.50": 1,
+          "0.50-0.70": 11,
+          "0.70-0.90": 22,
+          "0.90-1.00": 386
+        }
+      },
+      "low_confidence_rate": 0.02857142857142857,
+      "truncation_count": 0,
+      "peak_gpu_memory_bytes": 404175360,
+      "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "transformers_version": "5.17.0",
+      "timestamp_utc": "2026-09-24T01:00:13.678276+00:00",
+      "python": "3.11.9",
+      "device": "cuda:0",
+      "confidence_threshold": 0.7,
+      "model_revision": "6f5cf0a2b59cabb106aca4c287eed12e357e90eb",
+      "label_mapping": {
+        "0": "entailment",
+        "1": "neutral",
+        "2": "contradiction"
+      },
+      "max_sequence_length": 512,
+      "warmup_examples": 3,
+      "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+      "command": "D:\\Programs\\nyayamind-verification\\research_v2\\scripts\\run_gold01.py --model baseline --device cuda:0 --run-id 20260924T005958_180775Z_gold01_baseline"
+    }
+  },
+  "v2": {
+    "model": "tasksource/ModernBERT-large-nli",
+    "metrics": {
+      "n": 420,
+      "accuracy": 0.9380952380952381,
+      "macro_f1": 0.9299079919746402,
+      "weighted_f1": 0.9371710293858251,
+      "per_class": {
+        "ENTAILED": {
+          "precision": 0.9533678756476683,
+          "recall": 1.0,
+          "f1": 0.9761273209549072,
+          "support": 184,
+          "tp": 184,
+          "fp": 9,
+          "fn": 0
+        },
+        "CONTRADICTED": {
+          "precision": 0.926605504587156,
+          "recall": 0.8559322033898306,
+          "f1": 0.8898678414096917,
+          "support": 118,
+          "tp": 101,
+          "fp": 8,
+          "fn": 17
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "precision": 0.923728813559322,
+          "recall": 0.923728813559322,
+          "f1": 0.923728813559322,
+          "support": 118,
+          "tp": 109,
+          "fp": 9,
+          "fn": 9
+        }
+      },
+      "confusion_matrix": {
+        "ENTAILED": {
+          "ENTAILED": 184,
+          "CONTRADICTED": 0,
+          "NOT_ENOUGH_INFORMATION": 0
+        },
+        "CONTRADICTED": {
+          "ENTAILED": 8,
+          "CONTRADICTED": 101,
+          "NOT_ENOUGH_INFORMATION": 9
+        },
+        "NOT_ENOUGH_INFORMATION": {
+          "ENTAILED": 1,
+          "CONTRADICTED": 8,
+          "NOT_ENOUGH_INFORMATION": 109
+        }
+      },
+      "benchmark": "gold01",
+      "stack": "v2",
+      "model_id": "tasksource/ModernBERT-large-nli",
+      "dataset_sha256": "aad8018bafc1d9e8b65b100b7cbbede6f22cfd29cf5c5d7863845443a632bfec",
+      "dataset_path": "research\\prototype\\evaluation\\expected_outputs\\controlled_benchmark_gold\\controlled_verifier_benchmark.jsonl",
+      "elapsed_seconds": 10.694468799898459,
+      "mean_latency_seconds": 0.02546302095213919,
+      "throughput_examples_per_second": 39.272637833492745,
+      "confidence_mean": 0.9264028586802029,
+      "confidence_distribution": {
+        "n": 420,
+        "min": 0.48799052834510803,
+        "p10": 0.6987848818302155,
+        "p25": 0.9473672807216644,
+        "median": 0.9893794357776642,
+        "p75": 0.9943573176860809,
+        "p90": 0.9974100530147553,
+        "max": 0.9996535778045654,
+        "histogram": {
+          "0.00-0.50": 2,
+          "0.50-0.70": 41,
+          "0.70-0.90": 43,
+          "0.90-1.00": 334
+        }
+      },
+      "low_confidence_rate": 0.10238095238095238,
+      "truncation_count": 0,
+      "peak_gpu_memory_bytes": 1608684032,
+      "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "torch_version": "2.11.0+cu128",
+      "cuda_version": "12.8",
+      "transformers_version": "5.17.0",
+      "timestamp_utc": "2026-09-24T01:00:32.858026+00:00",
+      "python": "3.11.9",
+      "device": "cuda:0",
+      "confidence_threshold": 0.7,
+      "model_revision": null,
+      "label_mapping": {
+        "0": "entailment",
+        "1": "neutral",
+        "2": "contradiction"
+      },
+      "max_sequence_length": 2048,
+      "warmup_examples": 3,
+      "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+      "command": "D:\\Programs\\nyayamind-verification\\research_v2\\scripts\\run_gold01.py --model v2 --device cuda:0 --run-id 20260924T010014_402174Z_gold01_v2"
+    }
+  },
+  "delta": {
+    "accuracy": -0.033333333333333326,
+    "macro_f1": -0.038453275455075375,
+    "contradicted_recall": -0.07627118644067787
+  },
+  "mcnemar_exact": {
+    "baseline_only_correct": 20,
+    "v2_only_correct": 6,
+    "discordant_pairs": 26,
+    "exact_two_sided_p": 0.009355306625366211,
+    "n": 420
+  },
+  "paired_bootstrap": {
+    "accuracy": {
+      "estimate": -0.03333333333333333,
+      "ci_95": [
+        -0.05714285714285716,
+        -0.00952380952380949
+      ],
+      "bootstrap_n": 5000,
+      "resamples": 5000
+    },
+    "macro_f1": {
+      "estimate": -0.038453275455075375,
+      "ci_95": [
+        -0.06607249071741805,
+        -0.011183574959193754
+      ],
+      "bootstrap_n": 5000,
+      "resamples": 5000
+    },
+    "contradicted_recall": {
+      "estimate": -0.07627118644067797,
+      "ci_95": [
+        -0.13740458015267165,
+        -0.01754385964912286
+      ],
+      "bootstrap_n": 5000,
+      "resamples": 5000
+    }
+  },
+  "paired_categories": {
+    "both_abstain": 106,
+    "both_agree": 285,
+    "both_fail": 3,
+    "v2_changes_correct_to_incorrect": 20,
+    "v2_improves": 6
+  },
+  "primary_interpretable_metric": "macro_f1",
+  "macro_f1_all_classes_supported": true,
+  "interpretation": "degraded",
+  "interpretation_basis": "paired bootstrap CI for macro_f1; interpretation does not mean V2 is globally better and does not override safety metrics"
+}

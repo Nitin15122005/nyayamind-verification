@@ -1,0 +1,37 @@
+{
+  "n_inputs": 50,
+  "n_claims": 239,
+  "evidence_coverage": 0.7112970711297071,
+  "verdict_counts": {
+    "ENTAILED": 43,
+    "CONTRADICTED": 19,
+    "NOT_ENOUGH_INFORMATION": 108,
+    "NO_EVIDENCE": 69
+  },
+  "correction_status_counts": {
+    "not_triggered": 30,
+    "corrected": 3,
+    "correction_scope_violation": 12,
+    "correction_failed": 5
+  },
+  "correction_triggers": 20,
+  "corrections_attempted": 20,
+  "corrections_accepted": 3,
+  "corrections_rejected": 17,
+  "safety_gate_rejections": 12,
+  "sibling_regressions": 0,
+  "final_reverification_failures": 5,
+  "fail_closed_events": 17,
+  "unsafe_shipments": 0,
+  "generator_stack": "v2",
+  "verifier_stack": "v2",
+  "condition": "C",
+  "generator": "Qwen/Qwen3-4B-Instruct-2507",
+  "verifier": "tasksource/ModernBERT-large-nli",
+  "dataset": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+  "input_sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+  "runtime_seconds": 172.77800569999818,
+  "throughput_inputs_per_second": 0.28938868443305527,
+  "peak_gpu_memory_bytes": 4446963200,
+  "generation_records": 50
+}

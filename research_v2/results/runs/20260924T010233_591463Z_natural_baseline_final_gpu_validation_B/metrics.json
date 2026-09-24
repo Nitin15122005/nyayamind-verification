@@ -1,0 +1,38 @@
+{
+  "kind": "natural_unlabeled_descriptive_only",
+  "n_cases": 50,
+  "n_claims": 209,
+  "evidence_coverage": 0.7033492822966507,
+  "verdict_counts": {
+    "ENTAILED": 36,
+    "CONTRADICTED": 4,
+    "NOT_ENOUGH_INFORMATION": 107,
+    "NO_EVIDENCE": 62
+  },
+  "verdict_rates": {
+    "ENTAILED": 0.1722488038277512,
+    "CONTRADICTED": 0.019138755980861243,
+    "NOT_ENOUGH_INFORMATION": 0.5119617224880383,
+    "NO_EVIDENCE": 0.2966507177033493
+  },
+  "low_confidence_rate": 0.07655502392344497,
+  "correction_trigger_rate": 0.09569377990430622,
+  "truncation_count": 0,
+  "chunk_aggregation_verdict_changes": 0,
+  "inference_count": 147,
+  "elapsed_seconds": 3.394489500002237,
+  "mean_latency_seconds": 0.023091765306137668,
+  "throughput_claims_per_second": 43.30548083884281,
+  "peak_gpu_memory_bytes": 407457792,
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch_version": "2.11.0+cu128",
+  "transformers_version": "5.17.0",
+  "python": "3.11.9",
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "model_id": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "dataset": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+  "dataset_sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+  "device": "cuda:0",
+  "timestamp_utc": "2026-09-24T01:02:33.591463+00:00",
+  "note": "Descriptive natural-data comparison; no independent correctness labels, not legal accuracy."
+}

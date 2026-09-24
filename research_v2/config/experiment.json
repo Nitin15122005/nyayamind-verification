@@ -1,0 +1,42 @@
+{
+  "seed": 42,
+  "baseline": {
+    "generator": "Qwen/Qwen2.5-7B-Instruct",
+    "verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  },
+  "v2": {
+    "generator": "Qwen/Qwen3-4B-Instruct-2507",
+    "verifier": "tasksource/ModernBERT-large-nli"
+  },
+  "generation": {
+    "quantization": {
+      "load_in_4bit": true,
+      "bnb_4bit_use_double_quant": true,
+      "bnb_4bit_quant_type": "nf4",
+      "bnb_4bit_compute_dtype": "bfloat16"
+    },
+    "device": "cuda",
+    "allow_cpu_fallback": false,
+    "max_input_length": null,
+    "max_new_tokens": 200,
+    "correction_max_new_tokens": 220,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "do_sample": false
+  },
+  "verification": {
+    "confidence_threshold": 0.7,
+    "max_sequence_length": 2048,
+    "premise_framing": "labeled",
+    "truncation_policy": "preserve_hypothesis_then_chunk_premise"
+  },
+  "inputs": {
+    "gold01": "research/prototype/evaluation/expected_outputs/controlled_benchmark_gold/controlled_verifier_benchmark.jsonl",
+    "gold02": "research/prototype/evaluation/expected_outputs/synthetic_stress_gold/run_synthetic_stress.jsonl",
+    "natural_sources": [
+      "research/prototype/outputs/final_gpu_validation_A.jsonl",
+      "research/prototype/outputs/final_gpu_validation_B.jsonl"
+    ]
+  },
+  "note": "Generation settings mirror the existing Qwen2.5 config where compatible. The max input length is tokenizer/model constrained and must be recorded at execution. Do not silently alter the config or substitute model IDs."
+}

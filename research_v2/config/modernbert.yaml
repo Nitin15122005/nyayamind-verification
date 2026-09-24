@@ -1,0 +1,6 @@
+﻿model_id: tasksource/ModernBERT-large-nli
+confidence_threshold: 0.70
+max_position_length: 2048
+device: cuda
+truncation_policy: chunk_all_evidence_preserve_claim
+chunk_aggregation: arithmetic_mean_equal_weight_then_argmax_threshold

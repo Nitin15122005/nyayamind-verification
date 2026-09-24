@@ -1,0 +1,16 @@
+{
+  "model": "tasksource/ModernBERT-large-nli",
+  "device": "cuda:0",
+  "count": 35,
+  "class_case_counts": {
+    "ENTAILED": 10,
+    "CONTRADICTED": 10,
+    "NOT_ENOUGH_INFORMATION": 10
+  },
+  "real_claim_count": 5,
+  "mapping_validated_from_model_config": true,
+  "schema_valid": true,
+  "finite_confidence": true,
+  "deterministic_first_five": true,
+  "elapsed_inference_seconds": 0.9127358999976423
+}

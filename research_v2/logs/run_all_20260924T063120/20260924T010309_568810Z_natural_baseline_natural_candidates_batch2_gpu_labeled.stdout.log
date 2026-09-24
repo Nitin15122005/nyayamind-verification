@@ -1,0 +1,41 @@
+{
+  "run_dir": "D:\\Programs\\nyayamind-verification\\research_v2\\results\\runs\\20260924T010319_171200Z_natural_baseline_natural_candidates_batch2_gpu_labeled",
+  "metrics": {
+    "kind": "natural_unlabeled_descriptive_only",
+    "n_cases": 50,
+    "n_claims": 236,
+    "evidence_coverage": 0.4915254237288136,
+    "verdict_counts": {
+      "ENTAILED": 17,
+      "CONTRADICTED": 3,
+      "NOT_ENOUGH_INFORMATION": 96,
+      "NO_EVIDENCE": 120
+    },
+    "verdict_rates": {
+      "ENTAILED": 0.07203389830508475,
+      "CONTRADICTED": 0.012711864406779662,
+      "NOT_ENOUGH_INFORMATION": 0.4067796610169492,
+      "NO_EVIDENCE": 0.5084745762711864
+    },
+    "low_confidence_rate": 0.059322033898305086,
+    "correction_trigger_rate": 0.07203389830508475,
+    "truncation_count": 0,
+    "chunk_aggregation_verdict_changes": 0,
+    "inference_count": 116,
+    "elapsed_seconds": 2.871549600000435,
+    "mean_latency_seconds": 0.02475473793103823,
+    "throughput_claims_per_second": 40.39630727603745,
+    "peak_gpu_memory_bytes": 399997952,
+    "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.17.0",
+    "python": "3.11.9",
+    "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+    "model_id": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+    "dataset": "research/prototype/outputs/natural_candidates_batch2_gpu_labeled.jsonl",
+    "dataset_sha256": "e5c052a01dcdb6c0fe03886091dbae52753c3695ed9a15ea844541d5180673e6",
+    "device": "cuda:0",
+    "timestamp_utc": "2026-09-24T01:03:19.171200+00:00",
+    "note": "Descriptive natural-data comparison; no independent correctness labels, not legal accuracy."
+  }
+}

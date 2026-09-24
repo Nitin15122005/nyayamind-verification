@@ -1,0 +1,37 @@
+{
+  "n_inputs": 50,
+  "n_claims": 207,
+  "evidence_coverage": 0.7101449275362319,
+  "verdict_counts": {
+    "ENTAILED": 32,
+    "CONTRADICTED": 5,
+    "NOT_ENOUGH_INFORMATION": 110,
+    "NO_EVIDENCE": 60
+  },
+  "correction_status_counts": {
+    "not_triggered": 34,
+    "correction_scope_violation": 14,
+    "corrected": 1,
+    "correction_failed": 1
+  },
+  "correction_triggers": 16,
+  "corrections_attempted": 16,
+  "corrections_accepted": 1,
+  "corrections_rejected": 15,
+  "safety_gate_rejections": 14,
+  "sibling_regressions": 0,
+  "final_reverification_failures": 1,
+  "fail_closed_events": 15,
+  "unsafe_shipments": 0,
+  "generator_stack": "baseline",
+  "verifier_stack": "baseline",
+  "condition": "C",
+  "generator": "Qwen/Qwen2.5-7B-Instruct",
+  "verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+  "dataset": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+  "input_sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+  "runtime_seconds": 42.98333029999776,
+  "throughput_inputs_per_second": 1.163241632351153,
+  "peak_gpu_memory_bytes": 5364730368,
+  "generation_records": 50
+}

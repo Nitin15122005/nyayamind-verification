@@ -1,0 +1,12 @@
+{
+  "n_inputs": 50,
+  "baseline_attempts": 16,
+  "v2_attempts": 20,
+  "same_flagged_case_and_claim": 0,
+  "baseline_accepted": 1,
+  "v2_accepted": 3,
+  "baseline_sibling_regressions": 0,
+  "v2_sibling_regressions": 0,
+  "natural_data_correctness": "unavailable; no legal gold labels",
+  "interpretation": "Report paired behavior only. Correction quality is objectively measurable only when final reverification and explicit safety gates provide a defined outcome."
+}

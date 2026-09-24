@@ -1,0 +1,45 @@
+{
+  "timestamp_utc": "2026-09-24T01:47:35.605027+00:00",
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "python": "3.11.9",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.17.0",
+  "cuda_runtime": "12.8",
+  "accelerate": "1.15.0",
+  "bitsandbytes": "0.50.2",
+  "cuda_available": true,
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "gpu_total_memory_bytes": 6438780928,
+  "models": {
+    "baseline_generator": "Qwen/Qwen2.5-7B-Instruct",
+    "baseline_verifier": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+    "v2_generator": "Qwen/Qwen3-4B-Instruct-2507",
+    "v2_verifier": "tasksource/ModernBERT-large-nli"
+  },
+  "local_checkpoint_paths": {
+    "v2_generator": "D:\\Programs\\nyayamind-verification\\research_v2\\models\\Qwen3-4B-Instruct-2507",
+    "v2_verifier": "D:\\Programs\\nyayamind-verification\\research_v2\\models\\ModernBERT-large-nli"
+  },
+  "model_revisions": {
+    "v2_generator": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "v2_verifier": "ca476cb923a8637073d4ceb0f19f7fc236e260d4"
+  },
+  "qwen3_generation": {
+    "quantization": "4bit_nf4",
+    "double_quant": true,
+    "compute_dtype": "bfloat16",
+    "max_input_tokens": 8192,
+    "max_output_tokens": 200,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "do_sample": false,
+    "seed": 42
+  },
+  "modernbert_verification": {
+    "max_position_length": 2048,
+    "confidence_threshold": 0.7,
+    "long_input_policy": "ordered evidence chunks, complete claim repeated, equal-weight mean probabilities; never drops evidence"
+  },
+  "seed": 42,
+  "note": "Environment capture; v2 models were not loaded."
+}

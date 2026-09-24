@@ -1,0 +1,13 @@
+{
+  "timestamp_utc": "2026-09-24T00:59:23.122914+00:00",
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "python": "3.11.9",
+  "torch_version": "2.11.0+cu128",
+  "transformers_version": "5.17.0",
+  "cuda_version": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "device": "cuda:0",
+  "model_id": "tasksource/ModernBERT-large-nli",
+  "model_revision": null,
+  "command": "research_v2/scripts/run_gold01.py --model v2 --device cuda:0"
+}

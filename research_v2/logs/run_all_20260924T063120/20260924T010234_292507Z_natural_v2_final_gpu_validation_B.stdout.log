@@ -1,0 +1,41 @@
+{
+  "run_dir": "D:\\Programs\\nyayamind-verification\\research_v2\\results\\runs\\20260924T010245_068369Z_natural_v2_final_gpu_validation_B",
+  "metrics": {
+    "kind": "natural_unlabeled_descriptive_only",
+    "n_cases": 50,
+    "n_claims": 209,
+    "evidence_coverage": 0.7033492822966507,
+    "verdict_counts": {
+      "ENTAILED": 42,
+      "CONTRADICTED": 3,
+      "NOT_ENOUGH_INFORMATION": 102,
+      "NO_EVIDENCE": 62
+    },
+    "verdict_rates": {
+      "ENTAILED": 0.20095693779904306,
+      "CONTRADICTED": 0.014354066985645933,
+      "NOT_ENOUGH_INFORMATION": 0.4880382775119617,
+      "NO_EVIDENCE": 0.2966507177033493
+    },
+    "low_confidence_rate": 0.22488038277511962,
+    "correction_trigger_rate": 0.23923444976076555,
+    "truncation_count": 0,
+    "chunk_aggregation_verdict_changes": 0,
+    "inference_count": 147,
+    "elapsed_seconds": 3.369788999996672,
+    "mean_latency_seconds": 0.022923734693854912,
+    "throughput_claims_per_second": 43.62290932760039,
+    "peak_gpu_memory_bytes": 1612290560,
+    "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "torch_version": "2.11.0+cu128",
+    "transformers_version": "5.17.0",
+    "python": "3.11.9",
+    "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+    "model_id": "tasksource/ModernBERT-large-nli",
+    "dataset": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+    "dataset_sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+    "device": "cuda:0",
+    "timestamp_utc": "2026-09-24T01:02:45.068369+00:00",
+    "note": "Descriptive natural-data comparison; no independent correctness labels, not legal accuracy."
+  }
+}

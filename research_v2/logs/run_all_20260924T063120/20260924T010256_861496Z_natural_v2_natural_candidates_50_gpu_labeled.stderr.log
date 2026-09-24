@@ -1,0 +1,8 @@
+
+Loading weights:   0%|          | 0/174 [00:00<?, ?it/s]
+Loading weights:   5%|4         | 8/174 [00:00<00:02, 63.16it/s]
+Loading weights:   9%|8         | 15/174 [00:00<00:03, 46.77it/s]
+Loading weights:  20%|##        | 35/174 [00:00<00:01, 95.42it/s]
+Loading weights:  26%|##6       | 46/174 [00:00<00:01, 83.12it/s]
+Loading weights:  32%|###2      | 56/174 [00:00<00:01, 83.47it/s]
+Loading weights: 100%|##########| 174/174 [00:00<00:00, 233.98it/s]

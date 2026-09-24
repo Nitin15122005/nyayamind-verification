@@ -1,0 +1,15 @@
+{
+  "timestamp_utc": "2026-09-24T01:03:54.870563+00:00",
+  "git_commit": "c174e3ee9851edbca944fdb0ba1fba598559fe54",
+  "python": "3.11.9",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.17.0",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "input": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+  "input_sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+  "n_inputs": 50,
+  "seed": 42,
+  "device": "cuda:0",
+  "command": "research_v2/scripts/run_full_pipeline.py --matrix --limit 50"
+}

@@ -1,0 +1,15 @@
+{
+  "status": "FAILED",
+  "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+  "error_type": "ValueError",
+  "error": "Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\Programs\\nyayamind-verification\\research_v2\\scripts\\run_qwen3_smoke.py\", line 20, in main\n    adapter=Qwen3Adapter(config)\n            ^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Programs\\nyayamind-verification\\research_v2\\src\\generation\\qwen3_adapter.py\", line 41, in __init__\n    self._load()\n  File \"D:\\Programs\\nyayamind-verification\\research_v2\\src\\generation\\qwen3_adapter.py\", line 65, in _load\n    self.model = AutoModelForCausalLM.from_pretrained(self.config.model_id, **kwargs)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Nitin Sharma\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\transformers\\models\\auto\\auto_factory.py\", line 402, in from_pretrained\n    return model_class.from_pretrained(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Nitin Sharma\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\transformers\\modeling_utils.py\", line 4164, in from_pretrained\n    device_map = check_and_set_device_map(device_map)  # warn, error and fix the device map\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\Nitin Sharma\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\transformers\\integrations\\accelerate.py\", line 137, in check_and_set_device_map\n    raise ValueError(\nValueError: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`\n",
+  "torch_version": "2.11.0+cu128",
+  "transformers_version": "5.17.0",
+  "python": "3.11.9",
+  "cuda_version": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "peak_gpu_memory_bytes": 0,
+  "warnings": [],
+  "command": "py -3.11 research_v2/scripts/run_qwen3_smoke.py"
+}

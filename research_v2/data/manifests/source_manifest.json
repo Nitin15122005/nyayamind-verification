@@ -1,0 +1,47 @@
+{
+  "created_utc": "2026-09-23T22:14:03.086157+00:00",
+  "sources": [
+    {
+      "path": "research/prototype/evaluation/expected_outputs/controlled_benchmark_gold/controlled_verifier_benchmark.jsonl",
+      "exists": true,
+      "sha256": "aad8018bafc1d9e8b65b100b7cbbede6f22cfd29cf5c5d7863845443a632bfec",
+      "size_bytes": 485350
+    },
+    {
+      "path": "research/prototype/evaluation/expected_outputs/synthetic_stress_gold/run_synthetic_stress.jsonl",
+      "exists": true,
+      "sha256": "717378e88648deb8491caabc24455e1d7f57e27d8923ee2582a64936289237d5",
+      "size_bytes": 490800
+    },
+    {
+      "path": "research/prototype/outputs/final_gpu_validation_A.jsonl",
+      "exists": true,
+      "sha256": "27f88e760f5258c6e9b76a0f233add341bc41f0e8f37fa228c8964533dc9e532",
+      "size_bytes": 442615
+    },
+    {
+      "path": "research/prototype/outputs/final_gpu_validation_B.jsonl",
+      "exists": true,
+      "sha256": "c6ee252a8c1fc4146ef42ced094548f15cb63a6d23383a69219f5fb012863b18",
+      "size_bytes": 449990
+    },
+    {
+      "path": "research/prototype/outputs/natural_candidates_50_gpu_labeled.jsonl",
+      "exists": true,
+      "sha256": "4a1d78dc828aba1de46a1a1efae3cb4f20fd107d1d463206f252b13d274d75eb",
+      "size_bytes": 543957
+    },
+    {
+      "path": "research/prototype/outputs/natural_candidates_batch2_gpu_labeled.jsonl",
+      "exists": true,
+      "sha256": "e5c052a01dcdb6c0fe03886091dbae52753c3695ed9a15ea844541d5180673e6",
+      "size_bytes": 540254
+    },
+    {
+      "path": "research/prototype/outputs/natural_candidate_selected_ids_50_final_validation.json",
+      "exists": true,
+      "sha256": "954380e7695ceead984d67e7029186074a9ffd95130f02d17b01ea08d9877f9a",
+      "size_bytes": 938
+    }
+  ]
+}

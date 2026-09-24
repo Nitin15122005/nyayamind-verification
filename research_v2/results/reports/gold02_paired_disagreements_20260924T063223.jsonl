@@ -1,0 +1,9 @@
+{"id": "s6", "gold_label": "CONTRADICTED", "baseline": "NOT_ENOUGH_INFORMATION", "v2": "CONTRADICTED", "category": "v2_improves"}
+{"id": "s12", "gold_label": "CONTRADICTED", "baseline": "NOT_ENOUGH_INFORMATION", "v2": "CONTRADICTED", "category": "v2_improves"}
+{"id": "s27", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s35", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s38", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s41", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s50", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s52", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
+{"id": "s55", "gold_label": "CONTRADICTED", "baseline": "CONTRADICTED", "v2": "NOT_ENOUGH_INFORMATION", "category": "v2_changes_correct_to_incorrect"}
