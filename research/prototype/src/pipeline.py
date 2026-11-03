@@ -708,6 +708,40 @@ def _reverify_sibling_regressions(
         )
         if not match.matched:
             continue
+        # Re-verify the sibling's OWN assertion, not automatically the
+        # parser's full sentence-level claim_text. Multiple citations can
+        # share one sentence; in that case claim_text includes sibling
+        # clauses that are not supported by this sibling's evidence. Using
+        # that combined sentence here can manufacture a false regression
+        # when the target clause alone was edited.
+        #
+        # Prefer the structured respectively hypothesis where available;
+        # otherwise use assertion_text only when the parser safely narrowed
+        # it to a verbatim clause. Fall back to the full claim when no
+        # conservative narrowing exists. This preserves the old fail-closed
+        # behavior for unresolved/ambiguous claims.
+        sibling_hypothesis = None
+        citation_data = (
+            counterpart.citation_extracted.as_dict()
+            if counterpart.citation_extracted is not None else None
+        )
+        if citation_data is not None:
+            sibling_hypothesis = _assertion_spans_hypothesis({
+                "assertion_spans": list(counterpart.assertion_spans or []),
+                "citation_extracted": citation_data,
+                "_evidence_provision": {
+                    "provision_type": match.evidence.provision_type,
+                    "provision_number": match.evidence.provision_number,
+                    "act": match.evidence.act,
+                },
+            })
+        if sibling_hypothesis is None:
+            assertion_text = getattr(counterpart, "assertion_text", None)
+            if assertion_text and assertion_text != counterpart.claim_text:
+                sibling_hypothesis = assertion_text
+            else:
+                sibling_hypothesis = counterpart.claim_text
+
         result = baseline["_verifier"].verify(
             premise=format_premise(
                 match.evidence.canonical_text,
@@ -716,11 +750,12 @@ def _reverify_sibling_regressions(
                 provision_number=match.evidence.provision_number,
                 act=match.evidence.act,
             ),
-            hypothesis=counterpart.claim_text,
+            hypothesis=sibling_hypothesis,
         )
         if result.label == CONTRADICTED:
             regressions.append({
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
+                "reverified_hypothesis": sibling_hypothesis,
                 "evidence_id": match.evidence.dataset_citation_key,
                 "verdict": result.label, "confidence": result.confidence,
                 "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
