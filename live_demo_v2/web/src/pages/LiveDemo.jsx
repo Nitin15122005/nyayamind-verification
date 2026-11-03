@@ -128,6 +128,7 @@ export default function LiveDemo() {
   }
 
   const runStatus = running ? "running" : runOutcome;
+  const hasStarted = Object.values(stageStatus).some((status) => status !== "pending");
 
   return (
     <div className="min-h-screen">
