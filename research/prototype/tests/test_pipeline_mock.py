@@ -165,8 +165,31 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((case_text, original_field_text, flagged_claim_text, evidence_text))
+        # Mirror the production corrector contract: return only the one
+        # corrected target sentence when the fixture changes exactly that
+        # sentence and preserves every sibling at its original position.
+        # Keep the complete paragraph for adversarial fixtures (sibling
+        # edits, additions, or reordering) so the production guard rejects it.
+        original = claim_parser.split_sentences(original_field_text)
+        proposed = claim_parser.split_sentences(self._corrected_text)
+        target_positions = [
+            i for i, sentence in enumerate(original)
+            if sentence == flagged_claim_text.strip()
+        ]
+        output = self._corrected_text
+        if (
+            len(target_positions) == 1
+            and len(proposed) == len(original)
+        ):
+            target_index = target_positions[0]
+            siblings_unchanged = all(
+                proposed[i] == original[i]
+                for i in range(len(original)) if i != target_index
+            )
+            if siblings_unchanged and proposed[target_index] != original[target_index]:
+                output = proposed[target_index]
         meta = CorrectionMetadata(model_id="mock-generator", max_new_tokens=220, do_sample=False, seed=42)
-        return self._corrected_text, meta
+        return output, meta
 
 
 def _vr(label, confidence=0.95, sub_reason=None):
@@ -554,7 +577,7 @@ def test_correction_hallucinating_an_extra_new_citation_is_rejected_not_shipped(
     # appended after it, citing a provision (Section 34) nobody asked about
     # and that never appeared anywhere in the original field.
     corrected_text = (
-        f"{fixed_flagged_sentence} Section 34 of the Indian Penal Code, 1860 also applies here."
+        f"{fixed_flagged_sentence} and Section 34 of the Indian Penal Code, 1860 also applies here."
     )
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     generator = FakeGenerator(original_text)
@@ -911,8 +934,9 @@ def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
     shipped as status="corrected" with a genuine-looking ENTAILED
     confirmation that was never computed against the real correction at
     all. This is a fabricated safety confirmation, strictly worse than an
-    honest rejection. Must now be caught as "correction_ordinal_ambiguous",
-    never silently reclassified as "corrected"."""
+    honest rejection. The sentence-only output contract now rejects this
+    paragraph-level reorder before ordinal matching; the ordinal check remains
+    defense in depth for any future paragraph reconstruction path."""
     exact_index, all_usable = shared_citation_evidence_pool
     claim_a = "Section 420 of the Indian Penal Code, 1860 is one of the provisions relied upon in this case."
     claim_b_original = "Section 420 of the Indian Penal Code, 1860 requires no proof of dishonest intention."
@@ -940,11 +964,14 @@ def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
     record = run_case(case, "C", generator, verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
 
-    assert record["correction"]["status"] == "correction_ordinal_ambiguous"
+    # The paragraph-level reorder is rejected even earlier by the
+    # sentence-only corrector contract; the ordinal guard remains defense
+    # in depth for any future path that supplies a reconstructed paragraph.
+    assert record["correction"]["status"] == "correction_scope_violation"
     assert record["correction"]["reverification"] is None
     # Never shipped as if it were a confirmed correction: falls back to the
     # original, unedited field, exactly like scope_violation/correction_failed.
-    assert record["final_field"]["source"] == "correction_ordinal_ambiguous"
+    assert record["final_field"]["source"] == "correction_scope_violation"
     assert record["final_field"]["text"] == original_text
 
 
@@ -1160,7 +1187,8 @@ def test_assertion_spans_ships_respectively_edit_legacy_would_reject(
             NOT_ENOUGH_INFORMATION, confidence=0.5, sub_reason="low_confidence"),  # 406: triggers
         ("cheats", original_text): _vr(ENTAILED, confidence=0.95),                # 420: does not trigger
         ("criminal breach of trust", corrected_text): _vr(ENTAILED, confidence=0.9),  # 406 re-verification
-        ("cheats", corrected_text): _vr(ENTAILED, confidence=0.95),  # 420 sibling-regression re-check: unchanged
+        ("cheats", corrected_text): _vr(ENTAILED, confidence=0.95),  # 420 primary verification
+        ("cheats", "Section 420 cheating"): _vr(ENTAILED, confidence=0.95),  # 420 sibling assertion
     })
 
     for mode, expect_violation in [(False, None), (True, True), ("assertion_spans", False)]:
@@ -1334,6 +1362,10 @@ def test_flagship_1991_110_end_to_end_correction_ships_under_assertion_spans(
         ("murder", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.93),
         ("common intention", corrected_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
+        # Sibling-regression checks now use each citation's own respectively pair.
+        ("murder", "Section 302 murder"): _vr(ENTAILED, confidence=0.95),
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),
+        ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
     })
 
     # Legacy: rejected (all 4 citations share claim_text == full sentence).
@@ -1425,6 +1457,9 @@ def test_real_1997_1306_correction_ships_under_citation_keyword_boundary_split(
         # Sibling-regression re-checks (323, 149): unchanged, still not CONTRADICTED.
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
+        # Sibling checks use the parser's citation-specific verbatim clauses.
+        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
     cfg_legacy = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": False}}
@@ -1549,6 +1584,9 @@ def test_narrow_reverification_ships_when_full_sentence_dilutes_confidence(
         # ships, i.e. the narrow-hypothesis run): 323/149 unchanged.
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
+        # Sibling checks use the parser's citation-specific verbatim clauses.
+        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
     cfg_wide = {**config, "correction": {
@@ -1597,11 +1635,9 @@ def test_narrow_reverification_never_synthesizes_text(ipc_148_evidence_pool, con
 def test_sibling_regression_check_rejects_a_genuine_regression(
     respectively_evidence_pool, config
 ):
-    """If a sibling's own required (assertion_spans) fragments survive —
-    so the scope check itself passes — but the sibling's FULL corrected
-    sentence has changed enough that an independent re-check finds it now
-    genuinely CONTRADICTED its own evidence, the correction must be
-    rejected (status: correction_sibling_regression), never shipped, even
+    """If a sibling's own required assertion fragments survive, but its
+    independently checked, citation-specific assertion is now genuinely
+    CONTRADICTED by its own evidence, the correction must be rejected even
     though the target's own re-verification passed."""
     exact_index, all_usable = respectively_evidence_pool
     original_text = (
@@ -1628,10 +1664,11 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
         ("voluntarily causes hurt", original_text): _vr(ENTAILED, confidence=0.93),
         ("common intention", original_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.9),  # 149 target: passes
-        # Sibling-regression re-checks:
-        ("murder", corrected_text): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
-        ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.93),  # 323: fine
-        ("common intention", corrected_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
+        # Sibling-regression re-checks use citation-specific hypotheses,
+        # not the shared full sentence.
+        ("murder", "Section 302 murder but never manslaughter"): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
+        ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
     })
     cfg = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": "assertion_spans"}}
 
@@ -1799,3 +1836,76 @@ def test_negation_caveat_field_defaults_correctly_for_non_negated_and_no_evidenc
     by_text = {c["claim_text"]: c for c in record_b["claims"]}
     assert by_text[plain_contradicted]["negation_contradiction_caveat"] is False
     assert by_text[plain_entailed]["negation_contradiction_caveat"] is False
+
+def test_sibling_reverification_uses_its_own_assertion_in_a_bundled_sentence(
+    two_claim_evidence_pool, config
+):
+    """A target edit inside a bundled sentence must not make an untouched
+    sibling look regressed merely because the sibling's full claim_text
+    also contains the target clause. The sibling is re-verified against
+    its own parser-resolved, verbatim assertion instead."""
+    exact_index, all_usable = two_claim_evidence_pool
+    original_text = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes a fine only, "
+        "while Section 21 of the Indian Penal Code, 1860 defines public servants."
+    )
+    corrected_text = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes death or life "
+        "imprisonment, while Section 21 of the Indian Penal Code, 1860 defines "
+        "public servants."
+    )
+
+    original_claims = claim_parser.extract_claims(original_text)
+    corrected_claims = claim_parser.extract_claims(corrected_text)
+    original_by_number = {
+        c.citation_extracted.provision_number: c for c in original_claims
+    }
+    corrected_by_number = {
+        c.citation_extracted.provision_number: c for c in corrected_claims
+    }
+    target_original = original_by_number["302"]
+    sibling_original = original_by_number["21"]
+    target_corrected = corrected_by_number["302"]
+    sibling_corrected = corrected_by_number["21"]
+
+    # This is the exact structural condition that previously caused the
+    # false block: both records share one sentence-level claim_text, while
+    # the parser has safely resolved separate assertion_text fragments.
+    assert target_original.claim_text == sibling_original.claim_text
+    assert target_original.assertion_text != target_original.claim_text
+    assert sibling_original.assertion_text != sibling_original.claim_text
+    assert sibling_original.assertion_text in corrected_text
+    assert target_corrected.assertion_text != target_original.assertion_text
+
+    verifier = PremiseAwareScriptedVerifier({
+        ("Whoever commits murder", original_text): _vr(CONTRADICTED, confidence=0.90),
+        ("public servant", original_text): _vr(ENTAILED, confidence=0.95),
+        ("Whoever commits murder", target_corrected.assertion_text): _vr(ENTAILED, confidence=0.96),
+        ("public servant", sibling_corrected.assertion_text): _vr(ENTAILED, confidence=0.95),
+    })
+    cfg = {
+        **config,
+        "correction": {
+            **config.get("correction", {}),
+            "atomic_scope_check": "assertion_text",
+            "narrow_reverification_hypothesis": True,
+        },
+    }
+    case = Case(document_id="bundled-claims", case_text="facts...", raw_citation_keys=[])
+    record = run_case(
+        case, "C", FakeGenerator(original_text), verifier,
+        ScriptedCorrector(corrected_text), exact_index, all_usable, cfg,
+    )
+
+    assert record["correction"]["status"] == "corrected"
+    assert record["correction"]["sibling_regressions"] == []
+    assert record["final_field"]["source"] == "corrected"
+    assert record["final_field"]["text"] == corrected_text
+    # The sibling check must actually have run on the sibling's narrow
+    # assertion, not silently skipped it or re-used the combined sentence.
+    sibling_rechecks = [
+        hypothesis for _premise, hypothesis in verifier.calls
+        if hypothesis == sibling_corrected.assertion_text
+    ]
+    assert sibling_rechecks == [sibling_corrected.assertion_text]
+
