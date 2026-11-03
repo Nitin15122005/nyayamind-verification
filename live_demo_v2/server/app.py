@@ -1711,10 +1711,10 @@ class Handler(BaseHTTPRequestHandler):
             str(len(body)),
         )
 
-        self.send_header(
-            "Access-Control-Allow-Origin",
-            "*",
-        )
+        origin = self.headers.get("Origin")
+        if origin in {"http://localhost:5174", "http://127.0.0.1:5174"}:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
 
         self.send_header(
             "Access-Control-Allow-Methods",
@@ -1736,6 +1736,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
 
+        origin = self.headers.get("Origin")
+        if origin and origin not in {"http://localhost:5174", "http://127.0.0.1:5174"}:
+            self._send_json({"error": "Origin not allowed."}, status=403)
+            return
         self._send_json({})
 
     # -----------------------------------------------------------------------
@@ -1953,19 +1957,20 @@ class Handler(BaseHTTPRequestHandler):
         # REQUEST BODY
         # ---------------------------------------------------------------
 
-        length = int(
-            self.headers.get(
-                "Content-Length",
-                0,
-            )
-            or 0
-        )
+        try:
+            length = int(self.headers.get("Content-Length", "0") or 0)
+        except (TypeError, ValueError):
+            self._send_json({"error": "Invalid Content-Length header."}, status=400)
+            return
 
-        raw = (
-            self.rfile.read(length)
-            if length
-            else b"{}"
-        )
+        if length < 0:
+            self._send_json({"error": "Invalid request body length."}, status=400)
+            return
+        if length > 1_000_000:
+            self._send_json({"error": "Request is too large. Maximum accepted size is 1 MB."}, status=413)
+            return
+
+        raw = self.rfile.read(length) if length else b"{}"
 
         try:
 
@@ -2031,10 +2036,10 @@ class Handler(BaseHTTPRequestHandler):
             "no-cache",
         )
 
-        self.send_header(
-            "Access-Control-Allow-Origin",
-            "*",
-        )
+        origin = self.headers.get("Origin")
+        if origin in {"http://localhost:5174", "http://127.0.0.1:5174"}:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
 
         self.send_header(
             "Connection",
