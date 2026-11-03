@@ -1826,3 +1826,76 @@ def test_negation_caveat_field_defaults_correctly_for_non_negated_and_no_evidenc
     by_text = {c["claim_text"]: c for c in record_b["claims"]}
     assert by_text[plain_contradicted]["negation_contradiction_caveat"] is False
     assert by_text[plain_entailed]["negation_contradiction_caveat"] is False
+
+def test_sibling_reverification_uses_its_own_assertion_in_a_bundled_sentence(
+    two_claim_evidence_pool, config
+):
+    """A target edit inside a bundled sentence must not make an untouched
+    sibling look regressed merely because the sibling's full claim_text
+    also contains the target clause. The sibling is re-verified against
+    its own parser-resolved, verbatim assertion instead."""
+    exact_index, all_usable = two_claim_evidence_pool
+    original_text = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes a fine only, "
+        "while Section 21 of the Indian Penal Code, 1860 defines public servants."
+    )
+    corrected_text = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes death or life "
+        "imprisonment, while Section 21 of the Indian Penal Code, 1860 defines "
+        "public servants."
+    )
+
+    original_claims = claim_parser.extract_claims(original_text)
+    corrected_claims = claim_parser.extract_claims(corrected_text)
+    original_by_number = {
+        c.citation_extracted.provision_number: c for c in original_claims
+    }
+    corrected_by_number = {
+        c.citation_extracted.provision_number: c for c in corrected_claims
+    }
+    target_original = original_by_number["302"]
+    sibling_original = original_by_number["21"]
+    target_corrected = corrected_by_number["302"]
+    sibling_corrected = corrected_by_number["21"]
+
+    # This is the exact structural condition that previously caused the
+    # false block: both records share one sentence-level claim_text, while
+    # the parser has safely resolved separate assertion_text fragments.
+    assert target_original.claim_text == sibling_original.claim_text
+    assert target_original.assertion_text != target_original.claim_text
+    assert sibling_original.assertion_text != sibling_original.claim_text
+    assert sibling_original.assertion_text in corrected_text
+    assert target_corrected.assertion_text != target_original.assertion_text
+
+    verifier = PremiseAwareScriptedVerifier({
+        ("Whoever commits murder", original_text): _vr(CONTRADICTED, confidence=0.90),
+        ("public servant", original_text): _vr(ENTAILED, confidence=0.95),
+        ("Whoever commits murder", target_corrected.assertion_text): _vr(ENTAILED, confidence=0.96),
+        ("public servant", sibling_corrected.assertion_text): _vr(ENTAILED, confidence=0.95),
+    })
+    cfg = {
+        **config,
+        "correction": {
+            **config.get("correction", {}),
+            "atomic_scope_check": "assertion_text",
+            "narrow_reverification_hypothesis": True,
+        },
+    }
+    case = Case(document_id="bundled-claims", case_text="facts...", raw_citation_keys=[])
+    record = run_case(
+        case, "C", FakeGenerator(original_text), verifier,
+        ScriptedCorrector(corrected_text), exact_index, all_usable, cfg,
+    )
+
+    assert record["correction"]["status"] == "corrected"
+    assert record["correction"]["sibling_regressions"] == []
+    assert record["final_field"]["source"] == "corrected"
+    assert record["final_field"]["text"] == corrected_text
+    # The sibling check must actually have run on the sibling's narrow
+    # assertion, not silently skipped it or re-used the combined sentence.
+    sibling_rechecks = [
+        hypothesis for _premise, hypothesis in verifier.calls
+        if hypothesis == sibling_corrected.assertion_text
+    ]
+    assert sibling_rechecks == [sibling_corrected.assertion_text]
+
