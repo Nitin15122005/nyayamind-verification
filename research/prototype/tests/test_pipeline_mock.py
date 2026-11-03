@@ -1862,3 +1862,29 @@ def test_pipeline_withholds_duplicate_existing_citation(evidence_pool, config):
     assert record["final_field"]["source"] == "correction_unauthorized_addition"
     assert record["final_field"]["text"] == original
     assert len(verifier.calls) == 1  # duplicate citation rejected before re-verification
+
+
+def test_truncated_reverification_never_ships_correction(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    original_text = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    corrected_text = "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
+    case = Case(document_id="doc-truncated", case_text="facts...", raw_citation_keys=[])
+    generator = FakeGenerator(original_text)
+    truncated_entailed = VerificationResult(
+        label=ENTAILED, confidence=0.99, sub_reason=None,
+        raw_scores={"entailment": 0.99}, verifier_model="mock-verifier",
+        input_truncated=True,
+    )
+    verifier = ScriptedVerifier({
+        original_text: _vr(CONTRADICTED, confidence=0.91),
+        corrected_text: truncated_entailed,
+    })
+    corrector = ScriptedCorrector(corrected_text)
+
+    record = run_case(case, "C", generator, verifier, corrector,
+                      exact_index=exact_index, all_usable=all_usable, config=config)
+
+    assert record["correction"]["status"] == "correction_failed"
+    assert record["correction"]["reverification"]["input_truncated"] is True
+    assert record["final_field"]["source"] == "correction_failed"
+    assert record["final_field"]["text"] == original_text
