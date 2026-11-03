@@ -382,11 +382,12 @@ def _build_safety_checks(record: dict) -> list[dict]:
         "No unauthorized citation added",
         "PASS" if addition_ok else "BLOCK",
         (
-            "No new citation identity appears in the corrected text."
+            "No new citation identity or duplicate citation occurrence "
+            "appears in the corrected text."
             if addition_ok
             else
-            "The corrected text introduces a citation identity that was "
-            "not present anywhere in the original field."
+            "The corrected text introduces a new citation identity or an "
+            "additional occurrence of an existing citation."
         ),
     )
 
@@ -501,6 +502,14 @@ def _passed_structural_checks(assertion_aware: bool) -> list[dict]:
         },
     ]
 
+    checks.append(
+        {
+            "name": "Correction output shape",
+            "result": "PASS",
+            "detail": "The corrector returned one non-empty sentence or fragment.",
+        }
+    )
+
     if assertion_aware:
         checks.append(
             {
@@ -538,7 +547,8 @@ def _passed_structural_checks(assertion_aware: bool) -> list[dict]:
             "name": "No unauthorized citation added",
             "result": "PASS",
             "detail": (
-                "No new citation identity appears in the corrected text."
+                "No new citation identity or duplicate citation occurrence "
+            "appears in the corrected text."
             ),
         }
     )
