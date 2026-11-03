@@ -28,6 +28,7 @@ export default function LiveDemo() {
   const [viewedStage, setViewedStage] = useState(null);
   const [underlying, setUnderlying] = useState(false);
   const [error, setError] = useState(null);
+  const [runOutcome, setRunOutcome] = useState("ready");
 
   const abortRef = useRef(null);
 
@@ -46,6 +47,7 @@ export default function LiveDemo() {
     setStageStatus(initialStatus());
     setViewedStage(null);
     setError(null);
+    setRunOutcome("ready");
   }
 
   function handleTextChange(e) {
@@ -62,6 +64,7 @@ export default function LiveDemo() {
     setViewedStage(null);
     setUnderlying(false);
     setError(null);
+    setRunOutcome("ready");
   }
 
   // Every transition below is driven by a real event the backend emitted at
@@ -70,8 +73,12 @@ export default function LiveDemo() {
   // of the data it describes.
   function handleEvent(event) {
     const { stage, status, data } = event;
-    if (stage === "run") return; // overall lifecycle marker; `running` already tracks this via the fetch itself
+    if (stage === "run") {
+      if (status === "complete") setRunOutcome("complete");
+      return;
+    }
     if (stage === "error") {
+      setRunOutcome("failed");
       setError(data?.message || "This run could not be completed.");
       return;
     }
@@ -89,6 +96,7 @@ export default function LiveDemo() {
     if (!inputText.trim() || running) return;
     setRunning(true);
     setError(null);
+    setRunOutcome("running");
     setStageData({});
     setUnderlying(false);
     setStageStatus(initialStatus());
@@ -104,14 +112,18 @@ export default function LiveDemo() {
     try {
       await runVerification(body, handleEvent, { signal: controller.signal });
     } catch (e) {
-      if (e.name !== "AbortError") setError(e.message || "The run could not be completed.");
+      if (e.name !== "AbortError") {
+        setRunOutcome("failed");
+        setError(e.message || "The run could not be completed.");
+      } else {
+        setRunOutcome("cancelled");
+      }
     } finally {
       setRunning(false);
     }
   }
 
-  const hasStarted = Object.values(stageStatus).some((s) => s !== "pending");
-  const runStatus = running ? "running" : hasStarted ? "complete" : "ready";
+  const runStatus = running ? "running" : runOutcome;
 
   return (
     <div className="min-h-screen">
