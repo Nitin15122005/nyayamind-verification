@@ -472,8 +472,15 @@ def split_sentences(text: str) -> list[str]:
     # non-terminal abbreviation (see _SENTENCE_BOUNDARY_ABBREVIATIONS above).
     parts: list[str] = []
     for part in raw_parts:
-        if parts and parts[-1].rstrip().endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS):
-            parts[-1] = parts[-1].rstrip() + " " + part.strip()
+        previous = parts[-1].rstrip() if parts else ""
+        # A year-ending period is already handled correctly by the
+        # boundary regex: lowercase continuations (e.g. "1860 shall")
+        # are not split, while an uppercase next sentence (e.g. "1860. It")
+        # must remain a boundary. Unconditionally merging after a year
+        # incorrectly joined separate Act mentions and let the last Act
+        # leak into a later bare citation.
+        if parts and previous.endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS):
+            parts[-1] = previous + " " + part.strip()
         else:
             parts.append(part.strip())
     return parts
