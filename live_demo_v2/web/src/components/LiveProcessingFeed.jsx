@@ -49,6 +49,8 @@ function doneDetail(key, data) {
     }
     case "correction":
       if (!data.triggered) return "Not triggered";
+      if (data.attempted === false) return "Eligible, but target span unresolved — no edit attempted";
+      if (data.status === "correction_output_invalid") return "Candidate rejected — invalid output shape";
       return data.trigger_reason ? `Candidate correction generated (${data.trigger_reason})` : "Candidate correction generated";
     case "safety":
       if (!data.triggered) return "Not required";
