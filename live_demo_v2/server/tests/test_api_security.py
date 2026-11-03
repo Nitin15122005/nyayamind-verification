@@ -44,6 +44,8 @@ class ApiSecurityTests(unittest.TestCase):
         if payload is not None:
             body = json.dumps(payload).encode("utf-8")
             request_headers.setdefault("Content-Type", "application/json")
+        elif raw_body is not None:
+            request_headers.setdefault("Content-Type", "application/json")
         if body is not None and "Content-Length" not in request_headers:
             request_headers["Content-Length"] = str(len(body))
         connection.request(method, path, body=body, headers=request_headers)
