@@ -308,6 +308,8 @@ function CorrectionView({ data, underlying }) {
     );
   }
   const diffBefore = data.original_field_text || "";
+  const rawOutputRejected = data.status === "correction_output_invalid"
+    || data.status === "correction_splice_unavailable";
   const diffAfter = data.fragment_only
     ? (data.regenerated_text || "")
     : (data.corrected_paragraph || data.regenerated_text || "");
@@ -323,7 +325,14 @@ function CorrectionView({ data, underlying }) {
       </div>
       {data.regenerated_text && (
         <div className="glass-panel-solid rounded-lg p-4">
-          <CorrectionDiff before={diffBefore} after={diffAfter} />
+          {rawOutputRejected ? (
+            <div>
+              <p className="mb-1 font-mono text-[9px] uppercase tracking-wider text-warn">Rejected model output</p>
+              <p className="whitespace-pre-wrap text-sm leading-6 text-ink-primary">{data.regenerated_text}</p>
+            </div>
+          ) : (
+            <CorrectionDiff before={diffBefore} after={diffAfter} />
+          )}
         </div>
       )}
       {underlying && (
