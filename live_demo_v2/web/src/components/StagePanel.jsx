@@ -290,11 +290,27 @@ function CorrectionView({ data, underlying }) {
       <div className="rounded-lg border border-entail/20 bg-entail/5 p-4">
         <p className="font-mono text-[11px] uppercase tracking-wider text-entail">Correction decision</p>
         <p className="mt-1 text-sm text-ink-secondary">
-          No correction was attempted because no claim had an approved trigger reason.
+          No claim met the approved correction trigger policy.
         </p>
       </div>
     );
   }
+  if (data.attempted === false || data.status === "correction_span_invalid") {
+    return (
+      <div className="rounded-lg border border-warn/25 bg-warn/10 p-4">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-warn">Eligible, but not attempted</p>
+        <p className="mt-1 text-sm leading-6 text-ink-secondary">
+          Claim <span className="font-mono text-ink-primary">{data.triggered_for_claim_id || "unknown"}</span>
+          {" "}met the trigger policy ({data.trigger_reason || "unknown"}), but its own correction span
+          could not be resolved unambiguously. The original text was left unchanged.
+        </p>
+      </div>
+    );
+  }
+  const diffBefore = data.original_field_text || "";
+  const diffAfter = data.fragment_only
+    ? (data.regenerated_text || "")
+    : (data.corrected_paragraph || data.regenerated_text || "");
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-lg border border-warn/25 bg-warn/10 p-2.5">
@@ -305,15 +321,18 @@ function CorrectionView({ data, underlying }) {
           <span className="font-mono font-semibold text-warn">{data.trigger_reason || "unknown"}</span>.
         </p>
       </div>
-      <div className="glass-panel-solid rounded-lg p-4">
-        <CorrectionDiff before={data.original_field_text} after={data.regenerated_text} />
-      </div>
+      {data.regenerated_text && (
+        <div className="glass-panel-solid rounded-lg p-4">
+          <CorrectionDiff before={diffBefore} after={diffAfter} />
+        </div>
+      )}
       {underlying && (
         <div className="grid gap-2 sm:grid-cols-2">
           <TraceRow label="Attempts" value={String(data.attempts ?? "—")} />
           <TraceRow label="Correction mode" value={data.correction_mode || "unknown"} />
           <TraceRow label="Model" value={data.corr_meta?.model || "unknown"} />
           <TraceRow label="Fragment only" value={String(Boolean(data.fragment_only))} />
+          <TraceRow label="Output shape" value={data.status === "correction_output_invalid" ? "Rejected" : "Accepted"} />
         </div>
       )}
     </div>
@@ -331,7 +350,8 @@ function SafetyView({ data }) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-ink-secondary">
-        Validating the candidate correction from the previous stage, before it is trusted enough to re-verify.
+        These are the structural checks performed before re-verification. A pass here is provisional;
+        the correction is not approved until the corrected claim and any affected sibling claims are re-verified.
       </p>
       <SafetyChecklist checks={data.checks} />
     </div>
