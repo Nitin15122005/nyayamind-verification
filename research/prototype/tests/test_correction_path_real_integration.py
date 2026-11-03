@@ -290,8 +290,9 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
     assert corrector.calls[0][0] == _CORRUPTED_FLAGGED_SENTENCE  # flagged_claim_text passed through
     assert corrector.calls[0][1] == claims_by_number["302"]["evidence_text"]  # real evidence passed through
 
-    # regenerated claim: the corrector's output is recorded
-    assert record["correction"]["regenerated_text"] == _CORRECTED_FLAGGED_SENTENCE
+    # The corrector proposes one sentence; the pipeline splices it into
+    # the original paragraph and records that full regenerated field here.
+    assert record["correction"]["regenerated_text"] == corrected_text
 
     # re-verification: a REAL verdict was computed (not scripted) against
     # the real canonical evidence for the regenerated Section-302 sentence.
