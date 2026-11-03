@@ -63,6 +63,24 @@ export default function ResultBanner({ record, safetyChecks }) {
           </span>
         </div>
         <p className="text-lg leading-[1.65] text-ink-primary">{reason}</p>
+        {Array.isArray(correction.sibling_regressions) && correction.sibling_regressions.length > 0 && (
+          <div className="rounded-lg border border-warn/25 bg-warn/5 p-3">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-warn">
+              Sibling claims requiring attention
+            </p>
+            <div className="mt-2 flex flex-col gap-2">
+              {correction.sibling_regressions.map((item, index) => (
+                <div key={item.claim_id || index} className="rounded-md border border-slate-200 bg-white p-2.5">
+                  <p className="text-sm leading-5 text-ink-primary">{item.claim_text || "Claim could not be matched after correction."}</p>
+                  <p className="mt-1 font-mono text-[10px] text-ink-secondary">
+                    {item.baseline_verdict || "Original verdict"} → {item.verdict || "UNVERIFIABLE"}
+                    {item.reason ? ` · ${item.reason.replace(/_/g, " ")}` : ""}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {!notAttempted && correctedParagraph && (
           <div>
             <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">
