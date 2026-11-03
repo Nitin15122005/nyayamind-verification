@@ -125,6 +125,7 @@ from common import pipeline_helpers as ph  # noqa: E402
 from common import formatting as fmt  # noqa: E402
 
 from src import pipeline  # noqa: E402
+from src import claim_parser  # noqa: E402
 from src.data_loader import Case  # noqa: E402
 from src.corrector import CorrectionMetadata, SelectiveCorrector  # noqa: E402
 from src.generator import StatuteGroundingGenerator  # noqa: E402
@@ -136,15 +137,17 @@ from src.generator import StatuteGroundingGenerator  # noqa: E402
 
 class ReplayCorrector:
     """
-    Supplies a real, already-committed whole-paragraph correction
-    (LEGACY correction path) instead of invoking Qwen2.5-7B live.
+    Replays a committed whole-paragraph correction through the current
+    sentence-level correction contract.
 
-    The REAL apply_selective_correction() logic still runs live:
-      - scope gate
-      - unauthorized-addition check
-      - ordinal check
-      - re-verification
-      - sibling-regression check
+    When every unflagged original sentence survives exactly once, return
+    only the corrected target sentence. The real pipeline then performs its
+    deterministic splice and all normal safety checks.
+
+    If an unflagged sentence was changed, duplicated, or removed, retain the
+    full candidate paragraph. The pipeline rejects that malformed
+    sentence-level response before re-verification, so unsafe fixture output
+    can never be shipped.
     """
 
     def __init__(
@@ -164,6 +167,49 @@ class ReplayCorrector:
         flagged_claim_text,
         evidence_text,
     ):
+        original_sentences = claim_parser.split_sentences(
+            original_field_text
+        )
+        normalized_flagged = " ".join(flagged_claim_text.split())
+        target_positions = [
+            i
+            for i, sentence in enumerate(original_sentences)
+            if normalized_flagged in " ".join(sentence.split())
+        ]
+
+        output = self._corrected_text
+
+        if len(target_positions) == 1:
+            target_index = target_positions[0]
+            candidate = self._corrected_text
+            siblings = [
+                sentence
+                for i, sentence in enumerate(original_sentences)
+                if i != target_index
+            ]
+
+            siblings_are_unambiguous = all(
+                candidate.count(sibling) == 1
+                for sibling in siblings
+            )
+
+            if siblings_are_unambiguous:
+                for sibling in siblings:
+                    candidate = candidate.replace(sibling, "", 1)
+
+                candidate = candidate.strip()
+                candidate_sentences = claim_parser.split_sentences(
+                    candidate
+                )
+
+                if (
+                    len(candidate_sentences) == 1
+                    and candidate_sentences[0] != original_sentences[target_index]
+                    and normalized_flagged
+                    not in " ".join(candidate_sentences[0].split())
+                ):
+                    output = candidate_sentences[0]
+
         meta = CorrectionMetadata(
             model_id=self._model_id,
             max_new_tokens=220,
@@ -171,7 +217,7 @@ class ReplayCorrector:
             seed=42,
         )
 
-        return self._corrected_text, meta
+        return output, meta
 
 
 class ReplayAssertionCorrector:
