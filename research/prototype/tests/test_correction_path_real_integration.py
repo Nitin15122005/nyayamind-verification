@@ -167,25 +167,32 @@ class ScriptedCorrector:
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((flagged_claim_text, evidence_text))
         original = claim_parser.split_sentences(original_field_text)
-        proposed = claim_parser.split_sentences(self._corrected_text)
-        # Claim extraction may retain a citation-bearing assertion span
-        # rather than the entire source sentence. Match the normalized claim
-        # text within its containing sentence instead of requiring exact
-        # equality; the production splice still enforces an unambiguous target.
+        # The fixture supplies a full candidate paragraph. Extract a sentence-
+        # level proposal only when every non-target original sentence survives
+        # verbatim and exactly once. If any sibling changed or extra text remains,
+        # preserve the malformed paragraph so production scope checks reject it.
         normalized_flagged = " ".join(flagged_claim_text.split())
         target_positions = [
             i for i, sentence in enumerate(original)
             if normalized_flagged in " ".join(sentence.split())
         ]
         output = self._corrected_text
-        if len(target_positions) == 1 and len(proposed) == len(original):
+        if len(target_positions) == 1:
             target_index = target_positions[0]
-            siblings_unchanged = all(
-                proposed[i] == original[i]
-                for i in range(len(original)) if i != target_index
-            )
-            if siblings_unchanged and proposed[target_index] != original[target_index]:
-                output = proposed[target_index]
+            candidate = self._corrected_text
+            siblings = [sentence for i, sentence in enumerate(original) if i != target_index]
+            siblings_are_unambiguous = all(candidate.count(sibling) == 1 for sibling in siblings)
+            if siblings_are_unambiguous:
+                for sibling in siblings:
+                    candidate = candidate.replace(sibling, "", 1)
+                candidate = candidate.strip()
+                candidate_sentences = claim_parser.split_sentences(candidate)
+                if (
+                    len(candidate_sentences) == 1
+                    and candidate_sentences[0] != original[target_index]
+                    and normalized_flagged not in " ".join(candidate_sentences[0].split())
+                ):
+                    output = candidate_sentences[0]
         meta = CorrectionMetadata(
             model_id=self._model_id, max_new_tokens=220, do_sample=False, seed=42,
         )
