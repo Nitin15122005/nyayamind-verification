@@ -1458,7 +1458,7 @@ def test_real_1997_1306_correction_ships_under_citation_keyword_boundary_split(
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
-        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
@@ -1585,7 +1585,7 @@ def test_narrow_reverification_ships_when_full_sentence_dilutes_confidence(
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
-        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
@@ -1667,8 +1667,8 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
         # Sibling-regression re-checks use citation-specific hypotheses,
         # not the shared full sentence.
         ("murder", "Section 302 murder but never manslaughter"): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
-        ("voluntarily causes hurt", "voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
-        ("common intention", "abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
+        ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
     })
     cfg = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": "assertion_spans"}}
 
