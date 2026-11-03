@@ -125,9 +125,14 @@ class ApiSecurityTests(unittest.TestCase):
         self.assertEqual(status, 404)
 
     def test_post_rejects_non_json_content_type(self):
+        # An empty body isolates media-type validation and avoids a Windows
+        # TCP reset caused by closing a connection with unread body bytes.
         status, _, _ = self.request(
-            headers={**self.allowed_headers(), "Content-Type": "text/plain"},
-            raw_body=b'{"mode":"custom","text":"test"}',
+            headers={
+                **self.allowed_headers(),
+                "Content-Type": "text/plain",
+                "Content-Length": "0",
+            },
         )
         self.assertEqual(status, 415)
 
