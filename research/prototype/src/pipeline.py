@@ -791,14 +791,30 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
         flagged_claim_text=target["claim_text"],
         evidence_text=target["evidence_text"],  # may be None (contradicted-with-no-evidence is impossible by construction, but kept defensive)
     )
+    # Enforce the corrector's sentence-only contract before splicing. A
+    # paragraph returned here would otherwise be inserted into one sentence
+    # slot, duplicating siblings or smuggling unauthorized edits into output.
+    # The model prompt is not a security boundary: malformed output fails
+    # closed and is never re-verified or shipped.
+    sentence_contract_valid = isinstance(corrected_sentence, str) and bool(corrected_sentence.strip())
+    if sentence_contract_valid:
+        sentence_parts = [
+            part.strip()
+            for part in claim_parser._SENTENCE_SPLIT_REGEX.split(corrected_sentence.strip())
+            if part.strip()
+        ]
+        sentence_contract_valid = len(sentence_parts) == 1
     # Legacy mode remains sentence-level, not assertion-aware: the model
     # proposes only the flagged sentence, then deterministic code splices
     # that complete sentence back into the untouched paragraph. This removes
     # the observed failure mode where a whole-paragraph generation leaked a
     # neighboring fragment (for example, a trailing "intention.") into the
     # corrected sentence.
-    corrected_text = _splice_flagged_sentence(
-        original_field_text, target["claim_text"], corrected_sentence
+    corrected_text = (
+        _splice_flagged_sentence(
+            original_field_text, target["claim_text"], corrected_sentence
+        )
+        if sentence_contract_valid else None
     )
     corr_meta_dict = {
         "model": corr_meta.model_id,
@@ -818,13 +834,20 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     if corrected_text is None:
         if on_event:
             on_event("safety", "started", {})
-            on_event("safety", "completed", {"passed": False, "gate": "sentence_splice"})
+            on_event("safety", "completed", {
+                "passed": False,
+                "gate": "scope" if not sentence_contract_valid else "sentence_splice",
+            })
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "trigger_reason": trigger_reason,
             "attempts": 1,
-            "status": "correction_sentence_splice_unavailable",
+            "status": (
+                "correction_scope_violation"
+                if not sentence_contract_valid
+                else "correction_sentence_splice_unavailable"
+            ),
             "regenerated_text": corrected_sentence,
             "original_field_text": original_field_text,
             "reverification": None,
