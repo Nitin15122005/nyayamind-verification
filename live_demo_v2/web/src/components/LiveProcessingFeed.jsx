@@ -56,7 +56,7 @@ function doneDetail(key, data) {
     case "safety":
       if (!data.triggered) return "Not required";
       if (data.passed === false) return "Blocked -- see detail";
-      return `${(data.checks || []).filter((c) => c.result === "PASS").length}/${(data.checks || []).length} structural checks passed`;
+      return `${(data.checks || []).filter((c) => c.result === "PASS").length}/${(data.checks || []).length} structural checks passed (provisional)`;
     case "recheck":
       if (!data.triggered) return "Not applicable";
       return data.verdict ? `Re-verified: ${data.verdict}` : "Could not re-verify";
@@ -71,6 +71,8 @@ const STATUS_META = {
   ready: { label: "READY", dot: "bg-white/30" },
   running: { label: "RUNNING", dot: "bg-judicial animate-pulse-glow" },
   complete: { label: "COMPLETE", dot: "bg-entail" },
+  failed: { label: "FAILED", dot: "bg-contra" },
+  cancelled: { label: "CANCELLED", dot: "bg-warn" },
 };
 
 function Row({ stageKey, status, data, isLast, clickable, isViewed, onSelect }) {
