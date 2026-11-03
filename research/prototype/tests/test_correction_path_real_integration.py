@@ -387,35 +387,23 @@ def test_input_truncated_flag_false_for_a_normal_length_pair(real_verifier):
     assert result.input_truncated is False
 
 
-def test_input_truncated_flag_true_when_pair_exceeds_max_sequence_length(real_verifier):
-    """(real, reproduced instrumentation gap — fixed) Before this fix,
-    NLIVerifier.verify() had no way to report that HF's pair-truncation
-    silently cut content from the input — a verdict computed from a
-    truncated premise looked identical, in the output record, to one
-    computed from the full text. Uses the REAL cached DeBERTa tokenizer
-    (via real_verifier, not a mock) so this proves actual truncation
-    behavior, not an assumed one: a premise long enough that the combined
-    pair genuinely exceeds max_sequence_length must report
-    input_truncated=True. This is currently inert against the real 136
-    -record evidence corpus (see verifier.py's VerificationResult
-    docstring) — this test constructs the exceeding-length case directly
-    rather than waiting for a future corpus record to happen to trigger it."""
+def test_overlength_pair_is_rejected_before_model_inference(real_verifier):
+    """Overlength premise/hypothesis pairs must fail closed before inference."""
     long_premise = (
         "Whoever commits murder shall be punished with death or life imprisonment. "
         * 50
     )
-    result = real_verifier.verify(
-        premise=long_premise,
-        hypothesis="Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder.",
-    )
-    assert result.input_truncated is True
-    # Sanity check on the model call itself: it must still have run (never
-    # skipped or errored just because truncation occurred) and produced a
-    # normal, well-formed verdict.
-    assert result.label in (ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION)
+
+    with pytest.raises(
+        ValueError,
+        match="refusing to verify truncated statutory evidence",
+    ):
+        real_verifier.verify(
+            premise=long_premise,
+            hypothesis="Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder.",
+        )
 
 
-# ---------------------------------------------------------------------------
 # Negation safety gate: a negated claim must not silently drive an automatic
 # "correction" into an affirmative rewrite, using the REAL verifier — not a
 # scripted one — so the CONTRADICTED verdict driving this test is a genuine
