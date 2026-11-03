@@ -85,20 +85,8 @@ class VerificationResult:
     sub_reason: Optional[str]  # None | "low_confidence" (only set when downgraded)
     raw_scores: dict           # {"entailment": p, "neutral": p, "contradiction": p}
     verifier_model: str
-    # Measurement instrumentation, not live behavior — never changes the
-    # verdict/confidence/sub_reason above. True when premise+hypothesis
-    # together exceed max_sequence_length, meaning HF's pair-truncation
-    # silently cut content from the END of the premise (verified empirically
-    # against this project's cached tokenizer: the premise, not the
-    # hypothesis, is trimmed first) before this verdict was computed —
-    # exactly where a real statute's trailing exception/proviso clause would
-    # sit. Confirmed inert against the current 136-record evidence corpus
-    # (the longest real record + a realistic claim sentence total ~354/512
-    # tokens), but previously had zero detection: a future longer record
-    # could silently produce a verdict from truncated evidence with no
-    # trace in the output record. Same shape as the (separately fixed)
-    # evidence-matcher year-blindness gap — real, checked, currently-safe,
-    # worth closing before it can bite.
+    # Kept for output-schema compatibility. Successful results are never
+    # truncated; overlength pairs raise before model inference.
     input_truncated: bool = False
     disclaimer: str = (
         "NLI statistical confidence, not a legal-correctness determination."
