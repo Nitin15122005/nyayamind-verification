@@ -54,6 +54,13 @@ export default function LiveDemo() {
 
   function handleTextChange(e) {
     setInputText(e.target.value);
+    if (!running) {
+      setError(null);
+      setRunOutcome("idle");
+      setStageData({});
+      setStageStatus(initialStatus());
+      setViewedStage(null);
+    }
   }
 
   function handleReset() {
@@ -197,6 +204,7 @@ export default function LiveDemo() {
               underlying={underlying}
               onToggleUnderlying={() => setUnderlying((v) => !v)}
               error={error}
+              runOutcome={runOutcome}
             />
           </div>
 
