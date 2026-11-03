@@ -36,9 +36,11 @@ export default function LiveDemo() {
     fetchExamples()
       .then(setExamples)
       .catch(() => setExamples([]));
+    return () => abortRef.current?.abort();
   }, []);
 
   function handlePickSample(example) {
+    abortRef.current?.abort();
     setInputText(example.input_preview);
     setFilledPreview(example.input_preview);
     setSelectedExampleId(example.id);
@@ -55,6 +57,7 @@ export default function LiveDemo() {
   }
 
   function handleReset() {
+    abortRef.current?.abort();
     setInputText("");
     setCitation("");
     setFilledPreview(null);
@@ -119,6 +122,7 @@ export default function LiveDemo() {
         setRunOutcome("cancelled");
       }
     } finally {
+      abortRef.current = null;
       setRunning(false);
     }
   }
