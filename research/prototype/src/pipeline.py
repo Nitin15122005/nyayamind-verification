@@ -681,10 +681,12 @@ def _reverify_sibling_regressions(
     This re-parses the corrected text, finds each OTHER evidence-matched
     claim's own counterpart (same ordinal-position-among-same-citation-
     identity technique `apply_selective_correction` already uses for the
-    target), and genuinely re-verifies it against its OWN evidence —
-    exactly as if it were itself being checked. Returns the list of
-    siblings that come back CONTRADICTED (a real, independently-confirmed
-    regression) — empty if none, which is the expected, common case
+    target), and genuinely re-verifies it against its OWN evidence.
+    Returns siblings with a new contradiction, loss of a previous entailment,
+    truncated re-verification, or an unresolvable counterpart/evidence match.
+    These are all fail-closed outcomes — an unverified sibling is not treated
+    as a clean safety result. The list is empty only when every applicable
+    sibling check completes without a detected regression.
     (byte-for-byte preserved siblings can never change verdict, since
     verification is a deterministic function of premise+hypothesis; this
     only ever finds something when the sibling's SURROUNDING text, not its
