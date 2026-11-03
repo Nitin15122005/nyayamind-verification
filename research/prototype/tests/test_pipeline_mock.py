@@ -1459,7 +1459,7 @@ def test_real_1997_1306_correction_ships_under_citation_keyword_boundary_split(
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
         ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
-        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly"): _vr(ENTAILED, confidence=0.93),
+        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
     cfg_legacy = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": False}}
@@ -1586,7 +1586,7 @@ def test_narrow_reverification_ships_when_full_sentence_dilutes_confidence(
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
         ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
-        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly"): _vr(ENTAILED, confidence=0.93),
+        ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly."): _vr(ENTAILED, confidence=0.93),
     })
 
     cfg_wide = {**config, "correction": {
