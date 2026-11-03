@@ -733,13 +733,21 @@ def _reverify_sibling_regressions(
             c for c in reverify_claims if _citation_identity(c.citation_extracted) == identity
         ]
         if ordinal >= len(same_identity_reextracted):
-            continue  # structurally missing post-edit; the scope check already rejects this case
+            regressions.append({
+                "claim_id": rec["claim_id"], "claim_text": rec["claim_text"],
+                "verdict": "UNVERIFIABLE", "reason": "sibling_counterpart_missing",
+            })
+            continue
         counterpart = same_identity_reextracted[ordinal]
         match = match_evidence(
             counterpart.citation_extracted, baseline["_exact_index"], baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
         )
         if not match.matched:
+            regressions.append({
+                "claim_id": rec["claim_id"], "claim_text": rec["claim_text"],
+                "verdict": "UNVERIFIABLE", "reason": "sibling_evidence_unavailable",
+            })
             continue
         result = baseline["_verifier"].verify(
             premise=format_premise(
@@ -751,12 +759,21 @@ def _reverify_sibling_regressions(
             ),
             hypothesis=counterpart.claim_text,
         )
-        if result.label == CONTRADICTED:
+        baseline_verdict = rec.get("verdict")
+        regression_reason = None
+        if result.input_truncated:
+            regression_reason = "sibling_reverification_truncated"
+        elif result.label == CONTRADICTED and baseline_verdict != CONTRADICTED:
+            regression_reason = "sibling_new_contradiction"
+        elif baseline_verdict == ENTAILED and result.label != ENTAILED:
+            regression_reason = "entailed_sibling_no_longer_entailed"
+        if regression_reason:
             regressions.append({
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
                 "evidence_id": match.evidence.dataset_citation_key,
-                "verdict": result.label, "confidence": result.confidence,
-                "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
+                "verdict": result.label, "baseline_verdict": baseline_verdict,
+                "reason": regression_reason, "confidence": result.confidence,
+                "raw_scores": result.raw_scores,
                 "input_truncated": result.input_truncated,
             })
     return regressions
@@ -1079,7 +1096,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
                 "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
                 "input_truncated": result.input_truncated,
             }
-            if result.label == ENTAILED:
+            if result.label == ENTAILED and not result.input_truncated:
                 status = "corrected"
             if on_event:
                 on_event("recheck", "completed", dict(reverification))
