@@ -217,7 +217,13 @@ class NLIVerifier:
 
         verdict = _RAW_LABEL_TO_VERDICT[argmax_label_raw]
         sub_reason = None
-        if argmax_confidence < self.confidence_threshold:
+        # Never authorize a legal conclusion from a silently truncated
+        # premise/hypothesis pair. The tail of a statute may contain an
+        # exception or proviso, so truncated inputs are inconclusive.
+        if input_truncated:
+            verdict = NOT_ENOUGH_INFORMATION
+            sub_reason = "input_truncated"
+        elif argmax_confidence < self.confidence_threshold:
             verdict = NOT_ENOUGH_INFORMATION
             sub_reason = "low_confidence"
 
