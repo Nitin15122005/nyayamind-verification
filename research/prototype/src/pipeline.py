@@ -1292,17 +1292,17 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
     }
-    if on_event:
-        on_event("correction", "completed", {
-            "regenerated_text": corrected_fragment,
-            "original_fragment": target_content_fragment,
-            "output_valid": _correction_output_is_single_sentence(corrected_fragment),
-            "corr_meta": corr_meta_dict,
-            "fragment_only": True,
-        })
-
-    if not _correction_output_is_single_sentence(corrected_fragment):
+    output_is_valid = _correction_output_is_single_sentence(corrected_fragment)
+    if not output_is_valid:
         if on_event:
+            on_event("correction", "completed", {
+                "regenerated_text": corrected_fragment,
+                "original_fragment": target_content_fragment,
+                "output_valid": False,
+                "splice_available": False,
+                "corr_meta": corr_meta_dict,
+                "fragment_only": True,
+            })
             on_event("safety", "started", {})
             on_event("safety", "completed", {"passed": False, "gate": "output_shape"})
             on_event("recheck", "skipped", {})
@@ -1326,6 +1326,15 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     corrected_text = _splice_assertion_correction(
         original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
     )
+    if on_event:
+        on_event("correction", "completed", {
+            "regenerated_text": corrected_fragment,
+            "original_fragment": target_content_fragment,
+            "output_valid": True,
+            "splice_available": corrected_text is not None,
+            "corr_meta": corr_meta_dict,
+            "fragment_only": True,
+        })
     if corrected_text is None:
         if on_event:
             on_event("safety", "completed", {"passed": False, "gate": "splice"})
