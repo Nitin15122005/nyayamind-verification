@@ -1,76 +1,74 @@
-/** Thin client for the real backend. fetchExamples/fetchArchitecture are
- * plain JSON; runVerification streams newline-delimited JSON stage events
- * as the real pipeline executes them (server/app.py's run_streaming), so
- * onEvent fires in genuine real time, never on a fixed timer. */
-
-export async function fetchExamples() {
-  const res = await fetch("/api/examples");
+/** Thin client for the real backend. The run stream is strict NDJSON:
+ * malformed events and missing terminal events are failures, never silently ignored. */
+export async function fetchExamples({ signal } = {}) {
+  const res = await fetch("/api/examples", { signal });
   if (!res.ok) throw new Error("Could not load examples.");
   return res.json();
 }
-
-export async function fetchArchitecture() {
-  const res = await fetch("/api/architecture");
+export async function fetchArchitecture({ signal } = {}) {
+  const res = await fetch("/api/architecture", { signal });
   if (!res.ok) throw new Error("Could not load architecture.");
   return res.json();
 }
-
-export async function fetchConfig() {
-  const res = await fetch("/api/config");
+export async function fetchConfig({ signal } = {}) {
+  const res = await fetch("/api/config", { signal });
   if (!res.ok) throw new Error("Could not load config.");
   return res.json();
 }
-
-/**
- * Runs the real pipeline via POST /api/run and streams stage events.
- * `body` is either {mode:"example", id} or {mode:"custom", text}.
- * `onEvent({stage, status, data})` is called once per real stage event, in
- * the order the backend actually completed them.
- */
 export async function runVerification(body, onEvent, { signal } = {}) {
   const res = await fetch("/api/run", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    signal,
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body), signal,
   });
   if (!res.ok || !res.body) {
     let message = "The verification run could not be started.";
-    try {
-      const payload = await res.json();
-      if (payload?.error) message = payload.error;
-    } catch {
-      // ignore
-    }
+    try { const payload = await res.json(); if (payload?.error) message = payload.error; } catch { /* HTTP status is authoritative. */ }
     throw new Error(message);
   }
-
   const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
+  const decoder = new TextDecoder("utf-8", { fatal: true });
   let buffer = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    let newlineIndex;
-    // eslint-disable-next-line no-cond-assign
-    while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
-      const line = buffer.slice(0, newlineIndex).trim();
-      buffer = buffer.slice(newlineIndex + 1);
-      if (!line) continue;
-      try {
-        onEvent(JSON.parse(line));
-      } catch {
-        // ignore a malformed/partial line
+  let terminal = null;
+  function consumeLine(rawLine) {
+    const line = rawLine.trim();
+    if (!line) return;
+    if (terminal) throw new Error("The server sent data after the run ended.");
+    let event;
+    try { event = JSON.parse(line); } catch { throw new Error("The server sent a malformed verification event."); }
+    if (!event || typeof event !== "object" || typeof event.stage !== "string" ||
+        typeof event.status !== "string" ||
+        (event.data !== undefined && (!event.data || typeof event.data !== "object" || Array.isArray(event.data)))) {
+      throw new Error("The server sent an invalid verification event.");
+    }
+    if (event.stage === "error") {
+      onEvent(event);
+      terminal = "failed";
+      throw new Error(event.data?.message || "The verification run failed.");
+    }
+    if (event.stage === "run" && event.status === "complete") terminal = "complete";
+    onEvent(event);
+  }
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let newlineIndex;
+      while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, newlineIndex);
+        buffer = buffer.slice(newlineIndex + 1);
+        consumeLine(line);
       }
     }
-  }
-  if (buffer.trim()) {
-    try {
-      onEvent(JSON.parse(buffer.trim()));
-    } catch {
-      // ignore
-    }
+    buffer += decoder.decode();
+    if (buffer.trim()) consumeLine(buffer);
+    if (terminal !== "complete") throw new Error("The server stream ended before reporting successful completion.");
+  } catch (error) {
+    // Release the response stream on parse errors, backend failures, and
+    // explicit aborts; otherwise a rejected run can leave the body unread.
+    try { await reader.cancel(); } catch { /* stream may already be closed */ }
+    throw error;
+  } finally {
+    reader.releaseLock();
   }
 }

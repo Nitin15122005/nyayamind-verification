@@ -1,0 +1,50 @@
+name: Batch 2 validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "live_demo_v2/**"
+      - "research/prototype/src/verifier.py"
+      - "research/prototype/tests/test_verifier_input_length.py"
+      - "research/prototype/tests/test_correction_path_real_integration.py"
+      - ".github/workflows/batch2-validation.yml"
+  push:
+    branches:
+      - fix/batch-2-clean
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: live_demo_v2/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: live_demo_v2/web/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+
+  python-static-and-length-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install pytest
+      - name: Compile changed Python modules
+        run: python -m compileall -q live_demo_v2/server research/prototype/src/verifier.py
+      - name: Test fail-closed NLI sequence length
+        env:
+          PYTHONPATH: research/prototype
+        run: python -m pytest research/prototype/tests/test_verifier_input_length.py -q

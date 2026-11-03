@@ -68,6 +68,9 @@ const STATUS_META = {
   ready: { label: "READY", dot: "bg-white/30" },
   running: { label: "RUNNING", dot: "bg-judicial animate-pulse-glow" },
   complete: { label: "COMPLETE", dot: "bg-entail" },
+  failed: { label: "FAILED", dot: "bg-contra" },
+  cancelled: { label: "CANCELLED", dot: "bg-warn" },
+  incomplete: { label: "INCOMPLETE", dot: "bg-warn" },
 };
 
 function Row({ stageKey, status, data, isLast, clickable, isViewed, onSelect }) {

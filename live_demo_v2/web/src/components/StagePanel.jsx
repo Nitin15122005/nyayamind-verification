@@ -349,11 +349,11 @@ const STAGE_TITLES = {
   result: "Final Result",
 };
 
-export default function StagePanel({ viewedStage, stageData, underlying, onToggleUnderlying, error }) {
+export default function StagePanel({ viewedStage, stageData, underlying, onToggleUnderlying, error, runOutcome }) {
   if (error) {
     return (
       <div className="glass-panel rounded-xl p-4">
-        <p className="font-mono text-sm font-semibold uppercase tracking-wider text-contra">Run failed</p>
+        <p className="font-mono text-sm font-semibold uppercase tracking-wider text-contra">{runOutcome === "cancelled" ? "Run cancelled" : "Run failed"}</p>
         <p className="mt-1.5 text-xs text-ink-secondary">{error}</p>
       </div>
     );

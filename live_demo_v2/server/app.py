@@ -1228,7 +1228,7 @@ def run_streaming(
                             {
                                 "correction": {
                                     "status":
-                                        _GATE_TO_STATUS[gate]
+                                        _GATE_TO_STATUS.get(gate, "correction_failed")
                                 }
                             }
                         )
@@ -1427,6 +1427,24 @@ def run_streaming(
                     "correction":
                         correction_summary
                 }
+            )
+
+            # The pipeline may report that its initial structural gates passed
+            # and only later discover a deterministic-splice or final-status
+            # failure. Publish the authoritative post-pipeline safety result
+            # last so the UI cannot leave an earlier provisional PASS visible.
+            final_safety_passed = bool(safety_checks) and all(
+                check.get("result") == "PASS"
+                for check in safety_checks
+            )
+            emit(
+                "safety",
+                "complete",
+                {
+                    "triggered": True,
+                    "passed": final_safety_passed,
+                    "checks": safety_checks,
+                },
             )
 
     # -----------------------------------------------------------------------
@@ -1731,6 +1749,10 @@ def _validate_run_payload(body: object) -> tuple[dict | None, tuple[int, str] | 
 # ===========================================================================
 # HTTP HANDLER
 # ===========================================================================
+
+class ClientDisconnected(Exception):
+    """Raised when a streaming client disconnects; stops later pipeline stages."""
+
 
 class Handler(BaseHTTPRequestHandler):
 
@@ -2141,8 +2163,11 @@ class Handler(BaseHTTPRequestHandler):
                 BrokenPipeError,
                 ConnectionAbortedError,
                 OSError,
-            ):
-                pass
+            ) as exc:
+                # Cooperative cancellation: the currently-running model call
+                # cannot be interrupted safely, but raising here stops the
+                # pipeline at this event boundary before later stages begin.
+                raise ClientDisconnected() from exc
 
         def log(msg):
 
@@ -2191,7 +2216,7 @@ class Handler(BaseHTTPRequestHandler):
 
                         emit(
                             "error",
-                            "complete",
+                            "failed",
                             {
                                 "message":
                                     f"Unknown example id {ex_id!r}"
@@ -2254,7 +2279,7 @@ class Handler(BaseHTTPRequestHandler):
 
                         emit(
                             "error",
-                            "complete",
+                            "failed",
                             {
                                 "message":
                                     "No input text provided."
@@ -2311,7 +2336,7 @@ class Handler(BaseHTTPRequestHandler):
 
                     emit(
                         "error",
-                        "complete",
+                        "failed",
                         {
                             "message":
                                 "mode must be "
@@ -2331,6 +2356,9 @@ class Handler(BaseHTTPRequestHandler):
                     flush=True,
                 )
 
+            except ClientDisconnected:
+                log("Run cancelled: streaming client disconnected")
+
             except Exception as exc:
 
                 traceback.print_exc()
@@ -2339,14 +2367,17 @@ class Handler(BaseHTTPRequestHandler):
                     f"Run failed: {exc}"
                 )
 
-                emit(
-                    "error",
-                    "complete",
-                    {
-                        "message":
-                            "This run could not be completed."
-                    },
-                )
+                try:
+                    emit(
+                        "error",
+                        "failed",
+                        {
+                            "message":
+                                "This run could not be completed."
+                        },
+                    )
+                except ClientDisconnected:
+                    log("Run cancelled while reporting a failure")
 
                 print(
                     "[NyayaMind] POST /api/run -> 500",
