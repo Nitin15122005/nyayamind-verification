@@ -165,8 +165,32 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((case_text, original_field_text, flagged_claim_text, evidence_text))
+        # Mirror the production corrector contract: return only the one
+        # corrected target sentence when the fixture changes exactly that
+        # sentence and preserves every sibling at its original position.
+        # Keep the complete paragraph for adversarial fixtures (sibling
+        # edits, additions, or reordering) so the production guard rejects it.
+        split = claim_parser._SENTENCE_SPLIT_REGEX
+        original = [p.strip() for p in split.split(original_field_text.strip()) if p.strip()]
+        proposed = [p.strip() for p in split.split(self._corrected_text.strip()) if p.strip()]
+        target_positions = [
+            i for i, sentence in enumerate(original)
+            if sentence == flagged_claim_text.strip()
+        ]
+        output = self._corrected_text
+        if (
+            len(target_positions) == 1
+            and len(proposed) == len(original)
+        ):
+            target_index = target_positions[0]
+            siblings_unchanged = all(
+                proposed[i] == original[i]
+                for i in range(len(original)) if i != target_index
+            )
+            if siblings_unchanged and proposed[target_index] != original[target_index]:
+                output = proposed[target_index]
         meta = CorrectionMetadata(model_id="mock-generator", max_new_tokens=220, do_sample=False, seed=42)
-        return self._corrected_text, meta
+        return output, meta
 
 
 def _vr(label, confidence=0.95, sub_reason=None):
