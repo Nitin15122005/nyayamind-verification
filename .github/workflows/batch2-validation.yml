@@ -30,7 +30,8 @@ jobs:
           cache: npm
           cache-dependency-path: live_demo_v2/web/package-lock.json
       # The checked-in lockfile predates the declared lucide-react dependency.
-      # npm install reconciles it on the runner before running the checks.\n      - run: npm install --no-audit --no-fund
+      # npm install reconciles it on the runner before running the checks.
+      - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run build
 
