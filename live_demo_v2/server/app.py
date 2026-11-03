@@ -2367,14 +2367,17 @@ class Handler(BaseHTTPRequestHandler):
                     f"Run failed: {exc}"
                 )
 
-                emit(
-                    "error",
-                    "failed",
-                    {
-                        "message":
-                            "This run could not be completed."
-                    },
-                )
+                try:
+                    emit(
+                        "error",
+                        "failed",
+                        {
+                            "message":
+                                "This run could not be completed."
+                        },
+                    )
+                except ClientDisconnected:
+                    log("Run cancelled while reporting a failure")
 
                 print(
                     "[NyayaMind] POST /api/run -> 500",
