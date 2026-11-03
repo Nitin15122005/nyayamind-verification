@@ -310,6 +310,15 @@ def _build_safety_checks(record: dict) -> list[dict]:
         "any correction was attempted (NO_EVIDENCE claims never trigger correction).",
     )
 
+    if status == "correction_output_invalid":
+        row(
+            "Correction output shape",
+            "BLOCK",
+            "The corrector returned empty or multi-sentence output. The candidate "
+            "was rejected before splicing or re-verification.",
+        )
+        return checks
+
     if status == "correction_span_invalid":
         row(
             "Target span valid",
@@ -476,6 +485,7 @@ _GATE_TO_STATUS = {
     "splice": "correction_splice_unavailable",
     "sentence_splice": "correction_splice_unavailable",
     "structural_span": "correction_structural_span_lost",
+    "output_shape": "correction_output_invalid",
 }
 
 
@@ -1175,11 +1185,15 @@ def run_streaming(
                             "regenerated_text": data.get(
                                 "regenerated_text"
                             ),
+                            "corrected_paragraph": data.get(
+                                "corrected_paragraph"
+                            ),
                             "original_field_text": data.get(
-                                "original_fragment",
-                                baseline[
-                                    "generated_field"
-                                ]["text"],
+                                "original_field_text",
+                                data.get(
+                                    "original_fragment",
+                                    baseline["generated_field"]["text"],
+                                ),
                             ),
                             "corr_meta": data.get(
                                 "corr_meta"
@@ -1356,6 +1370,16 @@ def run_streaming(
 
         status = correction_summary["status"]
 
+        # Keep the full spliced paragraph distinct from the model's raw
+        # fragment/sentence candidate for UI rendering and audit records.
+        if status not in (
+            "not_triggered",
+            "correction_span_invalid",
+            "correction_output_invalid",
+            "correction_splice_unavailable",
+        ):
+            correction_summary["corrected_paragraph"] = correction_summary.get("regenerated_text")
+
         if status == "corrected":
 
             final_field = {
@@ -1378,48 +1402,40 @@ def run_streaming(
         # CORRECTION NOT TRIGGERED
         # -------------------------------------------------------------------
 
-        if status in (
-            "not_triggered",
-            "correction_span_invalid",
-        ):
+        if status == "not_triggered":
 
-            if status == "not_triggered":
+            log(
+                "safety -> no claim met the correction "
+                "trigger condition; nothing to correct"
+            )
 
-                log(
-                    "safety -> no claim met the correction "
-                    "trigger condition; nothing to correct"
-                )
+            emit("correction", "skipped", {"triggered": False})
+            emit("safety", "skipped", {"triggered": False})
+            emit("recheck", "skipped", {"triggered": False})
 
-            else:
+        elif status == "correction_span_invalid":
 
-                log(
-                    "safety -> flagged claim's target span "
-                    "could not be resolved"
-                )
+            log(
+                "correction -> eligible claim found, but its target span "
+                "could not be resolved; no edit was attempted"
+            )
 
             emit(
                 "correction",
-                "skipped",
+                "complete",
                 {
-                    "triggered": False
+                    "triggered": True,
+                    "attempted": False,
+                    "status": status,
+                    "triggered_for_claim_id": correction_summary.get("triggered_for_claim_id"),
+                    "trigger_reason": correction_summary.get("trigger_reason"),
+                    "attempts": 0,
+                    "original_field_text": baseline["generated_field"]["text"],
                 },
             )
-
-            emit(
-                "safety",
-                "skipped",
-                {
-                    "triggered": False
-                },
-            )
-
-            emit(
-                "recheck",
-                "skipped",
-                {
-                    "triggered": False
-                },
-            )
+            emit("safety", "skipped", {"triggered": True, "reason": "target span invalid"})
+            emit("recheck", "skipped", {"triggered": True})
+            safety_checks = _build_safety_checks({"correction": correction_summary})
 
         else:
 
