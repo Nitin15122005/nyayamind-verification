@@ -1528,7 +1528,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
                 "raw_scores": result.raw_scores,
                 "input_truncated": result.input_truncated,
             }
-            if result.label == ENTAILED:
+            if result.label == ENTAILED and not result.input_truncated:
                 status = "corrected"
             if on_event:
                 on_event("recheck", "completed", dict(reverification))
