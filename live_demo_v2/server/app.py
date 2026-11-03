@@ -1544,6 +1544,7 @@ def run_streaming(
             config["verification"][
                 "confidence_threshold"
             ],
+            len(all_usable),
         ),
 
         "correction": {
