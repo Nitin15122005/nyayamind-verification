@@ -1822,3 +1822,43 @@ def test_correction_rejects_duplicate_existing_citation_identity():
     ]
     assert not pipeline._has_citation_overcount(baseline_claims, original)
     assert pipeline._has_citation_overcount(baseline_claims, original + " " + original)
+
+def test_pipeline_withholds_multi_sentence_corrector_output(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    original = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    malformed = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes death or life "
+        "imprisonment. Section 148 deals with rioting."
+    )
+    case = Case(document_id="doc-output-shape", case_text="facts...", raw_citation_keys=[])
+    verifier = ScriptedVerifier({original: _vr(CONTRADICTED, confidence=0.95)})
+    record = run_case(
+        case, "C", FakeGenerator(original), verifier, ScriptedCorrector(malformed),
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+
+    assert record["correction"]["status"] == "correction_output_invalid"
+    assert record["final_field"]["source"] == "correction_output_invalid"
+    assert record["final_field"]["text"] == original
+    assert len(verifier.calls) == 1  # no re-verification of malformed output
+
+
+def test_pipeline_withholds_duplicate_existing_citation(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    original = "Section 302 of the Indian Penal Code, 1860 prescribes a fine only."
+    duplicated = (
+        "Section 302 of the Indian Penal Code, 1860 prescribes death or life "
+        "imprisonment, and Section 302 of the Indian Penal Code, 1860 prescribes "
+        "imprisonment for murder."
+    )
+    case = Case(document_id="doc-duplicate-citation", case_text="facts...", raw_citation_keys=[])
+    verifier = ScriptedVerifier({original: _vr(CONTRADICTED, confidence=0.95)})
+    record = run_case(
+        case, "C", FakeGenerator(original), verifier, ScriptedCorrector(duplicated),
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+
+    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["text"] == original
+    assert len(verifier.calls) == 1  # duplicate citation rejected before re-verification
