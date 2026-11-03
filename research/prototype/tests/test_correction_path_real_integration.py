@@ -46,12 +46,12 @@ outside the repo; the test also deletes it explicitly before returning.
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 import pytest
 import yaml
 
+from src import claim_parser
 from src.corrector import CorrectionMetadata
 from src.data_loader import Case, load_usable_evidence_from_config
 from src.generator import GenerationMetadata
@@ -166,7 +166,7 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((flagged_claim_text, evidence_text))
-        split = re.compile(r"(?<=[.!?])\\s+(?=[A-Z0-9])")
+        split = claim_parser._SENTENCE_SPLIT_REGEX
         original = [p.strip() for p in split.split(original_field_text.strip()) if p.strip()]
         proposed = [p.strip() for p in split.split(self._corrected_text.strip()) if p.strip()]
         target_positions = [
