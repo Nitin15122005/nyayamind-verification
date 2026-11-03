@@ -473,13 +473,13 @@ def split_sentences(text: str) -> list[str]:
     parts: list[str] = []
     for part in raw_parts:
         previous = parts[-1].rstrip() if parts else ""
-        # A legal instrument's publication year is followed by a period,
-        # but that period is not a sentence boundary when the next token
-        # continues the same sentence (e.g. "IPC, 1860 shall ...").
-        year_period = bool(re.search(r"\b(?:15|16|17|18|19|20)\d{2}\.$", previous))
-        if parts and (
-            previous.endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS) or year_period
-        ):
+        # A year-ending period is already handled correctly by the
+        # boundary regex: lowercase continuations (e.g. "1860 shall")
+        # are not split, while an uppercase next sentence (e.g. "1860. It")
+        # must remain a boundary. Unconditionally merging after a year
+        # incorrectly joined separate Act mentions and let the last Act
+        # leak into a later bare citation.
+        if parts and previous.endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS):
             parts[-1] = previous + " " + part.strip()
         else:
             parts.append(part.strip())
