@@ -166,9 +166,8 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((flagged_claim_text, evidence_text))
-        split = claim_parser._SENTENCE_SPLIT_REGEX
-        original = [p.strip() for p in split.split(original_field_text.strip()) if p.strip()]
-        proposed = [p.strip() for p in split.split(self._corrected_text.strip()) if p.strip()]
+        original = claim_parser.split_sentences(original_field_text)
+        proposed = claim_parser.split_sentences(self._corrected_text)
         target_positions = [
             i for i, sentence in enumerate(original)
             if sentence == flagged_claim_text.strip()
