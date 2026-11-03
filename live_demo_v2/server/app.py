@@ -2005,6 +2005,10 @@ class Handler(BaseHTTPRequestHandler):
 
             return
 
+        if not isinstance(body, dict):
+            self._send_json({"error": "Request body must be a JSON object."}, status=400)
+            return
+
         print(
             "[NyayaMind] request accepted",
             flush=True,
