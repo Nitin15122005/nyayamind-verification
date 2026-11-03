@@ -675,31 +675,18 @@ BAD_CORRECTED_TEXT_1994_495 = (
     + _ALTERED_UNFLAGGED_SENTENCE
 )
 
-# A separate unsafe fixture with different wording and a different original
-# paragraph, so the demo can show that scope protection is not tied to one
-# memorized input string.
-_UNSAFE_ALT_ORIGINAL_302 = (
-    "For murder, Section 302 of the Indian Penal Code, 1860 imposes only a "
-    "fine and excludes both death and imprisonment."
-)
-_UNSAFE_ALT_ORIGINAL_148 = (
-    "Section 148 of the Indian Penal Code, 1860 addresses rioting by a person "
-    "armed with a deadly weapon."
-)
+# Separate unsafe fixture based on the live correction example: the
+# proposed correction changes the citation identity from Section 420 to
+# Section 372. The pipeline must reject this unauthorized citation.
 _UNSAFE_ALT_CORRUPTED_TEXT = (
-    _UNSAFE_ALT_ORIGINAL_302 + " " + _UNSAFE_ALT_ORIGINAL_148
-)
-_UNSAFE_ALT_CORRECTED_302 = (
-    "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 "
-    "shall be punished with death, or imprisonment for life, and shall also "
-    "be liable to fine."
-)
-_UNSAFE_ALT_ALTERED_148 = (
-    "Section 148 of the Indian Penal Code, 1860 addresses theft committed by "
-    "a person acting alone."
+    "Section 420 of the Indian Penal Code, 1860 deals with voluntarily "
+    "causing hurt to another person. Section 406 of the Indian Penal Code, "
+    "1860 prescribes punishment for criminal breach of trust."
 )
 _UNSAFE_ALT_BAD_CORRECTED_TEXT = (
-    _UNSAFE_ALT_CORRECTED_302 + " " + _UNSAFE_ALT_ALTERED_148
+    "Section 372 of the Indian Penal Code, 1860 deals with cheating and "
+    "inducing a person to deliver property to another. Section 406 of the "
+    "Indian Penal Code, 1860 prescribes punishment for criminal breach of trust."
 )
 
 
@@ -807,15 +794,15 @@ EXAMPLE_SPECS = [
         "category": "correction_blocked",
         "title": "Selective Correction -- Unsafe Edit Blocked",
         "headline": (
-            "A different original paragraph where the candidate fixes Section "
-            "302 but also alters the separate Section 148 claim."
+            "A correction candidate that introduces a citation absent from "
+            "the original paragraph."
         ),
         "document_id": "1994_495",
         "mode": "C",
         "note": (
-            "This uses a different input from the safe-correction example. "
-            "The candidate corrects Section 302 but changes Section 148 from "
-            "armed rioting to theft; the scope gate must reject it."
+            "The original paragraph cites Sections 420 and 406. The candidate "
+            "changes the first citation to Section 372; the unauthorized-"
+            "citation gate must reject it and preserve the original."
         ),
         "kind": "mode_c_scripted",
         "generated_text": _UNSAFE_ALT_CORRUPTED_TEXT,
