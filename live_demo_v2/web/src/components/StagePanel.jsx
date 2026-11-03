@@ -392,6 +392,16 @@ function RecheckView({ data }) {
   if (!data?.triggered) {
     return <p className="text-base text-ink-secondary">Not applicable -- no correction was attempted.</p>;
   }
+  if (data.input_truncated) {
+    return (
+      <div className="rounded-lg border border-warn/25 bg-warn/10 p-3">
+        <p className="font-mono text-xs font-semibold uppercase tracking-wider text-warn">Re-verification not accepted</p>
+        <p className="mt-1 text-sm leading-5 text-ink-secondary">
+          The model input exceeded its token limit and was truncated. This verdict cannot authorize a correction.
+        </p>
+      </div>
+    );
+  }
   if (!data.verdict) return <p className="text-base text-ink-secondary">The corrected text could not be re-verified.</p>;
   return (
     <div className="glass-panel-solid flex flex-col gap-1.5 rounded-lg p-4">
