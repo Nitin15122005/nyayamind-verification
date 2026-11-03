@@ -1429,6 +1429,24 @@ def run_streaming(
                 }
             )
 
+            # The pipeline may report that its initial structural gates passed
+            # and only later discover a deterministic-splice or final-status
+            # failure. Publish the authoritative post-pipeline safety result
+            # last so the UI cannot leave an earlier provisional PASS visible.
+            final_safety_passed = not any(
+                check.get("result") == "BLOCK"
+                for check in safety_checks
+            )
+            emit(
+                "safety",
+                "complete",
+                {
+                    "triggered": True,
+                    "passed": final_safety_passed,
+                    "checks": safety_checks,
+                },
+            )
+
     # -----------------------------------------------------------------------
     # NON-CORRECTION MODE
     # -----------------------------------------------------------------------
