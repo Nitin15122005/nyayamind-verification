@@ -43,13 +43,15 @@ from __future__ import annotations
 
 import copy
 import json
+import os
+import socket
 import sys
 import threading
 import traceback
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit
 
 
 # ===========================================================================
@@ -1628,6 +1630,101 @@ def _json_default(o):
     return str(o)
 
 
+
+# ===========================================================================
+# LOCAL API SECURITY / REQUEST LIMITS
+# ===========================================================================
+
+_DEFAULT_ALLOWED_ORIGINS = {
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:4173",
+    "http://127.0.0.1:4173",
+}
+_DEFAULT_ALLOWED_HOSTS = {"127.0.0.1:8421", "localhost:8421"}
+
+
+def _csv_environment_set(name: str, defaults: set[str]) -> set[str]:
+    value = os.environ.get(name)
+    if value is None:
+        return set(defaults)
+    return {item.strip() for item in value.split(",") if item.strip()}
+
+
+def _normalize_origin(value: str) -> str | None:
+    """Accept only a bare HTTP(S) origin; reject paths, credentials and null."""
+    try:
+        parsed = urlsplit(value)
+        if (
+            parsed.scheme.lower() not in {"http", "https"}
+            or not parsed.netloc
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.path not in {"", "/"}
+            or parsed.query
+            or parsed.fragment
+        ):
+            return None
+        return f"{parsed.scheme.lower()}://{parsed.netloc.lower()}"
+    except (TypeError, ValueError):
+        return None
+
+
+ALLOWED_ORIGINS = {
+    normalized
+    for item in _csv_environment_set("NYAYAMIND_ALLOWED_ORIGINS", _DEFAULT_ALLOWED_ORIGINS)
+    if (normalized := _normalize_origin(item)) is not None
+}
+ALLOWED_HOSTS = {
+    item.lower()
+    for item in _csv_environment_set("NYAYAMIND_ALLOWED_HOSTS", _DEFAULT_ALLOWED_HOSTS)
+}
+MAX_REQUEST_BODY_BYTES = 1_048_576
+MAX_CUSTOM_TEXT_CHARS = 100_000
+REQUEST_READ_TIMEOUT_SECONDS = 10
+
+
+def _unique_json_object(pairs):
+    """Reject duplicate JSON keys instead of silently accepting the last one."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def _validate_run_payload(body: object) -> tuple[dict | None, tuple[int, str] | None]:
+    """Validate the complete public POST schema before touching pipeline state."""
+    if not isinstance(body, dict):
+        return None, (400, "JSON request body must be an object.")
+
+    mode = body.get("mode")
+    if mode == "example":
+        if set(body) != {"mode", "id"}:
+            return None, (400, "Example requests must contain only 'mode' and 'id'.")
+        example_id = body.get("id")
+        if not isinstance(example_id, str) or not example_id or len(example_id) > 128:
+            return None, (400, "'id' must be a non-empty string of at most 128 characters.")
+        if example_id not in EXAMPLE_BY_ID:
+            return None, (404, "Unknown example id.")
+        return body, None
+
+    if mode == "custom":
+        if set(body) != {"mode", "text"}:
+            return None, (400, "Custom requests must contain only 'mode' and 'text'.")
+        text = body.get("text")
+        if not isinstance(text, str):
+            return None, (400, "'text' must be a string.")
+        if not text.strip():
+            return None, (400, "'text' must not be empty.")
+        if len(text) > MAX_CUSTOM_TEXT_CHARS:
+            return None, (413, f"Custom text exceeds the {MAX_CUSTOM_TEXT_CHARS:,}-character limit.")
+        return body, None
+
+    return None, (400, "'mode' must be either 'example' or 'custom'.")
+
+
 # ===========================================================================
 # HTTP HANDLER
 # ===========================================================================
@@ -1637,6 +1734,78 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "NyayaMindDemoV2/1.0"
 
     protocol_version = "HTTP/1.1"
+
+    def _origin_is_allowed(self) -> bool:
+        origin = self.headers.get("Origin")
+        normalized = _normalize_origin(origin) if origin else None
+        return normalized is not None and normalized in ALLOWED_ORIGINS
+
+    def _reject_untrusted_host(self) -> bool:
+        host = (self.headers.get("Host") or "").strip().lower()
+        if host in ALLOWED_HOSTS:
+            return False
+        self.close_connection = True
+        self._send_json({"error": "Untrusted Host header."}, status=403)
+        return True
+
+    def _send_cors_headers(self) -> None:
+        origin = self.headers.get("Origin")
+        normalized = _normalize_origin(origin) if origin else None
+        self.send_header("Vary", "Origin")
+        if normalized is not None and normalized in ALLOWED_ORIGINS:
+            self.send_header("Access-Control-Allow-Origin", normalized)
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Max-Age", "600")
+
+    def _read_run_payload(self) -> tuple[dict | None, tuple[int, str] | None]:
+        """Read a bounded JSON body and validate its schema before execution."""
+        if self.headers.get("Transfer-Encoding"):
+            self.close_connection = True
+            return None, (400, "Transfer-Encoding is not supported; send Content-Length.")
+
+        raw_length = self.headers.get("Content-Length")
+        if raw_length is None:
+            self.close_connection = True
+            return None, (411, "Content-Length is required.")
+
+        try:
+            length = int(raw_length)
+        except (TypeError, ValueError):
+            self.close_connection = True
+            return None, (400, "Content-Length must be a valid integer.")
+
+        if length <= 0:
+            self.close_connection = True
+            return None, (400, "A non-empty JSON request body is required.")
+        if length > MAX_REQUEST_BODY_BYTES:
+            self.close_connection = True
+            return None, (413, f"Request body exceeds the {MAX_REQUEST_BODY_BYTES:,}-byte limit.")
+        if self.headers.get_content_type().lower() != "application/json":
+            self.close_connection = True
+            return None, (415, "Content-Type must be application/json.")
+
+        try:
+            self.connection.settimeout(REQUEST_READ_TIMEOUT_SECONDS)
+            raw = self.rfile.read(length)
+        except (socket.timeout, TimeoutError):
+            self.close_connection = True
+            return None, (408, "Timed out while reading the request body.")
+        finally:
+            try:
+                self.connection.settimeout(None)
+            except OSError:
+                pass
+
+        if len(raw) != length:
+            self.close_connection = True
+            return None, (400, "Request body ended before Content-Length bytes were received.")
+
+        try:
+            body = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_json_object)
+        except (UnicodeDecodeError, json.JSONDecodeError, ValueError):
+            return None, (400, "Request body must contain valid UTF-8 JSON without duplicate keys.")
+        return _validate_run_payload(body)
 
     # -----------------------------------------------------------------------
     # ACCESS LOG
@@ -1670,21 +1839,11 @@ class Handler(BaseHTTPRequestHandler):
             str(len(body)),
         )
 
-        self.send_header(
-            "Access-Control-Allow-Origin",
-            "*",
-        )
-
-        self.send_header(
-            "Access-Control-Allow-Methods",
-            "GET, POST, OPTIONS",
-        )
-
-        self.send_header(
-            "Access-Control-Allow-Headers",
-            "Content-Type",
-        )
-
+        self._send_cors_headers()
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Cache-Control", "no-store")
+        if self.close_connection:
+            self.send_header("Connection", "close")
         self.end_headers()
 
         self.wfile.write(body)
@@ -1694,15 +1853,35 @@ class Handler(BaseHTTPRequestHandler):
     # -----------------------------------------------------------------------
 
     def do_OPTIONS(self):
+        if self._reject_untrusted_host():
+            return
+        if not self._origin_is_allowed():
+            self.close_connection = True
+            self._send_json({"error": "Origin is not allowed."}, status=403)
+            return
 
-        self._send_json({})
+        requested_method = (self.headers.get("Access-Control-Request-Method") or "").upper()
+        if requested_method not in {"GET", "POST"}:
+            self._send_json({"error": "Requested CORS method is not allowed."}, status=403)
+            return
+
+        requested_headers = {
+            item.strip().lower()
+            for item in (self.headers.get("Access-Control-Request-Headers") or "").split(",")
+            if item.strip()
+        }
+        if not requested_headers.issubset({"content-type"}):
+            self._send_json({"error": "Requested CORS headers are not allowed."}, status=403)
+            return
+        self._send_json({"ok": True})
 
     # -----------------------------------------------------------------------
     # GET
     # -----------------------------------------------------------------------
 
     def do_GET(self):
-
+        if self._reject_untrusted_host():
+            return
         path = urlparse(self.path).path
 
         with _STATE_LOCK:
@@ -1844,7 +2023,12 @@ class Handler(BaseHTTPRequestHandler):
     # -----------------------------------------------------------------------
 
     def do_POST(self):
-
+        if self._reject_untrusted_host():
+            return
+        if not self._origin_is_allowed():
+            self.close_connection = True
+            self._send_json({"error": "Origin is not allowed."}, status=403)
+            return
         path = urlparse(self.path).path
 
         if path != "/api/run":
@@ -1859,38 +2043,26 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         # ---------------------------------------------------------------
-        # READ STATE
+        # REQUEST BODY + SCHEMA VALIDATION
         # ---------------------------------------------------------------
+        body, validation_error = self._read_run_payload()
+        if validation_error is not None:
+            status_code, message = validation_error
+            self._send_json({"error": message}, status=status_code)
+            return
 
+        # ---------------------------------------------------------------
+        # READ STATE ONLY AFTER THE REQUEST IS KNOWN TO BE VALID
+        # ---------------------------------------------------------------
         with _STATE_LOCK:
-
-            ready = (
-                _STATE["metadata_list"]
-                is not None
-            )
-
-            config = _STATE[
-                "config"
-            ]
-
-            exact_index = _STATE[
-                "exact_index"
-            ]
-
-            all_usable = _STATE[
-                "all_usable"
-            ]
-
-            verifier = _STATE[
-                "verifier"
-            ]
-
-            lazy_corrector = _STATE[
-                "lazy_corrector"
-            ]
+            ready = _STATE["metadata_list"] is not None
+            config = _STATE["config"]
+            exact_index = _STATE["exact_index"]
+            all_usable = _STATE["all_usable"]
+            verifier = _STATE["verifier"]
+            lazy_corrector = _STATE["lazy_corrector"]
 
         if not ready:
-
             self._send_json(
                 {
                     "error": (
@@ -1900,64 +2072,14 @@ class Handler(BaseHTTPRequestHandler):
                 },
                 status=503,
             )
-
             return
 
-        print(
-            "[NyayaMind] POST /api/run",
-            flush=True,
-        )
+        print("[NyayaMind] POST /api/run -> validated request", flush=True)
+        if body["mode"] == "example":
+            print(f"[NyayaMind] request -> curated example {body['id']!r}", flush=True)
+        else:
+            print("[NyayaMind] request -> custom input", flush=True)
 
-        # ---------------------------------------------------------------
-        # REQUEST BODY
-        # ---------------------------------------------------------------
-
-        length = int(
-            self.headers.get(
-                "Content-Length",
-                0,
-            )
-            or 0
-        )
-
-        raw = (
-            self.rfile.read(length)
-            if length
-            else b"{}"
-        )
-
-        try:
-
-            body = (
-                json.loads(
-                    raw.decode("utf-8")
-                )
-                if raw
-                else {}
-            )
-
-        except Exception:
-
-            print(
-                "[NyayaMind] POST /api/run "
-                "-> 400 (invalid JSON body)",
-                flush=True,
-            )
-
-            self._send_json(
-                {
-                    "error":
-                        "invalid JSON body"
-                },
-                status=400,
-            )
-
-            return
-
-        print(
-            "[NyayaMind] request accepted",
-            flush=True,
-        )
 
         if body.get("mode") == "example":
 
@@ -1990,15 +2112,10 @@ class Handler(BaseHTTPRequestHandler):
             "no-cache",
         )
 
-        self.send_header(
-            "Access-Control-Allow-Origin",
-            "*",
-        )
-
-        self.send_header(
-            "Connection",
-            "close",
-        )
+        self._send_cors_headers()
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Connection", "close")
 
         self.end_headers()
 
