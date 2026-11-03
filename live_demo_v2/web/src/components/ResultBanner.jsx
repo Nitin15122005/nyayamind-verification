@@ -3,6 +3,8 @@ import VerdictBadge from "./VerdictBadge.jsx";
 
 const WITHHELD_STATUSES = new Set([
   "correction_scope_violation",
+  "correction_output_invalid",
+  "correction_sentence_splice_unavailable",
   "correction_sibling_regression",
   "correction_ordinal_ambiguous",
   "correction_unauthorized_addition",
@@ -49,23 +51,40 @@ export default function ResultBanner({ record, safetyChecks }) {
   if (status && WITHHELD_STATUSES.has(status)) {
     const blockedCheck = (safetyChecks || []).find((c) => c.result === "BLOCK");
     const reason = blockedCheck?.detail || "Safety conditions were not satisfied.";
+    const notAttempted = status === "correction_span_invalid";
+    const rawOutputRejected = status === "correction_output_invalid" || status === "correction_splice_unavailable";
+    const correctedParagraph = correction.corrected_paragraph;
     return (
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2.5 rounded-lg border border-warn/30 bg-warn/10 px-5 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-warn" />
-          <span className="font-mono text-sm font-semibold tracking-wider text-warn">CORRECTION WITHHELD</span>
+          <span className="font-mono text-sm font-semibold tracking-wider text-warn">
+            {notAttempted ? "CORRECTION NOT ATTEMPTED" : "CORRECTION WITHHELD"}
+          </span>
         </div>
         <p className="text-lg leading-[1.65] text-ink-primary">{reason}</p>
-        <div>
-          <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">
-            Attempted correction (not shipped)
-          </p>
-          <div className="glass-panel-solid rounded-lg p-6 opacity-70">
-            <CorrectionDiff before={correction.original_field_text} after={correction.regenerated_text} />
+        {!notAttempted && correctedParagraph && (
+          <div>
+            <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">
+              Candidate paragraph (not shipped)
+            </p>
+            <div className="glass-panel-solid rounded-lg p-6 opacity-70">
+              <CorrectionDiff before={correction.original_field_text} after={correctedParagraph} />
+            </div>
           </div>
-        </div>
+        )}
+        {!notAttempted && rawOutputRejected && correction.regenerated_text && (
+          <div>
+            <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">
+              Rejected model output
+            </p>
+            <div className="glass-panel-solid rounded-lg p-4 opacity-70">
+              <p className="whitespace-pre-wrap text-sm leading-6 text-ink-primary">{correction.regenerated_text}</p>
+            </div>
+          </div>
+        )}
         <p className="text-sm text-ink-secondary">
-          The original text is kept unchanged in the final result -- an unsafe edit is never shipped.
+          The original text is kept unchanged in the final result. An unvalidated correction is never shipped.
         </p>
       </div>
     );
