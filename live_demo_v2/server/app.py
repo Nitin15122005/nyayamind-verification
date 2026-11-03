@@ -1213,6 +1213,14 @@ def run_streaming(
                                     "fragment_only"
                                 )
                             ),
+                            "attempted": True,
+                            "status": (
+                                "correction_output_invalid"
+                                if data.get("output_valid") is False
+                                else "correction_splice_unavailable"
+                                if data.get("splice_available") is False
+                                else None
+                            ),
                         },
                     )
 
