@@ -1089,6 +1089,13 @@ def run_streaming(
             + ")"
         )
 
+    # Eligibility is a claim-level policy decision; execution is controlled
+    # separately by the selected pipeline mode. Expose both so the UI does
+    # not imply that Mode B will run the correction stage.
+    for claim in baseline["claims"]:
+        claim["correction_execution_mode"] = mode
+        claim["correction_execution_enabled"] = mode == "C"
+
     emit(
         "verification",
         "complete",
