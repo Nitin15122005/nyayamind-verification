@@ -1585,7 +1585,10 @@ def _summarize_evidence(claims: list[dict], usable_pool_size: int) -> dict:
     }
 
 
-def _summarize_verification(claims: list[dict], mode: str, verifier_model: Optional[str], threshold: float) -> dict:
+def _summarize_verification(
+    claims: list[dict], mode: str, verifier_model: Optional[str],
+    threshold: float, usable_pool_size: int,
+) -> dict:
     counts = {ENTAILED: 0, CONTRADICTED: 0, NOT_ENOUGH_INFORMATION: 0, NO_EVIDENCE: 0}
     for c in claims:
         if c["verdict"] in counts:
@@ -1596,10 +1599,10 @@ def _summarize_verification(claims: list[dict], mode: str, verifier_model: Optio
         "confidence_threshold": threshold if mode in ("B", "C") else None,
         "counts": counts,
         "disclaimer": (
-            "Verdicts reflect a small public NLI model's statistical confidence "
-            "against a 59-record, third-party-sourced evidence corpus. Not a "
-            "legal-correctness determination; verifier accuracy is not yet "
-            "established (no gold evaluation has been run)."
+            f"Verdicts reflect a small public NLI model's statistical confidence "
+            f"against the currently loaded {usable_pool_size}-record audited evidence pool. "
+            "Controlled benchmark evaluations exist, but model entailment is not "
+            "a legal-correctness determination or an independently adjudicated legal outcome."
         ),
     }
 
@@ -1713,7 +1716,7 @@ def run_case(
         "evidence": _summarize_evidence(baseline["claims"], len(all_usable)),
         "verification": _summarize_verification(
             baseline["claims"], mode, verifier_model_id,
-            config["verification"]["confidence_threshold"],
+            config["verification"]["confidence_threshold"], len(all_usable),
         ),
         "correction": {k: v for k, v in correction_summary.items() if not k.startswith("_")},
         "final_field": final_field,
