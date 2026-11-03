@@ -86,6 +86,14 @@ export default function ResultBanner({ record, safetyChecks }) {
         <p className="text-sm text-ink-secondary">
           The original text is kept unchanged in the final result. An unvalidated correction is never shipped.
         </p>
+        <div>
+          <p className="mb-1.5 font-mono text-xs uppercase tracking-wider text-ink-secondary">
+            Final text (original retained)
+          </p>
+          <div className="glass-panel-solid rounded-lg p-5">
+            <p className="text-base leading-7 text-ink-primary">{record?.final_field?.text}</p>
+          </div>
+        </div>
       </div>
     );
   }
