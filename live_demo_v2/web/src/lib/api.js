@@ -76,7 +76,7 @@ export async function runVerification(body, onEvent, { signal } = {}) {
       buffer += decoder.decode(value, { stream: true });
       let newlineIndex;
       // eslint-disable-next-line no-cond-assign
-      while ((newlineIndex = buffer.indexOf("\\n")) >= 0) {
+      while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
         const line = buffer.slice(0, newlineIndex);
         buffer = buffer.slice(newlineIndex + 1);
         dispatchLine(line);
