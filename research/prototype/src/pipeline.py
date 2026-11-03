@@ -25,6 +25,7 @@ from __future__ import annotations
 import datetime
 import re
 import sys
+from collections import Counter
 from typing import Optional
 
 from . import claim_parser
@@ -638,6 +639,31 @@ def _citation_identity(citation) -> Optional[tuple]:
     if isinstance(citation, dict):
         return (citation.get("provision_type"), citation.get("provision_number"), citation.get("act_norm"))
     return (citation.provision_type, citation.provision_number, citation.act_norm)
+
+def _correction_output_is_single_sentence(text: str) -> bool:
+    """Reject empty or multi-sentence model output before attempting a splice."""
+    if not isinstance(text, str) or not text.strip():
+        return False
+    return len(claim_parser.split_sentences(text.strip())) == 1
+
+
+def _has_citation_overcount(baseline_claims: list[dict], corrected_text: str) -> bool:
+    """Reject new citation identities AND extra occurrences of existing ones.
+
+    A set-membership check misses duplicated citations already present in the
+    source paragraph. Counts preserve the baseline multiplicity invariant.
+    """
+    baseline_counts = Counter(
+        identity
+        for rec in baseline_claims
+        if (identity := _citation_identity(rec.get("citation_extracted"))) is not None
+    )
+    corrected_counts = Counter(
+        identity
+        for claim in claim_parser.extract_claims(corrected_text)
+        if (identity := _citation_identity(claim.citation_extracted)) is not None
+    )
+    return any(count > baseline_counts.get(identity, 0) for identity, count in corrected_counts.items())
 
 
 def _reverify_sibling_regressions(
