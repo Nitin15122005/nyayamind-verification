@@ -1364,7 +1364,7 @@ def test_flagship_1991_110_end_to_end_correction_ships_under_assertion_spans(
         ("common intention", corrected_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
         # Sibling-regression checks now use each citation's own respectively pair.
         ("murder", "Section 302 murder"): _vr(ENTAILED, confidence=0.95),
-        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),
         ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
     })
 
@@ -1458,7 +1458,7 @@ def test_real_1997_1306_correction_ships_under_citation_keyword_boundary_split(
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
-        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly"): _vr(ENTAILED, confidence=0.93),
     })
 
@@ -1585,7 +1585,7 @@ def test_narrow_reverification_ships_when_full_sentence_dilutes_confidence(
         ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.93),
         # Sibling checks use the parser's citation-specific verbatim clauses.
-        ("voluntarily causes hurt", "section 323 prescribes punishment for voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.95),
         ("unlawful assembly", "section 149 provides for the liability of every member of an unlawful assembly to the acts done by any one of them in the common object of the assembly"): _vr(ENTAILED, confidence=0.93),
     })
 
