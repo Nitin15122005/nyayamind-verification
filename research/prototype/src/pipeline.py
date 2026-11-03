@@ -1320,9 +1320,6 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "target_content_fragment": target_content_fragment,
         }
 
-    if on_event:
-        on_event("safety", "started", {})
-
     corrected_text = _splice_assertion_correction(
         original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
     )
@@ -1335,6 +1332,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "corr_meta": corr_meta_dict,
             "fragment_only": True,
         })
+        on_event("safety", "started", {})
     if corrected_text is None:
         if on_event:
             on_event("safety", "completed", {"passed": False, "gate": "splice"})
