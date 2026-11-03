@@ -800,7 +800,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     if sentence_contract_valid:
         sentence_parts = [
             part.strip()
-            for part in claim_parser._SENTENCE_SPLIT_REGEX.split(corrected_sentence.strip())
+            for part in claim_parser.split_sentences(corrected_sentence.strip())
             if part.strip()
         ]
         sentence_contract_valid = len(sentence_parts) == 1
