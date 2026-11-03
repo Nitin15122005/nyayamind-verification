@@ -63,8 +63,10 @@ class ApiSecurityTests(unittest.TestCase):
         self.assertIn(b"Origin", body)
 
     def test_post_rejects_untrusted_origin(self):
+        # Origin is rejected before the request body is read. Sending no body
+        # keeps this test focused on the origin gate rather than the expected
+        # connection close with unread bytes on an untrusted request.
         status, _, _ = self.request(
-            payload={"mode": "custom", "text": "test"},
             headers={"Origin": "https://attacker.example"},
         )
         self.assertEqual(status, 403)
