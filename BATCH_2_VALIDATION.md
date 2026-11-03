@@ -54,4 +54,4 @@ The research test suite includes a real-verifier integration test that requires 
 
 ## Validation status
 
-Code and regression tests have been added on the Batch 2 branch. They are **not marked as passing until executed** in the target Windows/Python/CUDA/Node environment. The Batch 1 checkpoint remains unchanged and is the rollback target.
+GitHub Actions passed the frontend test suite, Vite production build, Python syntax compilation, and the new NLI length-guard regression test on the current branch head. The full local server regression suite, complete research pytest suite, and manual Windows/CUDA live-demo smoke checks still need to be run before Batch 2 can be marked complete. The Batch 1 checkpoint remains unchanged and is the rollback target.
