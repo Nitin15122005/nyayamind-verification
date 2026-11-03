@@ -73,6 +73,19 @@ def test_split_sentences_empty_string():
     assert split_sentences("   ") == []
 
 
+def test_split_sentences_keeps_boundary_after_act_year():
+    text = (
+        "The case is governed by the Indian Penal Code, 1860. "
+        "It is also governed by the Arms Act, 1959. "
+        "Section 55 deals with an unrelated procedural matter."
+    )
+    assert split_sentences(text) == [
+        "The case is governed by the Indian Penal Code, 1860.",
+        "It is also governed by the Arms Act, 1959.",
+        "Section 55 deals with an unrelated procedural matter.",
+    ]
+
+
 # ---------------------------------------------------------------------------
 # extract_citation — the case that originally over-captured the Act name
 # into the following verb phrase (caught while writing this test suite,
