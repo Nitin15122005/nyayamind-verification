@@ -1750,6 +1750,10 @@ def _validate_run_payload(body: object) -> tuple[dict | None, tuple[int, str] | 
 # HTTP HANDLER
 # ===========================================================================
 
+class ClientDisconnected(Exception):
+    """Raised when a streaming client disconnects; stops later pipeline stages."""
+
+
 class Handler(BaseHTTPRequestHandler):
 
     server_version = "NyayaMind"
@@ -2159,8 +2163,11 @@ class Handler(BaseHTTPRequestHandler):
                 BrokenPipeError,
                 ConnectionAbortedError,
                 OSError,
-            ):
-                pass
+            ) as exc:
+                # Cooperative cancellation: the currently-running model call
+                # cannot be interrupted safely, but raising here stops the
+                # pipeline at this event boundary before later stages begin.
+                raise ClientDisconnected() from exc
 
         def log(msg):
 
@@ -2348,6 +2355,9 @@ class Handler(BaseHTTPRequestHandler):
                     "[NyayaMind] POST /api/run -> 200",
                     flush=True,
                 )
+
+            except ClientDisconnected:
+                log("Run cancelled: streaming client disconnected")
 
             except Exception as exc:
 
