@@ -426,18 +426,15 @@ const STAGE_TITLES = {
 };
 
 export default function StagePanel({ viewedStage, stageData, underlying, onToggleUnderlying, error }) {
-  if (error) {
-    return (
-      <div className="glass-panel rounded-xl p-4">
-        <p className="font-mono text-sm font-semibold uppercase tracking-wider text-contra">Run failed</p>
-        <p className="mt-1.5 text-xs text-ink-secondary">{error}</p>
-      </div>
-    );
-  }
-
   if (!viewedStage) {
     return (
       <div className="glass-panel flex min-h-[220px] flex-1 flex-col items-center justify-center rounded-xl p-5 text-center">
+        {error && (
+          <div className="mb-3 w-full rounded-lg border border-contra/25 bg-contra/5 p-3 text-left">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-contra">Run failed</p>
+            <p className="mt-1 text-xs text-ink-secondary">{error}</p>
+          </div>
+        )}
         <p className="text-sm text-ink-secondary">
           Press <span className="text-ink-primary">Run Verification</span> to execute the real pipeline.
         </p>
@@ -450,6 +447,13 @@ export default function StagePanel({ viewedStage, stageData, underlying, onToggl
 
   return (
     <div className="glass-panel flex-1 rounded-xl p-2.5 sm:p-3 nm-stage-enter">
+      {error && (
+        <div className="mb-3 rounded-lg border border-contra/25 bg-contra/5 p-3">
+          <p className="font-mono text-xs font-semibold uppercase tracking-wider text-contra">Run stopped before completion</p>
+          <p className="mt-1 text-xs text-ink-secondary">{error}</p>
+          <p className="mt-1 text-[11px] text-ink-muted">You can still inspect every stage that completed before the error.</p>
+        </div>
+      )}
       <div className="mb-1.5 flex flex-wrap items-center justify-between gap-1.5">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-wider text-ink-secondary">Active Stage</p>
