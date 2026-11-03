@@ -708,6 +708,40 @@ def _reverify_sibling_regressions(
         )
         if not match.matched:
             continue
+        # Re-verify the sibling's OWN assertion, not automatically the
+        # parser's full sentence-level claim_text. Multiple citations can
+        # share one sentence; in that case claim_text includes sibling
+        # clauses that are not supported by this sibling's evidence. Using
+        # that combined sentence here can manufacture a false regression
+        # when the target clause alone was edited.
+        #
+        # Prefer the structured respectively hypothesis where available;
+        # otherwise use assertion_text only when the parser safely narrowed
+        # it to a verbatim clause. Fall back to the full claim when no
+        # conservative narrowing exists. This preserves the old fail-closed
+        # behavior for unresolved/ambiguous claims.
+        sibling_hypothesis = None
+        citation_data = (
+            counterpart.citation_extracted.as_dict()
+            if counterpart.citation_extracted is not None else None
+        )
+        if citation_data is not None:
+            sibling_hypothesis = _assertion_spans_hypothesis({
+                "assertion_spans": list(counterpart.assertion_spans or []),
+                "citation_extracted": citation_data,
+                "_evidence_provision": {
+                    "provision_type": match.evidence.provision_type,
+                    "provision_number": match.evidence.provision_number,
+                    "act": match.evidence.act,
+                },
+            })
+        if sibling_hypothesis is None:
+            assertion_text = getattr(counterpart, "assertion_text", None)
+            if assertion_text and assertion_text != counterpart.claim_text:
+                sibling_hypothesis = assertion_text
+            else:
+                sibling_hypothesis = counterpart.claim_text
+
         result = baseline["_verifier"].verify(
             premise=format_premise(
                 match.evidence.canonical_text,
@@ -716,11 +750,12 @@ def _reverify_sibling_regressions(
                 provision_number=match.evidence.provision_number,
                 act=match.evidence.act,
             ),
-            hypothesis=counterpart.claim_text,
+            hypothesis=sibling_hypothesis,
         )
         if result.label == CONTRADICTED:
             regressions.append({
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
+                "reverified_hypothesis": sibling_hypothesis,
                 "evidence_id": match.evidence.dataset_citation_key,
                 "verdict": result.label, "confidence": result.confidence,
                 "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
@@ -791,14 +826,30 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
         flagged_claim_text=target["claim_text"],
         evidence_text=target["evidence_text"],  # may be None (contradicted-with-no-evidence is impossible by construction, but kept defensive)
     )
+    # Enforce the corrector's sentence-only contract before splicing. A
+    # paragraph returned here would otherwise be inserted into one sentence
+    # slot, duplicating siblings or smuggling unauthorized edits into output.
+    # The model prompt is not a security boundary: malformed output fails
+    # closed and is never re-verified or shipped.
+    sentence_contract_valid = isinstance(corrected_sentence, str) and bool(corrected_sentence.strip())
+    if sentence_contract_valid:
+        sentence_parts = [
+            part.strip()
+            for part in claim_parser.split_sentences(corrected_sentence.strip())
+            if part.strip()
+        ]
+        sentence_contract_valid = len(sentence_parts) == 1
     # Legacy mode remains sentence-level, not assertion-aware: the model
     # proposes only the flagged sentence, then deterministic code splices
     # that complete sentence back into the untouched paragraph. This removes
     # the observed failure mode where a whole-paragraph generation leaked a
     # neighboring fragment (for example, a trailing "intention.") into the
     # corrected sentence.
-    corrected_text = _splice_flagged_sentence(
-        original_field_text, target["claim_text"], corrected_sentence
+    corrected_text = (
+        _splice_flagged_sentence(
+            original_field_text, target["claim_text"], corrected_sentence
+        )
+        if sentence_contract_valid else None
     )
     corr_meta_dict = {
         "model": corr_meta.model_id,
@@ -818,13 +869,20 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     if corrected_text is None:
         if on_event:
             on_event("safety", "started", {})
-            on_event("safety", "completed", {"passed": False, "gate": "sentence_splice"})
+            on_event("safety", "completed", {
+                "passed": False,
+                "gate": "scope" if not sentence_contract_valid else "sentence_splice",
+            })
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "trigger_reason": trigger_reason,
             "attempts": 1,
-            "status": "correction_sentence_splice_unavailable",
+            "status": (
+                "correction_scope_violation"
+                if not sentence_contract_valid
+                else "correction_sentence_splice_unavailable"
+            ),
             "regenerated_text": corrected_sentence,
             "original_field_text": original_field_text,
             "reverification": None,
