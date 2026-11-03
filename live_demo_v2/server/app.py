@@ -1228,7 +1228,7 @@ def run_streaming(
                             {
                                 "correction": {
                                     "status":
-                                        _GATE_TO_STATUS[gate]
+                                        _GATE_TO_STATUS.get(gate, "correction_failed")
                                 }
                             }
                         )
