@@ -361,12 +361,10 @@ def test_assertion_aware_ships_narrow_fix_legacy_regeneration_would_reject(
     verifier = ScriptedVerifier({
         original_sentence: _vr(CONTRADICTED, confidence=0.88),
         unflagged_clause: _vr(ENTAILED, confidence=0.97),
-        # narrow_reverification_hypothesis is off by default (not set in
-        # `config`), so BOTH the target's own re-verification AND the
-        # unconditional sibling-regression check use the FULL re-extracted
-        # claim_text (the whole "..., while ..." sentence) as the
-        # hypothesis, not the narrower assertion_text clause.
+        # Target re-verification uses the corrected bundled sentence;
+        # sibling re-verification uses its own parser-resolved assertion.
         assertion_aware_corrected_sentence: _vr(ENTAILED, confidence=0.93),
+        "Section 21 of the Indian Penal Code, 1860 defines public servants.": _vr(ENTAILED, confidence=0.97),
     })
     # assertion_text for claim c1 here is the FULL " while "-split clause
     # ("Section 302 ... prescribes a fine only", not just the verb phrase —
@@ -470,14 +468,11 @@ def test_narrow_reverification_hypothesis_used_when_enabled(two_claim_evidence_p
     verifier = ScriptedVerifier({
         original_sentence: _vr(CONTRADICTED, confidence=0.88),
         unflagged_clause: _vr(ENTAILED, confidence=0.97),
-        # The TARGET's own re-verification is narrowed to just the clause
-        # (proving narrow_reverification_hypothesis is honored) -- but the
-        # UNCONDITIONAL sibling-regression check always re-verifies the
-        # sibling's own counterpart using its full re-extracted claim_text
-        # (the whole sentence), regardless of this flag, so both hypotheses
-        # must be scripted.
+        # The target uses its narrow clause; sibling re-verification uses
+        # the sibling's own parser-resolved assertion clause.
         corrected_flagged_clause: _vr(ENTAILED, confidence=0.99),
         assertion_aware_corrected_sentence: _vr(ENTAILED, confidence=0.93),
+        "Section 21 of the Indian Penal Code, 1860 defines public servants.": _vr(ENTAILED, confidence=0.97),
     })
     corrector = ScriptedAssertionSpanCorrector(corrected_flagged_clause)
     record = run_case(case, "C", FakeGenerator(original_sentence), verifier, corrector,
@@ -625,11 +620,10 @@ def test_multi_span_respectively_claim_ships_correction_preserving_structural_sp
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     verifier = ScriptedVerifier({
         RESPECTIVELY_ORIGINAL: _vr(CONTRADICTED, confidence=0.9),
-        # Both the target's own re-verification AND the unconditional
-        # sibling-regression check use the full re-extracted claim_text
-        # (identical for both claims, since they share one sentence) as
-        # hypothesis -- one scripted entry covers both calls.
+        # Target re-verification uses the corrected sentence; the sibling
+        # check uses its own citation-specific respectively spans.
         RESPECTIVELY_CORRECTED: _vr(ENTAILED, confidence=0.95),
+        "Section 34 common intention": _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
     })
     corrector = ScriptedAssertionSpanCorrector("murder")
 
