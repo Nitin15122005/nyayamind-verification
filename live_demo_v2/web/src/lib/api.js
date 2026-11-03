@@ -64,7 +64,9 @@ export async function runVerification(body, onEvent, { signal } = {}) {
     if (buffer.trim()) consumeLine(buffer);
     if (terminal !== "complete") throw new Error("The server stream ended before reporting successful completion.");
   } catch (error) {
-    if (signal?.aborted) { try { await reader.cancel(); } catch { /* connection already closed */ } }
+    // Release the response stream on parse errors, backend failures, and
+    // explicit aborts; otherwise a rejected run can leave the body unread.
+    try { await reader.cancel(); } catch { /* stream may already be closed */ }
     throw error;
   } finally {
     reader.releaseLock();
