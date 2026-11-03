@@ -347,6 +347,15 @@ function SafetyView({ data }) {
       </p>
     );
   }
+  if (!data.checks?.length) {
+    return (
+      <p className="text-xs text-ink-secondary">
+        {data.reason
+          ? `No correction candidate reached safety validation: ${data.reason}.`
+          : "No candidate was produced, so structural safety checks were not run."}
+      </p>
+    );
+  }
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-ink-secondary">
