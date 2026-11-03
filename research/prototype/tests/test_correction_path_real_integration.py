@@ -168,9 +168,14 @@ class ScriptedCorrector:
         self.calls.append((flagged_claim_text, evidence_text))
         original = claim_parser.split_sentences(original_field_text)
         proposed = claim_parser.split_sentences(self._corrected_text)
+        # Claim extraction may retain a citation-bearing assertion span
+        # rather than the entire source sentence. Match the normalized claim
+        # text within its containing sentence instead of requiring exact
+        # equality; the production splice still enforces an unambiguous target.
+        normalized_flagged = " ".join(flagged_claim_text.split())
         target_positions = [
             i for i, sentence in enumerate(original)
-            if sentence == flagged_claim_text.strip()
+            if normalized_flagged in " ".join(sentence.split())
         ]
         output = self._corrected_text
         if len(target_positions) == 1 and len(proposed) == len(original):
