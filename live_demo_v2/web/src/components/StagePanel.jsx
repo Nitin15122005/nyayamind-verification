@@ -145,6 +145,9 @@ function claimCardClass(verdict) {
 function VerificationTrace({ claim, underlying }) {
   const triggered = Boolean(claim.correction_trigger);
   const triggerReason = claim.correction_trigger_reason || "none";
+  const executionEnabled = Boolean(claim.correction_execution_enabled);
+  const executionMode = claim.correction_execution_mode || "unknown";
+  const negationSafeguard = Boolean(claim.negation_contradiction_caveat);
   const subReason =
     claim.sub_reason ||
     (claim.verdict === "NO_EVIDENCE" ? "not_applicable" : "genuine_high_confidence");
@@ -161,7 +164,11 @@ function VerificationTrace({ claim, underlying }) {
             ? "border-warn/30 bg-warn/10 text-warn"
             : "border-entail/25 bg-entail/10 text-entail")
         }>
-          {triggered ? "CORRECTION ELIGIBLE" : "CORRECTION NOT ELIGIBLE"}
+          {triggered
+            ? executionEnabled
+              ? "ELIGIBLE · MODE C"
+              : "ELIGIBLE · NOT EXECUTED"
+            : "CORRECTION NOT ELIGIBLE"}
         </span>
       </div>
 
@@ -170,20 +177,29 @@ function VerificationTrace({ claim, underlying }) {
         <TraceRow label="Confidence" value={typeof claim.confidence === "number" ? claim.confidence.toFixed(4) : "—"} />
         <TraceRow label="Sub-reason" value={subReason} />
         <TraceRow label="Trigger reason" value={triggerReason} tone={triggered ? "warn" : "neutral"} />
+        <TraceRow
+          label="Correction execution"
+          value={executionMode === "C" ? "Mode C · enabled" : executionMode === "B" ? "Mode B · disabled" : executionMode}
+          tone={executionEnabled ? "warn" : "neutral"}
+        />
       </div>
 
       <div className="mt-1 rounded border border-slate-200 bg-white p-1.5">
         <p className="font-mono text-[8px] uppercase tracking-wider text-ink-muted">Policy evaluation</p>
         <p className="mt-0.5 text-[10px] leading-4 text-ink-secondary">
-          {triggered
-            ? triggerReason === "contradicted"
-              ? "CONTRADICTED is an approved automatic-correction trigger."
-              : "NOT_ENOUGH_INFORMATION is eligible only because sub_reason = low_confidence."
-            : claim.verdict === "NOT_ENOUGH_INFORMATION"
-              ? "High-confidence NEI is treated as genuine uncertainty and does not trigger correction."
-              : claim.verdict === "NO_EVIDENCE"
-                ? "NO_EVIDENCE has no NLI premise and never triggers correction."
-                : "This verdict does not satisfy an approved correction trigger."}
+          {negationSafeguard
+            ? "The negation safeguard excludes this claim from automatic correction. Its CONTRADICTED verdict remains visible for review."
+            : triggered && !executionEnabled
+              ? "This claim meets the correction trigger policy, but Mode B is verification-only; no correction will run in this execution."
+              : triggered
+                ? triggerReason === "contradicted"
+                  ? "CONTRADICTED is an approved automatic-correction trigger. Mode C enables the correction stage."
+                  : "NOT_ENOUGH_INFORMATION is eligible only because sub_reason = low_confidence. Mode C enables the correction stage."
+                : claim.verdict === "NOT_ENOUGH_INFORMATION"
+                  ? "High-confidence NEI is treated as genuine uncertainty and does not trigger correction."
+                  : claim.verdict === "NO_EVIDENCE"
+                    ? "NO_EVIDENCE has no NLI premise and never triggers correction."
+                    : "This verdict does not satisfy an approved correction trigger."}
         </p>
       </div>
 
