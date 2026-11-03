@@ -3,15 +3,16 @@ name: Batch 2 validation
 on:
   pull_request:
     branches:
-      - checkpoint/batch-1-complete-2026-11-03
+      - main
     paths:
       - "live_demo_v2/**"
       - "research/prototype/src/verifier.py"
       - "research/prototype/tests/test_verifier_input_length.py"
+      - "research/prototype/tests/test_correction_path_real_integration.py"
       - ".github/workflows/batch2-validation.yml"
   push:
     branches:
-      - fix/batch-2-reliability
+      - fix/batch-2-clean
 
 permissions:
   contents: read
@@ -29,9 +30,7 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: live_demo_v2/web/package-lock.json
-      # The checked-in lockfile predates the declared lucide-react dependency.
-      # npm install reconciles it on the runner before running the checks.
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: npm test
       - run: npm run build
 
