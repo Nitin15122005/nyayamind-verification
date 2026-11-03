@@ -1780,15 +1780,15 @@ class Handler(BaseHTTPRequestHandler):
 
         length = int(raw_length)
 
+        if self.headers.get_content_type().lower() != "application/json":
+            self.close_connection = length > 0
+            return None, (415, "Content-Type must be application/json.")
         if length <= 0:
             self.close_connection = True
             return None, (400, "A non-empty JSON request body is required.")
         if length > MAX_REQUEST_BODY_BYTES:
             self.close_connection = True
             return None, (413, f"Request body exceeds the {MAX_REQUEST_BODY_BYTES:,}-byte limit.")
-        if self.headers.get_content_type().lower() != "application/json":
-            self.close_connection = True
-            return None, (415, "Content-Type must be application/json.")
 
         try:
             self.connection.settimeout(REQUEST_READ_TIMEOUT_SECONDS)
