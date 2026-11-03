@@ -675,6 +675,33 @@ BAD_CORRECTED_TEXT_1994_495 = (
     + _ALTERED_UNFLAGGED_SENTENCE
 )
 
+# A separate unsafe fixture with different wording and a different original
+# paragraph, so the demo can show that scope protection is not tied to one
+# memorized input string.
+_UNSAFE_ALT_ORIGINAL_302 = (
+    "For murder, Section 302 of the Indian Penal Code, 1860 imposes only a "
+    "fine and excludes both death and imprisonment."
+)
+_UNSAFE_ALT_ORIGINAL_148 = (
+    "Section 148 of the Indian Penal Code, 1860 addresses rioting by a person "
+    "armed with a deadly weapon."
+)
+_UNSAFE_ALT_CORRUPTED_TEXT = (
+    _UNSAFE_ALT_ORIGINAL_302 + " " + _UNSAFE_ALT_ORIGINAL_148
+)
+_UNSAFE_ALT_CORRECTED_302 = (
+    "Whoever commits murder under Section 302 of the Indian Penal Code, 1860 "
+    "shall be punished with death, or imprisonment for life, and shall also "
+    "be liable to fine."
+)
+_UNSAFE_ALT_ALTERED_148 = (
+    "Section 148 of the Indian Penal Code, 1860 addresses theft committed by "
+    "a person acting alone."
+)
+_UNSAFE_ALT_BAD_CORRECTED_TEXT = (
+    _UNSAFE_ALT_CORRECTED_302 + " " + _UNSAFE_ALT_ALTERED_148
+)
+
 
 EXAMPLE_SPECS = [
     {
@@ -780,19 +807,19 @@ EXAMPLE_SPECS = [
         "category": "correction_blocked",
         "title": "Selective Correction -- Unsafe Edit Blocked",
         "headline": (
-            "A correction that fixes the flagged claim but also alters an "
-            "unrelated sentence -- rejected."
+            "A different original paragraph where the candidate fixes Section "
+            "302 but also alters the separate Section 148 claim."
         ),
         "document_id": "1994_495",
         "mode": "C",
         "note": (
-            "The same Section 302 fix as the SHIP example, but the corrector's "
-            "output also silently changes the untouched Section 148 sentence. "
-            "The scope gate catches this."
+            "This uses a different input from the safe-correction example. "
+            "The candidate corrects Section 302 but changes Section 148 from "
+            "armed rioting to theft; the scope gate must reject it."
         ),
         "kind": "mode_c_scripted",
-        "generated_text": CORRUPTED_TEXT_1994_495,
-        "corrected_text": BAD_CORRECTED_TEXT_1994_495,
+        "generated_text": _UNSAFE_ALT_CORRUPTED_TEXT,
+        "corrected_text": _UNSAFE_ALT_BAD_CORRECTED_TEXT,
     },
     {
         "id": "assertion_aware_1955_32",
