@@ -847,6 +847,8 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             "regenerated_text": corrected_sentence,
             "original_field_text": original_field_text,
             "corrected_paragraph": corrected_text,
+            "output_valid": output_is_valid,
+            "splice_available": corrected_text is not None,
             "corr_meta": corr_meta_dict,
             "sentence_only": True,
         })
@@ -1294,6 +1296,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         on_event("correction", "completed", {
             "regenerated_text": corrected_fragment,
             "original_fragment": target_content_fragment,
+            "output_valid": _correction_output_is_single_sentence(corrected_fragment),
             "corr_meta": corr_meta_dict,
             "fragment_only": True,
         })
