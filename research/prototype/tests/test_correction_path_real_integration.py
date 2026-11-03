@@ -46,6 +46,7 @@ outside the repo; the test also deletes it explicitly before returning.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -155,11 +156,8 @@ class FakeGenerator:
 
 
 class ScriptedCorrector:
-    """Returns pre-authored 'corrected' text — never invokes the real 7B
-    model. Only pipeline.py's REAL apply_selective_correction() logic
-    (scope check, re-verification via the real verifier, status decision)
-    is under test here, not the LLM's correction quality. Same pattern as
-    test_pipeline_mock.py."""
+    """Returns a pre-authored sentence-level correction when safe, or a
+    deliberately malformed full paragraph for adversarial scope tests."""
 
     def __init__(self, corrected_text: str, model_id: str):
         self._corrected_text = corrected_text
@@ -168,10 +166,26 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((flagged_claim_text, evidence_text))
+        split = re.compile(r"(?<=[.!?])\\s+(?=[A-Z0-9])")
+        original = [p.strip() for p in split.split(original_field_text.strip()) if p.strip()]
+        proposed = [p.strip() for p in split.split(self._corrected_text.strip()) if p.strip()]
+        target_positions = [
+            i for i, sentence in enumerate(original)
+            if sentence == flagged_claim_text.strip()
+        ]
+        output = self._corrected_text
+        if len(target_positions) == 1 and len(proposed) == len(original):
+            target_index = target_positions[0]
+            siblings_unchanged = all(
+                proposed[i] == original[i]
+                for i in range(len(original)) if i != target_index
+            )
+            if siblings_unchanged and proposed[target_index] != original[target_index]:
+                output = proposed[target_index]
         meta = CorrectionMetadata(
             model_id=self._model_id, max_new_tokens=220, do_sample=False, seed=42,
         )
-        return self._corrected_text, meta
+        return output, meta
 
 
 def _case() -> Case:
@@ -266,7 +280,7 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
     assert corrector.calls[0][1] == claims_by_number["302"]["evidence_text"]  # real evidence passed through
 
     # regenerated claim: the corrector's output is recorded
-    assert record["correction"]["regenerated_text"] == corrected_text
+    assert record["correction"]["regenerated_text"] == _CORRECTED_FLAGGED_SENTENCE
 
     # re-verification: a REAL verdict was computed (not scripted) against
     # the real canonical evidence for the regenerated Section-302 sentence.
