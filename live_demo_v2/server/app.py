@@ -1658,6 +1658,7 @@ def _normalize_origin(value: str) -> str | None:
         if (
             parsed.scheme.lower() not in {"http", "https"}
             or not parsed.netloc
+            or parsed.hostname is None
             or parsed.username is not None
             or parsed.password is not None
             or parsed.path not in {"", "/"}
@@ -1665,6 +1666,8 @@ def _normalize_origin(value: str) -> str | None:
             or parsed.fragment
         ):
             return None
+        # Accessing .port also validates malformed/non-numeric ports.
+        _ = parsed.port
         return f"{parsed.scheme.lower()}://{parsed.netloc.lower()}"
     except (TypeError, ValueError):
         return None
@@ -1731,7 +1734,8 @@ def _validate_run_payload(body: object) -> tuple[dict | None, tuple[int, str] | 
 
 class Handler(BaseHTTPRequestHandler):
 
-    server_version = "NyayaMindDemoV2/1.0"
+    server_version = "NyayaMind"
+    sys_version = ""
 
     protocol_version = "HTTP/1.1"
 
@@ -1764,16 +1768,17 @@ class Handler(BaseHTTPRequestHandler):
             self.close_connection = True
             return None, (400, "Transfer-Encoding is not supported; send Content-Length.")
 
-        raw_length = self.headers.get("Content-Length")
-        if raw_length is None:
+        length_headers = self.headers.get_all("Content-Length", [])
+        if len(length_headers) != 1:
             self.close_connection = True
-            return None, (411, "Content-Length is required.")
+            return None, (411, "Exactly one Content-Length header is required.")
 
-        try:
-            length = int(raw_length)
-        except (TypeError, ValueError):
+        raw_length = length_headers[0]
+        if not raw_length.isascii() or not raw_length.isdigit():
             self.close_connection = True
-            return None, (400, "Content-Length must be a valid integer.")
+            return None, (400, "Content-Length must contain decimal digits only.")
+
+        length = int(raw_length)
 
         if length <= 0:
             self.close_connection = True
@@ -2080,21 +2085,6 @@ class Handler(BaseHTTPRequestHandler):
         else:
             print("[NyayaMind] request -> custom input", flush=True)
 
-
-        if body.get("mode") == "example":
-
-            print(
-                "[NyayaMind] request -> curated example "
-                f"{body.get('id')!r}",
-                flush=True,
-            )
-
-        elif body.get("mode") == "custom":
-
-            print(
-                "[NyayaMind] request -> custom input",
-                flush=True,
-            )
 
         # ---------------------------------------------------------------
         # STREAM RESPONSE
