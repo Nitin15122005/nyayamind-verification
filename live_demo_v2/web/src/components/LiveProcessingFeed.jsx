@@ -56,7 +56,7 @@ function doneDetail(key, data) {
     case "safety":
       if (!data.triggered) return "Not required";
       if (data.passed === false) return "Blocked -- see detail";
-      return `${(data.checks || []).filter((c) => c.result === "PASS").length}/${(data.checks || []).length} checks passed`;
+      return `${(data.checks || []).filter((c) => c.result === "PASS").length}/${(data.checks || []).length} structural checks passed`;
     case "recheck":
       if (!data.triggered) return "Not applicable";
       return data.verdict ? `Re-verified: ${data.verdict}` : "Could not re-verify";
