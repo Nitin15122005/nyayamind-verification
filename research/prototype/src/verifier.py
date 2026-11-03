@@ -179,29 +179,29 @@ class NLIVerifier:
         if not self.is_loaded():
             raise RuntimeError("NLIVerifier.load() must be called before verify().")
 
-        import torch
-
-        # Detect (never prevent) truncation: tokenize the SAME pair without
-        # truncation first, purely to measure its true combined length —
-        # this is a cheap, CPU-only tokenizer call (no model forward pass),
-        # not a second inference. HF's default pair-truncation trims the
-        # FIRST sequence (the premise, here) from its end when the pair
-        # exceeds max_length (verified empirically against this project's
-        # cached tokenizer) — exactly where a real statute's trailing
-        # exception/proviso clause would sit. Detection only; the actual
-        # model call below is unchanged (still truncates exactly as before)
-        # — this never alters what verdict is computed, only whether the
-        # caller can tell afterward that the input was cut.
-        untruncated_length = len(self._tokenizer(premise, hypothesis)["input_ids"])
-        input_truncated = untruncated_length > self.max_sequence_length
+        # Never score a silently truncated premise/hypothesis pair. In
+        # particular, truncating the premise can remove a trailing statutory
+        # exception or proviso and produce a confident but incomplete verdict.
+        # Refuse the pair before model inference; callers must treat this as
+        # an explicit verification failure, not as a legal verdict.
+        untruncated = self._tokenizer(premise, hypothesis, truncation=False)
+        untruncated_length = len(untruncated["input_ids"])
+        if untruncated_length > self.max_sequence_length:
+            raise ValueError(
+                "NLI input exceeds max_sequence_length "
+                f"({untruncated_length} > {self.max_sequence_length}); "
+                "refusing to verify truncated statutory evidence."
+            )
+        input_truncated = False
 
         inputs = self._tokenizer(
             premise,
             hypothesis,
-            truncation=True,
+            truncation=False,
             max_length=self.max_sequence_length,
             return_tensors="pt",
         )
+        import torch
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         with torch.no_grad():
