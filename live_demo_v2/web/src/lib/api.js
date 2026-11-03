@@ -40,37 +40,56 @@ export async function runVerification(body, onEvent, { signal } = {}) {
       const payload = await res.json();
       if (payload?.error) message = payload.error;
     } catch {
-      // ignore
+      // Keep the stable fallback message for non-JSON server failures.
     }
     throw new Error(message);
   }
 
   const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
+  const decoder = new TextDecoder("utf-8", { fatal: true });
   let buffer = "";
+  let completed = false;
 
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    let newlineIndex;
-    // eslint-disable-next-line no-cond-assign
-    while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
-      const line = buffer.slice(0, newlineIndex).trim();
-      buffer = buffer.slice(newlineIndex + 1);
-      if (!line) continue;
-      try {
-        onEvent(JSON.parse(line));
-      } catch {
-        // ignore a malformed/partial line
+  function dispatchLine(rawLine) {
+    const line = rawLine.trim();
+    if (!line) return;
+    let event;
+    try {
+      event = JSON.parse(line);
+    } catch {
+      throw new Error("The verification stream returned an invalid event. No result was accepted.");
+    }
+    if (!event || typeof event.stage !== "string" || typeof event.status !== "string") {
+      throw new Error("The verification stream returned an incomplete event. No result was accepted.");
+    }
+    onEvent(event);
+    if (event.stage === "error") {
+      throw new Error(event.data?.message || "The verification run failed.");
+    }
+    if (event.stage === "run" && event.status === "complete") completed = true;
+  }
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let newlineIndex;
+      // eslint-disable-next-line no-cond-assign
+      while ((newlineIndex = buffer.indexOf("\\n")) >= 0) {
+        const line = buffer.slice(0, newlineIndex);
+        buffer = buffer.slice(newlineIndex + 1);
+        dispatchLine(line);
       }
     }
+    buffer += decoder.decode();
+    if (buffer.trim()) dispatchLine(buffer);
+  } catch (error) {
+    try { await reader.cancel(); } catch { /* stream already closed */ }
+    throw error;
   }
-  if (buffer.trim()) {
-    try {
-      onEvent(JSON.parse(buffer.trim()));
-    } catch {
-      // ignore
-    }
+
+  if (!completed) {
+    throw new Error("The verification stream ended before a successful final status was received. The result was not accepted.");
   }
 }
