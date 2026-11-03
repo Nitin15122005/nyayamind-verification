@@ -12,7 +12,7 @@ Batch 2 is intentionally layered on the immutable Batch 1 checkpoint. It does no
 - Backend run errors use an explicit `error/failed` event instead of looking like a normal completed stage.
 - The frontend distinguishes successful, failed, cancelled, and incomplete runs; it no longer infers success merely because a stage started.
 - The frontend aborts its active request when unmounted and exposes a Cancel Run action.
-- A disconnected streaming client causes the backend to stop at the next event boundary. An already-running synchronous model inference cannot be interrupted mid-kernel; later pipeline stages are prevented from starting.
+- When a socket write observes that the streaming client disconnected, the backend stops at that event boundary. Detection depends on the operating system reporting the closed connection; an already-running synchronous model inference cannot be interrupted mid-kernel. Once detected, later pipeline stages are prevented from starting.
 
 ### Final safety decision
 - The server publishes an authoritative safety result after the correction pipeline returns. This supersedes provisional structural-gate events, so a later splice failure or sibling regression cannot leave the UI displaying an all-PASS safety result.
@@ -48,7 +48,7 @@ The research test suite includes a real-verifier integration test that requires 
 2. Confirm `/api/health` reaches `ready`.
 3. Run one curated correction-applied example and one correction-withheld example.
 4. Confirm the final safety panel reflects the final correction status, including a withheld legacy splice case.
-5. Start a custom run and press Cancel Run; confirm the UI shows CANCELLED rather than COMPLETE. The server should stop before starting subsequent stages after the client disconnect is observed.
+5. Start a custom run and press Cancel Run; confirm the UI shows CANCELLED rather than COMPLETE. After the server observes the disconnect on a stream write, it should stop before starting subsequent stages. An inference already in progress may finish first.
 6. Force a backend error or malformed stream in a test fixture and confirm the UI shows FAILED, never COMPLETE.
 7. Confirm Batch 1 API security tests still pass.
 
