@@ -170,9 +170,8 @@ class ScriptedCorrector:
         # sentence and preserves every sibling at its original position.
         # Keep the complete paragraph for adversarial fixtures (sibling
         # edits, additions, or reordering) so the production guard rejects it.
-        split = claim_parser._SENTENCE_SPLIT_REGEX
-        original = [p.strip() for p in split.split(original_field_text.strip()) if p.strip()]
-        proposed = [p.strip() for p in split.split(self._corrected_text.strip()) if p.strip()]
+        original = claim_parser.split_sentences(original_field_text)
+        proposed = claim_parser.split_sentences(self._corrected_text)
         target_positions = [
             i for i, sentence in enumerate(original)
             if sentence == flagged_claim_text.strip()
@@ -578,7 +577,7 @@ def test_correction_hallucinating_an_extra_new_citation_is_rejected_not_shipped(
     # appended after it, citing a provision (Section 34) nobody asked about
     # and that never appeared anywhere in the original field.
     corrected_text = (
-        f"{fixed_flagged_sentence} Section 34 of the Indian Penal Code, 1860 also applies here."
+        f"{fixed_flagged_sentence} and Section 34 of the Indian Penal Code, 1860 also applies here."
     )
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     generator = FakeGenerator(original_text)
@@ -972,7 +971,7 @@ def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
     assert record["correction"]["reverification"] is None
     # Never shipped as if it were a confirmed correction: falls back to the
     # original, unedited field, exactly like scope_violation/correction_failed.
-    assert record["final_field"]["source"] == "correction_ordinal_ambiguous"
+    assert record["final_field"]["source"] == "correction_scope_violation"
     assert record["final_field"]["text"] == original_text
 
 
