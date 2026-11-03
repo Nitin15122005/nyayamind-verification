@@ -28,13 +28,16 @@ export default function LiveDemo() {
   const [viewedStage, setViewedStage] = useState(null);
   const [underlying, setUnderlying] = useState(false);
   const [error, setError] = useState(null);
+  const [runOutcome, setRunOutcome] = useState("idle");
 
   const abortRef = useRef(null);
 
   useEffect(() => {
-    fetchExamples()
+    const controller = new AbortController();
+    fetchExamples({ signal: controller.signal })
       .then(setExamples)
-      .catch(() => setExamples([]));
+      .catch((e) => { if (e.name !== "AbortError") setExamples([]); });
+    return () => { controller.abort(); abortRef.current?.abort(); };
   }, []);
 
   function handlePickSample(example) {
@@ -46,6 +49,7 @@ export default function LiveDemo() {
     setStageStatus(initialStatus());
     setViewedStage(null);
     setError(null);
+    setRunOutcome("idle");
   }
 
   function handleTextChange(e) {
@@ -62,6 +66,7 @@ export default function LiveDemo() {
     setViewedStage(null);
     setUnderlying(false);
     setError(null);
+    setRunOutcome("idle");
   }
 
   // Every transition below is driven by a real event the backend emitted at
@@ -70,9 +75,13 @@ export default function LiveDemo() {
   // of the data it describes.
   function handleEvent(event) {
     const { stage, status, data } = event;
-    if (stage === "run") return; // overall lifecycle marker; `running` already tracks this via the fetch itself
+    if (stage === "run") {
+      if (status === "complete") setRunOutcome("succeeded");
+      return;
+    }
     if (stage === "error") {
       setError(data?.message || "This run could not be completed.");
+      setRunOutcome("failed");
       return;
     }
     if (status === "started") {
@@ -88,6 +97,7 @@ export default function LiveDemo() {
   async function handleRun() {
     if (!inputText.trim() || running) return;
     setRunning(true);
+    setRunOutcome("running");
     setError(null);
     setStageData({});
     setUnderlying(false);
@@ -104,14 +114,21 @@ export default function LiveDemo() {
     try {
       await runVerification(body, handleEvent, { signal: controller.signal });
     } catch (e) {
-      if (e.name !== "AbortError") setError(e.message || "The run could not be completed.");
+      if (e.name === "AbortError") {
+        setRunOutcome("cancelled");
+        setError("Run cancelled. No successful result was produced.");
+      } else {
+        setRunOutcome("failed");
+        setError(e.message || "The run could not be completed.");
+      }
     } finally {
+      if (abortRef.current === controller) abortRef.current = null;
       setRunning(false);
     }
   }
 
   const hasStarted = Object.values(stageStatus).some((s) => s !== "pending");
-  const runStatus = running ? "running" : hasStarted ? "complete" : "ready";
+  const runStatus = running ? "running" : runOutcome === "succeeded" ? "complete" : runOutcome === "failed" ? "failed" : runOutcome === "cancelled" ? "cancelled" : hasStarted ? "incomplete" : "ready";
 
   return (
     <div className="min-h-screen">
@@ -160,6 +177,9 @@ export default function LiveDemo() {
                   placeholder="Citation / authority (optional)"
                   className="w-full max-w-xs rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-body text-xs text-ink-primary placeholder:text-ink-muted focus:border-judicial focus:outline-none sm:w-72"
                 />
+                {running && (
+                  <button type="button" onClick={() => abortRef.current?.abort()} className="rounded-lg border border-contra/30 px-4 py-2 font-body text-xs font-semibold text-contra hover:bg-red-50">Cancel Run</button>
+                )}
                 <button
                   type="button"
                   onClick={handleRun}
