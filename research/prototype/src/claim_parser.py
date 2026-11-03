@@ -472,8 +472,15 @@ def split_sentences(text: str) -> list[str]:
     # non-terminal abbreviation (see _SENTENCE_BOUNDARY_ABBREVIATIONS above).
     parts: list[str] = []
     for part in raw_parts:
-        if parts and parts[-1].rstrip().endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS):
-            parts[-1] = parts[-1].rstrip() + " " + part.strip()
+        previous = parts[-1].rstrip() if parts else ""
+        # A legal instrument's publication year is followed by a period,
+        # but that period is not a sentence boundary when the next token
+        # continues the same sentence (e.g. "IPC, 1860 shall ...").
+        year_period = bool(re.search(r"\\b(?:15|16|17|18|19|20)\\d{2}\\.$", previous))
+        if parts and (
+            previous.endswith(_SENTENCE_BOUNDARY_ABBREVIATIONS) or year_period
+        ):
+            parts[-1] = previous + " " + part.strip()
         else:
             parts.append(part.strip())
     return parts
