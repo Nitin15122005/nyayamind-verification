@@ -91,11 +91,23 @@ function EvidenceView({ data, underlying }) {
           {c.evidence_text ? (
             <div className="mt-2 border-l-2 border-entail/40 pl-3">
               <p className="text-xs leading-5 text-ink-secondary">{c.evidence_text}</p>
-              {underlying && (
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink-muted">
-                  matched via {c.evidence_match_method}
-                </p>
-              )}
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                {c.evidence_source_url && (
+                  <a
+                    href={c.evidence_source_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[11px] font-medium text-judicial underline underline-offset-2"
+                  >
+                    View source
+                  </a>
+                )}
+                {underlying && (
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+                    matched via {c.evidence_match_method}
+                  </p>
+                )}
+              </div>
             </div>
           ) : (
             <p className="mt-2 text-sm text-ink-secondary">
