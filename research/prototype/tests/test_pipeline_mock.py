@@ -935,8 +935,9 @@ def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
     shipped as status="corrected" with a genuine-looking ENTAILED
     confirmation that was never computed against the real correction at
     all. This is a fabricated safety confirmation, strictly worse than an
-    honest rejection. Must now be caught as "correction_ordinal_ambiguous",
-    never silently reclassified as "corrected"."""
+    honest rejection. The sentence-only output contract now rejects this
+    paragraph-level reorder before ordinal matching; the ordinal check remains
+    defense in depth for any future paragraph reconstruction path."""
     exact_index, all_usable = shared_citation_evidence_pool
     claim_a = "Section 420 of the Indian Penal Code, 1860 is one of the provisions relied upon in this case."
     claim_b_original = "Section 420 of the Indian Penal Code, 1860 requires no proof of dishonest intention."
@@ -964,7 +965,10 @@ def test_reordered_shared_citation_claims_rejected_not_fabricated_as_corrected(
     record = run_case(case, "C", generator, verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
 
-    assert record["correction"]["status"] == "correction_ordinal_ambiguous"
+    # The paragraph-level reorder is rejected even earlier by the
+    # sentence-only corrector contract; the ordinal guard remains defense
+    # in depth for any future path that supplies a reconstructed paragraph.
+    assert record["correction"]["status"] == "correction_scope_violation"
     assert record["correction"]["reverification"] is None
     # Never shipped as if it were a confirmed correction: falls back to the
     # original, unedited field, exactly like scope_violation/correction_failed.
