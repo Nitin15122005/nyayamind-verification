@@ -830,8 +830,10 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     # the observed failure mode where a whole-paragraph generation leaked a
     # neighboring fragment (for example, a trailing "intention.") into the
     # corrected sentence.
-    corrected_text = _splice_flagged_sentence(
-        original_field_text, target["claim_text"], corrected_sentence
+    output_is_valid = _correction_output_is_single_sentence(corrected_sentence)
+    corrected_text = (
+        _splice_flagged_sentence(original_field_text, target["claim_text"], corrected_sentence)
+        if output_is_valid else None
     )
     corr_meta_dict = {
         "model": corr_meta.model_id,
@@ -843,10 +845,27 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     if on_event:
         on_event("correction", "completed", {
             "regenerated_text": corrected_sentence,
+            "original_field_text": original_field_text,
             "corrected_paragraph": corrected_text,
             "corr_meta": corr_meta_dict,
             "sentence_only": True,
         })
+
+    if not output_is_valid:
+        if on_event:
+            on_event("safety", "started", {})
+            on_event("safety", "completed", {"passed": False, "gate": "output_shape"})
+            on_event("recheck", "skipped", {})
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "trigger_reason": trigger_reason,
+            "attempts": 1,
+            "status": "correction_output_invalid",
+            "regenerated_text": corrected_sentence,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+        }
 
     if corrected_text is None:
         if on_event:
@@ -857,7 +876,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             "triggered_for_claim_id": target["claim_id"],
             "trigger_reason": trigger_reason,
             "attempts": 1,
-            "status": "correction_sentence_splice_unavailable",
+            "status": "correction_splice_unavailable",
             "regenerated_text": corrected_sentence,
             "original_field_text": original_field_text,
             "reverification": None,
@@ -904,15 +923,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     # same priority as a scope violation, since this is scope enforcement
     # too — just for additions rather than alterations/removals.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _has_citation_overcount(baseline["claims"], corrected_text):
         if on_event:
             on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
             on_event("recheck", "skipped", {})
@@ -1287,6 +1298,25 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "fragment_only": True,
         })
 
+    if not _correction_output_is_single_sentence(corrected_fragment):
+        if on_event:
+            on_event("safety", "started", {})
+            on_event("safety", "completed", {"passed": False, "gate": "output_shape"})
+            on_event("recheck", "skipped", {})
+        return {
+            "triggered_for_claim_id": target["claim_id"],
+            "trigger_reason": trigger_reason,
+            "attempts": 1,
+            "status": "correction_output_invalid",
+            "regenerated_text": corrected_fragment,
+            "original_field_text": original_field_text,
+            "reverification": None,
+            "corr_meta": corr_meta_dict,
+            "correction_mode": "assertion_aware",
+            "target_assertion_spans": target_spans,
+            "target_content_fragment": target_content_fragment,
+        }
+
     if on_event:
         on_event("safety", "started", {})
 
@@ -1368,15 +1398,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     # verifies existing unflagged claims survive; it does not forbid a NEW
     # hallucinated citation appearing inside the corrected fragment itself.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _has_citation_overcount(baseline["claims"], corrected_text):
         if on_event:
             on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
             on_event("recheck", "skipped", {})
