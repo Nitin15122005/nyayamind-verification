@@ -1,9 +1,9 @@
 # Batch 2 — Reliability and verification safeguards
 
-**Base:** `checkpoint/batch-1-complete-2026-11-03`  
-**Working branch:** `fix/batch-2-reliability`
+**Base:** `main` (Batch 1 API hardening and research correction already included)  
+**Working branch:** `fix/batch-2-clean`
 
-Batch 2 is intentionally layered on the immutable Batch 1 checkpoint. It does not change the canonical evidence corpus, production configuration, model weights, historical outputs, or baseline submodule.
+Batch 2 is layered directly on the current `main`. It does not duplicate Batch 1 changes or modify the canonical evidence corpus, production configuration, model weights, historical outputs, or baseline submodule.
 
 ## Changes in this branch
 
@@ -40,7 +40,7 @@ npm test
 npm run build
 ```
 
-The research test suite includes a real-verifier integration test that requires the configured CUDA environment. If CUDA is unavailable, report that test as environment-blocked; do not count it as passed.
+The research test suite includes a real-verifier integration test. If the configured CUDA environment is unavailable, report that test as environment-blocked; do not count it as passed.
 
 ## Required manual smoke checks
 
@@ -54,4 +54,10 @@ The research test suite includes a real-verifier integration test that requires 
 
 ## Validation status
 
-GitHub Actions passed the frontend test suite, Vite production build, Python syntax compilation, and the new NLI length-guard regression test on the current branch head. The full local server regression suite, complete research pytest suite, and manual Windows/CUDA live-demo smoke checks still need to be run before Batch 2 can be marked complete. The Batch 1 checkpoint remains unchanged and is the rollback target.
+Local validation on this branch:
+- Server tests: **23 passed**.
+- Research tests: **304 passed, 1 skipped**.
+- Frontend tests: **5 passed**.
+- Vite production build: **passed**.
+
+The GitHub Actions workflow is configured to run on pull requests targeting `main` and pushes to `fix/batch-2-clean`. Confirm its checks pass on the PR head before merge. The manual Windows live-demo smoke checks above remain required before Batch 2 is marked complete. The current `main` branch remains the rollback target.
