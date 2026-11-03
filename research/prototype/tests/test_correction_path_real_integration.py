@@ -265,7 +265,7 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
 
     case = _case()
     generator = FakeGenerator(corrupted_text, real_config["generation"]["model_id"])
-    corrector = ScriptedCorrector(corrected_text, real_config["generation"]["model_id"])
+    corrector = ScriptedCorrector(_CORRECTED_FLAGGED_SENTENCE, real_config["generation"]["model_id"])
 
     record = run_case(
         case, "C", generator, real_verifier, corrector,
