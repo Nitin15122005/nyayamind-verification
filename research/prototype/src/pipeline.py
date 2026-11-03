@@ -125,7 +125,14 @@ def _annotate_correction_triggers(claims: list[dict]) -> None:
     verdict, confidence, or the correction policy.
     """
     for claim in claims:
-        reason = _correction_trigger_reason(claim)
+        # Keep the public eligibility annotation identical to the execution
+        # policy: negation-driven CONTRADICTED claims are not auto-correction
+        # candidates, even though their NLI verdict remains visible.
+        reason = (
+            None
+            if claim.get("negation_contradiction_caveat")
+            else _correction_trigger_reason(claim)
+        )
         claim["correction_trigger"] = reason is not None
         claim["correction_trigger_reason"] = reason
 
