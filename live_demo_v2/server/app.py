@@ -2191,7 +2191,7 @@ class Handler(BaseHTTPRequestHandler):
 
                         emit(
                             "error",
-                            "complete",
+                            "failed",
                             {
                                 "message":
                                     f"Unknown example id {ex_id!r}"
@@ -2254,7 +2254,7 @@ class Handler(BaseHTTPRequestHandler):
 
                         emit(
                             "error",
-                            "complete",
+                            "failed",
                             {
                                 "message":
                                     "No input text provided."
@@ -2311,7 +2311,7 @@ class Handler(BaseHTTPRequestHandler):
 
                     emit(
                         "error",
-                        "complete",
+                        "failed",
                         {
                             "message":
                                 "mode must be "
@@ -2341,7 +2341,7 @@ class Handler(BaseHTTPRequestHandler):
 
                 emit(
                     "error",
-                    "complete",
+                    "failed",
                     {
                         "message":
                             "This run could not be completed."
