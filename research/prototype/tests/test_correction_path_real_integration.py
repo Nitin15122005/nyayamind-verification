@@ -51,6 +51,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from src import claim_parser
 from src.corrector import CorrectionMetadata
 from src.data_loader import Case, load_usable_evidence_from_config
 from src.generator import GenerationMetadata
@@ -155,11 +156,8 @@ class FakeGenerator:
 
 
 class ScriptedCorrector:
-    """Returns pre-authored 'corrected' text — never invokes the real 7B
-    model. Only pipeline.py's REAL apply_selective_correction() logic
-    (scope check, re-verification via the real verifier, status decision)
-    is under test here, not the LLM's correction quality. Same pattern as
-    test_pipeline_mock.py."""
+    """Returns a pre-authored sentence-level correction when safe, or a
+    deliberately malformed full paragraph for adversarial scope tests."""
 
     def __init__(self, corrected_text: str, model_id: str):
         self._corrected_text = corrected_text
@@ -168,10 +166,37 @@ class ScriptedCorrector:
 
     def correct(self, case_text, original_field_text, flagged_claim_text, evidence_text):
         self.calls.append((flagged_claim_text, evidence_text))
+        original = claim_parser.split_sentences(original_field_text)
+        # The fixture supplies a full candidate paragraph. Extract a sentence-
+        # level proposal only when every non-target original sentence survives
+        # verbatim and exactly once. If any sibling changed or extra text remains,
+        # preserve the malformed paragraph so production scope checks reject it.
+        normalized_flagged = " ".join(flagged_claim_text.split())
+        target_positions = [
+            i for i, sentence in enumerate(original)
+            if normalized_flagged in " ".join(sentence.split())
+        ]
+        output = self._corrected_text
+        if len(target_positions) == 1:
+            target_index = target_positions[0]
+            candidate = self._corrected_text
+            siblings = [sentence for i, sentence in enumerate(original) if i != target_index]
+            siblings_are_unambiguous = all(candidate.count(sibling) == 1 for sibling in siblings)
+            if siblings_are_unambiguous:
+                for sibling in siblings:
+                    candidate = candidate.replace(sibling, "", 1)
+                candidate = candidate.strip()
+                candidate_sentences = claim_parser.split_sentences(candidate)
+                if (
+                    len(candidate_sentences) == 1
+                    and candidate_sentences[0] != original[target_index]
+                    and normalized_flagged not in " ".join(candidate_sentences[0].split())
+                ):
+                    output = candidate_sentences[0]
         meta = CorrectionMetadata(
             model_id=self._model_id, max_new_tokens=220, do_sample=False, seed=42,
         )
-        return self._corrected_text, meta
+        return output, meta
 
 
 def _case() -> Case:
@@ -240,7 +265,7 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
 
     case = _case()
     generator = FakeGenerator(corrupted_text, real_config["generation"]["model_id"])
-    corrector = ScriptedCorrector(corrected_text, real_config["generation"]["model_id"])
+    corrector = ScriptedCorrector(_CORRECTED_FLAGGED_SENTENCE, real_config["generation"]["model_id"])
 
     record = run_case(
         case, "C", generator, real_verifier, corrector,
@@ -265,7 +290,8 @@ def test_full_correction_path_triggers_and_reverifies_with_real_verifier(
     assert corrector.calls[0][0] == _CORRUPTED_FLAGGED_SENTENCE  # flagged_claim_text passed through
     assert corrector.calls[0][1] == claims_by_number["302"]["evidence_text"]  # real evidence passed through
 
-    # regenerated claim: the corrector's output is recorded
+    # The corrector proposes one sentence; the pipeline splices it into
+    # the original paragraph and records that full regenerated field here.
     assert record["correction"]["regenerated_text"] == corrected_text
 
     # re-verification: a REAL verdict was computed (not scripted) against
