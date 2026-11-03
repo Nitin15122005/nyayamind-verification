@@ -1433,8 +1433,8 @@ def run_streaming(
             # and only later discover a deterministic-splice or final-status
             # failure. Publish the authoritative post-pipeline safety result
             # last so the UI cannot leave an earlier provisional PASS visible.
-            final_safety_passed = not any(
-                check.get("result") == "BLOCK"
+            final_safety_passed = bool(safety_checks) and all(
+                check.get("result") == "PASS"
                 for check in safety_checks
             )
             emit(
