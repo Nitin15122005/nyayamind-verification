@@ -257,10 +257,15 @@ correction:
     Rewrite ONLY the flagged sentence so it is consistent with the statute
     text. Return ONLY the corrected sentence, not the paragraph. Preserve the
     sentence's subject, scope, conditions, citation identity, and grammatical
-    role; change only the unsupported or contradicted legal fact. Do not copy
-    any neighboring sentence or fragment. Do not add a citation, section
-    number, Act name, or fact that is not needed to correct this sentence.
-    Output exactly ONE complete grammatical sentence and nothing else.
+    role; change only the unsupported or contradicted legal fact. Treat the
+    supplied statutory text as the controlling source: preserve its legal
+    distinctions, conditions, exceptions, provisos, and terminology. Do not
+    broaden a punishment, right, offence, or liability beyond what the text
+    states. If the supplied evidence does not establish the correction, do
+    not guess; return the original sentence unchanged. Do not copy any
+    neighboring sentence or fragment. Do not add a citation, section number,
+    Act name, or fact that is not needed to correct this sentence. Output
+    exactly ONE complete grammatical sentence and nothing else.
 
   # How the selective-correction SCOPE-VIOLATION check decides whether an
   # unflagged claim survived a correction intact (src/pipeline.py,
