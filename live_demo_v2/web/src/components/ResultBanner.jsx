@@ -63,6 +63,14 @@ export default function ResultBanner({ record, safetyChecks }) {
           </span>
         </div>
         <p className="text-lg leading-[1.65] text-ink-primary">{reason}</p>
+        {correction.reverification?.input_truncated && (
+          <div className="rounded-lg border border-warn/25 bg-warn/10 p-3">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-warn">Re-verification rejected</p>
+            <p className="mt-1 text-sm leading-5 text-ink-secondary">
+              The premise and hypothesis exceeded the model token limit. The resulting truncated-input verdict was not accepted, and the original text was retained.
+            </p>
+          </div>
+        )}
         {Array.isArray(correction.sibling_regressions) && correction.sibling_regressions.length > 0 && (
           <div className="rounded-lg border border-warn/25 bg-warn/5 p-3">
             <p className="font-mono text-xs font-semibold uppercase tracking-wider text-warn">
