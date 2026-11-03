@@ -92,7 +92,7 @@ function EvidenceView({ data, underlying }) {
             <div className="mt-2 border-l-2 border-entail/40 pl-3">
               <p className="text-xs leading-5 text-ink-secondary">{c.evidence_text}</p>
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                {c.evidence_source_url && (
+                {typeof c.evidence_source_url === "string" && /^https?:\/\//i.test(c.evidence_source_url) && (
                   <a
                     href={c.evidence_source_url}
                     target="_blank"
