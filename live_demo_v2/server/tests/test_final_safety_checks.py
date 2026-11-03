@@ -27,6 +27,17 @@ class FinalSafetyChecksTests(unittest.TestCase):
         })
         self.assertIn("BLOCK", {row["result"] for row in checks})
 
+    def test_fully_verified_correction_has_only_passing_checks(self):
+        checks = _build_safety_checks({
+            "correction": {
+                "status": "corrected",
+                "reverification": {"verdict": "ENTAILED", "confidence": 0.99},
+                "sibling_regressions": [],
+            }
+        })
+        self.assertTrue(checks)
+        self.assertEqual({row["result"] for row in checks}, {"PASS"})
+
     def test_sibling_regression_is_blocked(self):
         checks = _build_safety_checks({
             "correction": {
