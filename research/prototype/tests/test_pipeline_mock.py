@@ -1624,11 +1624,9 @@ def test_narrow_reverification_never_synthesizes_text(ipc_148_evidence_pool, con
 def test_sibling_regression_check_rejects_a_genuine_regression(
     respectively_evidence_pool, config
 ):
-    """If a sibling's own required (assertion_spans) fragments survive —
-    so the scope check itself passes — but the sibling's FULL corrected
-    sentence has changed enough that an independent re-check finds it now
-    genuinely CONTRADICTED its own evidence, the correction must be
-    rejected (status: correction_sibling_regression), never shipped, even
+    """If a sibling's own required assertion fragments survive, but its
+    independently checked, citation-specific assertion is now genuinely
+    CONTRADICTED by its own evidence, the correction must be rejected even
     though the target's own re-verification passed."""
     exact_index, all_usable = respectively_evidence_pool
     original_text = (
@@ -1655,10 +1653,11 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
         ("voluntarily causes hurt", original_text): _vr(ENTAILED, confidence=0.93),
         ("common intention", original_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.9),  # 149 target: passes
-        # Sibling-regression re-checks:
-        ("murder", corrected_text): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
-        ("voluntarily causes hurt", corrected_text): _vr(ENTAILED, confidence=0.93),  # 323: fine
-        ("common intention", corrected_text): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
+        # Sibling-regression re-checks use citation-specific hypotheses,
+        # not the shared full sentence.
+        ("murder", "Section 302 murder"): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
+        ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
+        ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
     })
     cfg = {**config, "correction": {**config.get("correction", {}), "atomic_scope_check": "assertion_spans"}}
 
