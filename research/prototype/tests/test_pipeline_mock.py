@@ -1799,3 +1799,26 @@ def test_negation_caveat_field_defaults_correctly_for_non_negated_and_no_evidenc
     by_text = {c["claim_text"]: c for c in record_b["claims"]}
     assert by_text[plain_contradicted]["negation_contradiction_caveat"] is False
     assert by_text[plain_entailed]["negation_contradiction_caveat"] is False
+
+# ---------------------------------------------------------------------------
+# Regression tests: malformed correction output and duplicate citations.
+# ---------------------------------------------------------------------------
+
+def test_correction_output_rejects_multiple_sentences():
+    valid = "Section 302 of the Indian Penal Code, 1860 prescribes death or life imprisonment."
+    invalid = valid + " Section 148 deals with rioting."
+    assert pipeline._correction_output_is_single_sentence(valid)
+    assert not pipeline._correction_output_is_single_sentence(invalid)
+    assert not pipeline._correction_output_is_single_sentence("   ")
+
+
+def test_correction_rejects_duplicate_existing_citation_identity():
+    original = "Section 148 of the Indian Penal Code, 1860 deals with rioting."
+    parsed = claim_parser.extract_claims(original)
+    assert parsed, "Test fixture must parse at least one citation-bearing claim."
+    baseline_claims = [
+        {"citation_extracted": claim.citation_extracted.as_dict()}
+        for claim in parsed
+    ]
+    assert not pipeline._has_citation_overcount(baseline_claims, original)
+    assert pipeline._has_citation_overcount(baseline_claims, original + " " + original)
