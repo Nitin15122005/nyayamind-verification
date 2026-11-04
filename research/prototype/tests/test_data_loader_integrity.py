@@ -180,3 +180,31 @@ def test_invalid_effective_date_intervals_are_rejected(tmp_path, effective_from,
     cpath, apath = write_pair(tmp_path, [row], [audit()])
     with pytest.raises(ValueError):
         load_usable_evidence(cpath, apath, USABLE)
+
+
+def test_case_loader_reads_only_explicit_judgment_date(tmp_path):
+    from src.data_loader import load_nyayarag_cases
+
+    path = tmp_path / "cases.json"
+    path.write_text(json.dumps([{
+        "document_id": "case-1",
+        "summarized_text": "A case summary.",
+        "sections": {"Section 1 in Example Act": "ignored text"},
+        "judgment_date": "2005-06-30",
+    }]), encoding="utf-8")
+    cases = load_nyayarag_cases([path])
+    assert cases[0].judgment_date == "2005-06-30"
+
+
+def test_case_loader_rejects_invalid_judgment_date(tmp_path):
+    from src.data_loader import load_nyayarag_cases
+
+    path = tmp_path / "cases.json"
+    path.write_text(json.dumps([{
+        "document_id": "case-2",
+        "summarized_text": "A case summary.",
+        "sections": {},
+        "judgment_date": "30-06-2005",
+    }]), encoding="utf-8")
+    with pytest.raises(ValueError, match="judgment_date"):
+        load_nyayarag_cases([path])
