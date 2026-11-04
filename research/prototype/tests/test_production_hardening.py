@@ -209,3 +209,26 @@ def test_manifest_hash_includes_subsection_identity():
     assert build_run_manifest({}, [base])["evidence_sha256"] != (
         build_run_manifest({}, [subsection])["evidence_sha256"]
     )
+
+
+def test_embedding_retrieval_signal_rejects_tied_act_candidates():
+    from src.retrieval_signals import best_match_among
+
+    first = _evidence("Industrial Disputes Act, 1947")
+    second = _evidence("Industrial Disputes Act, 1950")
+    first.act_norm = "industrial disputes act 1947"
+    second.act_norm = "industrial disputes act 1950"
+
+    class EqualScoreIndex:
+        def score_all(self, _query):
+            return {
+                first.act_norm: 0.91,
+                second.act_norm: 0.91,
+            }
+
+    result = best_match_among(
+        "industrial disputes act", [first, second], EqualScoreIndex(), "embedding"
+    )
+    assert result.evidence is None
+    assert result.ambiguous is True
+    assert result.score == 0.91
