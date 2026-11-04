@@ -11,7 +11,6 @@ import csv
 import hashlib
 import json
 import random
-import re
 from collections import Counter
 from pathlib import Path
 from typing import Iterable
@@ -24,7 +23,7 @@ GOLD03_REVIEW_FIELDS = [
 NATURAL_FIELDS = [
     "annotation_id", "document_id", "claim_id", "case_date",
     "case_context", "claim_text", "assertion_text", "citation",
-    "evidence_text", "evidence_source_url", "automated_evidence_status",
+    "evidence_text", "evidence_source_url",
     "reviewer_label", "reviewer_rationale", "citation_correctness",
     "temporal_applicability", "reviewer_id",
 ]
@@ -70,6 +69,9 @@ def command_split_gold03(args: argparse.Namespace) -> int:
     required = {"item_id", "source_text", "source_url", "candidate_claim_without_citation"}
     if not rows or not required.issubset(rows[0]):
         raise ValueError(f"Worksheet must contain columns: {sorted(required)}")
+    blank_claims = [r.get("item_id", "") for r in rows if not r.get("candidate_claim_without_citation", "").strip()]
+    if blank_claims:
+        raise ValueError(f"Draft citation-free claims before blind annotation; blank items: {blank_claims[:10]}")
     ids = [r["item_id"] for r in rows]
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate item_id in source worksheet")
@@ -132,6 +134,10 @@ def command_merge_gold03(args: argparse.Namespace) -> int:
     b = _validate_review_packet(args.reviewer2)
     if set(a) != set(b):
         raise ValueError("Reviewer item sets differ; refusing positional or partial merge")
+    ids_a = {row.get("reviewer_id", "").strip() for row in a.values()}
+    ids_b = {row.get("reviewer_id", "").strip() for row in b.values()}
+    if len(ids_a) != 1 or len(ids_b) != 1 or "" in ids_a or "" in ids_b or ids_a == ids_b:
+        raise ValueError("Reviewer packets must have distinct, non-empty reviewer identities")
     rows = []
     for item in sorted(a):
         x, y = a[item], b[item]
@@ -182,13 +188,16 @@ def command_validate_gold03(args: argparse.Namespace) -> int:
             value = row.get(field, "").strip().upper()
             if value and value not in LABELS:
                 errors.append(f"line {i}: invalid {field}={value}")
+        for field in ("reviewer1_id", "reviewer2_id", "reviewer1_rationale", "reviewer2_rationale"):
+            if not row.get(field, "").strip():
+                errors.append(f"line {i}: {field} missing")
+        if row.get("reviewer1_id") == row.get("reviewer2_id"):
+            errors.append(f"line {i}: reviewer identities must be independent")
         if row.get("adjudicated_label", "").strip():
             if not row.get("adjudication_rationale", "").strip():
                 errors.append(f"line {i}: adjudication rationale missing")
             if not row.get("adjudicator_id", "").strip():
                 errors.append(f"line {i}: adjudicator_id missing")
-        if row.get("reviewer1_id") and row.get("reviewer1_id") == row.get("reviewer2_id"):
-            errors.append(f"line {i}: reviewer identities must be independent")
     incomplete = sum(not r.get("adjudicated_label", "").strip() for r in rows)
     result = {"n_items": len(rows), "n_incomplete_adjudications": incomplete,
               "errors": errors, "release_ready": bool(rows) and not errors and incomplete == 0}
@@ -254,7 +263,6 @@ def command_export_natural(args: argparse.Namespace) -> int:
                 "citation": json.dumps(citation, ensure_ascii=False, sort_keys=True),
                 "evidence_text": str(claim.get("evidence_text") or ""),
                 "evidence_source_url": str(evidence_url),
-                "automated_evidence_status": str(claim.get("verdict") or ""),
                 "reviewer_label": "",
                 "reviewer_rationale": "",
                 "citation_correctness": "",
@@ -263,14 +271,13 @@ def command_export_natural(args: argparse.Namespace) -> int:
             })
     if not rows:
         raise ValueError("No claim rows found; expected records with document_id and claims[]")
-    # Stable ordering and no prediction fields beyond evidence status, which can be
-    # hidden by the study coordinator before giving the packet to reviewers.
+    # No automated verdict, confidence, or model identity is exported to reviewers.
     rows.sort(key=lambda r: (r["document_id"], r["claim_id"]))
     write_csv(args.output, rows, NATURAL_FIELDS)
     print(json.dumps({
         "output": str(args.output), "n_documents": len({r["document_id"] for r in rows}),
         "n_claims": len(rows), "labels_created": False,
-        "blinding_warning": "Remove automated_evidence_status before reviewer distribution.",
+        "blinding": "automated verdicts and confidence scores are excluded from reviewer packet",
         "case_grouping": "document_id is the mandatory split/cluster unit",
     }, indent=2))
     return 0
