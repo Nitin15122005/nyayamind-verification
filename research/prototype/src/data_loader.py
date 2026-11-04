@@ -132,6 +132,7 @@ def _load_usable_records_by_key(
         # certify a different source or provision under a shared key.
         for field_name in (
             "source_url", "act", "provision_type", "provision_number",
+            "effective_from", "effective_to",
         ):
             audited_value = audit_record.get(field_name)
             canonical_value = record.get(field_name)
