@@ -41,6 +41,8 @@ def build_run_manifest(config: dict, evidence_records: list) -> dict:
             "provision_type": getattr(item, "provision_type", None),
             "provision_number": getattr(item, "provision_number", None),
             "subsection": getattr(item, "subsection", None),
+            "effective_from": getattr(item, "effective_from", None),
+            "effective_to": getattr(item, "effective_to", None),
             "canonical_text": getattr(item, "canonical_text", None),
             "source_url": getattr(item, "source_url", None),
             "audit_verdict": getattr(item, "audit_verdict", None),
