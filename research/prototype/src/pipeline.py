@@ -779,11 +779,17 @@ def _reverify_sibling_regressions(
             ),
             hypothesis=sibling_hypothesis,
         )
-        if result.label == CONTRADICTED:
+        baseline_verdict = rec.get("verdict")
+        regressed = (
+            (baseline_verdict == ENTAILED and result.label != ENTAILED)
+            or (result.label == CONTRADICTED and baseline_verdict != CONTRADICTED)
+        )
+        if regressed:
             regressions.append({
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
                 "reverified_hypothesis": sibling_hypothesis,
                 "evidence_id": match.evidence.dataset_citation_key,
+                "baseline_verdict": baseline_verdict,
                 "verdict": result.label, "confidence": result.confidence,
                 "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
                 "input_truncated": result.input_truncated,
