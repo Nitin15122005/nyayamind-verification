@@ -369,3 +369,39 @@ def test_multiple_while_occurrences_is_a_safe_no_split():
     for c in claims:
         assert c.assertion_text == s  # ambiguous split point -> full sentence for all
 
+
+
+# ---------------------------------------------------------------------------
+# Conservative "whereas" parallel-clause extraction.
+# ---------------------------------------------------------------------------
+
+def test_whereas_split_preserves_the_unambiguous_left_sibling_assertion():
+    s = (
+        "Sections 302 and 304(1) require that for a conviction under "
+        "Section 302, the prosecution must establish that the accused "
+        "acted with premeditation and intention to cause death, whereas "
+        "Section 304(1) applies to cases where the death is caused by "
+        "negligence or without any intention to cause death."
+    )
+    claims = extract_claims(s)
+    by_number = {c.citation_extracted.provision_number: c for c in claims}
+    assert set(by_number) == {"302", "304"}
+    # Section 302 is mentioned only in the left-hand clause. The repeated
+    # Section 304(1) occurs on both sides, so its assignment remains
+    # ambiguous and must fail closed to the full sentence.
+    assert "Sections 302 and 304(1) require" in by_number["302"].assertion_text
+    assert by_number["302"].assertion_text.endswith("intention to cause death")
+    assert by_number["302"].assertion_text in s
+    assert by_number["304"].assertion_text == s
+    assert by_number["304"].assertion_spans == [s]
+
+
+def test_multiple_whereas_occurrences_remain_unsplit():
+    s = (
+        "Section 1 of the Example Act applies in one case, whereas "
+        "Section 2 applies in another, whereas Section 3 applies in a third."
+    )
+    claims = extract_claims(s)
+    assert len(claims) == 3
+    assert all(c.assertion_text == s for c in claims)
+    assert all(c.assertion_spans == [s] for c in claims)
