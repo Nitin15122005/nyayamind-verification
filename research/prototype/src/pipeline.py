@@ -14,11 +14,12 @@ evidence-matching stage (run once, independent of mode) so that comparing
 A vs B vs C is a paired comparison against an identical baseline, not three
 different generations.
 
-Known v0 simplification (documented, not hidden): if a field has more than
-one flagged claim, only the FIRST flagged claim drives the single
-correction attempt (see corrector.py — the correction prompt targets one
-flagged sentence). Multi-claim-per-field correction is out of scope for
-this prototype.
+Correction paths:
+  - The default legacy path makes at most one correction attempt.
+  - An opt-in experimental multi-claim path can make bounded sequential
+    attempts, rebuilding and re-verifying the complete field after each
+    edit. The batch is atomic: partial results are rolled back. It remains
+    disabled by default pending independent natural-data evaluation.
 """
 from __future__ import annotations
 
