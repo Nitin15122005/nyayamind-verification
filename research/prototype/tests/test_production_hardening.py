@@ -189,3 +189,23 @@ def test_fuzzy_subsection_gate_does_not_match_other_subsection():
     )
     result = match_evidence(citation, {}, [other])
     assert not result.matched
+
+
+def test_manifest_hash_includes_subsection_identity():
+    from types import SimpleNamespace
+    from src.run_manifest import build_run_manifest
+
+    base = SimpleNamespace(
+        dataset_citation_key="Section 25F in Industrial Disputes Act",
+        act="Industrial Disputes Act",
+        provision_type="Section",
+        provision_number="25F",
+        subsection=None,
+        canonical_text="Same text",
+        source_url="https://example.invalid/act",
+        audit_verdict="VERIFIED_EXACT",
+    )
+    subsection = SimpleNamespace(**{**base.__dict__, "subsection": "1"})
+    assert build_run_manifest({}, [base])["evidence_sha256"] != (
+        build_run_manifest({}, [subsection])["evidence_sha256"]
+    )
