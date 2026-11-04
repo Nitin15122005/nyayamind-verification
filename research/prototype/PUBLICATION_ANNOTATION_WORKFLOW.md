@@ -21,7 +21,7 @@ Allowed labels: ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION. Every decision r
 
 `python research/prototype/scripts/publication_annotation.py export-natural --input research/prototype/outputs/natural_candidates_50_gpu_labeled.jsonl --output research/prototype/outputs/NATURAL_ANNOTATION_PACKET.csv`
 
-Before sending the packet to reviewers, remove the automated_evidence_status column (and any other model outputs). Preserve document_id so all claims from a case stay in one split. Review citation correctness and temporal applicability against authoritative sources; an empty matched-evidence field is not proof of NEI.
+The exporter excludes automated verdicts and confidence scores. Preserve document_id so all claims from a case stay in one split. Review citation correctness and temporal applicability against authoritative sources; an empty matched-evidence field is not proof of NEI.
 
 The exporter uses assertion_text where available to avoid scoring an entire multi-claim sentence as one atomic claim. Keep the original claim_text in a separate archival copy if needed.
 
