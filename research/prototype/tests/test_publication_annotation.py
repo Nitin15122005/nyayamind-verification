@@ -66,3 +66,31 @@ def test_natural_export_keeps_claim_and_case_grouping(tmp_path):
     assert row["claim_text"] == "atomic claim"
     assert row["document_id"] == "case_1"
     assert row["reviewer_label"] == ""
+
+
+
+def test_gold03_split_refuses_blank_claims(tmp_path):
+    source = tmp_path / "worksheet.csv"
+    write_csv(source, [{
+        "item_id": "G03_0001", "source_text": "Rule text",
+        "source_url": "https://example.org", "candidate_claim_without_citation": "",
+    }])
+    args = type("Args", (), {"worksheet": source, "outdir": tmp_path / "packets", "seed": 7})
+    try:
+        MOD.command_split_gold03(args)
+    except ValueError as exc:
+        assert "Draft citation-free claims" in str(exc)
+    else:
+        raise AssertionError("blank candidate claim must not enter blind annotation")
+
+
+def test_gold03_validation_fails_without_independent_labels(tmp_path):
+    source = tmp_path / "merged.csv"
+    write_csv(source, [{
+        "item_id": "G03_1", "reviewer1_id": "R1", "reviewer2_id": "R2",
+        "reviewer1_label": "", "reviewer2_label": "",
+        "reviewer1_rationale": "", "reviewer2_rationale": "",
+        "adjudicated_label": "", "adjudication_rationale": "", "adjudicator_id": "",
+    }])
+    args = type("Args", (), {"input": source})
+    assert MOD.command_validate_gold03(args) == 2
