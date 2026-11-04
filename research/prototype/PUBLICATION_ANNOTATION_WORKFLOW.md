@@ -25,6 +25,12 @@ The exporter excludes automated verdicts and confidence scores. Preserve documen
 
 The exporter uses assertion_text where available to avoid scoring an entire multi-claim sentence as one atomic claim. Keep the original claim_text in a separate archival copy if needed.
 
+Then create two blind packets and merge independent reviews:
+`python research/prototype/scripts/publication_annotation.py split-natural --input research/prototype/outputs/NATURAL_ANNOTATION_PACKET.csv --outdir research/prototype/outputs/natural_review`
+`python research/prototype/scripts/publication_annotation.py merge-natural --reviewer1 research/prototype/outputs/natural_review/NATURAL_R1_BLIND.csv --reviewer2 research/prototype/outputs/natural_review/NATURAL_R2_BLIND.csv --output research/prototype/outputs/NATURAL_DOUBLE_ANNOTATED.csv`
+
+Fill adjudicated_label, adjudication_rationale, and adjudicator_id in the merged file before running the natural-data evaluator. Keep all claims from one document in the same train/validation/test partition.
+
 ## Integrity and interpretation
 
 - No predictions are labels.
