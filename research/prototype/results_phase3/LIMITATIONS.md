@@ -12,6 +12,14 @@ Stated plainly, using actual repository evidence — not a generic disclaimer li
   SHA-256-hashed provenance. This makes them internally consistent and reproducible, but they
   are not an independent human judgment of legal correctness.
 
+## Controlled benchmark construct validity
+
+- GOLD-01's attributed hypotheses include citation strings such as `According to Article 21 of Constitution of India`, while labeled premise framing adds the corresponding provision identifier to the evidence premise. This creates direct metadata overlap. The observed improvement may reflect citation matching rather than improved statutory reasoning; the current experiment does not separate these explanations.
+- GOLD-01's N1 `NOT_ENOUGH_INFORMATION` items use text from a different provision. Different provision identity and low lexical overlap do not, by themselves, prove the relation is neutral: provisions can be related, mutually qualifying, or logically inconsistent. The construction is a plausible negative control, not a legally adjudicated NEI gold label.
+- GOLD-01's negation transformation `shall not` → `shall` yields strings such as `No person shall not be deprived...` for Articles 21/22/311. These are linguistically ambiguous double-negative constructions, not cleanly validated contradictions. Three such examples occur in the current C1 set.
+- The paraphrase rules are deterministic lexical substitutions. Their labels are assigned by the rule, not independently checked for legal-semantic equivalence. A substitution can be grammatical yet alter scope, modality, exceptions, or legal register.
+- The cluster bootstrap/sign-flip analysis addresses repeated items within source provisions but cannot repair incorrect construction labels, citation-overlap confounding, or non-representative source selection.
+
 ## Sample sizes
 
 - **Correction shipping is measured on small samples throughout**: 1/56 cumulative natural
