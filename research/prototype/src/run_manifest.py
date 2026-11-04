@@ -13,7 +13,15 @@ def _sha256_json(value: object) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def _cuda_available() -> bool | None:\n    try:\n        import torch\n        return bool(torch.cuda.is_available())\n    except Exception:\n        return None\n\n\ndef build_run_manifest(config: dict, evidence_records: list) -> dict:
+def _cuda_available() -> bool | None:
+    try:
+        import torch
+        return bool(torch.cuda.is_available())
+    except Exception:
+        return None
+
+
+def build_run_manifest(config: dict, evidence_records: list) -> dict:
     """Fingerprint effective config and exact evidence text used by a run.
 
     Model identifiers are recorded as configured identifiers, not claimed
