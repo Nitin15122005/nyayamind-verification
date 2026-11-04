@@ -88,8 +88,7 @@ def main() -> int:
             "source_historical_status": source.get("historical_status", ""),
             "correct_identifier": correct,
             "mismatched_identifier": wrong,
-            # This claim deliberately contains no citation string, avoiding
-            # direct identifier overlap in the primary metadata comparison.
+            # Reserved for an independently drafted, citation-free claim.
             "candidate_claim_without_citation": "",
             **{field: "" for field in FIELDS if field not in {
                 "item_id", "source_key", "source_act", "source_provision_type",
@@ -115,9 +114,9 @@ def main() -> int:
         "labels_created": False,
         "mismatched_identifiers": "deterministic next-record pairing; diagnostic only",
         "warning": (
-            "The candidate claim is copied from its source text and is only an "
-            "entailed seed candidate, not independently adjudicated ground truth. "
-            "The mismatch pairing may be substantively related and must be reviewed."
+            "No claims or gold labels are generated. The citation-free claim field "
+            "is intentionally blank for independent drafting. The deterministic "
+            "mismatch pairing may be substantively related and must be reviewed."
         ),
     }, indent=2))
     return 0
