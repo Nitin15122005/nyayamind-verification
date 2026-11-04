@@ -104,6 +104,26 @@ def _load_usable_records_by_key(
             raise ValueError(
                 f"Canonical record {key!r} has missing/empty fields: {', '.join(missing)}"
             )
+        audit_record = next(
+            (row for row in audit_rows if row.get("dataset_citation_key") == key),
+            None,
+        )
+        if audit_record is None:
+            raise ValueError(f"Canonical record has no audit row for {key!r}")
+        # Some later audit supplements intentionally contain only verdict
+        # and audit provenance. Whenever the audit repeats canonical identity
+        # fields, however, they must agree exactly; otherwise the join could
+        # certify a different source or provision under a shared key.
+        for field_name in (
+            "source_url", "act", "provision_type", "provision_number",
+        ):
+            audited_value = audit_record.get(field_name)
+            canonical_value = record.get(field_name)
+            if audited_value is not None and str(audited_value) != str(canonical_value):
+                raise ValueError(
+                    f"Canonical/audit {field_name} mismatch for {key!r}: "
+                    f"{canonical_value!r} != {audited_value!r}"
+                )
         act_norm = normalize_act(record["act"])
         if not act_norm:
             raise ValueError(f"Canonical record {key!r} has an unnormalizable Act name")
