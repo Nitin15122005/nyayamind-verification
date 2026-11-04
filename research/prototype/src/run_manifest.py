@@ -13,7 +13,7 @@ def _sha256_json(value: object) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def build_run_manifest(config: dict, evidence_records: list) -> dict:
+def _cuda_available() -> bool | None:\n    try:\n        import torch\n        return bool(torch.cuda.is_available())\n    except Exception:\n        return None\n\n\ndef build_run_manifest(config: dict, evidence_records: list) -> dict:
     """Fingerprint effective config and exact evidence text used by a run.
 
     Model identifiers are recorded as configured identifiers, not claimed
@@ -47,9 +47,16 @@ def build_run_manifest(config: dict, evidence_records: list) -> dict:
         "evidence_sha256": _sha256_json(evidence),
         "generation_model_id": (config.get("generation") or {}).get("model_id"),
         "verification_model_id": (config.get("verification") or {}).get("model_id"),
+        "generation_model_revision": (config.get("generation") or {}).get("revision"),
+        "verification_model_revision": (config.get("verification") or {}).get("revision"),
+        "models_pinned_to_immutable_revisions": bool(
+            (config.get("generation") or {}).get("revision")
+            and (config.get("verification") or {}).get("revision")
+        ),
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
         "package_versions": packages,
+        "cuda_available": _cuda_available(),
         "model_revision_note": (
             "Model IDs are recorded as configured. Mutable aliases are not weight "
             "fingerprints; pin immutable revisions and archive artifact hashes "
