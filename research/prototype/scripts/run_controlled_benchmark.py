@@ -69,7 +69,7 @@ def compute_metrics(expected: list[str], predicted: list[str]) -> tuple[dict, di
 
 def fmt_confusion(cm: dict) -> list[str]:
     out = ["", "Confusion matrix (rows = gold, cols = predicted):",
-           f"  {'gold \\ pred':<16}" + "".join(f"{SHORT[l]:>7}" for l in LABELS) + f"{'total':>8}"]
+           "  " + f"{'gold / pred':<16}" + "".join(f"{SHORT[l]:>7}" for l in LABELS) + f"{'total':>8}"]
     for e in LABELS:
         row = sum(cm[e].values())
         out.append(f"  {SHORT[e]:<16}" + "".join(f"{cm[e][p]:>7}" for p in LABELS) + f"{row:>8}")
