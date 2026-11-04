@@ -52,7 +52,7 @@ def _parse_verdict(response_text: str) -> str:
     mentioned_labels = {
         label.upper()
         for label in re.findall(
-            r"\\b(ENTAILED|CONTRADICTED|NOT_ENOUGH_INFORMATION)\\b",
+            r"\b(ENTAILED|CONTRADICTED|NOT_ENOUGH_INFORMATION)\b",
             text,
             flags=re.IGNORECASE,
         )
