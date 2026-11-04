@@ -28,6 +28,7 @@ import sys
 from typing import Optional
 
 from . import claim_parser
+from .run_manifest import build_run_manifest
 from .evidence_matcher import match_evidence, classify_no_evidence, NO_EVIDENCE
 from .verifier import (
     ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION,
@@ -1729,6 +1730,7 @@ def run_case(
             )) if mode == "C" else None,
             "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
             "software_versions": _software_versions(),
+            "run_manifest": build_run_manifest(config, all_usable),
         },
     }
     return record
