@@ -405,3 +405,41 @@ def test_multiple_whereas_occurrences_remain_unsplit():
     assert len(claims) == 3
     assert all(c.assertion_text == s for c in claims)
     assert all(c.assertion_spans == [s] for c in claims)
+
+
+# ---------------------------------------------------------------------------
+# Citation occurrence offsets — each expanded provision keeps its own span.
+# ---------------------------------------------------------------------------
+
+def test_plural_citation_occurrences_have_exact_individual_offsets():
+    sentence = "Sections 302, 304(1), and 307 of the IPC prescribe penalties."
+    citations = extract_citations(sentence)
+    assert [c.provision_number for c in citations] == ["302", "304", "307"]
+    for citation in citations:
+        assert citation.start_char is not None
+        assert citation.end_char is not None
+        assert sentence[citation.start_char:citation.end_char].startswith(
+            citation.provision_number
+        )
+        assert citation.end_char > citation.start_char
+
+
+def test_repeated_provision_mentions_have_distinct_occurrence_offsets():
+    sentence = (
+        "Section 302 of the IPC applies, whereas Section 302 of the IPC "
+        "has a separate stated role."
+    )
+    citations = extract_citations(sentence)
+    assert len(citations) == 2
+    assert citations[0].provision_number == citations[1].provision_number == "302"
+    assert citations[0].start_char < citations[1].start_char
+    assert sentence[citations[0].start_char:citations[0].end_char] == "302"
+    assert sentence[citations[1].start_char:citations[1].end_char] == "302"
+
+
+def test_bare_citation_occurrence_has_exact_number_offsets():
+    sentence = "The applicable provision is Section 25F(1)."
+    citation = extract_citations(sentence)[0]
+    assert sentence[citation.start_char:citation.end_char] == "25F(1)"
+    assert citation.provision_number == "25F"
+    assert citation.subsection == "1"
