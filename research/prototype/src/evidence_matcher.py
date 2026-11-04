@@ -108,7 +108,7 @@ def match_evidence(
         try:
             parsed_case_date = date.fromisoformat(case_date)
         except (TypeError, ValueError) as exc:
-            raise ValueError("case_date must be a valid ISO YYYY-MM-DD string") from exc
+            raise ValueError("case_date must be a valid canonical ISO YYYY-MM-DD string") from exc
         if parsed_case_date.isoformat() != case_date:
             raise ValueError("case_date must use canonical YYYY-MM-DD format")
 
