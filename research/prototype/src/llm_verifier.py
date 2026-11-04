@@ -45,8 +45,19 @@ def _parse_verdict(response_text: str) -> str:
     to NOT_ENOUGH_INFORMATION. Substring matching is unsafe because a model
     can mention a label while actually returning a different conclusion.
     """
-    match = _VERDICT_PREFIX.match(response_text or "")
+    text = response_text or ""
+    match = _VERDICT_PREFIX.match(text)
     if not match:
+        return NOT_ENOUGH_INFORMATION
+    mentioned_labels = {
+        label.upper()
+        for label in re.findall(
+            r"\\b(ENTAILED|CONTRADICTED|NOT_ENOUGH_INFORMATION)\\b",
+            text,
+            flags=re.IGNORECASE,
+        )
+    }
+    if len(mentioned_labels) != 1:
         return NOT_ENOUGH_INFORMATION
     return match.group(1).upper()
 
