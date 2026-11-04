@@ -119,6 +119,7 @@ class VerificationResult:
     disclaimer: str = (
         "NLI statistical confidence, not a legal-correctness determination."
     )
+    model_revision: Optional[str] = None
 
 
 class NLIVerifier:
@@ -152,6 +153,7 @@ class NLIVerifier:
             raise ValueError("max_sequence_length must be a positive integer.")
         self.model_id = model_id
         self.model_revision = model_revision
+        self.resolved_model_revision = None
         self.confidence_threshold = float(confidence_threshold)
         self.max_sequence_length = max_sequence_length
         self.device = device
@@ -201,6 +203,7 @@ class NLIVerifier:
         self._tokenizer = tokenizer
         self._model = model
         self._id2label_lower = id2label
+        self.resolved_model_revision = getattr(model.config, "_commit_hash", None) or self.model_revision
 
     def is_loaded(self) -> bool:
         return self._model is not None
@@ -266,4 +269,5 @@ class NLIVerifier:
             raw_scores=raw_scores,
             verifier_model=self.model_id,
             input_truncated=input_truncated,
+            model_revision=self.resolved_model_revision,
         )
