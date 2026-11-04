@@ -155,3 +155,24 @@ the evidence. Passing unit tests alone is not publication readiness.
 
 - 2026-11-04: programme created on isolated publication branch; no production code/config or
   frozen research data changed by this document.
+
+
+## Code-side publication tooling added on 2026-11-04
+
+The following tooling is implemented on the isolated `production-hardening-2026-11-04` branch and included in draft PR #8. It is code preparation, not evidence that annotation or legal validation has been completed.
+
+- `research/prototype/scripts/publication_annotation.py`: blind GOLD-03 reviewer packet creation, source SHA-256 manifest, strict independent-review merge, adjudication validation, Cohen's kappa and class counts; natural-case export plus separate double-review packets and merge.
+- `research/prototype/scripts/evaluate_natural_annotations.py`: joins adjudicated natural annotations to the exact archived pipeline run by document/claim ID; reports per-class precision/recall/F1, confusion matrix, evidence coverage, and document-cluster bootstrap intervals. NO_EVIDENCE is reported separately rather than relabelled as NOT_ENOUGH_INFORMATION.
+- Tests: `test_publication_annotation.py` and `test_evaluate_natural_annotations.py`.
+- Operator instructions: `research/prototype/PUBLICATION_ANNOTATION_WORKFLOW.md`.
+
+### Remaining non-code actions
+
+1. Independently draft citation-free GOLD-03 claims from source provisions; the existing worksheet deliberately does not generate semantic claims or labels.
+2. Have two independent reviewers annotate, then adjudicate; freeze the dataset and record reviewer roles and agreement.
+3. Review natural claims against authoritative statutory text and applicable historical versions; adjudicate the claim labels.
+4. Populate only source-verified effective-date intervals and explicit judgment dates.
+5. Pin verified model commit SHAs and perform a clean-checkout/full-model reproduction.
+6. Run and inspect the latest CI suite and all model integration checks before merging PR #8.
+
+The evaluator, annotation tools, and CI are not substitutes for those steps. Historical data and GOLD-01 remain unchanged.
