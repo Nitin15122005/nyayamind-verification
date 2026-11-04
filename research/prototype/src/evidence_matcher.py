@@ -137,14 +137,20 @@ def match_evidence(
     # match, year-conflict veto) is IDENTICAL for every
     # fuzzy_method -- only the act-name scoring function below changes.
     claim_years = _act_years(citation.act_norm)
-    same_number_year_ok: list[EvidenceRecord] = [
+    same_number_year_candidates: list[EvidenceRecord] = [
         ev for ev in all_usable
         if ev.provision_type == citation.provision_type
         and ev.provision_number == citation.provision_number
         and ev.subsection == citation.subsection
-        and _effective_on(ev, case_date)
         and not _year_conflict(claim_years, _act_years(ev.act_norm))
     ]
+    same_number_year_ok = [
+        ev for ev in same_number_year_candidates if _effective_on(ev, case_date)
+    ]
+    if case_date is not None and not same_number_year_ok and any(
+        ev.effective_from is None for ev in same_number_year_candidates
+    ):
+        return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
 
     if fuzzy_method == "jaccard":
         claim_act_words = act_significant_words(citation.act_norm)
