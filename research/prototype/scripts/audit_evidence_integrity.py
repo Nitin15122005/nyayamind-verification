@@ -70,8 +70,18 @@ def inspect_pair(label: str, canonical: list[dict], audit: list[dict], errors: l
     usable = []
     for row in canonical:
         key = row.get("dataset_citation_key")
-        verdict = audit_by_key.get(key, {}).get("audit_verdict")
+        audit_row = audit_by_key.get(key, {})
+        verdict = audit_row.get("audit_verdict")
         verdict_counts[verdict or "MISSING"] += 1
+        for field_name in ("source_url", "act", "provision_type", "provision_number"):
+            audited_value = audit_row.get(field_name)
+            if audited_value is not None and str(audited_value) != str(row.get(field_name)):
+                errors.append({
+                    "code": "CANONICAL_AUDIT_METADATA_MISMATCH",
+                    "pool": label,
+                    "key": key,
+                    "field": field_name,
+                })
         missing = sorted(field for field in REQUIRED if not str(row.get(field, "")).strip())
         if missing:
             errors.append({"code": "MISSING_REQUIRED_FIELDS", "pool": label, "key": key, "fields": missing})
