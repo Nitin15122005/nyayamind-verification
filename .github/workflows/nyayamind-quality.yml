@@ -1,0 +1,79 @@
+name: NyayaMind quality gates
+
+on:
+  push:
+    branches:
+      - publication/readiness-engineering
+  pull_request:
+    branches:
+      - main
+      - publication/readiness-engineering
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nyayamind-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-tests:
+    name: Python 3.11 — prototype tests and evidence integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: research/requirements.txt
+      - name: Install CPU test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest PyYAML rank_bm25
+      - name: Compile Python source and scripts
+        run: |
+          python -m compileall -q research/prototype/src
+          python -m compileall -q research/prototype/scripts
+      - name: Run complete deterministic prototype test suite
+        env:
+          PYTHONPATH: research/prototype
+        run: python -m pytest research/prototype/tests -ra
+      - name: Audit statutory evidence structure (read-only)
+        run: |
+          python research/prototype/scripts/audit_evidence_integrity.py \
+            --output "${{ runner.temp }}/evidence-integrity-audit.json"
+
+  frontend:
+    name: Web — tests and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: live_demo_v2/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: live_demo_v2/web/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+
+  python-server:
+    name: Server — syntax and test discovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile server
+        run: python -m compileall -q live_demo_v2/server
+      - name: Discover server tests
+        run: python -m unittest discover -s live_demo_v2/server/tests -v
