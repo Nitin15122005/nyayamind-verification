@@ -621,8 +621,8 @@ def _splice_flagged_sentence(
 
 
 def _citation_identity(citation) -> Optional[tuple]:
-    """(provision_type, provision_number, act_norm) — the same three fields
-    the replacement-matching logic below always required, extracted once so
+    """(provision_type, provision_number, subsection, act_norm) — the complete
+    statutory identity used by replacement matching, extracted once so
     both the baseline claim dicts (plain dicts) and freshly re-parsed
     claim_parser objects (ExtractedCitation instances) can be compared with
     the same function. Returns None if there is no citation at all (never
@@ -631,8 +631,14 @@ def _citation_identity(citation) -> Optional[tuple]:
     if citation is None:
         return None
     if isinstance(citation, dict):
-        return (citation.get("provision_type"), citation.get("provision_number"), citation.get("act_norm"))
-    return (citation.provision_type, citation.provision_number, citation.act_norm)
+        return (
+            citation.get("provision_type"), citation.get("provision_number"),
+            citation.get("subsection"), citation.get("act_norm"),
+        )
+    return (
+        citation.provision_type, citation.provision_number,
+        citation.subsection, citation.act_norm,
+    )
 
 
 def _reverify_sibling_regressions(
