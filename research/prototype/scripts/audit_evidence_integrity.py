@@ -61,9 +61,9 @@ def inspect_pair(label: str, canonical: list[dict], audit: list[dict], errors: l
         if not key or count > 1:
             errors.append({"code": "AUDIT_DUPLICATE_OR_EMPTY_KEY", "pool": label, "key": key, "count": count})
     cset, aset = set(ckeys), set(akeys)
-    for key in sorted(cset - aset):
+    for key in sorted(cset - aset, key=lambda value: str(value)):
         errors.append({"code": "MISSING_AUDIT_ROW", "pool": label, "key": key})
-    for key in sorted(aset - cset):
+    for key in sorted(aset - cset, key=lambda value: str(value)):
         errors.append({"code": "ORPHAN_AUDIT_ROW", "pool": label, "key": key})
     audit_by_key = {r.get("dataset_citation_key"): r for r in audit}
     verdict_counts = Counter()
