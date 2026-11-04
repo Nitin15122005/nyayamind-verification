@@ -260,7 +260,8 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 # was previously only derivable by re-running that
                 # standalone script over already-produced outputs.
                 "no_evidence_category": (
-                    classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold)
+                    ("temporal_applicability_unverified" if match.match_method == "temporal_unverified"
+                     else classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold))
                     if not match.matched else None
                 ),
                 "verdict": None,          # filled by apply_verification (mode B/C)
