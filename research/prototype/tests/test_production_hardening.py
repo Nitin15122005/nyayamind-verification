@@ -232,3 +232,44 @@ def test_embedding_retrieval_signal_rejects_tied_act_candidates():
     assert result.evidence is None
     assert result.ambiguous is True
     assert result.score == 0.91
+
+
+def test_date_scoped_retrieval_fails_closed_without_effective_date_metadata():
+    evidence = _evidence("Industrial Disputes Act, 1947")
+    evidence.provision_number = "25F"
+    index = {(evidence.provision_type, evidence.provision_number, None, evidence.act_norm): evidence}
+    citation = ExtractedCitation(
+        "Section", "25F", None, "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    result = match_evidence(citation, index, [evidence], case_date="1982-01-01")
+    assert not result.matched
+    assert result.match_method == "temporal_unverified"
+
+
+def test_date_scoped_retrieval_accepts_only_explicit_effective_interval():
+    evidence = _evidence("Industrial Disputes Act, 1947")
+    evidence.provision_number = "25F"
+    evidence.effective_from = "1947-04-01"
+    evidence.effective_to = "2020-12-31"
+    index = {(evidence.provision_type, evidence.provision_number, None, evidence.act_norm): evidence}
+    citation = ExtractedCitation(
+        "Section", "25F", None, "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    inside = match_evidence(citation, index, [evidence], case_date="1982-01-01")
+    outside = match_evidence(citation, index, [evidence], case_date="2021-01-01")
+    assert inside.matched
+    assert not outside.matched
+    assert outside.match_method == "no_evidence"
+
+
+def test_date_scoped_retrieval_rejects_noncanonical_case_date():
+    evidence = _evidence("Industrial Disputes Act, 1947")
+    citation = ExtractedCitation(
+        "Section", "10", None, "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    import pytest
+    with pytest.raises(ValueError, match="canonical YYYY-MM-DD"):
+        match_evidence(citation, {}, [evidence], case_date="01-01-1982")
