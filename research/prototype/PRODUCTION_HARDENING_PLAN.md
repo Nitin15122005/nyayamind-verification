@@ -20,6 +20,19 @@ This programme separates implemented engineering work from work that requires in
 - The explicit result is `ambiguous_fuzzy`, distinct from a genuinely absent match.
 - Added a regression test for a year-omitted Act citation that equally matches two editions.
 
+### 3. Model revision and runtime manifest wiring
+- Added optional Hugging Face `revision` configuration for generator and verifier and passed it through the CLI to both tokenizer/model loaders.
+- Added model revision fields to generation metadata and each output reproducibility record.
+- Extended the run manifest with both configured revisions, an explicit immutable-pin status, and CUDA availability. The default revisions remain null; no unverified commit hashes were invented.
+
+### 4. Subsection-safe evidence lookup
+- Removed the fallback that matched a subsection citation to a base-section record (or vice versa) without proof that the exact subsection was covered.
+- Added regression tests for both mismatch directions. The resulting no-match is intentionally conservative and may reduce evidence coverage until subsection-level evidence is curated.
+
+### 5. Correction preservation regression tests
+- Added tests that the legacy sentence splice preserves all surrounding non-claim prose byte-for-byte and rejects duplicate target occurrences.
+- Existing deterministic splice architecture already limits edits to the single target sentence/fragment; tests now lock that contract.
+
 ## Remaining implementation work
 
 ### P0 — before calling the software publication-ready
