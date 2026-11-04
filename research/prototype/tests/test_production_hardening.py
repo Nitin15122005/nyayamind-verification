@@ -261,7 +261,7 @@ def test_date_scoped_retrieval_accepts_only_explicit_effective_interval():
     outside = match_evidence(citation, index, [evidence], case_date="2021-01-01")
     assert inside.matched
     assert not outside.matched
-    assert outside.match_method == "no_evidence"
+    assert outside.match_method == "temporal_out_of_range"
 
 
 def test_date_scoped_retrieval_rejects_noncanonical_case_date():
