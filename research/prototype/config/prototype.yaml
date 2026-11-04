@@ -357,6 +357,16 @@ correction:
   # 2026-08-27.
   narrow_reverification_hypothesis: true
 
+  # Sequential multi-claim correction (experimental; default OFF).
+  # Each edit is followed by full-field reparsing, evidence rematching and
+  # re-verification before another claim is considered. The complete batch
+  # rolls back if any later correction fails a safety gate. Partial batches
+  # are never shipped. This path is available only with assertion_aware:false.
+  # Do not enable for publication runs until the multi-claim test suite and
+  # independent natural-data evaluation have passed.
+  multi_claim_enabled: false
+  max_claim_corrections: 3
+
   # ASSERTION-AWARE correction (added 2026-09-12). When True, correction
   # rewrites ONLY the flagged claim's own `assertion_text` fragment (via
   # SelectiveCorrector.correct_assertion_span()) and splices it back with a
