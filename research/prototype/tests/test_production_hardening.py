@@ -133,3 +133,14 @@ def test_run_manifest_does_not_claim_models_are_pinned_when_revisions_missing():
     }
     manifest = build_run_manifest(config, [])
     assert manifest["models_pinned_to_immutable_revisions"] is False
+
+
+def test_run_manifest_does_not_treat_branch_or_tag_names_as_immutable_pins():
+    from src.run_manifest import build_run_manifest
+
+    config = {
+        "generation": {"model_id": "generator", "revision": "main"},
+        "verification": {"model_id": "verifier", "revision": "v1.0"},
+    }
+    manifest = build_run_manifest(config, [])
+    assert manifest["models_pinned_to_immutable_revisions"] is False
