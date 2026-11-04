@@ -1,38 +1,59 @@
 """
-LLM-based statutory claim verifier using Qwen2.5-7B-Instruct.
-An alternative to DeBERTa NLI designed specifically for legal domain claims
-where attribution prefixes ("According to Section X...") and complex statutory
-paraphrasing cause small NLI models to falsely predict NOT_ENOUGH_INFORMATION.
+LLM-based statutory claim verifier using the already-loaded Qwen model.
+
+This is an experimental alternative to the production DeBERTa NLI verifier.
+Its verdict is categorical and uncalibrated: it must never be presented as a
+probability or treated as confidence-equivalent to the NLI model.
 """
 from __future__ import annotations
 
 import re
-from typing import Optional, List, Tuple
-from .verifier import VerificationResult, ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION
+from typing import List, Tuple
+
+from .verifier import (
+    VerificationResult,
+    ENTAILED,
+    CONTRADICTED,
+    NOT_ENOUGH_INFORMATION,
+)
 
 VERIFIER_SYSTEM_PROMPT = (
-    "You are an expert legal natural language inference (NLI) verifier.\n"
-    "Your job is to compare a CANONICAL STATUTE EVIDENCE text against a CLAIM STATEMENT.\n\n"
-    "Categorization Rules:\n"
-    "1. ENTAILED: The claim's legal assertion is supported by or is a faithful paraphrase/application of the statute text. "
-    "Attribution phrases such as 'According to Section X of IPC...' do NOT prevent entailment if the legal assertion matches.\n"
-    "2. CONTRADICTED: The claim directly contradicts, negates, reverses, or misstates the statutory rule, duty, or penalty.\n"
-    "3. NOT_ENOUGH_INFORMATION: The claim includes specific extraneous factual assertions, procedural timelines, or non-statutory conditions that cannot be derived from the statute text alone.\n\n"
-    "Output MUST begin with EXACTLY ONE of these three words: ENTAILED, CONTRADICTED, or NOT_ENOUGH_INFORMATION."
+    "You compare CANONICAL STATUTE EVIDENCE against a CLAIM STATEMENT.\n"
+    "Return exactly one label as the first token.\n"
+    "ENTAILED: the legal assertion is supported by the evidence.\n"
+    "CONTRADICTED: the legal assertion conflicts with the evidence.\n"
+    "NOT_ENOUGH_INFORMATION: the evidence does not establish either conclusion.\n"
+    "Do not infer legal facts absent from the evidence."
 )
 
 VERIFIER_USER_TEMPLATE = (
     "STATUTE EVIDENCE:\n{premise}\n\n"
     "CLAIM STATEMENT:\n{hypothesis}\n\n"
-    "VERDICT (ENTAILED / CONTRADICTED / NOT_ENOUGH_INFORMATION):"
+    "VERDICT:"
 )
+
+_VERDICT_PREFIX = re.compile(
+    r"^\s*(ENTAILED|CONTRADICTED|NOT_ENOUGH_INFORMATION)\b",
+    re.IGNORECASE,
+)
+
+
+def _parse_verdict(response_text: str) -> str:
+    """Accept only an unambiguous label at the beginning of the response.
+
+    Any malformed, explanatory-first, or conflicting response fails closed
+    to NOT_ENOUGH_INFORMATION. Substring matching is unsafe because a model
+    can mention a label while actually returning a different conclusion.
+    """
+    match = _VERDICT_PREFIX.match(response_text or "")
+    if not match:
+        return NOT_ENOUGH_INFORMATION
+    return match.group(1).upper()
 
 
 class QwenLLMVerifier:
     def __init__(self, generator):
-        """
-        Wraps an existing StatuteGroundingGenerator instance to reuse the loaded Qwen GPU model.
-        """
+        """Reuse the generator's loaded model; no second model is loaded."""
         self.generator = generator
         self.model_id = getattr(generator, "model_id", "Qwen/Qwen2.5-7B-Instruct")
 
@@ -42,74 +63,111 @@ class QwenLLMVerifier:
     def verify(self, premise: str, hypothesis: str) -> VerificationResult:
         return self.verify_batch([(premise, hypothesis)])[0]
 
-    def verify_batch(self, pairs: List[Tuple[str, str]], batch_size: int = 16) -> List[VerificationResult]:
+    def verify_batch(
+        self,
+        pairs: List[Tuple[str, str]],
+        batch_size: int = 16,
+    ) -> List[VerificationResult]:
         if not self.is_loaded():
-            raise RuntimeError("Underlying generator model is not loaded. Call generator.load() first.")
+            raise RuntimeError(
+                "Underlying generator model is not loaded. Call generator.load() first."
+            )
+        if not isinstance(batch_size, int) or isinstance(batch_size, bool) or batch_size < 1:
+            raise ValueError("batch_size must be a positive integer.")
+        if not pairs:
+            return []
+        for index, pair in enumerate(pairs):
+            if (
+                not isinstance(pair, (tuple, list))
+                or len(pair) != 2
+                or not all(isinstance(value, str) and value.strip() for value in pair)
+            ):
+                raise ValueError(
+                    f"Each verification pair must contain non-empty premise and hypothesis strings; "
+                    f"invalid pair at index {index}."
+                )
 
         import torch
         from transformers import GenerationConfig
 
         tokenizer = self.generator._tokenizer
         model = self.generator._model
+        original_padding_side = tokenizer.padding_side
+        original_pad_token = tokenizer.pad_token
+        results: list[VerificationResult] = []
 
-        # Ensure padding side is left for decoder-only generation
-        orig_padding_side = tokenizer.padding_side
-        tokenizer.padding_side = "left"
-        if tokenizer.pad_token is None:
-            tokenizer.pad_token = tokenizer.eos_token
+        try:
+            # Decoder-only batched generation requires left padding.
+            tokenizer.padding_side = "left"
+            if tokenizer.pad_token is None:
+                tokenizer.pad_token = tokenizer.eos_token
+            device = model.device
 
-        results = []
+            for start in range(0, len(pairs), batch_size):
+                batch_pairs = pairs[start : start + batch_size]
+                prompts = []
+                for premise, hypothesis in batch_pairs:
+                    messages = [
+                        {"role": "system", "content": VERIFIER_SYSTEM_PROMPT},
+                        {
+                            "role": "user",
+                            "content": VERIFIER_USER_TEMPLATE.format(
+                                premise=premise, hypothesis=hypothesis
+                            ),
+                        },
+                    ]
+                    prompts.append(
+                        tokenizer.apply_chat_template(
+                            messages,
+                            tokenize=False,
+                            add_generation_prompt=True,
+                        )
+                    )
 
-        for i in range(0, len(pairs), batch_size):
-            batch_pairs = pairs[i : i + batch_size]
-            prompt_strs = []
-            for premise, hypothesis in batch_pairs:
-                user_content = VERIFIER_USER_TEMPLATE.format(premise=premise, hypothesis=hypothesis)
-                messages = [
-                    {"role": "system", "content": VERIFIER_SYSTEM_PROMPT},
-                    {"role": "user", "content": user_content},
-                ]
-                p_str = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                prompt_strs.append(p_str)
-
-            inputs = tokenizer(prompt_strs, return_tensors="pt", padding=True)
-            input_ids = inputs["input_ids"].to("cuda")
-            attention_mask = inputs["attention_mask"].to("cuda")
-
-            gen_config = GenerationConfig(
-                do_sample=False,
-                max_new_tokens=15,
-                pad_token_id=tokenizer.pad_token_id,
-                eos_token_id=tokenizer.eos_token_id,
-            )
-
-            with torch.no_grad():
-                outputs = model.generate(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    generation_config=gen_config,
+                inputs = tokenizer(prompts, return_tensors="pt", padding=True)
+                input_ids = inputs["input_ids"].to(device)
+                attention_mask = inputs["attention_mask"].to(device)
+                generation_config = GenerationConfig(
+                    do_sample=False,
+                    max_new_tokens=15,
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
                 )
 
-            for b_idx in range(len(batch_pairs)):
-                new_tokens = outputs[b_idx][input_ids.shape[1]:]
-                response_text = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+                with torch.inference_mode():
+                    outputs = model.generate(
+                        input_ids=input_ids,
+                        attention_mask=attention_mask,
+                        generation_config=generation_config,
+                    )
 
-                verdict = NOT_ENOUGH_INFORMATION
-                if "ENTAILED" in response_text.upper():
-                    verdict = ENTAILED
-                elif "CONTRADICTED" in response_text.upper():
-                    verdict = CONTRADICTED
-                elif "NOT_ENOUGH_INFORMATION" in response_text.upper() or "NEI" in response_text.upper():
-                    verdict = NOT_ENOUGH_INFORMATION
+                for batch_index in range(len(batch_pairs)):
+                    generated_tokens = outputs[batch_index][input_ids.shape[1] :]
+                    response_text = tokenizer.decode(
+                        generated_tokens, skip_special_tokens=True
+                    ).strip()
+                    verdict = _parse_verdict(response_text)
+                    results.append(
+                        VerificationResult(
+                            label=verdict,
+                            # The generative verifier exposes no calibrated
+                            # class probabilities. Zero means unavailable,
+                            # not a measured 0% probability.
+                            confidence=0.0,
+                            sub_reason="unscored_llm_verdict",
+                            raw_scores={
+                                "llm_response": response_text,
+                                "confidence_semantics": "uncalibrated; no probability available",
+                            },
+                            verifier_model=f"Qwen-LLMVerifier({self.model_id})",
+                            disclaimer=(
+                                "Experimental generative verdict; confidence is unscored "
+                                "and is not a calibrated probability."
+                            ),
+                        )
+                    )
+        finally:
+            tokenizer.padding_side = original_padding_side
+            tokenizer.pad_token = original_pad_token
 
-                results.append(VerificationResult(
-                    label=verdict,
-                    confidence=1.0,
-                    sub_reason=None,
-                    raw_scores={"llm_response": response_text},
-                    verifier_model=f"Qwen-LLMVerifier({self.model_id})",
-                    disclaimer="Qwen2.5-7B LLM-based verification result.",
-                ))
-
-        tokenizer.padding_side = orig_padding_side
         return results
