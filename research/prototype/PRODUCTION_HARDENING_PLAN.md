@@ -18,13 +18,14 @@ This programme separates implemented engineering work from work that requires in
 
 ### 2. Fail-closed fuzzy evidence ambiguity
 - Jaccard retrieval now rejects tied top-scoring candidates instead of accepting whichever record happens to appear first in the evidence pool.
+- Every fuzzy backend now enforces exact provision type, number, and subsection identity before Act-name similarity scoring; fuzzy similarity can no longer bypass the subsection gate.
 - The explicit result is `ambiguous_fuzzy`, distinct from a genuinely absent match.
 - Added a regression test for a year-omitted Act citation that equally matches two editions.
 
 ### 3. Model revision and runtime manifest wiring
 - Added optional Hugging Face `revision` configuration for generator and verifier and passed it through the CLI to both tokenizer/model loaders.
 - Added model revision fields to generation metadata and each output reproducibility record.
-- Extended the run manifest with both configured revisions, an explicit immutable-pin status, and CUDA availability. The default revisions remain null; no unverified commit hashes were invented.
+- Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The default revisions remain null; no unverified commit hashes were invented.
 
 ### 4. Subsection-safe evidence lookup
 - Removed the fallback that matched a subsection citation to a base-section record (or vice versa) without proof that the exact subsection was covered.
