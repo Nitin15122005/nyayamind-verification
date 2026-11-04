@@ -221,6 +221,8 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 else None,
                 "evidence_id": match.evidence.dataset_citation_key if match.matched else None,
                 "evidence_text": match.evidence.canonical_text if match.matched else None,
+                "evidence_source_url": match.evidence.source_url if match.matched else None,
+                "evidence_audit_verdict": match.evidence.audit_verdict if match.matched else None,
                 # Underscore-prefixed: internal bookkeeping consumed by
                 # _premise_for_claim() and stripped before output, so enabling
                 # labeled framing does not change the output record schema and
@@ -229,6 +231,9 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                     "provision_type": match.evidence.provision_type,
                     "provision_number": match.evidence.provision_number,
                     "act": match.evidence.act,
+                    "subsection": match.evidence.subsection,
+                    "source_url": match.evidence.source_url,
+                    "audit_verdict": match.evidence.audit_verdict,
                 } if match.matched else None,
                 # NOT underscore-prefixed: this is legitimate reproducibility
                 # metadata (how the evidence was matched: exact/fuzzy/none)
