@@ -412,6 +412,10 @@ class ExtractedCitation:
     # naturally falls through to NO_EVIDENCE without any special-casing.
     act_raw: Optional[str]       # as written in the generated text, or None
     act_norm: str                # normalized for matching, or "" if unresolved
+    # Exact occurrence offsets within the source sentence (end-exclusive).
+    # Optional defaults preserve compatibility with manually-built records.
+    start_char: Optional[int] = None
+    end_char: Optional[int] = None
 
     def as_dict(self) -> dict:
         return {
