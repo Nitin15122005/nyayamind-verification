@@ -63,39 +63,37 @@ def merged_records() -> list[dict]:
 
 def build_rows(records: list[dict]) -> list[dict]:
     rows = []
-        for i, source in enumerate(records):
-            other = records[(i + 1) % len(records)]
-            sub = f"({source['subsection']})" if source.get("subsection") else ""
-            correct = (f"{source['provision_type']} {source['provision_number']}{sub} "
-                       f"of {source['act']}")
-            wrong_sub = f"({other['subsection']})" if other.get("subsection") else ""
-            wrong = (f"{other['provision_type']} {other['provision_number']}{wrong_sub} "
-                     f"of {other['act']}")
-            rows.append({
-                "item_id": f"G03_{i + 1:04d}",
-                "source_key": source["dataset_citation_key"],
-                "source_act": source["act"],
-                "source_provision_type": source["provision_type"],
-                "source_provision_number": source["provision_number"],
-                "source_subsection": source.get("subsection") or "",
-                "source_text": source["canonical_text"],
-                "source_url": source.get("source_url", ""),
-                "source_audit_verdict": source["audit_verdict"],
-                "source_historical_status": source.get("historical_status", ""),
-                "correct_identifier": correct,
-                "mismatched_identifier": wrong,
-                # Reserved for an independently drafted, citation-free claim.
-                "candidate_claim_without_citation": "",
-                **{field: "" for field in FIELDS if field not in {
-                    "item_id", "source_key", "source_act", "source_provision_type",
-                    "source_provision_number", "source_subsection", "source_text",
-                    "source_url", "source_audit_verdict", "source_historical_status",
-                    "correct_identifier", "mismatched_identifier",
-                    "candidate_claim_without_citation",
-                }},
-            })
+    for i, source in enumerate(records):
+        other = records[(i + 1) % len(records)]
+        sub = f"({source['subsection']})" if source.get("subsection") else ""
+        correct = (f"{source['provision_type']} {source['provision_number']}{sub} "
+                   f"of {source['act']}")
+        wrong_sub = f"({other['subsection']})" if other.get("subsection") else ""
+        wrong = (f"{other['provision_type']} {other['provision_number']}{wrong_sub} "
+                 f"of {other['act']}")
+        rows.append({
+            "item_id": f"G03_{i + 1:04d}",
+            "source_key": source["dataset_citation_key"],
+            "source_act": source["act"],
+            "source_provision_type": source["provision_type"],
+            "source_provision_number": source["provision_number"],
+            "source_subsection": source.get("subsection") or "",
+            "source_text": source["canonical_text"],
+            "source_url": source.get("source_url", ""),
+            "source_audit_verdict": source["audit_verdict"],
+            "source_historical_status": source.get("historical_status", ""),
+            "correct_identifier": correct,
+            "mismatched_identifier": wrong,
+            "candidate_claim_without_citation": "",
+            **{field: "" for field in FIELDS if field not in {
+                "item_id", "source_key", "source_act", "source_provision_type",
+                "source_provision_number", "source_subsection", "source_text",
+                "source_url", "source_audit_verdict", "source_historical_status",
+                "correct_identifier", "mismatched_identifier",
+                "candidate_claim_without_citation",
+            }},
+        })
     return rows
-
 
 def main() -> int:
     records = merged_records()
