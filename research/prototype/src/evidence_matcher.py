@@ -121,7 +121,8 @@ def match_evidence(
     exact = exact_index.get(index_key)
     if exact is not None:
         if not _effective_on(exact, case_date):
-            return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
+            method = "temporal_unverified" if exact.effective_from is None else "no_evidence"
+            return MatchResult(matched=False, evidence=None, match_method=method)
         return MatchResult(matched=True, evidence=exact, match_method="exact_normalized")
 
     # Do not discard a cited subsection to obtain a base-section match.
