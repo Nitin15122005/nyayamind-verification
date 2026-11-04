@@ -1210,6 +1210,10 @@ def apply_multi_claim_correction(
     max_attempts = correction_config.get("max_claim_corrections", 1)
     if isinstance(max_attempts, bool) or not isinstance(max_attempts, int) or max_attempts < 1:
         raise ValueError("correction.max_claim_corrections must be a positive integer")
+    if max_attempts > max(1, len(baseline.get("claims", []))):
+        raise ValueError("correction.max_claim_corrections cannot exceed the initial claim count")
+    if correction_config.get("assertion_aware", False):
+        raise ValueError("multi_claim_enabled is supported only by the legacy sentence-correction path")
     original_text = baseline["generated_field"]["text"]
     current = baseline
     successful_edits = []
