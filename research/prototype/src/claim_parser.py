@@ -424,6 +424,8 @@ class ExtractedCitation:
             "subsection": self.subsection,
             "act_raw": self.act_raw,
             "act_norm": self.act_norm,
+            "start_char": self.start_char,
+            "end_char": self.end_char,
         }
 
 
@@ -692,7 +694,12 @@ def extract_citations(sentence: str) -> list[ExtractedCitation]:
                 ),
             ))
 
-    results.sort(key=lambda pair: pair[0])
+    # Sort by each individual citation occurrence, not only by the start
+    # of its enclosing citation group. This preserves exact reading order
+    # for plural citation lists and repeated provision mentions.
+    results.sort(key=lambda pair: (
+        pair[1].start_char if pair[1].start_char is not None else pair[0]
+    ))
     return [c for _, c in results]
 
 
