@@ -271,5 +271,5 @@ def test_date_scoped_retrieval_rejects_noncanonical_case_date():
         normalize_act("Industrial Disputes Act, 1947"),
     )
     import pytest
-    with pytest.raises(ValueError, match="canonical YYYY-MM-DD"):
+    with pytest.raises(ValueError, match="valid canonical ISO YYYY-MM-DD"):
         match_evidence(citation, {}, [evidence], case_date="01-01-1982")
