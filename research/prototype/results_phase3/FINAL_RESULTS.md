@@ -44,7 +44,7 @@ configuration differs. Figure: `figures/01_overview/F01_headline_baseline_vs_mod
 
 ## 4. Verifier Results
 
-**Controlled benchmark, GOLD-01, n=420 real per-item labels** (`figures/02_verifier/`):
+**Controlled benchmark, GOLD-01, n=420 construction-labeled items** (`figures/02_verifier/`):
 
 | Metric | Baseline (bare) | Modified (labeled) |
 |---|---|---|
