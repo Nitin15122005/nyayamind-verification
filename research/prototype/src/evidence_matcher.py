@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from typing import Optional
 
 from .claim_parser import ExtractedCitation, act_significant_words
@@ -49,6 +50,18 @@ def _year_conflict(claim_years: set[str], ev_years: set[str]) -> bool:
     return bool(claim_years) and bool(ev_years) and claim_years.isdisjoint(ev_years)
 
 
+def _effective_on(evidence: EvidenceRecord, case_date: str | None) -> bool:
+    """Require explicit, curated effective-date coverage for dated cases."""
+    if case_date is None:
+        return True
+    if evidence.effective_from is None:
+        return False
+    target = date.fromisoformat(case_date)
+    start = date.fromisoformat(evidence.effective_from)
+    end = date.fromisoformat(evidence.effective_to) if evidence.effective_to else None
+    return start <= target and (end is None or target <= end)
+
+
 @dataclass
 class MatchResult:
     matched: bool
@@ -75,6 +88,7 @@ def match_evidence(
     fuzzy_act_index: "object | None" = None,
     fuzzy_bm25_threshold: float = 0.5,
     fuzzy_embedding_threshold: float = 0.55,
+    case_date: str | None = None,
 ) -> MatchResult:
     """
     fuzzy_method: "jaccard" (default, production-unchanged) | "bm25" |
@@ -90,6 +104,14 @@ def match_evidence(
     min-max normalized per candidate set; embedding is raw cosine
     similarity) -- see retrieval_signals.best_match_among()'s docstring.
     """
+    if case_date is not None:
+        try:
+            parsed_case_date = date.fromisoformat(case_date)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("case_date must be a valid ISO YYYY-MM-DD string") from exc
+        if parsed_case_date.isoformat() != case_date:
+            raise ValueError("case_date must use canonical YYYY-MM-DD format")
+
     index_key = (
         citation.provision_type,
         citation.provision_number,
@@ -98,6 +120,8 @@ def match_evidence(
     )
     exact = exact_index.get(index_key)
     if exact is not None:
+        if not _effective_on(exact, case_date):
+            return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
         return MatchResult(matched=True, evidence=exact, match_method="exact_normalized")
 
     # Do not discard a cited subsection to obtain a base-section match.
@@ -117,6 +141,7 @@ def match_evidence(
         if ev.provision_type == citation.provision_type
         and ev.provision_number == citation.provision_number
         and ev.subsection == citation.subsection
+        and _effective_on(ev, case_date)
         and not _year_conflict(claim_years, _act_years(ev.act_norm))
     ]
 
