@@ -35,6 +35,25 @@ _RAW_LABEL_TO_VERDICT = {
 }
 
 
+def _validated_nli_label_map(id2label: dict) -> dict[int, str]:
+    """Validate a complete, unambiguous three-class NLI label mapping."""
+    if not isinstance(id2label, dict):
+        raise ValueError("NLI model config.id2label must be a dictionary.")
+    try:
+        normalized = {int(index): str(label).strip().lower() for index, label in id2label.items()}
+    except (TypeError, ValueError) as exc:
+        raise ValueError("NLI model config.id2label contains a non-integer class index.") from exc
+    expected_indices = {0, 1, 2}
+    expected_labels = set(_RAW_LABEL_TO_VERDICT)
+    if set(normalized) != expected_indices or set(normalized.values()) != expected_labels:
+        raise ValueError(
+            "NLI model must expose exactly one each of entailment, contradiction, "
+            f"and neutral at class indices 0, 1, 2; received {normalized!r}. "
+            "Refusing to guess label semantics."
+        )
+    return normalized
+
+
 PREMISE_FRAMING_BARE = "bare"
 PREMISE_FRAMING_LABELED = "labeled"
 PREMISE_FRAMINGS = (PREMISE_FRAMING_BARE, PREMISE_FRAMING_LABELED)
@@ -108,8 +127,22 @@ class NLIVerifier:
         """
         if device not in ("cuda", "cpu"):
             raise ValueError(f"device must be 'cuda' or 'cpu', got {device!r}")
+        if not isinstance(model_id, str) or not model_id.strip():
+            raise ValueError("model_id must be a non-empty string.")
+        if (
+            not isinstance(confidence_threshold, (int, float))
+            or isinstance(confidence_threshold, bool)
+            or not 0.0 <= float(confidence_threshold) <= 1.0
+        ):
+            raise ValueError("confidence_threshold must be a number between 0 and 1.")
+        if (
+            not isinstance(max_sequence_length, int)
+            or isinstance(max_sequence_length, bool)
+            or max_sequence_length < 1
+        ):
+            raise ValueError("max_sequence_length must be a positive integer.")
         self.model_id = model_id
-        self.confidence_threshold = confidence_threshold
+        self.confidence_threshold = float(confidence_threshold)
         self.max_sequence_length = max_sequence_length
         self.device = device
         self._tokenizer = None
@@ -132,7 +165,7 @@ class NLIVerifier:
                 "you intend a CPU-only run (e.g. the offline benchmark)."
             )
 
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        tokenizer = AutoTokenizer.from_pretrained(self.model_id)
         # fp16 on CUDA: this model is loaded concurrently with the 4-bit 7B
         # generator on a 6GB card (RTX 4050) — the default fp32 load nearly
         # doubles this model's VRAM footprint for no accuracy benefit at
@@ -142,23 +175,22 @@ class NLIVerifier:
         # implementation and the ones that do are slower than fp32, so the
         # halving that pays for itself on the GPU costs on CPU.
         dtype = torch.float16 if self.device == "cuda" else torch.float32
-        self._model = AutoModelForSequenceClassification.from_pretrained(
+        model = AutoModelForSequenceClassification.from_pretrained(
             self.model_id, torch_dtype=dtype
         )
-        self._model.eval()
-        self._model = self._model.to(self.device)
-        # Read the label order from the model's own config rather than
-        # hardcoding indices — different NLI checkpoints do not all use the
-        # same id2label ordering.
-        self._id2label_lower = {
-            i: label.lower() for i, label in self._model.config.id2label.items()
-        }
-        for lbl in self._id2label_lower.values():
-            if lbl not in _RAW_LABEL_TO_VERDICT:
-                raise ValueError(
-                    f"Unexpected NLI label '{lbl}' in {self.model_id} config.id2label "
-                    f"— expected entailment/neutral/contradiction. Refusing to guess."
-                )
+        model.eval()
+        model = model.to(self.device)
+        # Validate all three classes and their indices before exposing the
+        # model as loaded. Partial/duplicate mappings can otherwise yield a
+        # confident but semantically invalid verdict.
+        id2label = _validated_nli_label_map(model.config.id2label)
+        if int(getattr(model.config, "num_labels", len(id2label))) != 3:
+            raise ValueError(
+                f"NLI model {self.model_id} must have exactly 3 output labels."
+            )
+        self._tokenizer = tokenizer
+        self._model = model
+        self._id2label_lower = id2label
 
     def is_loaded(self) -> bool:
         return self._model is not None
@@ -166,6 +198,10 @@ class NLIVerifier:
     def verify(self, premise: str, hypothesis: str) -> VerificationResult:
         if not self.is_loaded():
             raise RuntimeError("NLIVerifier.load() must be called before verify().")
+        if not isinstance(premise, str) or not premise.strip():
+            raise ValueError("premise must be a non-empty string.")
+        if not isinstance(hypothesis, str) or not hypothesis.strip():
+            raise ValueError("hypothesis must be a non-empty string.")
 
         # Never score a silently truncated premise/hypothesis pair. In
         # particular, truncating the premise can remove a trailing statutory
@@ -192,9 +228,13 @@ class NLIVerifier:
         import torch
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
-        with torch.no_grad():
+        with torch.inference_mode():
             logits = self._model(**inputs).logits
             probs = torch.softmax(logits, dim=-1).squeeze(0).tolist()
+        if len(probs) != 3 or len(self._id2label_lower) != 3:
+            raise RuntimeError(
+                f"NLI model returned {len(probs)} class probabilities; expected exactly 3."
+            )
 
         raw_scores = {
             self._id2label_lower[i]: probs[i] for i in range(len(probs))
