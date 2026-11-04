@@ -21,17 +21,20 @@ flagged.
 | Total v1 records | 82 |
 | Corrections to existing v0 records (same `dataset_citation_key`, replaces on merge) | 3 |
 | Genuinely new citation keys | 79 |
-| Audit verdict: `VERIFIED_EXACT` (usable by default `usable_evidence_verdicts`) | 79 |
-| Audit verdict: `SOURCE_ONLY` (NOT usable by default — same policy as v0) | 3 |
+| Audit verdict: `VERIFIED_EXACT` (usable by default `usable_evidence_verdicts`) | 78 |
+| Audit verdict: `SOURCE_ONLY` (NOT usable by default — same policy as v0) | 4 |
 
-**Net effect on the usable evidence pool when `use_evidence_v1: true`: 59 → 137
-records** (59 v0 usable, minus 1 replaced-in-place by its v1 correction, plus 3 v1
-corrections, plus 76 newly-usable v1 records = 137; verified directly by loading both
-configurations and counting — see `outputs/research_completion_report.md`).
+**Net effect on the usable evidence pool when `use_evidence_v1: true`: 59 → 136
+records.** The later 2026-08-27 independent-audit addendum below records the downgrade
+of one v1 record from `VERIFIED_EXACT` to `SOURCE_ONLY`; therefore the current v1
+usable count is 78, not the original build-time count of 79. The merged count is
+59 v0 usable records plus 78 usable v1 records, less the one usable-key replacement
+in the merge = 136. This is the current count recorded by the independent-audit addendum;
+re-run the loader to reproduce it in a clean checkout.
 
 ## Target selection (no outcome leakage)
 
-The 79 new citation keys are the next 79 most-frequent citation keys — by real
+The 79 originally selected new citation keys are the next 79 most-frequent citation keys — by real
 occurrence count across BOTH NyayaRAG source files (`SCI_56k_multi_5k_...json`,
 `SCI_56k_single_5k_...json`), the exact same deterministic, generation-free counting
 method `scripts/select_natural_candidates.py` and the original v0 `README.md`'s
