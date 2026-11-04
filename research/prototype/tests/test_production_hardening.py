@@ -157,3 +157,35 @@ def test_correction_citation_identity_includes_subsection():
     }
     subsection = {**base, "subsection": "1"}
     assert _citation_identity(base) != _citation_identity(subsection)
+
+
+def test_fuzzy_subsection_identity_gate_applies_before_act_similarity():
+    from src.evidence_matcher import match_evidence
+
+    base = _evidence("Industrial Disputes Act, 1947")
+    base.provision_number = "25F"
+    base.subsection = None
+    base.act_norm = normalize_act("Industrial Disputes Act, 1947")
+    index = {}
+    citation = ExtractedCitation(
+        "Section", "25F", "1", "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    result = match_evidence(citation, index, [base])
+    assert not result.matched
+    assert result.match_method == "no_evidence"
+
+
+def test_fuzzy_subsection_gate_does_not_match_other_subsection():
+    from src.evidence_matcher import match_evidence
+
+    other = _evidence("Industrial Disputes Act, 1947")
+    other.provision_number = "25F"
+    other.subsection = "2"
+    other.act_norm = normalize_act("Industrial Disputes Act, 1947")
+    citation = ExtractedCitation(
+        "Section", "25F", "1", "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    result = match_evidence(citation, {}, [other])
+    assert not result.matched
