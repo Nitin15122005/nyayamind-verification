@@ -54,12 +54,17 @@ configuration differs. Figure: `figures/01_overview/F01_headline_baseline_vs_mod
 **Inferential qualification (2026-11-04):** GOLD-01 contains 420 repeated-condition items
 from 59 source provisions. Rows sharing an `evidence_key` are dependent observations. The
 previous item-level McNemar (p=4.16e-23) and exact sign test (p=1.58e-30) do not account for
-within-provision dependence and are withdrawn as confirmatory evidence. Accuracy, macro-F1
-and confusion matrices remain descriptive results on this fixed controlled benchmark.
-A cluster-aware paired bootstrap and sign-flip analysis is implemented in
-`scripts/analyze_clustered_benchmark.py`; its output must be reviewed before restoring an
-inferential claim. Even a significant cluster-aware result would apply only to this
-mechanically constructed benchmark, not natural-case legal correctness.
+within-provision dependence and remain withdrawn as confirmatory evidence. The completed
+paired cluster analysis (420 items per arm; 59 clusters) gives an equal-cluster accuracy
+difference of +0.2338 (95% cluster-bootstrap CI 0.2175–0.2507) and a paired cluster
+sign-flip p=0.0000099999 (100,000 Monte Carlo permutations). The pooled macro-F1 difference
+has a 95% cluster-bootstrap CI of 0.2065–0.2354. Treat these as cluster-aware sensitivity
+estimates within this fixed, deterministically constructed corpus, not broad-population
+confirmation: the source provisions are not a probability sample and the sign-flip test
+relies on exchangeability/symmetry of cluster-level paired differences. They do not
+establish human-annotated or natural-case legal correctness. See
+`scripts/analyze_clustered_benchmark.py` and the generated
+`outputs/gold01_clustered_analysis.json`.
 
 - Per-class precision/recall/F1: `figures/02_verifier/F03_gold01_per_class_precision_recall_f1.png`,
   `tables/detailed_metrics/verifier_per_class_metrics.csv`
