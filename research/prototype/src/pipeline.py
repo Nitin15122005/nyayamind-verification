@@ -1766,7 +1766,10 @@ def run_case(
     final_field = {"text": baseline["generated_field"]["text"], "source": "original"}
 
     if mode == "C":
-        assertion_aware_correction = bool((config.get("correction") or {}).get("assertion_aware", False))
+        correction_config = config.get("correction") or {}
+        assertion_aware_correction = bool(correction_config.get("assertion_aware", False))
+        if assertion_aware_correction and correction_config.get("multi_claim_enabled", False):
+            raise ValueError("correction.multi_claim_enabled cannot be combined with assertion_aware")
         if assertion_aware_correction:
             correction_summary = apply_selective_correction_assertion_aware(baseline, case, corrector, config)
         else:
