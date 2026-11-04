@@ -100,14 +100,10 @@ def match_evidence(
     if exact is not None:
         return MatchResult(matched=True, evidence=exact, match_method="exact_normalized")
 
-    # Exact match with subsection ignored (a claim citing "Section 25F(1)"
-    # should still find the base "Section 25F" evidence record if that's
-    # what's in the corpus, and vice versa).
-    if citation.subsection is not None:
-        loose_key = (citation.provision_type, citation.provision_number, None, citation.act_norm)
-        exact_loose = exact_index.get(loose_key)
-        if exact_loose is not None:
-            return MatchResult(matched=True, evidence=exact_loose, match_method="exact_normalized")
+    # Do not discard a cited subsection to obtain a base-section match.
+    # A base provision record does not, by itself, establish that the
+    # particular subsection is supported. Missing subsection-level evidence
+    # therefore remains NO_EVIDENCE until the corpus explicitly represents it.
 
     # Fuzzy fallback: same provision_type + provision_number, act-name
     # similarity above threshold. The legal-identity gate (provision_type +
