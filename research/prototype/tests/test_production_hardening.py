@@ -50,3 +50,62 @@ def test_clause_attribution_does_not_conflate_same_number_from_different_acts():
     target = ExtractedCitation("Section", "302", None, "Indian Penal Code, 1860", "indian penal code 1860")
     other_act_clause = "Section 302 of the Code of Criminal Procedure, 1973 governs a different matter."
     assert not _citation_mentioned_in(other_act_clause, target)
+
+
+def test_subsection_citation_does_not_match_base_section_only():
+    base = _evidence("Industrial Disputes Act, 1947")
+    base.provision_number = "25F"
+    base.subsection = None
+    base.act_norm = normalize_act("Industrial Disputes Act, 1947")
+    index = {(base.provision_type, base.provision_number, base.subsection, base.act_norm): base}
+    citation = ExtractedCitation(
+        "Section", "25F", "1", "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    result = match_evidence(citation, index, [base])
+    assert not result.matched
+    assert result.evidence is None
+    assert result.match_method == "no_evidence"
+
+
+def test_base_section_citation_does_not_silently_select_subsection_record():
+    subsection = _evidence("Industrial Disputes Act, 1947")
+    subsection.provision_number = "25F"
+    subsection.subsection = "1"
+    subsection.act_norm = normalize_act("Industrial Disputes Act, 1947")
+    index = {(subsection.provision_type, subsection.provision_number, subsection.subsection, subsection.act_norm): subsection}
+    citation = ExtractedCitation(
+        "Section", "25F", None, "Industrial Disputes Act, 1947",
+        normalize_act("Industrial Disputes Act, 1947"),
+    )
+    result = match_evidence(citation, index, [subsection])
+    assert not result.matched
+
+
+def test_flagged_sentence_splice_preserves_all_other_field_text_exactly():
+    from src.pipeline import _splice_flagged_sentence
+
+    original = (
+        "Opening non-claim prose. Section 10 of the Test Act applies. "
+        "Unrelated sentence without a citation."
+    )
+    corrected = _splice_flagged_sentence(
+        original,
+        "Section 10 of the Test Act applies.",
+        "Section 10 of the Test Act does not apply.",
+    )
+    assert corrected == (
+        "Opening non-claim prose. Section 10 of the Test Act does not apply. "
+        "Unrelated sentence without a citation."
+    )
+    assert corrected.startswith("Opening non-claim prose. ")
+    assert corrected.endswith(" Unrelated sentence without a citation.")
+
+
+def test_flagged_sentence_splice_rejects_duplicate_target_occurrences():
+    from src.pipeline import _splice_flagged_sentence
+
+    sentence = "Section 10 of the Test Act applies."
+    assert _splice_flagged_sentence(
+        f"{sentence} {sentence}", sentence, "Corrected sentence."
+    ) is None
