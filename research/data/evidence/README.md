@@ -273,3 +273,8 @@ third-party source, not confirmed against India Code itself.
   per task scope.
 - No verifier, correction mechanism, or LLM-based validation was
   implemented or invoked anywhere in producing this file.
+
+
+## Temporal applicability metadata (engineering schema)
+
+The evidence loader now accepts optional `effective_from` and `effective_to` fields in canonical JSONL records. Values must be canonical ISO `YYYY-MM-DD` dates; `effective_to` cannot appear without `effective_from`, and an end date cannot precede a start date. These fields are intentionally not inferred from `historical_status`: a coarse status such as `repealed` or `in_force` is not a provision-level commencement/amendment interval. For a case record with an explicit `judgment_date`, retrieval requires an evidence interval covering that date. If the date is present but the evidence record has no verified interval, the claim remains `NO_EVIDENCE` with `temporal_applicability_unverified`. Existing records without intervals remain usable only for undated cases, and their output explicitly marks temporal applicability as `not_assessed`. Do not populate these fields without source-backed effective-date verification.
