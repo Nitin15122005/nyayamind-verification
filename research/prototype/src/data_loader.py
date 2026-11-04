@@ -165,6 +165,13 @@ def load_usable_evidence(
     """
     canonical_path = Path(canonical_path)
     audit_path = Path(audit_path)
+    approved_verdicts = {"VERIFIED_EXACT", "VERIFIED_CONTENT"}
+    requested_verdicts = set(usable_verdicts)
+    if not requested_verdicts or not requested_verdicts.issubset(approved_verdicts):
+        raise ValueError(
+            "usable_verdicts may contain only VERIFIED_EXACT and "
+            f"VERIFIED_CONTENT; received {sorted(requested_verdicts)!r}"
+        )
     if (extra_canonical_path is None) != (extra_audit_path is None):
         raise ValueError(
             "extra_canonical_path and extra_audit_path must be supplied together; "
