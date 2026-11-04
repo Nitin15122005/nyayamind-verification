@@ -26,13 +26,13 @@ from dataclasses import dataclass, field
 @dataclass
 class GenerationMetadata:
     model_id: str
-    model_revision: str | None
     quantization: dict
     max_new_tokens: int
     do_sample: bool
     temperature: float
     top_p: float
     seed: int
+    model_revision: str | None = None
     generated_at: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"))
 
 
