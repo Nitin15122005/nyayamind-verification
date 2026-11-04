@@ -113,6 +113,10 @@ def evaluate_case(case, generator, verifier, corrector, exact_index, all_usable,
     multi_config = copy.deepcopy(config)
     multi_config.setdefault("correction", {})["multi_claim_enabled"] = True
     multi_config["correction"]["assertion_aware"] = False
+    configured_limit = multi_config["correction"].get("max_claim_corrections", 3)
+    multi_config["correction"]["max_claim_corrections"] = min(
+        configured_limit, max(1, len(baseline["claims"]))
+    )
 
     legacy_baseline = _fork_baseline(baseline)
     multi_baseline = _fork_baseline(baseline)
