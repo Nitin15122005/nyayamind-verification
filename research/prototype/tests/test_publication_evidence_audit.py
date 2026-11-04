@@ -125,3 +125,14 @@ def test_sparse_audit_metadata_remains_supported():
     }]
     AUDIT.inspect_pair("fixture", [row], audit, errors, warnings)
     assert errors == []
+
+
+def test_empty_keys_are_reported_without_crashing_set_difference_sort():
+    errors, warnings = [], []
+    row = record()
+    row["dataset_citation_key"] = None
+    audit = [{"dataset_citation_key": None, "audit_verdict": "VERIFIED_EXACT"}]
+    result = AUDIT.inspect_pair("fixture", [row], audit, errors, warnings)
+    assert result["usable_records"] == 1
+    assert any(item["code"] == "CANONICAL_DUPLICATE_OR_EMPTY_KEY" for item in errors)
+    assert any(item["code"] == "AUDIT_DUPLICATE_OR_EMPTY_KEY" for item in errors)
