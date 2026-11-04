@@ -171,7 +171,7 @@ def test_rebuild_verified_baseline_uses_fresh_parse_and_evidence(monkeypatch):
         parsed.append(text)
         return [fresh_claim]
 
-    def match(citation, exact_index, all_usable, threshold):
+    def match(citation, exact_index, all_usable, threshold, **kwargs):
         matched.append((exact_index, all_usable, threshold))
         evidence = SimpleNamespace(
             dataset_citation_key="evidence-302", canonical_text="Evidence text",

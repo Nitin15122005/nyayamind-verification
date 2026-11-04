@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from typing import Optional
 
 from .claim_parser import ExtractedCitation, act_significant_words
@@ -49,11 +50,23 @@ def _year_conflict(claim_years: set[str], ev_years: set[str]) -> bool:
     return bool(claim_years) and bool(ev_years) and claim_years.isdisjoint(ev_years)
 
 
+def _effective_on(evidence: EvidenceRecord, case_date: str | None) -> bool:
+    """Require explicit, curated effective-date coverage for dated cases."""
+    if case_date is None:
+        return True
+    if evidence.effective_from is None:
+        return False
+    target = date.fromisoformat(case_date)
+    start = date.fromisoformat(evidence.effective_from)
+    end = date.fromisoformat(evidence.effective_to) if evidence.effective_to else None
+    return start <= target and (end is None or target <= end)
+
+
 @dataclass
 class MatchResult:
     matched: bool
     evidence: Optional[EvidenceRecord]
-    match_method: str  # "exact_normalized" | "fuzzy" | "no_evidence"
+    match_method: str  # "exact_normalized" | "fuzzy" | "no_evidence" | "ambiguous_fuzzy"
 
 
 def _token_overlap(a: set[str], b: set[str]) -> float:
@@ -75,6 +88,7 @@ def match_evidence(
     fuzzy_act_index: "object | None" = None,
     fuzzy_bm25_threshold: float = 0.5,
     fuzzy_embedding_threshold: float = 0.55,
+    case_date: str | None = None,
 ) -> MatchResult:
     """
     fuzzy_method: "jaccard" (default, production-unchanged) | "bm25" |
@@ -90,6 +104,14 @@ def match_evidence(
     min-max normalized per candidate set; embedding is raw cosine
     similarity) -- see retrieval_signals.best_match_among()'s docstring.
     """
+    if case_date is not None:
+        try:
+            parsed_case_date = date.fromisoformat(case_date)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("case_date must be a valid canonical ISO YYYY-MM-DD string") from exc
+        if parsed_case_date.isoformat() != case_date:
+            raise ValueError("case_date must use canonical YYYY-MM-DD format")
+
     index_key = (
         citation.provision_type,
         citation.provision_number,
@@ -98,42 +120,59 @@ def match_evidence(
     )
     exact = exact_index.get(index_key)
     if exact is not None:
+        if not _effective_on(exact, case_date):
+            method = "temporal_unverified" if exact.effective_from is None else "temporal_out_of_range"
+            return MatchResult(matched=False, evidence=None, match_method=method)
         return MatchResult(matched=True, evidence=exact, match_method="exact_normalized")
 
-    # Exact match with subsection ignored (a claim citing "Section 25F(1)"
-    # should still find the base "Section 25F" evidence record if that's
-    # what's in the corpus, and vice versa).
-    if citation.subsection is not None:
-        loose_key = (citation.provision_type, citation.provision_number, None, citation.act_norm)
-        exact_loose = exact_index.get(loose_key)
-        if exact_loose is not None:
-            return MatchResult(matched=True, evidence=exact_loose, match_method="exact_normalized")
+    # Do not discard a cited subsection to obtain a base-section match.
+    # A base provision record does not, by itself, establish that the
+    # particular subsection is supported. Missing subsection-level evidence
+    # therefore remains NO_EVIDENCE until the corpus explicitly represents it.
 
-    # Fuzzy fallback: same provision_type + provision_number, act-name
-    # similarity above threshold. The legal-identity gate (provision_type +
-    # provision_number match, year-conflict veto) is IDENTICAL for every
+    # Fuzzy fallback: same provision_type + provision_number + subsection,
+    # with act-name similarity above threshold. A subsection mismatch is a
+    # statutory-identity mismatch, not a fuzzy text-similarity problem.
+    # The legal-identity gate (provision_type + provision_number + subsection
+    # match, year-conflict veto) is IDENTICAL for every
     # fuzzy_method -- only the act-name scoring function below changes.
     claim_years = _act_years(citation.act_norm)
-    same_number_year_ok: list[EvidenceRecord] = [
+    same_number_year_candidates: list[EvidenceRecord] = [
         ev for ev in all_usable
         if ev.provision_type == citation.provision_type
         and ev.provision_number == citation.provision_number
+        and ev.subsection == citation.subsection
         and not _year_conflict(claim_years, _act_years(ev.act_norm))
     ]
+    same_number_year_ok = [
+        ev for ev in same_number_year_candidates if _effective_on(ev, case_date)
+    ]
+    if case_date is not None and not same_number_year_ok:
+        if any(ev.effective_from is None for ev in same_number_year_candidates):
+            return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
+        if same_number_year_candidates:
+            return MatchResult(matched=False, evidence=None, match_method="temporal_out_of_range")
 
     if fuzzy_method == "jaccard":
         claim_act_words = act_significant_words(citation.act_norm)
-        best: Optional[EvidenceRecord] = None
-        best_overlap = 0.0
-        for ev in same_number_year_ok:
-            ev_act_words = act_significant_words(ev.act_norm)
-            overlap = _token_overlap(claim_act_words, ev_act_words)
-            if overlap > best_overlap:
-                best_overlap = overlap
-                best = ev
-        if best is not None and best_overlap >= fuzzy_token_overlap_threshold:
-            return MatchResult(matched=True, evidence=best, match_method="fuzzy")
-        return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+        scored_candidates = [
+            (ev, _token_overlap(claim_act_words, act_significant_words(ev.act_norm)))
+            for ev in same_number_year_ok
+        ]
+        best_overlap = max((score for _ev, score in scored_candidates), default=0.0)
+        best_candidates = [
+            ev for ev, score in scored_candidates
+            if abs(score - best_overlap) <= 1e-12
+        ]
+        if best_overlap < fuzzy_token_overlap_threshold:
+            return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+        # A top-scoring tie between distinct statutory records is not a
+        # ranking problem: it is an identity ambiguity. Choosing whichever
+        # record happened to occur first in the corpus would make retrieval
+        # order-dependent and could feed the verifier the wrong law.
+        if len(best_candidates) != 1:
+            return MatchResult(matched=False, evidence=None, match_method="ambiguous_fuzzy")
+        return MatchResult(matched=True, evidence=best_candidates[0], match_method="fuzzy")
 
     if fuzzy_method in ("bm25", "embedding"):
         if fuzzy_act_index is None:
@@ -141,6 +180,8 @@ def match_evidence(
         from .retrieval_signals import best_match_among  # deferred: keeps optional deps optional
 
         scored = best_match_among(citation.act_norm, same_number_year_ok, fuzzy_act_index, fuzzy_method)
+        if scored.ambiguous:
+            return MatchResult(matched=False, evidence=None, match_method="ambiguous_fuzzy")
         threshold = fuzzy_bm25_threshold if fuzzy_method == "bm25" else fuzzy_embedding_threshold
         if scored.evidence is not None and scored.score >= threshold:
             return MatchResult(matched=True, evidence=scored.evidence, match_method="fuzzy")

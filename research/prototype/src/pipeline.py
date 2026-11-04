@@ -193,7 +193,8 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     claim_records = []
     for claim in claims:
         match = match_evidence(
-            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold
+            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold,
+            case_date=getattr(case, "judgment_date", None),
         )
         claim_records.append(
             {
@@ -221,6 +222,14 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 else None,
                 "evidence_id": match.evidence.dataset_citation_key if match.matched else None,
                 "evidence_text": match.evidence.canonical_text if match.matched else None,
+                "evidence_source_url": match.evidence.source_url if match.matched else None,
+                "evidence_audit_verdict": match.evidence.audit_verdict if match.matched else None,
+                "temporal_applicability": (
+                    "verified_for_case_date" if match.matched and getattr(case, "judgment_date", None)
+                    else "unverified_no_temporal_metadata" if match.match_method == "temporal_unverified"
+                    else "not_effective_on_case_date" if match.match_method == "temporal_out_of_range"
+                    else "not_assessed"
+                ),
                 # Underscore-prefixed: internal bookkeeping consumed by
                 # _premise_for_claim() and stripped before output, so enabling
                 # labeled framing does not change the output record schema and
@@ -229,6 +238,9 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                     "provision_type": match.evidence.provision_type,
                     "provision_number": match.evidence.provision_number,
                     "act": match.evidence.act,
+                    "subsection": match.evidence.subsection,
+                    "source_url": match.evidence.source_url,
+                    "audit_verdict": match.evidence.audit_verdict,
                 } if match.matched else None,
                 # NOT underscore-prefixed: this is legitimate reproducibility
                 # metadata (how the evidence was matched: exact/fuzzy/none)
@@ -249,13 +261,16 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 # was previously only derivable by re-running that
                 # standalone script over already-produced outputs.
                 "no_evidence_category": (
-                    classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold)
+                    ("temporal_applicability_unverified" if match.match_method == "temporal_unverified"
+                     else "statutory_text_not_effective_on_case_date" if match.match_method == "temporal_out_of_range"
+                     else classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold))
                     if not match.matched else None
                 ),
                 "verdict": None,          # filled by apply_verification (mode B/C)
                 "confidence": None,
                 "sub_reason": None,
                 "verifier_model": None,
+                "verifier_model_revision": None,
                 # Additive field (measurement infrastructure, not live
                 # behavior): the verifier's FULL raw label distribution
                 # (all three of entailment/neutral/contradiction, not just
@@ -300,9 +315,11 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     return {
         "document_id": case.document_id,
         "case_text": case.case_text,
+        "judgment_date": getattr(case, "judgment_date", None),
         "generated_field": {
             "text": generated_text,
             "model": gen_meta.model_id,
+            "model_revision": getattr(gen_meta, "model_revision", None),
             "quantization": gen_meta.quantization,
             "generation_params": {
                 "max_new_tokens": gen_meta.max_new_tokens,
@@ -424,6 +441,7 @@ def apply_verification(
         rec["confidence"] = result.confidence
         rec["sub_reason"] = result.sub_reason
         rec["verifier_model"] = result.verifier_model
+        rec["verifier_model_revision"] = getattr(result, "model_revision", None)
         rec["raw_scores"] = result.raw_scores
         rec["input_truncated"] = result.input_truncated
         rec["verified_hypothesis"] = hypothesis
@@ -621,8 +639,8 @@ def _splice_flagged_sentence(
 
 
 def _citation_identity(citation) -> Optional[tuple]:
-    """(provision_type, provision_number, act_norm) — the same three fields
-    the replacement-matching logic below always required, extracted once so
+    """(provision_type, provision_number, subsection, act_norm) — the complete
+    statutory identity used by replacement matching, extracted once so
     both the baseline claim dicts (plain dicts) and freshly re-parsed
     claim_parser objects (ExtractedCitation instances) can be compared with
     the same function. Returns None if there is no citation at all (never
@@ -631,8 +649,14 @@ def _citation_identity(citation) -> Optional[tuple]:
     if citation is None:
         return None
     if isinstance(citation, dict):
-        return (citation.get("provision_type"), citation.get("provision_number"), citation.get("act_norm"))
-    return (citation.provision_type, citation.provision_number, citation.act_norm)
+        return (
+            citation.get("provision_type"), citation.get("provision_number"),
+            citation.get("subsection"), citation.get("act_norm"),
+        )
+    return (
+        citation.provision_type, citation.provision_number,
+        citation.subsection, citation.act_norm,
+    )
 
 
 def _reverify_sibling_regressions(
@@ -650,9 +674,10 @@ def _reverify_sibling_regressions(
     claim's own counterpart (same ordinal-position-among-same-citation-
     identity technique `apply_selective_correction` already uses for the
     target), and genuinely re-verifies it against its OWN evidence —
-    exactly as if it were itself being checked. Returns the list of
-    siblings that come back CONTRADICTED (a real, independently-confirmed
-    regression) — empty if none, which is the expected, common case
+    exactly as if it were itself being checked. Returns siblings whose
+    previously ENTAILED verdict is downgraded, or whose non-CONTRADICTED
+    baseline verdict becomes CONTRADICTED — both are regressions — empty
+    if none, which is the expected, common case
     (byte-for-byte preserved siblings can never change verdict, since
     verification is a deterministic function of premise+hypothesis; this
     only ever finds something when the sibling's SURROUNDING text, not its
@@ -707,6 +732,7 @@ def _reverify_sibling_regressions(
         match = match_evidence(
             counterpart.citation_extracted, baseline["_exact_index"], baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if not match.matched:
             continue
@@ -754,11 +780,17 @@ def _reverify_sibling_regressions(
             ),
             hypothesis=sibling_hypothesis,
         )
-        if result.label == CONTRADICTED:
+        baseline_verdict = rec.get("verdict")
+        regressed = (
+            (baseline_verdict == ENTAILED and result.label != ENTAILED)
+            or (result.label == CONTRADICTED and baseline_verdict != CONTRADICTED)
+        )
+        if regressed:
             regressions.append({
                 "claim_id": rec["claim_id"], "claim_text": counterpart.claim_text,
                 "reverified_hypothesis": sibling_hypothesis,
                 "evidence_id": match.evidence.dataset_citation_key,
+                "baseline_verdict": baseline_verdict,
                 "verdict": result.label, "confidence": result.confidence,
                 "raw_scores": result.raw_scores,  # see generate_and_parse's raw_scores comment
                 "input_truncated": result.input_truncated,
@@ -1040,6 +1072,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             baseline["_exact_index"],
             baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if match.matched:
             if on_event:
@@ -1158,6 +1191,7 @@ def _rebuild_verified_baseline(baseline: dict, field_text: str, config: dict) ->
         match = match_evidence(
             claim.citation_extracted, baseline["_exact_index"],
             baseline["_all_usable"], threshold,
+            case_date=baseline.get("judgment_date"),
         )
         citation = claim.citation_extracted
         records.append({
@@ -1624,6 +1658,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             baseline["_exact_index"],
             baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if match.matched:
             if on_event:
@@ -1841,6 +1876,7 @@ def run_case(
     record = {
         "document_id": baseline["document_id"],
         "case_text": baseline["case_text"],
+        "judgment_date": baseline.get("judgment_date"),
         "generated_field": baseline["generated_field"],
         "claims": [
             {k: v for k, v in c.items() if not k.startswith("_")}
@@ -1857,7 +1893,11 @@ def run_case(
             "mode": mode,
             "seed": config["seed"],
             "generation_model": config["generation"]["model_id"],
+            "generation_model_revision": config["generation"].get("revision"),
+            "generation_resolved_model_revision": baseline["generated_field"].get("model_revision"),
             "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
+            "verification_model_revision": config["verification"].get("revision") if mode in ("B", "C") else None,
+            "verification_resolved_model_revision": getattr(verifier, "resolved_model_revision", None) if verifier is not None else None,
             "quantization": config["generation"]["quantization"],
             "confidence_threshold": config["verification"]["confidence_threshold"],
             # Which premise framing produced these verdicts. Without this a run
@@ -1890,6 +1930,7 @@ def run_case(
             )) if mode == "C" else None,
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
             "software_versions": _software_versions(),
+            "temporal_applicability_policy": "date_scoped_fail_closed_when_verified_effective_dates_missing",
             "run_manifest": build_run_manifest(config, all_usable),
         },
     }

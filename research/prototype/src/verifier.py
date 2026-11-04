@@ -119,11 +119,12 @@ class VerificationResult:
     disclaimer: str = (
         "NLI statistical confidence, not a legal-correctness determination."
     )
+    model_revision: Optional[str] = None
 
 
 class NLIVerifier:
     def __init__(self, model_id: str, confidence_threshold: float, max_sequence_length: int = 512,
-                 device: str = "cuda"):
+                 device: str = "cuda", model_revision: str | None = None):
         """`device` defaults to "cuda" and that path is unchanged: it still
         refuses to run if CUDA is missing, because in the pipeline this model
         shares a 6GB card with a 4-bit 7B generator and a silent CPU fallback
@@ -151,6 +152,8 @@ class NLIVerifier:
         ):
             raise ValueError("max_sequence_length must be a positive integer.")
         self.model_id = model_id
+        self.model_revision = model_revision
+        self.resolved_model_revision = None
         self.confidence_threshold = float(confidence_threshold)
         self.max_sequence_length = max_sequence_length
         self.device = device
@@ -174,7 +177,7 @@ class NLIVerifier:
                 "you intend a CPU-only run (e.g. the offline benchmark)."
             )
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        tokenizer = AutoTokenizer.from_pretrained(self.model_id, revision=self.model_revision)
         # fp16 on CUDA: this model is loaded concurrently with the 4-bit 7B
         # generator on a 6GB card (RTX 4050) — the default fp32 load nearly
         # doubles this model's VRAM footprint for no accuracy benefit at
@@ -185,7 +188,7 @@ class NLIVerifier:
         # halving that pays for itself on the GPU costs on CPU.
         dtype = torch.float16 if self.device == "cuda" else torch.float32
         model = AutoModelForSequenceClassification.from_pretrained(
-            self.model_id, torch_dtype=dtype
+            self.model_id, torch_dtype=dtype, revision=self.model_revision
         )
         model.eval()
         model = model.to(self.device)
@@ -200,6 +203,7 @@ class NLIVerifier:
         self._tokenizer = tokenizer
         self._model = model
         self._id2label_lower = id2label
+        self.resolved_model_revision = getattr(model.config, "_commit_hash", None) or self.model_revision
 
     def is_loaded(self) -> bool:
         return self._model is not None
@@ -265,4 +269,5 @@ class NLIVerifier:
             raw_scores=raw_scores,
             verifier_model=self.model_id,
             input_truncated=input_truncated,
+            model_revision=self.resolved_model_revision,
         )

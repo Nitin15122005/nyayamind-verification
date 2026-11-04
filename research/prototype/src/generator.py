@@ -32,6 +32,7 @@ class GenerationMetadata:
     temperature: float
     top_p: float
     seed: int
+    model_revision: str | None = None
     generated_at: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"))
 
 
@@ -48,8 +49,11 @@ class StatuteGroundingGenerator:
         system_prompt: str,
         user_prompt_template: str,
         seed: int,
+        model_revision: str | None = None,
     ):
         self.model_id = model_id
+        self.model_revision = model_revision
+        self.resolved_model_revision = None
         self.quantization = quantization
         self.device_map = device_map
         self.max_new_tokens = max_new_tokens
@@ -96,16 +100,20 @@ class StatuteGroundingGenerator:
             bnb_4bit_compute_dtype=getattr(torch, self.quantization["bnb_4bit_compute_dtype"]),
             llm_int8_skip_modules=[],
         )
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        self._tokenizer = AutoTokenizer.from_pretrained(
+            self.model_id, revision=self.model_revision
+        )
         gc.collect()
         torch.cuda.empty_cache()
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
+            revision=self.model_revision,
             quantization_config=bnb_config,
             device_map=self.device_map,
             low_cpu_mem_usage=True,
         )
         self._model.eval()
+        self.resolved_model_revision = getattr(self._model.config, "_commit_hash", None) or self.model_revision
 
     def is_loaded(self) -> bool:
         return self._model is not None
@@ -147,6 +155,7 @@ class StatuteGroundingGenerator:
 
         metadata = GenerationMetadata(
             model_id=self.model_id,
+            model_revision=self.resolved_model_revision,
             quantization=self.quantization,
             max_new_tokens=self.max_new_tokens,
             do_sample=self.do_sample,

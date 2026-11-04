@@ -50,6 +50,8 @@ jobs:
         env:
           PYTHONPATH: research/prototype
         run: python -m pytest research/prototype/tests -m 'not integration' -ra
+      - name: Run model-free CLI and evidence-pool smoke check
+        run: python research/prototype/scripts/run_mvp.py --check
       - name: Audit statutory evidence structure (read-only)
         run: |
           python research/prototype/scripts/audit_evidence_integrity.py \
