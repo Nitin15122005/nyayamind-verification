@@ -661,7 +661,7 @@ def test_evidence_matcher_same_section_number_different_acts_no_collision():
     assert other_result.evidence.canonical_text == "Unrelated provision text."
 
 
-def test_evidence_matcher_subsection_falls_back_to_base_section(synthetic_pool):
+def test_evidence_matcher_subsection_does_not_fall_back_to_base_section(synthetic_pool):
     exact_index, all_usable = synthetic_pool
     # Corpus has "Section 302" (no subsection); claim cites "Section 302(1)".
     citation = ExtractedCitation(
@@ -669,8 +669,9 @@ def test_evidence_matcher_subsection_falls_back_to_base_section(synthetic_pool):
         act_raw="the Indian Penal Code, 1860", act_norm="indian penal code 1860",
     )
     result = match_evidence(citation, exact_index, all_usable, fuzzy_token_overlap_threshold=0.8)
-    assert result.matched is True
-    assert result.evidence.subsection is None
+    assert result.matched is False
+    assert result.evidence is None
+    assert result.match_method == "no_evidence"
 
 
 def test_evidence_matcher_adjacent_provision_numbers_never_cross_match():
