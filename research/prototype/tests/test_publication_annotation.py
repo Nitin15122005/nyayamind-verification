@@ -94,3 +94,19 @@ def test_gold03_validation_fails_without_independent_labels(tmp_path):
     }])
     args = type("Args", (), {"input": source})
     assert MOD.command_validate_gold03(args) == 2
+
+
+
+def test_natural_double_review_merge_preserves_disagreement(tmp_path):
+    a, b, out = tmp_path / "r1.csv", tmp_path / "r2.csv", tmp_path / "merged.csv"
+    common = {"annotation_id": "d1:c1", "document_id": "d1", "claim_id": "c1",
+              "claim_text": "claim", "evidence_text": "evidence",
+              "reviewer_rationale": "Reason"}
+    write_csv(a, [{**common, "reviewer_label": "ENTAILED", "reviewer_id": "R1"}])
+    write_csv(b, [{**common, "reviewer_label": "CONTRADICTED", "reviewer_id": "R2"}])
+    args = type("Args", (), {"reviewer1": a, "reviewer2": b, "output": out})
+    MOD.command_merge_natural(args)
+    row = MOD.read_csv(out)[0]
+    assert row["reviewer1_label"] == "ENTAILED"
+    assert row["reviewer2_label"] == "CONTRADICTED"
+    assert row["adjudicated_label"] == ""
