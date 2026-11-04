@@ -24,7 +24,7 @@ class CorrectionMetadata:
     max_new_tokens: int
     do_sample: bool
     seed: int
-    corrected_at: str = field(default_factory=lambda: datetime.datetime.utcnow().isoformat() + "Z")
+    corrected_at: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"))
 
 
 class SelectiveCorrector:
