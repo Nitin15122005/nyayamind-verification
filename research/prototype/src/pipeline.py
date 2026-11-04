@@ -1143,6 +1143,150 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     }
 
 
+
+def _rebuild_verified_baseline(baseline: dict, field_text: str, config: dict) -> dict:
+    """Re-parse and re-verify every claim after a successful correction.
+
+    This is deliberately a fresh pass over the complete corrected field.
+    Claim IDs and verdicts from the previous field are never reused.
+    """
+    claims = claim_parser.extract_claims(field_text)
+    records = []
+    threshold = config["evidence_matching"]["fuzzy_token_overlap_threshold"]
+    for claim in claims:
+        match = match_evidence(
+            claim.citation_extracted, baseline["_exact_index"],
+            baseline["_all_usable"], threshold,
+        )
+        citation = claim.citation_extracted
+        records.append({
+            "claim_id": claim.claim_id,
+            "claim_text": claim.claim_text,
+            "assertion_text": claim.assertion_text,
+            "assertion_spans": list(claim.assertion_spans),
+            "citation_extracted": citation.as_dict() if citation else None,
+            "evidence_id": match.evidence.dataset_citation_key if match.matched else None,
+            "evidence_text": match.evidence.canonical_text if match.matched else None,
+            "_evidence_provision": {
+                "provision_type": match.evidence.provision_type,
+                "provision_number": match.evidence.provision_number,
+                "act": match.evidence.act,
+            } if match.matched else None,
+            "evidence_match_method": match.match_method,
+            "no_evidence_category": (
+                classify_no_evidence(citation, baseline["_all_usable"], threshold)
+                if not match.matched else None
+            ),
+            "verdict": None if match.matched else NO_EVIDENCE,
+            "confidence": None,
+            "sub_reason": None,
+            "verifier_model": None,
+            "raw_scores": None,
+            "input_truncated": None,
+            "negation_contradiction_caveat": None,
+        })
+    refreshed = dict(baseline)
+    refreshed["generated_field"] = dict(baseline["generated_field"], text=field_text)
+    refreshed["claims"] = records
+    apply_verification(
+        refreshed, baseline["_verifier"], resolve_premise_framing(config),
+        bool((config.get("verification") or {}).get("narrow_primary_hypothesis", False)),
+        bool((config.get("verification") or {}).get("assertion_span_primary_hypothesis", False)),
+    )
+    return refreshed
+
+
+def apply_multi_claim_correction(
+    baseline: dict, case, corrector, config: dict, on_event=None,
+) -> dict:
+    """Opt-in sequential correction with full-field reparse/reverification.
+
+    Every iteration invokes the existing single-claim safety path against a
+    freshly rebuilt baseline. The batch is atomic: if any later attempt fails,
+    the function returns the original field and reports rollback. The feature
+    is intentionally not the default until independently evaluated.
+    """
+    correction_config = config.get("correction") or {}
+    max_attempts = correction_config.get("max_claim_corrections", 1)
+    if isinstance(max_attempts, bool) or not isinstance(max_attempts, int) or max_attempts < 1:
+        raise ValueError("correction.max_claim_corrections must be a positive integer")
+    original_text = baseline["generated_field"]["text"]
+    current = baseline
+    successful_edits = []
+    failed_attempt = None
+
+    for attempt_index in range(max_attempts):
+        eligible = [
+            rec for rec in current["claims"]
+            if _should_trigger_correction(rec) and not rec.get("negation_contradiction_caveat")
+        ]
+        if not eligible:
+            break
+        result = apply_selective_correction(current, case, corrector, config, on_event=on_event)
+        if result.get("status") != "corrected":
+            failed_attempt = result
+            break
+        next_text = result.get("regenerated_text")
+        if not isinstance(next_text, str) or next_text == current["generated_field"]["text"]:
+            failed_attempt = dict(result, status="correction_no_effect")
+            break
+        successful_edits.append({
+            "attempt": attempt_index + 1,
+            "triggered_for_claim_id": result.get("triggered_for_claim_id"),
+            "trigger_reason": result.get("trigger_reason"),
+            "reverification": result.get("reverification"),
+            "corr_meta": result.get("corr_meta"),
+        })
+        current = _rebuild_verified_baseline(current, next_text, config)
+
+    remaining = [
+        rec for rec in current["claims"]
+        if _should_trigger_correction(rec) and not rec.get("negation_contradiction_caveat")
+    ]
+    if failed_attempt is not None:
+        return {
+            "triggered_for_claim_id": successful_edits[0]["triggered_for_claim_id"] if successful_edits else failed_attempt.get("triggered_for_claim_id"),
+            "trigger_reason": successful_edits[0]["trigger_reason"] if successful_edits else failed_attempt.get("trigger_reason"),
+            "attempts": len(successful_edits) + int(failed_attempt.get("attempts", 0)),
+            "status": "multi_claim_batch_rolled_back" if successful_edits else failed_attempt.get("status", "correction_failed"),
+            "regenerated_text": original_text if successful_edits else failed_attempt.get("regenerated_text"),
+            "original_field_text": original_text,
+            "reverification": None,
+            "successful_attempts": successful_edits,
+            "failed_attempt": {k: v for k, v in failed_attempt.items() if not k.startswith("_")},
+            "remaining_flagged_claims": len(remaining),
+            "atomic_batch": True,
+        }
+
+    if not successful_edits:
+        return {
+            "triggered_for_claim_id": None,
+            "trigger_reason": None,
+            "attempts": 0,
+            "status": "not_triggered",
+            "regenerated_text": None,
+            "original_field_text": original_text,
+            "reverification": None,
+            "successful_attempts": [],
+            "remaining_flagged_claims": len(remaining),
+            "atomic_batch": True,
+        }
+
+    status = "corrected" if not remaining else "multi_claim_limit_reached"
+    return {
+        "triggered_for_claim_id": successful_edits[0]["triggered_for_claim_id"],
+        "trigger_reason": successful_edits[0]["trigger_reason"],
+        "attempts": len(successful_edits),
+        "status": status,
+        "regenerated_text": current["generated_field"]["text"],
+        "original_field_text": original_text,
+        "reverification": successful_edits[-1]["reverification"],
+        "successful_attempts": successful_edits,
+        "remaining_flagged_claims": len(remaining),
+        "atomic_batch": True,
+    }
+
+
 def _correction_target_spans(rec: dict) -> Optional[tuple[list[str], str]]:
     """Resolves a flagged claim's `assertion_spans` into (spans,
     content_fragment) for ASSERTION-AWARE correction, or None (fail closed)
@@ -1621,7 +1765,11 @@ def run_case(
         if assertion_aware_correction:
             correction_summary = apply_selective_correction_assertion_aware(baseline, case, corrector, config)
         else:
-            correction_summary = apply_selective_correction(baseline, case, corrector, config)
+            multi_claim = bool((config.get("correction") or {}).get("multi_claim_enabled", False))
+            if multi_claim:
+                correction_summary = apply_multi_claim_correction(baseline, case, corrector, config)
+            else:
+                correction_summary = apply_selective_correction(baseline, case, corrector, config)
         if correction_summary["status"] == "corrected":
             final_field = {"text": correction_summary["regenerated_text"], "source": "corrected"}
         elif correction_summary["status"] == "correction_failed":
