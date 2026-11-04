@@ -208,3 +208,18 @@ def test_case_loader_rejects_invalid_judgment_date(tmp_path):
     }]), encoding="utf-8")
     with pytest.raises(ValueError, match="judgment_date"):
         load_nyayarag_cases([path])
+
+
+@pytest.mark.parametrize("field,value", [
+    ("effective_from", "2001-01-01"),
+    ("effective_to", "2011-01-01"),
+])
+def test_loader_rejects_audit_effective_date_disagreement(tmp_path, field, value):
+    row = canonical()
+    row["effective_from"] = "2000-01-01"
+    row["effective_to"] = "2010-12-31"
+    audit_row = audit()
+    audit_row[field] = value
+    cpath, apath = write_pair(tmp_path, [row], [audit_row])
+    with pytest.raises(ValueError, match=f"Canonical/audit {field} mismatch"):
+        load_usable_evidence(cpath, apath, USABLE)
