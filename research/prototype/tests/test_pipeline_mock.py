@@ -1927,3 +1927,22 @@ def test_claim_output_exposes_canonical_evidence_provenance(evidence_pool, confi
     start = claim["citation_extracted"]["start_char"]
     end = claim["citation_extracted"]["end_char"]
     assert text[start:end] == "302"
+
+
+def test_dated_case_does_not_treat_undated_statute_record_as_verified(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(
+        document_id="dated-doc", case_text="facts...", raw_citation_keys=[],
+        judgment_date="1982-01-01",
+    )
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_id"] is None
+    assert claim["evidence_match_method"] == "temporal_unverified"
+    assert claim["no_evidence_category"] == "temporal_applicability_unverified"
+    assert claim["temporal_applicability"] == "unverified_no_temporal_metadata"
+    assert record["judgment_date"] == "1982-01-01"
