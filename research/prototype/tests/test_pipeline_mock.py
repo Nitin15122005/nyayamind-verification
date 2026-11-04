@@ -1924,3 +1924,6 @@ def test_claim_output_exposes_canonical_evidence_provenance(evidence_pool, confi
     assert claim["evidence_audit_verdict"] == "VERIFIED_EXACT"
     assert claim["citation_extracted"]["start_char"] is not None
     assert claim["citation_extracted"]["end_char"] > claim["citation_extracted"]["start_char"]
+    start = claim["citation_extracted"]["start_char"]
+    end = claim["citation_extracted"]["end_char"]
+    assert text[start:end] == "302"
