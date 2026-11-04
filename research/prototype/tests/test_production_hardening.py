@@ -41,3 +41,12 @@ def test_fuzzy_match_rejects_equal_score_ambiguous_act_editions():
     assert not result.matched
     assert result.evidence is None
     assert result.match_method == "ambiguous_fuzzy"
+
+
+def test_clause_attribution_does_not_conflate_same_number_from_different_acts():
+    from src.claim_parser import _citation_mentioned_in
+    from src.claim_parser import ExtractedCitation
+
+    target = ExtractedCitation("Section", "302", None, "Indian Penal Code, 1860", "indian penal code 1860")
+    other_act_clause = "Section 302 of the Code of Criminal Procedure, 1973 governs a different matter."
+    assert not _citation_mentioned_in(other_act_clause, target)
