@@ -49,14 +49,16 @@ def merged_records() -> list[dict]:
         for row in read_jsonl(canonical_path):
             key = row["dataset_citation_key"]
             audit = audits.get(key)
-            if audit and audit.get("audit_verdict") == VERDICT:
+            if audit and audit.get("audit_verdict") in {"VERIFIED_EXACT", "VERIFIED_CONTENT"}:
                 merged[key] = {**row, **{
                     "audit_verdict": audit.get("audit_verdict"),
                     "audit_note": audit.get("audit_note", ""),
                     "audit_date": audit.get("audit_date", ""),
                     "audit_method": audit.get("audit_method", ""),
                 }}
-    return sorted(merged.values(), key=lambda r: r["dataset_citation_key"])
+    # Apply exact-only selection AFTER v1 replaces same-key v0 records.
+    exact = [row for row in merged.values() if row["audit_verdict"] == VERDICT]
+    return sorted(exact, key=lambda r: r["dataset_citation_key"])
 
 
 def main() -> int:
