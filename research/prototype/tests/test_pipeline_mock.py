@@ -1909,3 +1909,18 @@ def test_sibling_reverification_uses_its_own_assertion_in_a_bundled_sentence(
     ]
     assert sibling_rechecks == [sibling_corrected.assertion_text]
 
+
+
+def test_claim_output_exposes_canonical_evidence_provenance(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(document_id="doc-provenance", case_text="facts...", raw_citation_keys=[])
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_source_url"] == "https://example.invalid/1"
+    assert claim["evidence_audit_verdict"] == "VERIFIED_EXACT"
+    assert claim["citation_extracted"]["start_char"] is not None
+    assert claim["citation_extracted"]["end_char"] > claim["citation_extracted"]["start_char"]
