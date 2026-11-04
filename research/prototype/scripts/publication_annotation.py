@@ -184,10 +184,13 @@ def command_validate_gold03(args: argparse.Namespace) -> int:
         if not item or item in seen:
             errors.append(f"line {i}: blank or duplicate item_id")
         seen.add(item)
-        for field in ("reviewer1_label", "reviewer2_label", "adjudicated_label"):
+        for field in ("reviewer1_label", "reviewer2_label"):
             value = row.get(field, "").strip().upper()
-            if value and value not in LABELS:
-                errors.append(f"line {i}: invalid {field}={value}")
+            if value not in LABELS:
+                errors.append(f"line {i}: missing or invalid {field}={value}")
+        value = row.get("adjudicated_label", "").strip().upper()
+        if value and value not in LABELS:
+            errors.append(f"line {i}: invalid adjudicated_label={value}")
         for field in ("reviewer1_id", "reviewer2_id", "reviewer1_rationale", "reviewer2_rationale"):
             if not row.get(field, "").strip():
                 errors.append(f"line {i}: {field} missing")
@@ -202,7 +205,7 @@ def command_validate_gold03(args: argparse.Namespace) -> int:
     result = {"n_items": len(rows), "n_incomplete_adjudications": incomplete,
               "errors": errors, "release_ready": bool(rows) and not errors and incomplete == 0}
     print(json.dumps(result, indent=2))
-    return 0 if not errors else 2
+    return 0 if result["release_ready"] else 2
 
 
 def kappa(rows: list[dict]) -> float | None:
