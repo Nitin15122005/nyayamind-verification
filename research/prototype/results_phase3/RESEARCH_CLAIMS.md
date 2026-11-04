@@ -6,7 +6,7 @@ for exact source artifacts.
 
 | # | Claim | Classification | Evidence | n | Experiment type | Permitted interpretation | Caveat |
 |---|---|---|---|---|---|---|---|
-| C1 | Labeled premise framing improves NLI verifier performance over bare framing on the controlled benchmark | **DESCRIPTIVE; inferential status pending** | macro F1 0.749→0.968; accuracy 0.733→0.971 | 420 items nested within 59 source provisions | Controlled, deterministic, paired | Report the observed item-level metrics with the construction limits | The previously reported item-level McNemar p=4.16e-23 is not confirmatory because multiple items share each evidence provision; cluster-aware reanalysis is required before claiming statistical significance |
+| C1 | Labeled premise framing improves NLI verifier performance over bare framing on the controlled benchmark | **DESCRIPTIVE; cluster-aware sensitivity analysis completed** | macro F1 0.749→0.968; accuracy 0.733→0.971; equal-cluster accuracy difference +0.234 (95% cluster-bootstrap CI 0.218–0.251); paired cluster sign-flip p≈0.00001 | 420 items nested within 59 source provisions | Controlled, deterministic, paired | Report item-level metrics and cluster-aware sensitivity estimates, explicitly bounded to this constructed corpus | The sign-flip test assumes exchangeability/symmetry of cluster-level paired differences; the 59 provisions are not a probability sample of all legal provisions. Treat p and CI as within-benchmark sensitivity evidence, not broad-population confirmation |
 | C2 | The v0+v1 evidence pool increases evidence coverage over v0-only | **SUPPORTED** | 63.2%→70.3% (fresh), McNemar p=0.0003 | 209 | Paired natural, METRIC-ONLY | State as coverage improvement, never "accuracy" | Two distinct historical/fresh columns exist for CONTRADICTED counts — never conflate them (see FINAL_RESULTS.md §5) |
 | C3 | The claim-parser fix (223eb9d + Art./Arts.) improves evidence-matchable claim extraction | **SUPPORTED** | 6/30 improved, 0 worsened, sign test p=0.03 | 30 | Historical reproduction (parser not re-executed; sign test freshly recomputed) | State the exact counts and test | Cannot re-execute the pre-fix parser without checking out old source; not attempted |
 | C4 | `atomic_scope_check="assertion_spans"` reduces false scope-violation rejections | **PROVISIONAL** | 1/11 real historical scope violations unblocked on replay | 11 | Descriptive replay, no test | State as a directional, small-n observation | DIAGNOSTIC grade; a real, not fabricated, replay — but only 1/11 |
@@ -23,15 +23,23 @@ for exact source artifacts.
 
 ## GOLD-01 inferential qualification (2026-11-04)
 
-GOLD-01 contains 420 rows derived from only 59 source provisions (E1/E2/C1/C2/N1/N2
+GOLD-01 contains 420 rows derived from 59 source provisions (E1/E2/C1/C2/N1/N2
 conditions per provision, with E3/E4 available for 33 provisions). Rows sharing an
-`evidence_key` are dependent observations. The historical item-level McNemar result
-(p=4.16e-23) therefore must not be presented as confirmatory significance. A new
-cluster-aware paired bootstrap and sign-flip analysis has been added at
-`research/prototype/scripts/analyze_clustered_benchmark.py`. Until it is run on the
-per-item predictions for both framings, retain the accuracy/F1 values as descriptive
-results and do not state a confirmatory p-value. This does not invalidate the measured
-confusion matrices; it limits the inferential claim.
+`evidence_key` are dependent observations, so the historical item-level McNemar result
+(p=4.16e-23) is withdrawn as confirmatory evidence. The paired cluster analysis was
+rerun on both framing arms (420 items each; 59 clusters). The equal-cluster accuracy
+difference was +0.2338, with a 95% cluster-bootstrap interval of [0.2175, 0.2507].
+The paired cluster sign-flip test returned p=0.0000099999 using 100,000 Monte Carlo
+permutations (the minimum attainable corrected Monte Carlo value in this run). The
+pooled macro-F1 difference had a 95% cluster-bootstrap interval of [0.2065, 0.2354].
+
+These results strengthen the evidence for a framing effect within GOLD-01, but should
+be reported as cluster-aware sensitivity analysis rather than broad-population
+confirmation: the source provisions are a fixed project corpus, not a probability
+sample, and the sign-flip test relies on exchangeability/symmetry of cluster-level
+paired differences. The analysis does not establish human-annotated or natural-case
+legal correctness. The reproducible output is
+`research/prototype/outputs/gold01_clustered_analysis.json`.
 
 ## Absolutely do not claim
 
