@@ -140,3 +140,19 @@ def test_loader_refuses_unapproved_usable_verdict_configuration(tmp_path, unsafe
 
     with pytest.raises(ValueError, match="usable_verdicts may contain only"):
         load_usable_evidence(cpath, apath, unsafe_verdicts)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("source_url", "https://example.invalid/other-source"),
+    ("act", "Different Act, 1900"),
+    ("provision_type", "Article"),
+    ("provision_number", "9"),
+])
+def test_loader_rejects_conflicting_audit_identity_metadata(tmp_path, field, value):
+    canonical_row = canonical()
+    audit_row = audit()
+    audit_row[field] = value
+    cpath, apath = write_pair(tmp_path, [canonical_row], [audit_row])
+
+    with pytest.raises(ValueError, match=f"Canonical/audit {field} mismatch"):
+        load_usable_evidence(cpath, apath, USABLE)
