@@ -1946,3 +1946,24 @@ def test_dated_case_does_not_treat_undated_statute_record_as_verified(evidence_p
     assert claim["no_evidence_category"] == "temporal_applicability_unverified"
     assert claim["temporal_applicability"] == "unverified_no_temporal_metadata"
     assert record["judgment_date"] == "1982-01-01"
+
+
+def test_case_date_before_statute_interval_is_reported_as_temporal_mismatch(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    evidence = all_usable[0]
+    evidence.effective_from = "2000-01-01"
+    evidence.effective_to = None
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(
+        document_id="pre-commencement", case_text="facts...", raw_citation_keys=[],
+        judgment_date="1982-01-01",
+    )
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_id"] is None
+    assert claim["evidence_match_method"] == "temporal_out_of_range"
+    assert claim["no_evidence_category"] == "statutory_text_not_effective_on_case_date"
+    assert claim["temporal_applicability"] == "not_effective_on_case_date"
