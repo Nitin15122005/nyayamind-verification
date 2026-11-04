@@ -1857,7 +1857,9 @@ def run_case(
             "mode": mode,
             "seed": config["seed"],
             "generation_model": config["generation"]["model_id"],
+            "generation_model_revision": config["generation"].get("revision"),
             "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
+            "verification_model_revision": config["verification"].get("revision") if mode in ("B", "C") else None,
             "quantization": config["generation"]["quantization"],
             "confidence_threshold": config["verification"]["confidence_threshold"],
             # Which premise framing produced these verdicts. Without this a run
