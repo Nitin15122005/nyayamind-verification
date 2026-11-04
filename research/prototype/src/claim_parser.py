@@ -754,7 +754,16 @@ def _citation_mentioned_in(clause: str, citation: ExtractedCitation) -> bool:
     "Sections 3 and 482" — is still recognized; a naive adjacency regex
     would only ever match the FIRST number in such a list."""
     for c in extract_citations(clause):
-        if c.provision_type == citation.provision_type and c.provision_number == citation.provision_number:
+        if (
+            c.provision_type == citation.provision_type
+            and c.provision_number == citation.provision_number
+            and c.subsection == citation.subsection
+            and (
+                not c.act_norm
+                or not citation.act_norm
+                or c.act_norm == citation.act_norm
+            )
+        ):
             return True
     return False
 
