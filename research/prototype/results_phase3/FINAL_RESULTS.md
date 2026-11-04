@@ -54,15 +54,7 @@ configuration differs. Figure: `figures/01_overview/F01_headline_baseline_vs_mod
 **Inferential qualification (2026-11-04):** GOLD-01 contains 420 repeated-condition items
 from 59 source provisions. Rows sharing an `evidence_key` are dependent observations. The
 previous item-level McNemar (p=4.16e-23) and exact sign test (p=1.58e-30) do not account for
-within-provision dependence and remain withdrawn as confirmatory evidence. The completed
-paired cluster analysis (420 items per arm; 59 clusters) gives an equal-cluster accuracy
-difference of +0.2338 (95% cluster-bootstrap CI 0.2175–0.2507) and a paired cluster
-sign-flip p=0.0000099999 (100,000 Monte Carlo permutations). The pooled macro-F1 difference
-has a 95% cluster-bootstrap CI of 0.2065–0.2354. Treat these as cluster-aware sensitivity
-estimates within this fixed, deterministically constructed corpus, not broad-population
-confirmation: the source provisions are not a probability sample and the sign-flip test
-relies on exchangeability/symmetry of cluster-level paired differences. They do not
-establish human-annotated or natural-case legal correctness. See
+within-provision dependence and remain withdrawn as confirmatory evidence. The completed paired cluster analysis (420 items per arm; 59 clusters) gives an equal-cluster accuracy difference of +0.2338 (95% cluster-bootstrap CI 0.2175–0.2507) and paired cluster sign-flip p=0.0000099999 (100,000 Monte Carlo permutations). The pooled macro-F1 difference has a 95% cluster-bootstrap CI of 0.2065–0.2354. However, construct validity limits interpretation: attributed hypotheses repeat the provision citation that labeled framing adds to the premise, so the model can exploit citation-metadata overlap. This experiment does not isolate improved statutory reasoning. Treat the cluster estimates as within-benchmark sensitivity results, not broad-population confirmation. The 59 provisions are a fixed project corpus, and no human-annotated or natural-case legal correctness is established. See
 `scripts/analyze_clustered_benchmark.py` and the generated
 `outputs/gold01_clustered_analysis.json`.
 
@@ -77,6 +69,8 @@ establish human-annotated or natural-case legal correctness. See
 **Synthetic stress (GOLD-02, n=59, contradiction detection):** recall 0.356 (21/59) → 0.458
 (27/59), no statistical test performed (source did not report one). `figures/02_verifier/F05_gold02_synthetic_contradiction_detection.png`.
 **GRADE B.**
+
+**Construct-validity warning:** GOLD-01's attributed conditions put the citation in the hypothesis while labeled framing adds the matching provision identifier to the premise. This lexical/metadata overlap is a plausible shortcut and means the framing experiment does not isolate legal entailment reasoning. See `outputs/GOLD01_CONSTRUCTION_VALIDITY_AUDIT.md`.
 
 **NEW — assertion_span_primary_hypothesis (n=6 real "respectively" claims, CPU DeBERTa):**
 4/6 claims changed verdict when verified against an `assertion_spans`-built hypothesis instead
