@@ -121,7 +121,7 @@ def match_evidence(
     exact = exact_index.get(index_key)
     if exact is not None:
         if not _effective_on(exact, case_date):
-            method = "temporal_unverified" if exact.effective_from is None else "no_evidence"
+            method = "temporal_unverified" if exact.effective_from is None else "temporal_out_of_range"
             return MatchResult(matched=False, evidence=None, match_method=method)
         return MatchResult(matched=True, evidence=exact, match_method="exact_normalized")
 
@@ -147,10 +147,11 @@ def match_evidence(
     same_number_year_ok = [
         ev for ev in same_number_year_candidates if _effective_on(ev, case_date)
     ]
-    if case_date is not None and not same_number_year_ok and any(
-        ev.effective_from is None for ev in same_number_year_candidates
-    ):
-        return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
+    if case_date is not None and not same_number_year_ok:
+        if any(ev.effective_from is None for ev in same_number_year_candidates):
+            return MatchResult(matched=False, evidence=None, match_method="temporal_unverified")
+        if same_number_year_candidates:
+            return MatchResult(matched=False, evidence=None, match_method="temporal_out_of_range")
 
     if fuzzy_method == "jaccard":
         claim_act_words = act_significant_words(citation.act_norm)
