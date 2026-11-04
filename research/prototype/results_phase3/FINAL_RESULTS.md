@@ -12,8 +12,7 @@ production)** — the same pipeline code, five configuration levers changed base
 
 Headline, evidence-graded:
 
-- **Verifier (controlled, GOLD-01, n=420, labels exist):** macro F1 0.749 → 0.968, accuracy
-  0.733 → 0.971 (McNemar p=4.16e-23). **GRADE A.**
+- **Verifier (controlled, GOLD-01, 420 items from 59 source provisions):** macro F1 0.749 → 0.968, accuracy 0.733 → 0.971. These are observed benchmark metrics; confirmatory significance is pending cluster-aware reanalysis.
 - **Evidence coverage (paired natural, n=209, no labels — coverage, not accuracy):** 63.2% →
   70.3% (McNemar χ²=13.07, p=0.0003). **GRADE A.**
 - **Claim parser (n=30 reparse):** 6/30 documents improved, 0 worsened (sign test p=0.03).
@@ -52,8 +51,15 @@ configuration differs. Figure: `figures/01_overview/F01_headline_baseline_vs_mod
 | Accuracy | 0.7333 | 0.9714 |
 | Macro F1 | 0.7487 | 0.9684 |
 
-Statistical test: McNemar (continuity-corrected), p=4.16e-23; exact sign test p=1.58e-30.
-**GRADE A, SUPPORTED.**
+**Inferential qualification (2026-11-04):** GOLD-01 contains 420 repeated-condition items
+from 59 source provisions. Rows sharing an `evidence_key` are dependent observations. The
+previous item-level McNemar (p=4.16e-23) and exact sign test (p=1.58e-30) do not account for
+within-provision dependence and are withdrawn as confirmatory evidence. Accuracy, macro-F1
+and confusion matrices remain descriptive results on this fixed controlled benchmark.
+A cluster-aware paired bootstrap and sign-flip analysis is implemented in
+`scripts/analyze_clustered_benchmark.py`; its output must be reviewed before restoring an
+inferential claim. Even a significant cluster-aware result would apply only to this
+mechanically constructed benchmark, not natural-case legal correctness.
 
 - Per-class precision/recall/F1: `figures/02_verifier/F03_gold01_per_class_precision_recall_f1.png`,
   `tables/detailed_metrics/verifier_per_class_metrics.csv`
