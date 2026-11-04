@@ -240,6 +240,101 @@ def command_summarize_gold03(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_split_natural(args: argparse.Namespace) -> int:
+    rows = read_csv(args.input)
+    required = {"annotation_id", "document_id", "claim_id", "claim_text", "evidence_text"}
+    if not rows or not required.issubset(rows[0]):
+        raise ValueError(f"Natural packet missing required columns: {sorted(required)}")
+    ids = [r["annotation_id"] for r in rows]
+    if len(ids) != len(set(ids)):
+        raise ValueError("Duplicate annotation_id in natural packet")
+    rng = random.Random(args.seed)
+    rng.shuffle(rows)
+    fields = [k for k in rows[0] if k not in {
+        "reviewer_label", "reviewer_rationale", "reviewer_id",
+        "citation_correctness", "temporal_applicability",
+    }]
+    fields += ["reviewer_label", "reviewer_rationale", "citation_correctness",
+               "temporal_applicability", "reviewer_id"]
+    out = Path(args.outdir)
+    for reviewer in ("R1", "R2"):
+        packet = []
+        for row in rows:
+            item = {k: row.get(k, "") for k in fields}
+            item.update(reviewer_label="", reviewer_rationale="",
+                        citation_correctness="", temporal_applicability="",
+                        reviewer_id=reviewer)
+            packet.append(item)
+        write_csv(out / f"NATURAL_{reviewer}_BLIND.csv", packet, fields)
+    manifest = {
+        "dataset": "natural-case annotation",
+        "source_file": str(args.input),
+        "source_sha256": digest(args.input),
+        "n_claims": len(rows),
+        "n_documents": len({r["document_id"] for r in rows}),
+        "seed": args.seed,
+        "reviewer_packets": ["NATURAL_R1_BLIND.csv", "NATURAL_R2_BLIND.csv"],
+        "predictions_excluded": True,
+        "split_unit": "document_id",
+    }
+    (out / "NATURAL_ANNOTATION_MANIFEST.json").write_text(
+        json.dumps(manifest, indent=2) + "\\n", encoding="utf-8"
+    )
+    print(json.dumps(manifest, indent=2))
+    return 0
+
+
+def command_merge_natural(args: argparse.Namespace) -> int:
+    def load(path: Path) -> dict[str, dict]:
+        rows = read_csv(path)
+        result = {}
+        for row in rows:
+            key = row.get("annotation_id", "").strip()
+            label = row.get("reviewer_label", "").strip().upper()
+            if not key or key in result:
+                raise ValueError(f"{path}: blank or duplicate annotation_id")
+            if label not in LABELS:
+                raise ValueError(f"{path}: {key}: invalid reviewer_label {label!r}")
+            if not row.get("reviewer_rationale", "").strip():
+                raise ValueError(f"{path}: {key}: reviewer rationale required")
+            result[key] = {**row, "reviewer_label": label}
+        return result
+    a, b = load(args.reviewer1), load(args.reviewer2)
+    if set(a) != set(b):
+        raise ValueError("Natural reviewer item sets differ")
+    ids_a = {r.get("reviewer_id", "").strip() for r in a.values()}
+    ids_b = {r.get("reviewer_id", "").strip() for r in b.values()}
+    if len(ids_a) != 1 or len(ids_b) != 1 or "" in ids_a or "" in ids_b or ids_a == ids_b:
+        raise ValueError("Natural reviewer identities must be distinct and non-empty")
+    rows = []
+    for key in sorted(a):
+        x, y = a[key], b[key]
+        for field in ("document_id", "claim_id", "claim_text", "evidence_text"):
+            if x.get(field) != y.get(field):
+                raise ValueError(f"{key}: reviewer packets differ in {field}")
+        row = {k: v for k, v in x.items() if k not in {
+            "reviewer_label", "reviewer_rationale", "reviewer_id",
+            "citation_correctness", "temporal_applicability",
+        }}
+        row.update({
+            "reviewer1_id": x["reviewer_id"], "reviewer1_label": x["reviewer_label"],
+            "reviewer1_rationale": x["reviewer_rationale"],
+            "reviewer2_id": y["reviewer_id"], "reviewer2_label": y["reviewer_label"],
+            "reviewer2_rationale": y["reviewer_rationale"],
+            "adjudicated_label": "", "adjudication_rationale": "", "adjudicator_id": "",
+        })
+        rows.append(row)
+    fields = list(rows[0]) if rows else []
+    write_csv(args.output, rows, fields)
+    print(json.dumps({
+        "output": str(args.output), "n_claims": len(rows),
+        "agreement_count": sum(r["reviewer1_label"] == r["reviewer2_label"] for r in rows),
+        "adjudication_required": sum(r["reviewer1_label"] != r["reviewer2_label"] for r in rows),
+        "labels_adjudicated": False,
+    }, indent=2))
+    return 0
+
+
 def command_export_natural(args: argparse.Namespace) -> int:
     records = list(read_jsonl(args.input))
     rows = []
@@ -306,6 +401,16 @@ def main() -> int:
     p.add_argument("--input", type=Path, required=True)
     p.add_argument("--output", type=Path)
     p.set_defaults(func=command_summarize_gold03)
+    p = sub.add_parser("split-natural")
+    p.add_argument("--input", type=Path, required=True)
+    p.add_argument("--outdir", type=Path, required=True)
+    p.add_argument("--seed", type=int, default=20261104)
+    p.set_defaults(func=command_split_natural)
+    p = sub.add_parser("merge-natural")
+    p.add_argument("--reviewer1", type=Path, required=True)
+    p.add_argument("--reviewer2", type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
+    p.set_defaults(func=command_merge_natural)
     p = sub.add_parser("export-natural")
     p.add_argument("--input", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
