@@ -32,3 +32,12 @@ The exporter uses assertion_text where available to avoid scoring an entire mult
 - Do not describe provisional or model-assisted annotations as independent human ground truth.
 - Report reviewer roles, agreement, adjudication, exclusions, class prevalence, and case-level split policy.
 - Preserve source files; generated packets are new artifacts.
+
+
+## Natural-data scoring after adjudication
+
+Once the natural packet has been independently annotated and adjudicated, use the frozen annotation file with the exact archived run used to generate those claims:
+
+`python research/prototype/scripts/evaluate_natural_annotations.py --annotations research/prototype/outputs/NATURAL_DOUBLE_ANNOTATED.csv --predictions research/prototype/outputs/natural_candidates_50_gpu_labeled.jsonl --output research/prototype/outputs/NATURAL_ANNOTATION_METRICS.json`
+
+The evaluator joins by (document_id, claim_id), refuses duplicate/missing labels, reports the three-class confusion matrix and per-class metrics, and uses a document-level bootstrap. Claims with NO_EVIDENCE are reported separately as evidence-coverage failures, not silently counted as NOT_ENOUGH_INFORMATION. Do not run this against a different generation batch or changed parser output.
