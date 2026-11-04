@@ -224,6 +224,11 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 "evidence_text": match.evidence.canonical_text if match.matched else None,
                 "evidence_source_url": match.evidence.source_url if match.matched else None,
                 "evidence_audit_verdict": match.evidence.audit_verdict if match.matched else None,
+                "temporal_applicability": (
+                    "verified_for_case_date" if match.matched and getattr(case, "judgment_date", None)
+                    else "unverified_no_temporal_metadata" if match.match_method == "temporal_unverified"
+                    else "not_assessed"
+                ),
                 # Underscore-prefixed: internal bookkeeping consumed by
                 # _premise_for_claim() and stripped before output, so enabling
                 # labeled framing does not change the output record schema and
@@ -1858,6 +1863,7 @@ def run_case(
     record = {
         "document_id": baseline["document_id"],
         "case_text": baseline["case_text"],
+        "judgment_date": baseline.get("judgment_date"),
         "generated_field": baseline["generated_field"],
         "claims": [
             {k: v for k, v in c.items() if not k.startswith("_")}
@@ -1909,6 +1915,7 @@ def run_case(
             )) if mode == "C" else None,
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
             "software_versions": _software_versions(),
+            "temporal_applicability_policy": "date_scoped_fail_closed_when_verified_effective_dates_missing",
             "run_manifest": build_run_manifest(config, all_usable),
         },
     }
