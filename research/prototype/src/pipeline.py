@@ -193,7 +193,8 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     claim_records = []
     for claim in claims:
         match = match_evidence(
-            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold
+            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold,
+            case_date=getattr(case, "judgment_date", None),
         )
         claim_records.append(
             {
@@ -305,6 +306,7 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
     return {
         "document_id": case.document_id,
         "case_text": case.case_text,
+        "judgment_date": getattr(case, "judgment_date", None),
         "generated_field": {
             "text": generated_text,
             "model": gen_meta.model_id,
@@ -718,6 +720,7 @@ def _reverify_sibling_regressions(
         match = match_evidence(
             counterpart.citation_extracted, baseline["_exact_index"], baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if not match.matched:
             continue
@@ -1051,6 +1054,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
             baseline["_exact_index"],
             baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if match.matched:
             if on_event:
@@ -1169,6 +1173,7 @@ def _rebuild_verified_baseline(baseline: dict, field_text: str, config: dict) ->
         match = match_evidence(
             claim.citation_extracted, baseline["_exact_index"],
             baseline["_all_usable"], threshold,
+            case_date=baseline.get("judgment_date"),
         )
         citation = claim.citation_extracted
         records.append({
@@ -1635,6 +1640,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             baseline["_exact_index"],
             baseline["_all_usable"],
             config["evidence_matching"]["fuzzy_token_overlap_threshold"],
+            case_date=baseline.get("judgment_date"),
         )
         if match.matched:
             if on_event:
