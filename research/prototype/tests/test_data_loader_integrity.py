@@ -127,3 +127,16 @@ def test_partial_supplement_pair_is_rejected(tmp_path):
 
     with pytest.raises(ValueError, match="must be supplied together"):
         load_usable_evidence(cpath, apath, USABLE, extra_canonical_path=cpath)
+
+
+@pytest.mark.parametrize("unsafe_verdicts", [
+    {"SOURCE_ONLY"},
+    {"VERIFIED_EXACT", "INVALID"},
+    set(),
+    {"VERIFIED_EXACT", "UNREVIEWED"},
+])
+def test_loader_refuses_unapproved_usable_verdict_configuration(tmp_path, unsafe_verdicts):
+    cpath, apath = write_pair(tmp_path, [canonical()], [audit()])
+
+    with pytest.raises(ValueError, match="usable_verdicts may contain only"):
+        load_usable_evidence(cpath, apath, unsafe_verdicts)
