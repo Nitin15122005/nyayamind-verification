@@ -39,10 +39,19 @@ def _validated_nli_label_map(id2label: dict) -> dict[int, str]:
     """Validate a complete, unambiguous three-class NLI label mapping."""
     if not isinstance(id2label, dict):
         raise ValueError("NLI model config.id2label must be a dictionary.")
+    normalized: dict[int, str] = {}
     try:
-        normalized = {int(index): str(label).strip().lower() for index, label in id2label.items()}
+        for index, label in id2label.items():
+            normalized_index = int(index)
+            if normalized_index in normalized:
+                raise ValueError(
+                    f"Duplicate NLI class index after normalization: {normalized_index}."
+                )
+            normalized[normalized_index] = str(label).strip().lower()
     except (TypeError, ValueError) as exc:
-        raise ValueError("NLI model config.id2label contains a non-integer class index.") from exc
+        raise ValueError(
+            "NLI model config.id2label contains an invalid or duplicate class index."
+        ) from exc
     expected_indices = {0, 1, 2}
     expected_labels = set(_RAW_LABEL_TO_VERDICT)
     if set(normalized) != expected_indices or set(normalized.values()) != expected_labels:
