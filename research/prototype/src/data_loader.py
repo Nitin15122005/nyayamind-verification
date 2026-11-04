@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 from .claim_parser import normalize_act
@@ -33,6 +34,22 @@ class EvidenceRecord:
     source_url: str
     audit_verdict: str
     act_norm: str
+    effective_from: str | None = None
+    effective_to: str | None = None
+
+
+def _iso_date_or_none(value, field_name: str, record_key: str) -> str | None:
+    if value is None or value == "":
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"{field_name} for {record_key!r} must be an ISO YYYY-MM-DD string")
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError as exc:
+        raise ValueError(f"{field_name} for {record_key!r} is not a valid ISO date: {value!r}") from exc
+    if parsed.isoformat() != value:
+        raise ValueError(f"{field_name} for {record_key!r} must use canonical YYYY-MM-DD format")
+    return value
 
 
 def _load_usable_records_by_key(
@@ -123,6 +140,12 @@ def _load_usable_records_by_key(
                     f"Canonical/audit {field_name} mismatch for {key!r}: "
                     f"{canonical_value!r} != {audited_value!r}"
                 )
+        effective_from = _iso_date_or_none(record.get("effective_from"), "effective_from", key)
+        effective_to = _iso_date_or_none(record.get("effective_to"), "effective_to", key)
+        if effective_to and not effective_from:
+            raise ValueError(f"effective_to without effective_from for {key!r}")
+        if effective_from and effective_to and date.fromisoformat(effective_to) < date.fromisoformat(effective_from):
+            raise ValueError(f"effective_to precedes effective_from for {key!r}")
         act_norm = normalize_act(record["act"])
         if not act_norm:
             raise ValueError(f"Canonical record {key!r} has an unnormalizable Act name")
@@ -136,6 +159,8 @@ def _load_usable_records_by_key(
             source_url=record["source_url"],
             audit_verdict=verdict,
             act_norm=act_norm,
+            effective_from=effective_from,
+            effective_to=effective_to,
         )
 
     orphan_audit_keys = set(verdict_by_key) - set(by_key)
@@ -249,7 +274,8 @@ def load_usable_evidence_from_config(
 class Case:
     document_id: str
     case_text: str
-    raw_citation_keys: list[str]   # NyayaRAG's own section KEYS (identity only)
+    raw_citation_keys: list[str]
+    judgment_date: str | None = None   # NyayaRAG's own section KEYS (identity only)
 
 
 def load_nyayarag_cases(paths: list[str | Path]) -> list[Case]:
@@ -270,6 +296,7 @@ def load_nyayarag_cases(paths: list[str | Path]) -> list[Case]:
                     document_id=r["document_id"],
                     case_text=r["summarized_text"],
                     raw_citation_keys=list((r.get("sections") or {}).keys()),
+                    judgment_date=_iso_date_or_none(r.get("judgment_date"), "judgment_date", r["document_id"]),
                 )
             )
     return cases
