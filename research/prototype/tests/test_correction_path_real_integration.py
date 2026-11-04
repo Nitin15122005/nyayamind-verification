@@ -58,6 +58,8 @@ from src.generator import GenerationMetadata
 from src.pipeline import run_case
 from src.verifier import CONTRADICTED, ENTAILED, NOT_ENOUGH_INFORMATION, NLIVerifier
 
+pytestmark = pytest.mark.integration
+
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PROTOTYPE_ROOT = REPO_ROOT / "research" / "prototype"
 CONFIG_PATH = PROTOTYPE_ROOT / "config" / "prototype.yaml"
