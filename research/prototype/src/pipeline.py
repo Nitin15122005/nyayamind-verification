@@ -1278,7 +1278,8 @@ def apply_multi_claim_correction(
         "trigger_reason": successful_edits[0]["trigger_reason"],
         "attempts": len(successful_edits),
         "status": status,
-        "regenerated_text": current["generated_field"]["text"],
+        "regenerated_text": original_text if remaining else current["generated_field"]["text"],
+        "candidate_text_rolled_back": current["generated_field"]["text"] if remaining else None,
         "original_field_text": original_text,
         "reverification": successful_edits[-1]["reverification"],
         "successful_attempts": successful_edits,
@@ -1822,6 +1823,9 @@ def run_case(
             # survive the edit. Never ship a correction that silently drops
             # part of the citation's own identity.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_structural_span_lost"}
+        elif correction_summary["status"] in ("multi_claim_batch_rolled_back", "multi_claim_limit_reached"):
+            # Multi-claim correction is atomic: partial batches never ship.
+            final_field = {"text": baseline["generated_field"]["text"], "source": correction_summary["status"]}
         # "not_triggered": final_field stays as original (already set above)
 
     verifier_model_id = getattr(verifier, "model_id", None) if verifier is not None else None
