@@ -53,7 +53,7 @@ def _year_conflict(claim_years: set[str], ev_years: set[str]) -> bool:
 class MatchResult:
     matched: bool
     evidence: Optional[EvidenceRecord]
-    match_method: str  # "exact_normalized" | "fuzzy" | "no_evidence"
+    match_method: str  # "exact_normalized" | "fuzzy" | "no_evidence" | "ambiguous_fuzzy"
 
 
 def _token_overlap(a: set[str], b: set[str]) -> float:
