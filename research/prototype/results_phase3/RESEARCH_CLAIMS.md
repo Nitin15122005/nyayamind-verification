@@ -21,7 +21,19 @@ for exact source artifacts.
 | C13 | NyayaMind's results generalize broadly beyond this evidence pool / case set | **NOT SUPPORTED** | No cross-corpus or cross-jurisdiction evaluation performed | — | — | Describe results as bounded to this evidence pool and NyayaRAG case set | — |
 | C14 | Docker deployment of the current codebase has been validated | **NOT SUPPORTED (ENVIRONMENT-BLOCKED)** | Daemon not running on this machine across 5 sessions | — | — | State as environment-blocked, not failed or passed | A 2026-08-27 image (predating 5 later levers) was smoke-tested as a structural sanity check only |
 
-## GOLD-01 inferential qualification (2026-11-04)\n\nGOLD-01 contains 420 rows derived from only 59 source provisions (E1/E2/C1/C2/N1/N2\nconditions per provision, with E3/E4 available for 33 provisions). Rows sharing an\n`evidence_key` are dependent observations. The historical item-level McNemar result\n(p=4.16e-23) therefore must not be presented as confirmatory significance. A new\ncluster-aware paired bootstrap and sign-flip analysis has been added at\n`research/prototype/scripts/analyze_clustered_benchmark.py`. Until it is run on the\nper-item predictions for both framings, retain the accuracy/F1 values as descriptive\nresults and do not state a confirmatory p-value. This does not invalidate the measured\nconfusion matrices; it limits the inferential claim.\n\n## Absolutely do not claim
+## GOLD-01 inferential qualification (2026-11-04)
+
+GOLD-01 contains 420 rows derived from only 59 source provisions (E1/E2/C1/C2/N1/N2
+conditions per provision, with E3/E4 available for 33 provisions). Rows sharing an
+`evidence_key` are dependent observations. The historical item-level McNemar result
+(p=4.16e-23) therefore must not be presented as confirmatory significance. A new
+cluster-aware paired bootstrap and sign-flip analysis has been added at
+`research/prototype/scripts/analyze_clustered_benchmark.py`. Until it is run on the
+per-item predictions for both framings, retain the accuracy/F1 values as descriptive
+results and do not state a confirmatory p-value. This does not invalidate the measured
+confusion matrices; it limits the inferential claim.
+
+## Absolutely do not claim
 
 - Lawyer validation, guaranteed legal correctness, or a formal legal-correctness oracle (C12).
 - Broad generalization beyond this project's evidence pool and case set (C13).
