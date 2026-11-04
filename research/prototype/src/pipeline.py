@@ -674,9 +674,10 @@ def _reverify_sibling_regressions(
     claim's own counterpart (same ordinal-position-among-same-citation-
     identity technique `apply_selective_correction` already uses for the
     target), and genuinely re-verifies it against its OWN evidence —
-    exactly as if it were itself being checked. Returns the list of
-    siblings that come back CONTRADICTED (a real, independently-confirmed
-    regression) — empty if none, which is the expected, common case
+    exactly as if it were itself being checked. Returns siblings whose
+    previously ENTAILED verdict is downgraded, or whose non-CONTRADICTED
+    baseline verdict becomes CONTRADICTED — both are regressions — empty
+    if none, which is the expected, common case
     (byte-for-byte preserved siblings can never change verdict, since
     verification is a deterministic function of premise+hypothesis; this
     only ever finds something when the sibling's SURROUNDING text, not its
