@@ -19,6 +19,14 @@ This review covers the evidence loader, experimental generative verifier, automa
 - Mark generative verdicts as unscored, validate input pairs and batch size, use the loaded model's device, and restore tokenizer padding configuration in a `finally` block.
 - This remains an experimental alternative, not a replacement for the production DeBERTa NLI verifier.
 
+### Multi-claim correction (experimental, opt-in)
+- Added a separate sequential orchestration path; the historical single-claim correction path remains the default.
+- After every successful edit, the entire field is reparsed, every claim is rematched to the evidence corpus, and all evidence-backed claims are re-verified before another correction is attempted.
+- Correction attempts are bounded by the initial claim count and configured maximum; the assertion-aware path is explicitly incompatible with this orchestration until separately designed.
+- The batch is atomic: if a later correction fails a safety gate, all earlier edits in that batch are rolled back. If the configured attempt limit is reached with flagged claims remaining, the partial candidate is retained only for diagnostics and the original field is shipped.
+- Added tests for sequential refresh, batch rollback, attempt-limit rollback and configuration validation.
+- This is an engineering implementation, not evidence that multi-claim correction is accurate on natural legal summaries. It remains disabled by default pending independent evaluation.
+
 ### Reproducibility metadata
 - Added a versioned run manifest to each pipeline output.
 - Fingerprints the effective configuration and the exact usable evidence identifiers/text with SHA-256.
@@ -37,7 +45,7 @@ This review covers the evidence loader, experimental generative verifier, automa
 1. **Temporal legal applicability:** retrieval matches citation identity and text; it does not resolve whether a historical provision applied on the judgment date or apply repeal, savings, and transitional provisions. This must be resolved before presenting matches as date-valid legal conclusions.
 2. **Evidence authority and coverage:** structural integrity does not establish authoritative legal correctness. The corpus is limited and includes third-party sources.
 3. **GOLD-03:** citation-free claims, paraphrases, contradictions and NEI labels still need independent drafting/adjudication before confirmatory reasoning claims.
-4. **Correction scope:** only the first eligible flagged claim is corrected. Multi-claim correction remains unimplemented.
+4. **Multi-claim correction validation:** an opt-in sequential implementation now exists with full-field re-verification and atomic rollback. It remains disabled by default until natural-data evaluation demonstrates acceptable correction precision and no regressions.
 5. **Model validation:** calibration, independent domain evaluation, drift monitoring and model artifact versioning remain incomplete.
 6. **Public deployment:** the live demo binds to loopback and lacks production authentication, TLS termination, rate limiting, durable job queue and operational monitoring. It is a local demo, not a public production API.
 7. **Reproducibility:** release-grade runs still need mandatory model/dataset hashes, environment lockfiles and complete run manifests.
