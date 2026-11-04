@@ -690,6 +690,8 @@ def extract_citation(sentence: str) -> Optional[ExtractedCitation]:
 
 _PARALLEL_CLAUSE_SPLIT_RE = re.compile(r"\s*,?\s+while\s+", re.IGNORECASE)
 
+_WHEREAS_CLAUSE_SPLIT_RE = re.compile(r"\s*,?\s+whereas\s+", re.IGNORECASE)
+
 
 def _split_into_parallel_clauses(sentence: str) -> list[str]:
     """Conservative, single-purpose split of a bundled multi-citation
@@ -708,6 +710,16 @@ def _split_into_parallel_clauses(sentence: str) -> list[str]:
     if len(parts) != 2:
         return [sentence]
     return [p.strip() for p in parts]
+
+
+def _split_into_whereas_clauses(sentence: str) -> list[str]:
+    """Split one explicit 'X, whereas Y' construction into two verbatim
+    clauses. Multiple 'whereas' occurrences are deliberately left intact:
+    this helper is a narrow structural signal, not a general clause parser."""
+    parts = _WHEREAS_CLAUSE_SPLIT_RE.split(sentence)
+    if len(parts) != 2:
+        return [sentence]
+    return [part.strip() for part in parts]
 
 
 def _citation_mentioned_in(clause: str, citation: ExtractedCitation) -> bool:
@@ -830,7 +842,9 @@ def _assign_assertion_texts(sentence: str, sentence_claims: list[Claim]) -> None
       1. Semicolon split (`_split_by_semicolons`) — any number of clauses.
       2. ' while ' split (`_split_into_parallel_clauses`) — exactly two
          clauses (unchanged from the original implementation).
-      3. Citation-keyword-boundary split
+      3. ' whereas ' split (`_split_into_whereas_clauses`) — exactly two
+         clauses; multiple occurrences remain unsplit.
+      4. Citation-keyword-boundary split
          (`_split_by_citation_keyword_boundaries`) — a comma-separated list
          of full clauses, each STARTING with its own citation mention
          ("Section 148 mandates X, section 304 deals with Y, and section
@@ -838,7 +852,7 @@ def _assign_assertion_texts(sentence: str, sentence_claims: list[Claim]) -> None
          semicolon, and from pass 2 in that there is no "while"; the
          boundary signal here is "a new citation keyword starts right
          after this comma."
-      4. Parenthetical-gloss span (`_parenthetical_gloss_span`) — for a
+      5. Parenthetical-gloss span (`_parenthetical_gloss_span`) — for a
          citation still unresolved after 1-3, e.g. because it and its
          sibling citations share one clause with no further separator
          ("Sections 302 (murder), 34 (common intention), 323 (...), ...").
@@ -857,6 +871,10 @@ def _assign_assertion_texts(sentence: str, sentence_claims: list[Claim]) -> None
     while_clauses = _split_into_parallel_clauses(sentence)
     if len(while_clauses) == 2:
         _assign_from_clauses(sentence_claims, while_clauses)
+
+    whereas_clauses = _split_into_whereas_clauses(sentence)
+    if len(whereas_clauses) == 2:
+        _assign_from_clauses(sentence_claims, whereas_clauses)
 
     keyword_boundary_clauses = _split_by_citation_keyword_boundaries(sentence)
     if len(keyword_boundary_clauses) >= 2:
