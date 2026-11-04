@@ -13,6 +13,7 @@ This programme separates implemented engineering work from work that requires in
 - Included offsets in citation serialization, so pipeline output records retain occurrence provenance.
 - Ordered extracted citations by individual occurrence position rather than only by citation-group position.
 - Tightened clause attribution so the same provision number from a different Act or subsection is not treated as the same statutory identity.
+- Updated correction re-extraction/ordinal matching identity to include subsection as well as provision type, number, and Act; this prevents same-section-number subsections from being conflated.
 - Added regression tests for plural lists, repeated mentions, bare subsection citations, and cross-Act clause attribution.
 
 ### 2. Fail-closed fuzzy evidence ambiguity
