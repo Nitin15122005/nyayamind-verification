@@ -268,6 +268,7 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 "confidence": None,
                 "sub_reason": None,
                 "verifier_model": None,
+                "verifier_model_revision": None,
                 # Additive field (measurement infrastructure, not live
                 # behavior): the verifier's FULL raw label distribution
                 # (all three of entailment/neutral/contradiction, not just
@@ -316,6 +317,7 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
         "generated_field": {
             "text": generated_text,
             "model": gen_meta.model_id,
+            "model_revision": getattr(gen_meta, "model_revision", None),
             "quantization": gen_meta.quantization,
             "generation_params": {
                 "max_new_tokens": gen_meta.max_new_tokens,
@@ -437,6 +439,7 @@ def apply_verification(
         rec["confidence"] = result.confidence
         rec["sub_reason"] = result.sub_reason
         rec["verifier_model"] = result.verifier_model
+        rec["verifier_model_revision"] = getattr(result, "model_revision", None)
         rec["raw_scores"] = result.raw_scores
         rec["input_truncated"] = result.input_truncated
         rec["verified_hypothesis"] = hypothesis
@@ -1882,8 +1885,10 @@ def run_case(
             "seed": config["seed"],
             "generation_model": config["generation"]["model_id"],
             "generation_model_revision": config["generation"].get("revision"),
+            "generation_resolved_model_revision": getattr(gen_meta, "model_revision", None),
             "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
             "verification_model_revision": config["verification"].get("revision") if mode in ("B", "C") else None,
+            "verification_resolved_model_revision": getattr(verifier, "resolved_model_revision", None) if verifier is not None else None,
             "quantization": config["generation"]["quantization"],
             "confidence_threshold": config["verification"]["confidence_threshold"],
             # Which premise framing produced these verdicts. Without this a run
