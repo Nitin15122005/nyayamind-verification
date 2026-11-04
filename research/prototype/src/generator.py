@@ -26,6 +26,7 @@ from dataclasses import dataclass, field
 @dataclass
 class GenerationMetadata:
     model_id: str
+    model_revision: str | None
     quantization: dict
     max_new_tokens: int
     do_sample: bool
@@ -152,6 +153,7 @@ class StatuteGroundingGenerator:
 
         metadata = GenerationMetadata(
             model_id=self.model_id,
+            model_revision=self.model_revision,
             quantization=self.quantization,
             max_new_tokens=self.max_new_tokens,
             do_sample=self.do_sample,
