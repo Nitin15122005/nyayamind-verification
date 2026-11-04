@@ -22,7 +22,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 # Allow running as a plain script (python scripts/run_mvp.py) as well as
@@ -33,6 +35,34 @@ sys.path.insert(0, str(_PROTOTYPE_ROOT.parent.parent))  # repo root, for `resear
 sys.path.insert(0, str(_PROTOTYPE_ROOT))                 # prototype root, for `src.*`
 
 MAX_ALLOWED_CASES = 5
+
+
+def _write_records_atomically(output_path: Path, records) -> None:
+    """Replace an output only after every JSONL record has been written.
+
+    Failed or interrupted runs must not truncate a previous successful result
+    or leave a partial JSONL file looking like a complete experiment.
+    """
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary_name = tempfile.mkstemp(
+        prefix=f".{output_path.name}.",
+        suffix=".tmp",
+        dir=str(output_path.parent),
+    )
+    temporary_path = Path(temporary_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\\n") as handle:
+            for record in records:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_path, output_path)
+    except BaseException:
+        try:
+            temporary_path.unlink(missing_ok=True)
+        finally:
+            raise
 
 
 def cmd_check() -> int:
@@ -89,12 +119,10 @@ def cmd_check() -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    if args.num_cases > MAX_ALLOWED_CASES:
+    if not isinstance(args.num_cases, int) or not 1 <= args.num_cases <= MAX_ALLOWED_CASES:
         print(
-            f"Refusing to run {args.num_cases} cases: this prototype is "
-            f"hard-capped at {MAX_ALLOWED_CASES} cases per invocation until "
-            f"a deliberate decision is made to scale up. Re-run with "
-            f"--num-cases <= {MAX_ALLOWED_CASES}."
+            f"Refusing to run {args.num_cases!r} cases: --num-cases must be "
+            f"between 1 and {MAX_ALLOWED_CASES}."
         )
         return 1
 
@@ -166,13 +194,14 @@ def cmd_run(args: argparse.Namespace) -> int:
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with output_path.open("w", encoding="utf-8") as f:
+    def generated_records():
         for case in run_cases:
             print(f"  Running case {case.document_id}...")
-            record = run_case(
+            yield run_case(
                 case, args.mode, gen, verifier, corrector, exact_index, all_usable, config
             )
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+    _write_records_atomically(output_path, generated_records())
 
     print(f"Wrote {len(run_cases)} record(s) to {output_path}")
     return 0
