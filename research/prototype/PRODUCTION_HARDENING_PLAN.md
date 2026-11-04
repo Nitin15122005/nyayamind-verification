@@ -24,7 +24,7 @@ This programme separates implemented engineering work from work that requires in
 
 ### 3. Model revision and runtime manifest wiring
 - Added optional Hugging Face `revision` configuration for generator and verifier and passed it through the CLI to both tokenizer/model loaders.
-- Added model revision fields to generation metadata and each output reproducibility record.
+- Added model revision fields to generation metadata and each output reproducibility record. After loading, the generator and verifier capture Hugging Face’s resolved `_commit_hash` when available, so outputs record the actual resolved revision even when the config used a mutable alias.
 - Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The default revisions remain null; no unverified commit hashes were invented.
 
 ### 4. Subsection-safe evidence lookup
@@ -34,7 +34,7 @@ This programme separates implemented engineering work from work that requires in
 ### 5. Date-aware statutory applicability plumbing
 - Added optional ISO `effective_from` / `effective_to` fields to canonical evidence loading, with strict date and interval validation. No dates are fabricated or backfilled.
 - Added optional `judgment_date` ingestion from the case record. If a case date is present, retrieval accepts only evidence with an explicit effective interval covering that date; missing temporal metadata yields `temporal_unverified` / `temporal_applicability_unverified` rather than a legal verdict.
-- Threaded the judgment date through initial matching, correction re-matching, sibling re-verification, and output records. Dated cases therefore fail closed consistently throughout the pipeline.
+- Threaded the judgment date through initial matching, correction re-matching, sibling re-verification, and output records. Dated cases therefore fail closed consistently throughout the pipeline. Missing intervals and intervals outside the case date have distinct machine-readable outcomes.
 - The current corpus does not yet contain independently verified effective intervals and the current case loader only consumes an explicit `judgment_date` field. Date-aware retrieval will therefore intentionally decline evidence for dated cases until source-backed intervals are curated.
 
 ### 6. Evidence provenance in outputs
