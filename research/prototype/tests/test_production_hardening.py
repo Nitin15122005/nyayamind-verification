@@ -144,3 +144,16 @@ def test_run_manifest_does_not_treat_branch_or_tag_names_as_immutable_pins():
     }
     manifest = build_run_manifest(config, [])
     assert manifest["models_pinned_to_immutable_revisions"] is False
+
+
+def test_correction_citation_identity_includes_subsection():
+    from src.pipeline import _citation_identity
+
+    base = {
+        "provision_type": "Section",
+        "provision_number": "25F",
+        "subsection": None,
+        "act_norm": "industrial disputes act 1947",
+    }
+    subsection = {**base, "subsection": "1"}
+    assert _citation_identity(base) != _citation_identity(subsection)
