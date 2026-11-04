@@ -12,6 +12,7 @@ USABLE = {"VERIFIED_EXACT", "VERIFIED_CONTENT"}
 
 
 def write_pair(tmp_path, canonical_rows, audit_rows):
+    tmp_path.mkdir(parents=True, exist_ok=True)
     canonical = tmp_path / "canonical.jsonl"
     audit = tmp_path / "audit.jsonl"
     canonical.write_text(
@@ -115,7 +116,7 @@ def test_exact_index_collision_is_rejected_across_merged_pools(tmp_path):
     base_key = "Section 1 in Example Act, 2000"
     extra_key = "Section 01 in Example Act, 2000"
     c0, a0 = write_pair(tmp_path / "base", [canonical(base_key)], [audit(base_key)])
-    c1, a1 = write_pair(tmp_path / "extra", [canonical(extra_key, "01")], [audit(extra_key)])
+    c1, a1 = write_pair(tmp_path / "extra", [canonical(extra_key, "1")], [audit(extra_key)])
 
     with pytest.raises(ValueError, match="Evidence index collision"):
         load_usable_evidence(c0, a0, USABLE, c1, a1)
