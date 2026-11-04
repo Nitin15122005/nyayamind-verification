@@ -25,7 +25,8 @@ This review covers the evidence loader, experimental generative verifier, automa
 - Correction attempts are bounded by the initial claim count and configured maximum; the assertion-aware path is explicitly incompatible with this orchestration until separately designed.
 - The batch is atomic: if a later correction fails a safety gate, all earlier edits in that batch are rolled back. If the configured attempt limit is reached with flagged claims remaining, the partial candidate is retained only for diagnostics and the original field is shipped.
 - Added tests for sequential refresh, batch rollback, attempt-limit rollback and configuration validation.
-- This is an engineering implementation, not evidence that multi-claim correction is accurate on natural legal summaries. It remains disabled by default pending independent evaluation.
+- Added `scripts/evaluate_multi_claim_correction.py`, a paired natural-data runner that generates and verifies each case once, then forks the same baseline into legacy single-claim and sequential multi-claim arms. It records per-arm outcomes and independently reparses/rematches/re-verifies candidate fields for residual flagged-claim counts. The runner is covered by tests for one-time baseline generation, paired inputs and independent arm state.
+- The paired natural-data run has not yet been executed. This is an evaluation harness, not evidence that multi-claim correction is accurate on natural legal summaries. The feature remains disabled by default pending evaluation and review of candidate texts.
 
 ### Reproducibility metadata
 - Added a versioned run manifest to each pipeline output.
