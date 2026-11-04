@@ -1632,8 +1632,9 @@ def test_narrow_reverification_never_synthesizes_text(ipc_148_evidence_pool, con
     assert target.assertion_text in corrected_text  # genuine substring, not synthesized
 
 
+@pytest.mark.parametrize("sibling_recheck", [CONTRADICTED, NOT_ENOUGH_INFORMATION])
 def test_sibling_regression_check_rejects_a_genuine_regression(
-    respectively_evidence_pool, config
+    respectively_evidence_pool, config, sibling_recheck
 ):
     """If a sibling's own required assertion fragments survive, but its
     independently checked, citation-specific assertion is now genuinely
@@ -1666,7 +1667,7 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.9),  # 149 target: passes
         # Sibling-regression re-checks use citation-specific hypotheses,
         # not the shared full sentence.
-        ("murder", "Section 302 murder but never manslaughter"): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
+        ("murder", "Section 302 murder but never manslaughter"): _vr(sibling_recheck, confidence=0.85),  # 302: no longer ENTAILED
         ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
         ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
     })
@@ -1677,7 +1678,7 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
 
     assert record["correction"]["status"] == "correction_sibling_regression"
     assert len(record["correction"]["sibling_regressions"]) == 1
-    assert record["correction"]["sibling_regressions"][0]["verdict"] == CONTRADICTED
+    assert record["correction"]["sibling_regressions"][0]["verdict"] == sibling_recheck
     # Never shipped: final field reverts to the original, untouched text.
     assert record["final_field"]["source"] == "correction_sibling_regression"
     assert record["final_field"]["text"] == original_text
