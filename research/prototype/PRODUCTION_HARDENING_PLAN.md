@@ -31,7 +31,17 @@ This programme separates implemented engineering work from work that requires in
 - Removed the fallback that matched a subsection citation to a base-section record (or vice versa) without proof that the exact subsection was covered.
 - Added regression tests for both mismatch directions. The resulting no-match is intentionally conservative and may reduce evidence coverage until subsection-level evidence is curated.
 
-### 5. Correction preservation regression tests
+### 5. Date-aware statutory applicability plumbing
+- Added optional ISO `effective_from` / `effective_to` fields to canonical evidence loading, with strict date and interval validation. No dates are fabricated or backfilled.
+- Added optional `judgment_date` ingestion from the case record. If a case date is present, retrieval accepts only evidence with an explicit effective interval covering that date; missing temporal metadata yields `temporal_unverified` / `temporal_applicability_unverified` rather than a legal verdict.
+- Threaded the judgment date through initial matching, correction re-matching, sibling re-verification, and output records. Dated cases therefore fail closed consistently throughout the pipeline.
+- The current corpus does not yet contain independently verified effective intervals and the current case loader only consumes an explicit `judgment_date` field. Date-aware retrieval will therefore intentionally decline evidence for dated cases until source-backed intervals are curated.
+
+### 6. Evidence provenance in outputs
+- Claim records now expose canonical `source_url` and `audit_verdict`, as well as the full evidence identity (including subsection). This makes the provenance behind a verifier premise inspectable.
+- Run-manifest evidence fingerprints now include subsection and effective-date intervals.
+
+### 7. Correction preservation regression tests
 - Added tests that the legacy sentence splice preserves all surrounding non-claim prose byte-for-byte and rejects duplicate target occurrences.
 - Existing deterministic splice architecture already limits edits to the single target sentence/fragment; tests now lock that contract.
 
@@ -42,9 +52,9 @@ This programme separates implemented engineering work from work that requires in
 - Run real-model integration tests and a clean-checkout reproduction.
 - Add occurrence-aware parser tests against the real natural-data failure cases, including `1979_201`, `1972_254`, and `1996_119`.
 - Review every place that compares citation identity; use Act, provision type, provision number, subsection, and occurrence order where applicable.
-- Review the subsection-ignored evidence fallback. It must not be treated as proof that the cited subsection is supported unless the retrieved text demonstrably covers it.
+- Curate source-backed effective-date intervals and populate explicit `judgment_date` values for the target case corpus; the date-aware code is fail-closed but the required legal metadata is not currently present.
 - Audit all correction paths for full-field preservation, repeated-citation ordering, and post-correction re-extraction.
-- Pin immutable model revisions and record exact model/tokenizer revisions in each run manifest.
+- Supply verified immutable model commit SHAs and archive model/tokenizer artifact hashes; configuration plumbing and manifest fields are implemented, but defaults remain intentionally unpinned.
 
 ### P1 — evidence and runtime integrity
 - Add temporal applicability metadata to evidence records: enactment, commencement, amendment, repeal, and historical version.
