@@ -1888,7 +1888,7 @@ def run_case(
             "assertion_aware_correction": bool((config.get("correction") or {}).get(
                 "assertion_aware", False
             )) if mode == "C" else None,
-            "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
             "software_versions": _software_versions(),
             "run_manifest": build_run_manifest(config, all_usable),
         },
