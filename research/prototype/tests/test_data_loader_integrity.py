@@ -120,3 +120,10 @@ def test_exact_index_collision_is_rejected_across_merged_pools(tmp_path):
 
     with pytest.raises(ValueError, match="Evidence index collision"):
         load_usable_evidence(c0, a0, USABLE, c1, a1)
+
+
+def test_partial_supplement_pair_is_rejected(tmp_path):
+    cpath, apath = write_pair(tmp_path, [canonical()], [audit()])
+
+    with pytest.raises(ValueError, match="must be supplied together"):
+        load_usable_evidence(cpath, apath, USABLE, extra_canonical_path=cpath)
