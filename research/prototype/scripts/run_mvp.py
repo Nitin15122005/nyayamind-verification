@@ -52,9 +52,9 @@ def _write_records_atomically(output_path: Path, records) -> None:
     )
     temporary_path = Path(temporary_name)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\\n") as handle:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
             for record in records:
-                handle.write(json.dumps(record, ensure_ascii=False) + "\\n")
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary_path, output_path)
