@@ -105,15 +105,18 @@ def match_evidence(
     # particular subsection is supported. Missing subsection-level evidence
     # therefore remains NO_EVIDENCE until the corpus explicitly represents it.
 
-    # Fuzzy fallback: same provision_type + provision_number, act-name
-    # similarity above threshold. The legal-identity gate (provision_type +
-    # provision_number match, year-conflict veto) is IDENTICAL for every
+    # Fuzzy fallback: same provision_type + provision_number + subsection,
+    # with act-name similarity above threshold. A subsection mismatch is a
+    # statutory-identity mismatch, not a fuzzy text-similarity problem.
+    # The legal-identity gate (provision_type + provision_number + subsection
+    # match, year-conflict veto) is IDENTICAL for every
     # fuzzy_method -- only the act-name scoring function below changes.
     claim_years = _act_years(citation.act_norm)
     same_number_year_ok: list[EvidenceRecord] = [
         ev for ev in all_usable
         if ev.provision_type == citation.provision_type
         and ev.provision_number == citation.provision_number
+        and ev.subsection == citation.subsection
         and not _year_conflict(claim_years, _act_years(ev.act_norm))
     ]
 
