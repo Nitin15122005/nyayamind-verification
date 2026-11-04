@@ -109,3 +109,27 @@ def test_flagged_sentence_splice_rejects_duplicate_target_occurrences():
     assert _splice_flagged_sentence(
         f"{sentence} {sentence}", sentence, "Corrected sentence."
     ) is None
+
+
+def test_run_manifest_records_model_revisions_and_pin_state():
+    from src.run_manifest import build_run_manifest
+
+    config = {
+        "generation": {"model_id": "generator", "revision": "a" * 40},
+        "verification": {"model_id": "verifier", "revision": "b" * 40},
+    }
+    manifest = build_run_manifest(config, [])
+    assert manifest["generation_model_revision"] == "a" * 40
+    assert manifest["verification_model_revision"] == "b" * 40
+    assert manifest["models_pinned_to_immutable_revisions"] is True
+
+
+def test_run_manifest_does_not_claim_models_are_pinned_when_revisions_missing():
+    from src.run_manifest import build_run_manifest
+
+    config = {
+        "generation": {"model_id": "generator", "revision": None},
+        "verification": {"model_id": "verifier", "revision": None},
+    }
+    manifest = build_run_manifest(config, [])
+    assert manifest["models_pinned_to_immutable_revisions"] is False
