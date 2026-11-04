@@ -53,6 +53,7 @@ class StatuteGroundingGenerator:
     ):
         self.model_id = model_id
         self.model_revision = model_revision
+        self.resolved_model_revision = None
         self.quantization = quantization
         self.device_map = device_map
         self.max_new_tokens = max_new_tokens
@@ -112,6 +113,7 @@ class StatuteGroundingGenerator:
             low_cpu_mem_usage=True,
         )
         self._model.eval()
+        self.resolved_model_revision = getattr(self._model.config, "_commit_hash", None) or self.model_revision
 
     def is_loaded(self) -> bool:
         return self._model is not None
@@ -153,7 +155,7 @@ class StatuteGroundingGenerator:
 
         metadata = GenerationMetadata(
             model_id=self.model_id,
-            model_revision=self.model_revision,
+            model_revision=self.resolved_model_revision,
             quantization=self.quantization,
             max_new_tokens=self.max_new_tokens,
             do_sample=self.do_sample,
