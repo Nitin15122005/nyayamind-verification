@@ -53,27 +53,15 @@ def test_merge_applies_v1_replacement_before_exact_only_filter(tmp_path, monkeyp
     assert [r["canonical_text"] for r in rows] == ["Retained v0 text.", "New v1 text."]
 
 
-def test_worksheet_rows_have_blank_claims_and_labels():
+def test_builder_leaves_claim_and_gold_label_fields_blank():
     records = [
-        canonical("A", "1", "First exact provision."),
-        canonical("B", "2", "Second exact provision."),
+        {**canonical("A", "1", "First exact provision."), "audit_verdict": "VERIFIED_EXACT"},
+        {**canonical("B", "2", "Second exact provision."), "audit_verdict": "VERIFIED_EXACT"},
     ]
-    records[0]["audit_verdict"] = "VERIFIED_EXACT"
-    records[1]["audit_verdict"] = "VERIFIED_EXACT"
-
-    rows = []
-    for i, source in enumerate(records):
-        other = records[(i + 1) % len(records)]
-        rows.append({
-            "candidate_claim_without_citation": "",
-            "correct_identifier": f"Section {source['provision_number']} of {source['act']}",
-            "mismatched_identifier": f"Section {other['provision_number']} of {other['act']}",
-            "reviewer1_label": "",
-            "reviewer2_label": "",
-            "adjudicated_label": "",
-        })
-
-    assert all(not row["candidate_claim_without_citation"] for row in rows)
-    assert all(not row["reviewer1_label"] and not row["reviewer2_label"]
-               and not row["adjudicated_label"] for row in rows)
+    rows = BUILDER.build_rows(records)
+    assert len(rows) == 2
+    assert all(row["candidate_claim_without_citation"] == "" for row in rows)
+    assert all(row["reviewer1_label"] == "" and row["reviewer2_label"] == ""
+               and row["adjudicated_label"] == "" for row in rows)
     assert all(row["correct_identifier"] != row["mismatched_identifier"] for row in rows)
+    assert [row["item_id"] for row in rows] == ["G03_0001", "G03_0002"]
