@@ -91,7 +91,7 @@ def inspect_pair(label: str, canonical: list[dict], audit: list[dict], errors: l
             errors.append({"code": "INVALID_SOURCE_URL", "pool": label, "key": key, "url": url})
         if verdict not in ALLOWED_VERDICTS:
             errors.append({"code": "UNKNOWN_OR_MISSING_VERDICT", "pool": label, "key": key, "verdict": verdict})
-        if verdict in USABLE:
+        if verdict in USABLE and isinstance(key, str) and key.strip():
             usable.append(row)
         act = row.get("act", "")
         if act and row.get("act_norm") and row["act_norm"] != normalize_act(act):
