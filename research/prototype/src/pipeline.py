@@ -1887,7 +1887,7 @@ def run_case(
             "seed": config["seed"],
             "generation_model": config["generation"]["model_id"],
             "generation_model_revision": config["generation"].get("revision"),
-            "generation_resolved_model_revision": getattr(gen_meta, "model_revision", None),
+            "generation_resolved_model_revision": baseline["generated_field"].get("model_revision"),
             "verification_model": config["verification"]["model_id"] if mode in ("B", "C") else None,
             "verification_model_revision": config["verification"].get("revision") if mode in ("B", "C") else None,
             "verification_resolved_model_revision": getattr(verifier, "resolved_model_revision", None) if verifier is not None else None,
