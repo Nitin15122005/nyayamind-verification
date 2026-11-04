@@ -90,7 +90,7 @@ def main() -> int:
             "mismatched_identifier": wrong,
             # This claim deliberately contains no citation string, avoiding
             # direct identifier overlap in the primary metadata comparison.
-            "candidate_claim_without_citation": source["canonical_text"],
+            "candidate_claim_without_citation": "",
             **{field: "" for field in FIELDS if field not in {
                 "item_id", "source_key", "source_act", "source_provision_type",
                 "source_provision_number", "source_subsection", "source_text",
