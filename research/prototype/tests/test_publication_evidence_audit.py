@@ -98,3 +98,30 @@ def test_legacy_act_marked_in_force_is_a_warning_not_a_pass_claim():
     )
     assert any(item["code"] == "REVIEW_HISTORICAL_STATUS" for item in warnings)
     assert errors == []
+
+
+def test_conflicting_audit_source_url_is_reported():
+    errors, warnings = [], []
+    row = record()
+    audit = [{
+        "dataset_citation_key": row["dataset_citation_key"],
+        "audit_verdict": "VERIFIED_EXACT",
+        "source_url": "https://example.org/different-source",
+    }]
+    AUDIT.inspect_pair("fixture", [row], audit, errors, warnings)
+    assert any(
+        item["code"] == "CANONICAL_AUDIT_METADATA_MISMATCH"
+        and item["field"] == "source_url"
+        for item in errors
+    )
+
+
+def test_sparse_audit_metadata_remains_supported():
+    errors, warnings = [], []
+    row = record()
+    audit = [{
+        "dataset_citation_key": row["dataset_citation_key"],
+        "audit_verdict": "VERIFIED_EXACT",
+    }]
+    AUDIT.inspect_pair("fixture", [row], audit, errors, warnings)
+    assert errors == []
