@@ -123,17 +123,24 @@ def match_evidence(
 
     if fuzzy_method == "jaccard":
         claim_act_words = act_significant_words(citation.act_norm)
-        best: Optional[EvidenceRecord] = None
-        best_overlap = 0.0
-        for ev in same_number_year_ok:
-            ev_act_words = act_significant_words(ev.act_norm)
-            overlap = _token_overlap(claim_act_words, ev_act_words)
-            if overlap > best_overlap:
-                best_overlap = overlap
-                best = ev
-        if best is not None and best_overlap >= fuzzy_token_overlap_threshold:
-            return MatchResult(matched=True, evidence=best, match_method="fuzzy")
-        return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+        scored_candidates = [
+            (ev, _token_overlap(claim_act_words, act_significant_words(ev.act_norm)))
+            for ev in same_number_year_ok
+        ]
+        best_overlap = max((score for _ev, score in scored_candidates), default=0.0)
+        best_candidates = [
+            ev for ev, score in scored_candidates
+            if abs(score - best_overlap) <= 1e-12
+        ]
+        if best_overlap < fuzzy_token_overlap_threshold:
+            return MatchResult(matched=False, evidence=None, match_method="no_evidence")
+        # A top-scoring tie between distinct statutory records is not a
+        # ranking problem: it is an identity ambiguity. Choosing whichever
+        # record happened to occur first in the corpus would make retrieval
+        # order-dependent and could feed the verifier the wrong law.
+        if len(best_candidates) != 1:
+            return MatchResult(matched=False, evidence=None, match_method="ambiguous_fuzzy")
+        return MatchResult(matched=True, evidence=best_candidates[0], match_method="fuzzy")
 
     if fuzzy_method in ("bm25", "embedding"):
         if fuzzy_act_index is None:
