@@ -149,3 +149,55 @@ def test_multi_claim_limit_does_not_silently_ship_partial_batch(monkeypatch):
     assert result["status"] == "multi_claim_limit_reached"
     assert result["regenerated_text"] == "Original field."
     assert result["remaining_flagged_claims"] == 1
+
+
+def test_rebuild_verified_baseline_uses_fresh_parse_and_evidence(monkeypatch):
+    fresh_claim = SimpleNamespace(
+        claim_id="fresh-id", claim_text="Corrected claim.",
+        assertion_text="Corrected claim.", assertion_spans=["Corrected claim."],
+        citation_extracted=SimpleNamespace(as_dict=lambda: {"provision_number": "302"}),
+    )
+    baseline = {
+        "generated_field": {"text": "Original field."},
+        "claims": [{"claim_id": "old-id"}],
+        "_exact_index": {}, "_all_usable": ["evidence"],
+        "_verifier": object(),
+    }
+    parsed = []
+    matched = []
+    verified = []
+
+    def extract(text):
+        parsed.append(text)
+        return [fresh_claim]
+
+    def match(citation, exact_index, all_usable, threshold):
+        matched.append((exact_index, all_usable, threshold))
+        evidence = SimpleNamespace(
+            dataset_citation_key="evidence-302", canonical_text="Evidence text",
+            provision_type="Section", provision_number="302", act="IPC",
+        )
+        return SimpleNamespace(matched=True, evidence=evidence, match_method="exact")
+
+    def verify(refreshed, verifier, framing, narrow, span):
+        verified.append((refreshed, verifier))
+        refreshed["claims"][0]["verdict"] = pipeline.ENTAILED
+
+    monkeypatch.setattr(pipeline.claim_parser, "extract_claims", extract)
+    monkeypatch.setattr(pipeline, "match_evidence", match)
+    monkeypatch.setattr(pipeline, "apply_verification", verify)
+
+    refreshed = pipeline._rebuild_verified_baseline(
+        baseline, "Corrected claim.",
+        {"evidence_matching": {"fuzzy_token_overlap_threshold": 0.8},
+         "verification": {"premise_framing": "bare"}},
+    )
+
+    assert parsed == ["Corrected claim."]
+    assert matched == [(baseline["_exact_index"], baseline["_all_usable"], 0.8)]
+    assert refreshed["claims"][0]["claim_id"] == "fresh-id"
+    assert refreshed["claims"][0]["evidence_id"] == "evidence-302"
+    assert refreshed["claims"][0]["verdict"] == pipeline.ENTAILED
+    assert verified == [(refreshed, baseline["_verifier"])]
+    assert baseline["generated_field"]["text"] == "Original field."
+    assert baseline["claims"][0]["claim_id"] == "old-id"
