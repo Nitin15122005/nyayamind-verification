@@ -16,6 +16,8 @@ from src.llm_verifier import _parse_verdict
         ("", NOT_ENOUGH_INFORMATION),
         ("The answer is ENTAILED", NOT_ENOUGH_INFORMATION),
         ("CONTRADICTED, but actually ENTAILED", CONTRADICTED),
+        ("ENTAILED/CONTRADICTED", NOT_ENOUGH_INFORMATION),
+        ("ENTAILEDORCONTRADICTED", NOT_ENOUGH_INFORMATION),
         ("NEI", NOT_ENOUGH_INFORMATION),
         ("not enough information", NOT_ENOUGH_INFORMATION),
         ("The claim is not contradicted", NOT_ENOUGH_INFORMATION),
