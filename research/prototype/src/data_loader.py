@@ -74,6 +74,7 @@ def _load_usable_records_by_key(
     canonical_rows = read_jsonl(canonical_path, "canonical evidence")
 
     verdict_by_key: dict[str, str] = {}
+    audit_record_by_key: dict[str, dict] = {}
     for line_no, record in enumerate(audit_rows, 1):
         key = record.get("dataset_citation_key")
         verdict = record.get("audit_verdict")
@@ -86,6 +87,7 @@ def _load_usable_records_by_key(
                 f"Unknown audit verdict {verdict!r} for {key!r}: {audit_path}:{line_no}"
             )
         verdict_by_key[key] = verdict
+        audit_record_by_key[key] = record
 
     by_key: dict[str, EvidenceRecord] = {}
     for line_no, record in enumerate(canonical_rows, 1):
@@ -104,10 +106,7 @@ def _load_usable_records_by_key(
             raise ValueError(
                 f"Canonical record {key!r} has missing/empty fields: {', '.join(missing)}"
             )
-        audit_record = next(
-            (row for row in audit_rows if row.get("dataset_citation_key") == key),
-            None,
-        )
+        audit_record = audit_record_by_key.get(key)
         if audit_record is None:
             raise ValueError(f"Canonical record has no audit row for {key!r}")
         # Some later audit supplements intentionally contain only verdict
