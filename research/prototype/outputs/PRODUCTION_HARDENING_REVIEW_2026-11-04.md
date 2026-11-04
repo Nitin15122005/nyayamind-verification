@@ -19,6 +19,13 @@ This review covers the evidence loader, experimental generative verifier, automa
 - Mark generative verdicts as unscored, validate input pairs and batch size, use the loaded model's device, and restore tokenizer padding configuration in a `finally` block.
 - This remains an experimental alternative, not a replacement for the production DeBERTa NLI verifier.
 
+### Reproducibility metadata
+- Added a versioned run manifest to each pipeline output.
+- Fingerprints the effective configuration and the exact usable evidence identifiers/text with SHA-256.
+- Records Python/platform and installed ML package versions, alongside configured model IDs.
+- Explicitly does not pretend a model alias is a model-weight hash; immutable model revisions and archived artifact hashes remain required for exact weight reproducibility.
+- Added deterministic tests proving stable hashes for identical inputs and changed hashes when config/evidence changes.
+
 ### CI/test architecture
 - Added pinned CPU dependencies matching the documented torch/transformers generation.
 - Marked real pretrained-model tests as integration tests and separated them from deterministic tests.
@@ -34,7 +41,8 @@ This review covers the evidence loader, experimental generative verifier, automa
 5. **Model validation:** calibration, independent domain evaluation, drift monitoring and model artifact versioning remain incomplete.
 6. **Public deployment:** the live demo binds to loopback and lacks production authentication, TLS termination, rate limiting, durable job queue and operational monitoring. It is a local demo, not a public production API.
 7. **Reproducibility:** release-grade runs still need mandatory model/dataset hashes, environment lockfiles and complete run manifests.
-8. **Target-environment validation:** Windows full-suite execution, real-model integration, GPU generation/correction, Docker and end-to-end deployment need validation in the target environment.
+8. **Model artifact pinning:** the run manifest fingerprints configuration and evidence, but configured model IDs may still be mutable aliases. Pin immutable model revisions and archive model/tokenizer artifact hashes before claiming exact weight reproducibility.
+9. **Target-environment validation:** Windows full-suite execution, real-model integration, GPU generation/correction, Docker and end-to-end deployment need validation in the target environment.
 
 ## Release decision
 
