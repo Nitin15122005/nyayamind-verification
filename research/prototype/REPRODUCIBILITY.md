@@ -56,8 +56,10 @@ as the interpreter (Windows; substitute `research/.venv/bin/python` on Linux/mac
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 ```
 
-Expected: **205 passed** (as of 2026-08-27; the count grows as tests are added — treat any
-failure as a real regression, not flakiness. The suite is deterministic).
+Expected result: all tests pass. **205 passed** is a historical count from 2026-08-27,
+not a current expectation. Record the actual pass/fail/skip/error counts, interpreter
+version, operating system, and commit SHA from each publication-readiness run; do not
+report the historical count as a fresh test result.
 
 ### Config/import check (no model loaded)
 
