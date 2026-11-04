@@ -227,6 +227,7 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 "temporal_applicability": (
                     "verified_for_case_date" if match.matched and getattr(case, "judgment_date", None)
                     else "unverified_no_temporal_metadata" if match.match_method == "temporal_unverified"
+                    else "not_effective_on_case_date" if match.match_method == "temporal_out_of_range"
                     else "not_assessed"
                 ),
                 # Underscore-prefixed: internal bookkeeping consumed by
@@ -261,6 +262,7 @@ def generate_and_parse(case, generator, exact_index, all_usable, fuzzy_threshold
                 # standalone script over already-produced outputs.
                 "no_evidence_category": (
                     ("temporal_applicability_unverified" if match.match_method == "temporal_unverified"
+                     else "statutory_text_not_effective_on_case_date" if match.match_method == "temporal_out_of_range"
                      else classify_no_evidence(claim.citation_extracted, all_usable, fuzzy_threshold))
                     if not match.matched else None
                 ),
