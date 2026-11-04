@@ -23,7 +23,7 @@ def _baseline():
     }
 
 
-def _config(limit=3):
+def _config(limit=2):
     return {"correction": {"max_claim_corrections": limit}}
 
 
