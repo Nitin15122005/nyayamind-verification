@@ -32,7 +32,7 @@ class GenerationMetadata:
     temperature: float
     top_p: float
     seed: int
-    generated_at: str = field(default_factory=lambda: datetime.datetime.utcnow().isoformat() + "Z")
+    generated_at: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"))
 
 
 class StatuteGroundingGenerator:
