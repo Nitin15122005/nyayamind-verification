@@ -38,38 +38,98 @@ class EvidenceRecord:
 def _load_usable_records_by_key(
     canonical_path: Path, audit_path: Path, usable_verdicts: set[str],
 ) -> dict[str, EvidenceRecord]:
-    """One (canonical, audit) file pair -> {dataset_citation_key: EvidenceRecord},
-    filtered to usable_verdicts. Shared by load_usable_evidence for both the
-    base v0 corpus and any optional v1+ supplement, so both are built by the
-    exact same rules."""
+    """Load one canonical/audit pair with fail-closed structural checks.
+
+    Duplicate keys, malformed JSONL, missing/orphan audit rows, unknown
+    verdicts and incomplete evidence records are rejected. Silently
+    overwriting a duplicate or silently dropping a record would make the
+    effective evidence corpus depend on file order.
+    """
+    allowed_verdicts = {
+        "VERIFIED_EXACT", "VERIFIED_CONTENT", "SOURCE_ONLY", "INVALID", "UNRESOLVED",
+    }
+
+    def read_jsonl(path: Path, kind: str) -> list[dict]:
+        if not path.is_file():
+            raise FileNotFoundError(f"{kind} file does not exist: {path}")
+        rows: list[dict] = []
+        with path.open(encoding="utf-8") as handle:
+            for line_no, raw in enumerate(handle, 1):
+                if not raw.strip():
+                    raise ValueError(f"{kind} contains a blank line: {path}:{line_no}")
+                try:
+                    record = json.loads(raw)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(
+                        f"Invalid JSON in {kind}: {path}:{line_no}: {exc}"
+                    ) from exc
+                if not isinstance(record, dict):
+                    raise ValueError(
+                        f"{kind} record must be a JSON object: {path}:{line_no}"
+                    )
+                rows.append(record)
+        return rows
+
+    audit_rows = read_jsonl(audit_path, "evidence audit")
+    canonical_rows = read_jsonl(canonical_path, "canonical evidence")
+
     verdict_by_key: dict[str, str] = {}
-    with audit_path.open(encoding="utf-8") as f:
-        for line in f:
-            rec = json.loads(line)
-            verdict_by_key[rec["dataset_citation_key"]] = rec["audit_verdict"]
+    for line_no, record in enumerate(audit_rows, 1):
+        key = record.get("dataset_citation_key")
+        verdict = record.get("audit_verdict")
+        if not isinstance(key, str) or not key.strip():
+            raise ValueError(f"Missing audit citation key: {audit_path}:{line_no}")
+        if key in verdict_by_key:
+            raise ValueError(f"Duplicate audit citation key {key!r}: {audit_path}:{line_no}")
+        if verdict not in allowed_verdicts:
+            raise ValueError(
+                f"Unknown audit verdict {verdict!r} for {key!r}: {audit_path}:{line_no}"
+            )
+        verdict_by_key[key] = verdict
 
     by_key: dict[str, EvidenceRecord] = {}
-    with canonical_path.open(encoding="utf-8") as f:
-        for line in f:
-            rec = json.loads(line)
-            key = rec["dataset_citation_key"]
-            verdict = verdict_by_key.get(key)
-            if verdict not in usable_verdicts:
-                continue
-            act_norm = normalize_act(rec["act"])
-            by_key[key] = EvidenceRecord(
-                dataset_citation_key=key,
-                act=rec["act"],
-                provision_type=rec["provision_type"],
-                provision_number=rec["provision_number"],
-                subsection=rec.get("subsection"),
-                canonical_text=rec["canonical_text"],
-                source_url=rec["source_url"],
-                audit_verdict=verdict,
-                act_norm=act_norm,
+    for line_no, record in enumerate(canonical_rows, 1):
+        key = record.get("dataset_citation_key")
+        if not isinstance(key, str) or not key.strip():
+            raise ValueError(f"Missing canonical citation key: {canonical_path}:{line_no}")
+        if key in by_key:
+            raise ValueError(f"Duplicate canonical citation key {key!r}: {canonical_path}:{line_no}")
+        verdict = verdict_by_key.get(key)
+        if verdict is None:
+            raise ValueError(f"Canonical record has no audit row for {key!r}")
+        required = ("act", "provision_type", "provision_number", "canonical_text", "source_url")
+        missing = [field for field in required if not isinstance(record.get(field), str)
+                   or not record[field].strip()]
+        if missing:
+            raise ValueError(
+                f"Canonical record {key!r} has missing/empty fields: {', '.join(missing)}"
             )
-    return by_key
+        act_norm = normalize_act(record["act"])
+        if not act_norm:
+            raise ValueError(f"Canonical record {key!r} has an unnormalizable Act name")
+        by_key[key] = EvidenceRecord(
+            dataset_citation_key=key,
+            act=record["act"],
+            provision_type=record["provision_type"],
+            provision_number=str(record["provision_number"]),
+            subsection=record.get("subsection"),
+            canonical_text=record["canonical_text"],
+            source_url=record["source_url"],
+            audit_verdict=verdict,
+            act_norm=act_norm,
+        )
 
+    orphan_audit_keys = set(verdict_by_key) - set(by_key)
+    if orphan_audit_keys:
+        sample = sorted(orphan_audit_keys)[:5]
+        raise ValueError(
+            f"Audit contains {len(orphan_audit_keys)} orphan record(s); examples: {sample}"
+        )
+
+    return {
+        key: record for key, record in by_key.items()
+        if record.audit_verdict in usable_verdicts
+    }
 
 def load_usable_evidence(
     canonical_path: str | Path,
@@ -118,6 +178,13 @@ def load_usable_evidence(
     all_usable: list[EvidenceRecord] = []
     for ev in by_key.values():
         index_key = (ev.provision_type, ev.provision_number, ev.subsection, ev.act_norm)
+        previous = exact_index.get(index_key)
+        if previous is not None:
+            raise ValueError(
+                "Evidence index collision for "
+                f"{index_key!r}: {previous.dataset_citation_key!r} and "
+                f"{ev.dataset_citation_key!r}. Refusing order-dependent overwrite."
+            )
         exact_index[index_key] = ev
         all_usable.append(ev)
 
