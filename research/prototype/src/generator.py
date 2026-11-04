@@ -48,8 +48,10 @@ class StatuteGroundingGenerator:
         system_prompt: str,
         user_prompt_template: str,
         seed: int,
+        model_revision: str | None = None,
     ):
         self.model_id = model_id
+        self.model_revision = model_revision
         self.quantization = quantization
         self.device_map = device_map
         self.max_new_tokens = max_new_tokens
@@ -96,11 +98,14 @@ class StatuteGroundingGenerator:
             bnb_4bit_compute_dtype=getattr(torch, self.quantization["bnb_4bit_compute_dtype"]),
             llm_int8_skip_modules=[],
         )
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        self._tokenizer = AutoTokenizer.from_pretrained(
+            self.model_id, revision=self.model_revision
+        )
         gc.collect()
         torch.cuda.empty_cache()
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_id,
+            revision=self.model_revision,
             quantization_config=bnb_config,
             device_map=self.device_map,
             low_cpu_mem_usage=True,
