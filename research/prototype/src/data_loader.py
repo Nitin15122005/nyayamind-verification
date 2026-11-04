@@ -165,6 +165,11 @@ def load_usable_evidence(
     """
     canonical_path = Path(canonical_path)
     audit_path = Path(audit_path)
+    if (extra_canonical_path is None) != (extra_audit_path is None):
+        raise ValueError(
+            "extra_canonical_path and extra_audit_path must be supplied together; "
+            "a partial evidence-pool supplement is not permitted."
+        )
 
     by_key = _load_usable_records_by_key(canonical_path, audit_path, usable_verdicts)
 
