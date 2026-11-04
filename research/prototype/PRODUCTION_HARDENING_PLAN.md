@@ -91,5 +91,10 @@ This programme separates implemented engineering work from work that requires in
 ## Validation record
 
 - Repository writes in this branch are confirmed by GitHub commit responses.
-- Tests have **not yet been run by the assistant** in a local checkout.
-- No GPU generation, real-model integration, clean-machine reproduction, or legal annotation has been performed as part of this branch yet.
+- GitHub Actions on the hardening branch passed: **405 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
+- Frontend tests and production build passed; server compilation and test discovery passed.
+- `run_mvp.py --check` passed in CI, including configuration parsing and loading the merged 136-record usable evidence pool without loading models.
+- Evidence integrity audit completed with `PASS_WITH_WARNINGS`, 0 errors and 3 existing warnings. This is structural/provenance auditing, not legal validation.
+- Real DeBERTa/GPU integration remains a manual skipped job. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
+- Date-aware retrieval code is tested, but current canonical records do not have independently verified effective-date intervals and the source case records have not been shown to supply `judgment_date`; dated cases therefore correctly fail closed until those data are curated.
+- No independent GOLD-03 legal annotation or adjudication has been performed.
