@@ -147,6 +147,8 @@ def match_evidence(
         from .retrieval_signals import best_match_among  # deferred: keeps optional deps optional
 
         scored = best_match_among(citation.act_norm, same_number_year_ok, fuzzy_act_index, fuzzy_method)
+        if scored.ambiguous:
+            return MatchResult(matched=False, evidence=None, match_method="ambiguous_fuzzy")
         threshold = fuzzy_bm25_threshold if fuzzy_method == "bm25" else fuzzy_embedding_threshold
         if scored.evidence is not None and scored.score >= threshold:
             return MatchResult(matched=True, evidence=scored.evidence, match_method="fuzzy")
