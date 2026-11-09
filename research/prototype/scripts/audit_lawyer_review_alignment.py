@@ -13,7 +13,7 @@ from typing import Any
 
 PROVISION_RE = re.compile(
     r"\\b(section|sections|article|articles|rule|rules|regulation|regulations)\\s+"
-    r"([0-9]+[A-Za-z]?(?:\\([^)]+\\))?(?:\\s*(?:,|and|&)\\s*[0-9]+[A-Za-z]?(?:\\([^)]+\\))?)*)",
+    r"([0-9]+[A-Za-z]?(?:\\([^)]+\\))*(?:\\s*(?:,|and|&)\\s*[0-9]+[A-Za-z]?(?:\\([^)]+\\))*)*)",
     re.IGNORECASE,
 )
 
@@ -32,7 +32,7 @@ def provision_keys(value: Any) -> set[tuple[str, str]]:
     text = norm_text(value)
     for match in PROVISION_RE.finditer(text):
         kind = match.group(1).rstrip("s")
-        for number in re.findall(r"[0-9]+[a-z]?(?:\\([^)]+\\))?", match.group(2)):
+        for number in re.findall(r"[0-9]+[a-z]?(?:\\([^)]+\\))*", match.group(2)):
             result.add((kind, re.sub(r"\\s+", "", number)))
     return result
 
