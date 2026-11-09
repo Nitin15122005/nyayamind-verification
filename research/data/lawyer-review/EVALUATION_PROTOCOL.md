@@ -46,7 +46,23 @@ The annotation row is not an independent case. Any future train/dev/test split o
 
 Do not use lawyer correction text, supporting authorities, or post-hoc audit findings as model input when evaluating predictions unless the experiment explicitly studies that information and prevents target leakage. Freeze model versions, prompts, thresholds, evidence corpus, retrieval configuration, and prediction-generation code before scoring.
 
-## 5. Alignment is not evaluation
+## 5. Reference baseline
+
+The repository includes `generate_lawyer_review_baseline.py`, which creates a **training-fold majority-class baseline** independently for each lawyer target. It uses five-fold `StratifiedGroupKFold`, groups by `case_reference`, and predicts the most frequent training label for every held-out row. The output is out-of-fold: a case is never present in both the training and test partition for the same fold.
+
+Reproduce it with:
+
+```bash
+python research/prototype/scripts/generate_lawyer_review_baseline.py
+python research/prototype/scripts/evaluate_lawyer_review.py \\
+  --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \\
+  --predictions research/data/lawyer-review/processed/majority_baseline.oof.csv \\
+  --output research/data/lawyer-review/processed/majority_baseline.metrics.json
+```
+
+This baseline is a sanity-check floor, not a NyayaMind model result. It uses only the training-fold label frequencies and no legal text or model outputs. Report the baseline separately for both targets. A future NyayaMind predictor must use the same case-grouped evaluation boundary and be compared against this baseline using frozen out-of-fold predictions. Do not interpret baseline scores as legal correctness.
+
+## 6. Alignment is not evaluation
 
 The alignment audit establishes whether lawyer rows can be linked to model-generated claim records. It does not establish prediction correctness. Report separately:
 
@@ -58,7 +74,7 @@ The alignment audit establishes whether lawyer rows can be linked to model-gener
 
 Do not silently discard ambiguous or unmatched rows. Publish their counts and a prespecified inclusion rule. Do not use a stale audit after changing the alignment script.
 
-## 6. Reproduction
+## 7. Reproduction
 
 From the repository root, after importing the authorized workbook and producing an explicit prediction CSV:
 
@@ -74,6 +90,6 @@ python research/prototype/scripts/evaluate_lawyer_review.py \
 
 The audit command additionally requires the frozen model output JSONL files in `research/prototype/outputs/`. Keep raw workbook, private predictions, and generated audit artifacts out of public Git unless redistribution and disclosure are authorized.
 
-## 7. Minimum reporting language
+## 8. Minimum reporting language
 
 Describe scores as **agreement with the supplied lawyer annotations**, not legal accuracy or universal legal truth. State the number of annotation rows and unique cases, the two target definitions, label distribution, case-cluster bootstrap method, and dataset limitations. Do not claim inter-annotator agreement, adjudication, reviewer representativeness, or external validity unless independently documented.
