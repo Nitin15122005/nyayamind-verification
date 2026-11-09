@@ -45,7 +45,7 @@ def extract_reference_act(value: Any) -> str:
     """Remove provision locators and subsection qualifiers from a lawyer reference."""
     text = PROVISION_RE.sub(" ", norm_text(value))
     text = re.sub(r"\b(?:sub[- ]?section|subsection|clause|paragraph)\s+[0-9]+[a-z]?(?:\([^)]+\))*", " ", text)
-    text = re.sub(r"\b(?:the|and)\b", " ", text)
+    text = re.sub(r"^\s*the\b", " ", text)
     text = re.sub(r"\([^)]*\)", " ", text)
     text = re.sub(r"\b(?:18|19|20)\d{2}\b", " ", text)
     normalized = re.sub(r"[^a-z0-9]+", " ", text).strip()
@@ -67,14 +67,15 @@ def act_name_match(reference_act: str, candidate_act: Any) -> str:
     for alias, expansion in aliases.items():
         reference_act = re.sub(rf"\b{alias}\b", expansion, reference_act)
         candidate = re.sub(rf"\b{alias}\b", expansion, candidate)
-    reference_core = " ".join(
-        token for token in reference_act.split()
-        if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
-    )
-    candidate_core = " ".join(
-        token for token in candidate.split()
-        if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
-    )
+    def core(value: str) -> str:
+        value = re.sub(r"^the\\s+", "", value.strip())
+        value = re.sub(r"^part\\s+[ivxlcdm]+\\s+of\\s+", "", value)
+        return " ".join(
+            token for token in value.split()
+            if not re.fullmatch(r"(?:18|19|20)\\d{2}", token)
+        )
+    reference_core = core(reference_act)
+    candidate_core = core(candidate)
     if reference_core == candidate_core or reference_core in candidate_core or candidate_core in reference_core:
         return "match"
     return "mismatch"
