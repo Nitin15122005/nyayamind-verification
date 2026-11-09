@@ -46,6 +46,22 @@ class TestLawyerReviewFeatureEvaluation(unittest.TestCase):
             "case_reference", "annotation_id",
         })
 
+    def test_evidence_id_alone_marks_evidence_present(self):
+        annotation = self._annotation(0)
+        row = self._audit_row(0)
+        row["matched_model_claims"][0].pop("evidence_text")
+        frame, _ = build_feature_frame([annotation], {"rows": [row]})
+        self.assertEqual(frame.iloc[0]["evidence_present"], "yes")
+
+    def test_text_match_cannot_override_provision_identifier(self):
+        annotation = self._annotation(0)
+        row = self._audit_row(0)
+        row["matched_model_claims"][0]["provision_identifier_match"] = False
+        row["matched_model_claims"][0]["reference_text_match"] = True
+        frame, diagnostics = build_feature_frame([annotation], {"rows": [row]})
+        self.assertTrue(frame.empty)
+        self.assertEqual(diagnostics["excluded_rows"]["candidate_alignment_not_unique"], 1)
+
     def test_case_grouped_predictions_cover_each_row_and_both_targets(self):
         rows = []
         for i in range(30):
