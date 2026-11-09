@@ -258,12 +258,9 @@ def main() -> int:
     predictions.to_csv(args.predictions, index=False)
     args.metrics.write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
-        "status": "ok", "n_eligible_rows": diagnostics["n_eligible_rows"],
-        "n_eligible_cases": diagnostics["n_eligible_cases"],
-        "targets": {t: {
-            "model_macro_f1": metrics["targets"][t]["model"]["macro_f1"],
-            "majority_macro_f1": metrics["targets"][t]["majority_baseline"]["macro_f1"],
-        } for t in TARGETS},
+        "status": "ok",
+        "data_diagnostics": diagnostics,
+        "targets": metrics["targets"],
     }, indent=2))
     return 0
 
