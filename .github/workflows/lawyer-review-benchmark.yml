@@ -36,6 +36,4 @@ jobs:
           python -m pip install pandas==2.2.2 openpyxl==3.1.5 scikit-learn==1.4.2 pytest==9.1.1
       - name: Run lawyer-review benchmark unit tests
         run: |
-          python -m pytest \
-            research/prototype/tests/test_lawyer_review_import.py \
-            research/prototype/tests/test_lawyer_review_evaluation.py -q
+          python -m pytest research/prototype/tests/test_lawyer_review_import.py research/prototype/tests/test_lawyer_review_evaluation.py -q
