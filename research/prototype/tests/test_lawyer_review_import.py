@@ -38,9 +38,9 @@ class TestLawyerReviewImport(unittest.TestCase):
 
     def test_summary_distinguishes_tuple_and_exact_content_duplicates(self):
         from scripts.import_lawyer_review import build_summary
-        records = normalize_dataframe(pd.concat([frame(), frame()], ignore_index=True))
-        records[1]["source_row_number"] = 2
-        records[1]["annotation_id"] = "LR-0002"
+        combined = pd.concat([frame(), frame()], ignore_index=True)
+        combined.loc[1, "No."] = 2
+        records = normalize_dataframe(combined)
         import tempfile
         from pathlib import Path
         with tempfile.TemporaryDirectory() as directory:
