@@ -113,6 +113,7 @@ def collect_model_claims(outputs_dir: Path) -> dict[str, list[dict[str, Any]]]:
                     "provision_number": citation.get("provision_number"),
                     "act_raw": citation.get("act_raw"), "act_norm": citation.get("act_norm"),
                     "evidence_id": claim.get("evidence_id"),
+                    "evidence_text": claim.get("evidence_text"),
                     "evidence_match_method": claim.get("evidence_match_method"),
                     "verdict": claim.get("verdict"), "confidence": claim.get("confidence"),
                     "verifier_model": claim.get("verifier_model"),
@@ -137,9 +138,11 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
         ]
         unique = {}
         for candidate in statement_matches:
-            key = (candidate.get("claim_text"), candidate.get("provision_type"),
-                   candidate.get("provision_number"), candidate.get("act_raw"),
-                   candidate.get("verdict"), candidate.get("evidence_id"))
+            key = (candidate.get("document_id"), candidate.get("claim_id"),
+                   norm_text(candidate.get("claim_text")), norm_text(candidate.get("assertion_text")),
+                   norm_text(candidate.get("provision_type")),
+                   normalize_provision_number(candidate.get("provision_number")),
+                   norm_text(candidate.get("act_raw")), norm_text(candidate.get("verifier_model")) )
             if key not in unique:
                 item = dict(candidate, source_files=[candidate["source_file"]])
                 ctype = norm_text(candidate.get("provision_type")).rstrip("s")
@@ -151,12 +154,19 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
                     norm_text(f"{candidate.get('provision_type') or ''} {candidate.get('provision_number') or ''} {candidate.get('act_raw') or ''}")
                 })
                 unique[key] = item
-            elif candidate["source_file"] not in unique[key]["source_files"]:
-                unique[key]["source_files"].append(candidate["source_file"])
+            else:
+                existing = unique[key]
+                if candidate["source_file"] not in existing["source_files"]:
+                    existing["source_files"].append(candidate["source_file"])
+                for field in ("verdict", "evidence_match_method"):
+                    if existing.get(field) != candidate.get(field):
+                        existing[field] = "VARIANT"
+                for field in ("evidence_id", "evidence_text"):
+                    existing[field] = existing.get(field) or candidate.get(field)
         matches = list(unique.values())
         reference_matches = [
             m for m in matches
-            if (m["provision_identifier_match"] or m["reference_text_match"])
+            if (m["provision_identifier_match"] if keys else m["reference_text_match"])
             and m.get("act_match") != "mismatch"
         ]
         # A same-Act, same-number Section/Rule disagreement is a confirmed citation
