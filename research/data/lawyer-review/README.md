@@ -3,8 +3,10 @@
 ## Status
 
 This directory contains the data contract and import workflow for the lawyer-reviewed
-statutory claim workbook. The source workbook is intentionally not duplicated by this
-commit. Place the supplied workbook at:
+statutory claim workbook. The source workbook is included in this repository under the permissions confirmed by
+the dataset owner. Treat it as immutable; the importer verifies its SHA-256. If those
+permissions change, remove the workbook and its derived row-level annotations before
+redistribution. The canonical workbook path is:
 
 `research/data/lawyer-review/raw/NyayaMind_Lawyer_Review_Final_Columns.xlsx`
 
@@ -79,11 +81,10 @@ The executable scoring contract, metric definitions, case-cluster bootstrap proc
 
 ## Data governance
 
-Before making the repository public or distributing this dataset, confirm permission to
-redistribute the workbook and its annotations. Check whether it contains reviewer
-identifiers, confidential comments, or third-party material. If redistribution is not
-authorized, keep the raw workbook out of Git and provide an access-controlled procedure
-or a derived dataset whose release has been approved.
+The dataset owner has confirmed permission to redistribute the workbook and its
+annotations in this repository. This confirmation does not establish that reviewer
+identifiers or confidential comments are absent; inspect the workbook before any wider
+reuse, and honor any later withdrawal or scope limitation on the permission.
 
 ## Limitations
 
