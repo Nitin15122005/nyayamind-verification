@@ -82,6 +82,10 @@ class TestLawyerReviewFeatureEvaluation(unittest.TestCase):
             self.assertIn(f"predicted_{target}_model", predictions.columns)
             self.assertIn(f"predicted_{target}_majority", predictions.columns)
             self.assertEqual(metrics["targets"][target]["n"], 30)
+            paired = metrics["targets"][target]["paired_model_minus_majority_bootstrap"]
+            self.assertEqual(paired["replicates"], 100)
+            self.assertEqual(len(paired["accuracy_difference_interval"]), 2)
+            self.assertEqual(len(paired["macro_f1_difference_interval"]), 2)
             for fold in metrics["targets"][target]["folds"]:
                 self.assertGreater(fold["train_cases"], 0)
                 self.assertGreater(fold["test_cases"], 0)
