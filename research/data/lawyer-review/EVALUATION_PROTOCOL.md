@@ -62,7 +62,15 @@ python research/prototype/scripts/evaluate_lawyer_review.py \\
 
 This baseline is a sanity-check floor, not a NyayaMind model result. It uses only the training-fold label frequencies and no legal text or model outputs. Report the baseline separately for both targets. A future NyayaMind predictor must use the same case-grouped evaluation boundary and be compared against this baseline using frozen out-of-fold predictions. Do not interpret baseline scores as legal correctness.
 
-## 6. Alignment is not evaluation
+## 6. Structured verifier-signal experiment
+
+The repository includes `evaluate_lawyer_review_features.py` as an exploratory feature-based evaluation. It predicts the two lawyer targets separately with three-class logistic regression; it does not translate NLI classes into lawyer labels.
+
+The predeclared eligibility rule is an exact legal-statement match and exactly one compatible provision/Act candidate. Rows failing candidate/reference uniqueness are excluded and counted in diagnostics. The experiment uses structured verifier/retrieval metadata only: provision type, Act match, evidence matching method, NLI verdict, verifier model, evidence presence, provision-identifier match, reference-text match, confidence, and distinct statement-match count. It excludes legal-statement text, case and annotation identifiers, correction/clarification text, supporting authorities, and annotation-derived audit conclusions.
+
+Use five-fold StratifiedGroupKFold with `case_reference` as the group, and compare against a training-fold majority baseline on the exact same eligible rows and folds. Report both targets separately, including per-class metrics, confusion matrices, and 95% case-cluster bootstrap intervals. The eligibility subset and exclusions must be reported alongside every result. These are exploratory annotation-agreement results; they are not legal accuracy, and improvement in macro-F1 alone does not establish overall superiority if accuracy falls or intervals overlap.
+
+## 7. Alignment is not evaluation
 
 The alignment audit establishes whether lawyer rows can be linked to model-generated claim records. It does not establish prediction correctness. Report separately:
 
@@ -74,7 +82,7 @@ The alignment audit establishes whether lawyer rows can be linked to model-gener
 
 Do not silently discard ambiguous or unmatched rows. Publish their counts and a prespecified inclusion rule. Do not use a stale audit after changing the alignment script.
 
-## 7. Reproduction
+## 8. Reproduction
 
 From the repository root, after importing the authorized workbook and producing an explicit prediction CSV:
 
@@ -90,6 +98,6 @@ python research/prototype/scripts/evaluate_lawyer_review.py \
 
 The audit command additionally requires the frozen model output JSONL files in `research/prototype/outputs/`. Keep raw workbook, private predictions, and generated audit artifacts out of public Git unless redistribution and disclosure are authorized.
 
-## 8. Minimum reporting language
+## 9. Minimum reporting language
 
 Describe scores as **agreement with the supplied lawyer annotations**, not legal accuracy or universal legal truth. State the number of annotation rows and unique cases, the two target definitions, label distribution, case-cluster bootstrap method, and dataset limitations. Do not claim inter-annotator agreement, adjudication, reviewer representativeness, or external validity unless independently documented.
