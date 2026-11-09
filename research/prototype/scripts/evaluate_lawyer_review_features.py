@@ -303,7 +303,8 @@ def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, boots
                 result_frame, target, f"predicted_{target}_model",
                 f"predicted_{target}_majority", reps=bootstrap_reps, seed=seed
             ),
-            "folds": fold_info,\n            "feature_ablations": ablation_results,
+            "folds": fold_info,
+            "feature_ablations": ablation_results,
         }
     predictions = all_predictions[0][["annotation_id", "case_reference"]].copy()
     for result_frame in all_predictions:
