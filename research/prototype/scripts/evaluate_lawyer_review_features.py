@@ -85,7 +85,9 @@ def build_feature_frame(annotations: list[dict[str, Any]], audit: dict[str, Any]
             "evidence_match_method": claim.get("evidence_match_method") or "MISSING",
             "verdict": claim.get("verdict") or "MISSING",
             "verifier_model": claim.get("verifier_model") or "MISSING",
-            "evidence_present": "yes" if claim.get("evidence_id") and claim.get("evidence_text") else "no",\n            "provision_identifier_match": str(bool(claim.get("provision_identifier_match"))),\n            "reference_text_match": str(bool(claim.get("reference_text_match")),
+            "evidence_present": "yes" if claim.get("evidence_id") and claim.get("evidence_text") else "no",
+            "provision_identifier_match": str(bool(claim.get("provision_identifier_match"))),
+            "reference_text_match": str(bool(claim.get("reference_text_match"))),
             "confidence": confidence,
             "candidate_count": float(row.get("num_distinct_statement_matches", 0)),
         })
