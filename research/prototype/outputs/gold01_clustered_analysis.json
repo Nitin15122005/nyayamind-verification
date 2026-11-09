@@ -1,0 +1,27 @@
+{
+  "analysis": "paired cluster bootstrap and sign-flip randomization",
+  "cluster_unit": "evidence_key (source provision)",
+  "n_clusters": 59,
+  "n_items_per_arm": 420,
+  "bare_item_accuracy": 0.7333333333333333,
+  "labeled_item_accuracy": 0.9714285714285714,
+  "item_accuracy_difference": 0.23809523809523814,
+  "bare_equal_cluster_accuracy": 0.739406779661017,
+  "labeled_equal_cluster_accuracy": 0.9731638418079096,
+  "equal_cluster_accuracy_difference": 0.23375706214689265,
+  "equal_cluster_accuracy_difference_95pct_bootstrap_ci": [
+    0.21751412429378528,
+    0.2507062146892655
+  ],
+  "paired_cluster_sign_flip_p_two_sided": 9.99990000099999e-06,
+  "permutations": 100000,
+  "bootstrap_replicates": 20000,
+  "macro_f1_bare_item_pooled": 0.7486646586649771,
+  "macro_f1_labeled_item_pooled": 0.9683612674297156,
+  "macro_f1_difference_95pct_cluster_bootstrap_ci": [
+    0.20653312123524167,
+    0.2353842738172675
+  ],
+  "seed": 20261104,
+  "interpretation": "Descriptive benchmark performance remains conditional on this deterministically constructed corpus. Cluster-aware inference addresses repeated items per provision; it does not establish human-annotated or natural-case legal correctness."
+}
