@@ -212,17 +212,47 @@ def compact_summary(result: dict[str, Any]) -> dict[str, Any]:
     rows = result["rows"]
     def ids(predicate):
         return [row["annotation_id"] for row in rows if predicate(row)]
+    unmatched = [row for row in rows if row["num_reference_aligned_matches"] == 0]
+    unmatched_diagnostics = []
+    for row in unmatched:
+        candidates = row["matched_model_claims"]
+        if not candidates:
+            reason = "no_exact_statement_match"
+        elif not any(candidate["provision_identifier_match"] or candidate["reference_text_match"] for candidate in candidates):
+            reason = "no_provision_identifier_or_reference_text_match"
+        else:
+            reason = "act_name_incompatible_or_unresolved"
+        unmatched_diagnostics.append({
+            "annotation_id": row["annotation_id"],
+            "case_reference": row["case_reference"],
+            "legal_reference": row["legal_reference"],
+            "statement_correctness": row.get("statement_correctness"),
+            "reference_correctness": row.get("reference_correctness"),
+            "reason": reason,
+            "statement_match_count": row["num_distinct_statement_matches"],
+            "candidate_claims": [{
+                "claim_id": candidate.get("claim_id"),
+                "provision_type": candidate.get("provision_type"),
+                "provision_number": candidate.get("provision_number"),
+                "act_raw": candidate.get("act_raw"),
+                "act_norm": candidate.get("act_norm"),
+                "provision_identifier_match": candidate["provision_identifier_match"],
+                "reference_text_match": candidate["reference_text_match"],
+                "act_match": candidate["act_match"],
+            } for candidate in candidates],
+        })
     return {key: value for key, value in result.items() if key != "rows"} | {
         "row_counts": {
             "unique_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] == 1)),
             "ambiguous_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] > 1)),
-            "unmatched_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] == 0)),
+            "unmatched_reference_alignment": len(unmatched),
         },
         "annotation_ids": {
             "unique_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 1),
             "ambiguous_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] > 1),
             "unmatched_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 0),
         },
+        "unmatched_diagnostics": unmatched_diagnostics,
         "interpretation": "Identity/provision alignment only; not model evaluation and no NLI-to-lawyer-label mapping.",
     }
 
