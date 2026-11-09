@@ -56,10 +56,10 @@ jobs:
             --output research/data/lawyer-review/processed/majority_baseline.metrics.json
       - name: Evaluate structured verifier signals against lawyer labels
         run: |
-          python research/prototype/scripts/evaluate_lawyer_review_features.py \\
-            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \\
-            --audit research/data/lawyer-review/processed/alignment_audit.json \\
-            --predictions research/data/lawyer-review/processed/structured_signals.oof.csv \\
+          python research/prototype/scripts/evaluate_lawyer_review_features.py \
+            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
+            --audit research/data/lawyer-review/processed/alignment_audit.json \
+            --predictions research/data/lawyer-review/processed/structured_signals.oof.csv \
             --metrics research/data/lawyer-review/processed/structured_signals.metrics.json
       - name: Upload alignment and baseline artifacts
         uses: actions/upload-artifact@v4
