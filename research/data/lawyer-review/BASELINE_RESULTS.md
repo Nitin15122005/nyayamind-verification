@@ -40,29 +40,33 @@ The macro-F1 values are low because a majority-class predictor does not learn th
 
 ## Structured verifier-signal evaluation
 
-A separate exploratory experiment evaluates structured verifier/retrieval metadata against each lawyer target. It uses only provision type, Act match, evidence matching method, NLI verdict, verifier model, evidence presence, provision-identifier match, reference-text match, confidence, and number of distinct statement matches. It excludes raw legal-statement text, case/annotation IDs, correction text, supporting authorities, and annotation-derived audit conclusions.
+A separate exploratory experiment evaluates structured verifier/retrieval metadata against each lawyer target. It uses provision type, Act match, evidence matching method, NLI verdict, verifier model, evidence presence, provision-identifier match, reference-text match, confidence, and number of distinct statement matches. It excludes raw legal-statement text, case/annotation IDs, correction text, supporting authorities, and annotation-derived audit conclusions.
 
-Eligibility was fixed before scoring: exact statement match and exactly one compatible provision/Act candidate. This retained **244/251 rows across 44/45 cases**; six rows were excluded for non-unique candidate alignment and one for non-unique reference alignment. Both targets use the same eligible rows and five-fold StratifiedGroupKFold partitions grouped by `case_reference`. Each target is a separate three-class logistic-regression model. No NLI-to-lawyer-label mapping is used. Bootstrap intervals use 2,000 case-cluster percentile replicates (seed 20261109).
+Eligibility is exact statement match and exactly one **typed provision/Act-compatible** candidate. The stricter alignment audit retains **220/251 rows across 44/45 cases**. Thirty rows have multiple reference-aligned claims and are excluded as ambiguous; LR-0232 is a typed Section-versus-Rule mismatch and is not treated as an exact match. This supersedes the earlier, more permissive 244-row exploratory run. Both targets use the same eligible rows and five-fold StratifiedGroupKFold partitions grouped by `case_reference`. Each target is a separate three-class logistic-regression model. No NLI-to-lawyer-label mapping is used.
 
-| Target | Structured model accuracy (95% CI) | Structured model macro-F1 (95% CI) | Same-subset majority accuracy | Same-subset majority macro-F1 (95% CI) |
-|---|---:|---:|---:|---:|
-| Statement correctness | 0.4303 [0.3301, 0.5287] | 0.4347 [0.3346, 0.5275] | 0.5287 [0.3954, 0.6560] | 0.2306 [0.1889, 0.2641] |
-| Legal-reference correctness | 0.4426 [0.3450, 0.5296] | 0.4391 [0.3403, 0.5193] | 0.5943 [0.5000, 0.6803] | 0.2485 [0.2222, 0.2699] |
+Bootstrap intervals use 2,000 case-cluster percentile replicates (seed 20261109). In addition to separate model and baseline intervals, the revised pipeline computes a **paired case-cluster bootstrap of the out-of-fold model-minus-majority metric difference**. This resamples the same cases for both prediction sets and preserves the pairing. It quantifies uncertainty conditional on the generated out-of-fold predictions; it does not retrain the model within each bootstrap replicate.
+
+| Target | Model accuracy (95% CI) | Model macro-F1 (95% CI) | Same-subset majority accuracy | Same-subset majority macro-F1 | Paired accuracy difference (95% CI) | Paired macro-F1 difference (95% CI) |
+|---|---:|---:|---:|---:|---:|---:|
+| Statement correctness | 0.4227 [0.3452, 0.5388] | 0.4016 [0.3298, 0.5029] | 0.5818 | 0.2452 | -0.2919 [-0.2919, -0.0209] | +0.1564 [+0.0538, +0.2593] |
+| Legal-reference correctness | 0.4500 [0.3110, 0.5377] | 0.4212 [0.2898, 0.5051] | 0.6000 | 0.2500 | -0.1577 [-0.3010, -0.0238] | +0.1659 [+0.0702, +0.2598] |
+
+Paired differences are model minus same-fold majority baseline. The interval for accuracy difference is entirely below zero for both targets; the macro-F1 difference interval is entirely above zero. Thus, on this selected subset and these OOF predictions, the model trades lower accuracy for higher macro-F1. This is a class-balance trade-off, not an overall win or evidence of legal accuracy.
 
 Per-class structured-model results (precision / recall / F1; support):
 
 | Target | Class | Precision | Recall | F1 | Support |
 |---|---|---:|---:|---:|---:|
-| Statement correctness | Yes | 0.3474 | 0.7857 | 0.4818 | 42 |
-| Statement correctness | No | 0.4000 | 0.4384 | 0.4183 | 73 |
-| Statement correctness | Partially | 0.5797 | 0.3101 | 0.4040 | 129 |
-| Legal-reference correctness | Yes | 0.6429 | 0.4345 | 0.5185 | 145 |
-| Legal-reference correctness | No | 0.3594 | 0.9200 | 0.5169 | 25 |
-| Legal-reference correctness | Partially | 0.2683 | 0.2973 | 0.2821 | 74 |
+| Statement correctness | Yes | 0.2286 | 0.3902 | 0.2883 | 41 |
+| Statement correctness | No | 0.3731 | 0.4902 | 0.4237 | 51 |
+| Statement correctness | Partially | 0.6265 | 0.4063 | 0.4929 | 128 |
+| Legal-reference correctness | Yes | 0.6346 | 0.5000 | 0.5593 | 132 |
+| Legal-reference correctness | No | 0.3500 | 0.9130 | 0.5060 | 23 |
+| Legal-reference correctness | Partially | 0.2143 | 0.1846 | 0.1983 | 65 |
 
-The structured models improve macro-F1 over the same-subset majority baseline for both targets, but have lower accuracy. This reflects a trade-off in minority-class prediction, not a general performance win. The reference-correctness model has particularly weak F1 for `Partially`. The confidence intervals are broad and overlap the comparator intervals; this is exploratory evidence on a small, selected subset, not proof of generalizable improvement. The models are not production-ready and have not been fine-tuned or externally validated.
+The reference-correctness model has weak recall for `Partially`. The 44-case eligible subset is selected by exact statement and typed provision alignment, so the results do not generalize automatically to unmatched or ambiguous claims. These are exploratory annotation-agreement results, not legal accuracy or production validation. The models have not been fine-tuned or externally validated.
 
-The per-class metrics and confusion matrices are emitted in `structured_signals.metrics.json`; row-level out-of-fold predictions are in `structured_signals.oof.csv`. CI uploads these with the alignment and majority-baseline outputs as the `lawyer-review-alignment-and-baseline` artifact.
+The row-level out-of-fold predictions and full metrics (including confusion matrices, fold composition, separate bootstrap intervals, and paired differences) are emitted in `structured_signals.oof.csv` and `structured_signals.metrics.json`. CI uploads these with the compact alignment summary and majority-baseline outputs as the `lawyer-review-alignment-and-baseline` artifact.
 
 ## Limitations
 
