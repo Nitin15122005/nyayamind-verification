@@ -149,6 +149,26 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
         self.assertEqual(summary["row_counts"]["resolved_typed_provision_mismatch"], 1)
         self.assertEqual(summary["row_counts"]["unmatched_reference_alignment"], 0)
 
+    def test_reference_text_cannot_override_typed_provision_mismatch(self):
+        annotation = {
+            "annotation_id": "LR-TYPE-TEXT", "case_reference": "case-A",
+            "legal_statement": "Rule 3 is relevant.",
+            "legal_reference": "Code of Criminal Procedure 1973, Section 3",
+        }
+        claim = {
+            "document_id": "case-A", "source_file": "run.jsonl", "claim_id": "c1",
+            "claim_text": "Rule 3 is relevant.", "assertion_text": "",
+            "provision_type": "Rule", "provision_number": "3",
+            "act_raw": "Code of Criminal Procedure 1973",
+            "act_norm": "code of criminal procedure 1973",
+            "evidence_id": "Code of Criminal Procedure 1973 Section 3",
+            "verdict": "CONTRADICTED",
+        }
+        row = audit([annotation], {"case-A": [claim]})["rows"][0]
+        self.assertTrue(row["matched_model_claims"][0]["reference_text_match"])
+        self.assertEqual(row["num_reference_aligned_matches"], 0)
+        self.assertEqual(row["num_typed_provision_mismatch_matches"], 1)
+
     def test_missing_case_is_not_a_negative_prediction(self):
         result = audit([{
             "annotation_id": "LR-0003", "case_reference": "case-missing",
