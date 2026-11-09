@@ -36,6 +36,32 @@ class TestLawyerReviewImport(unittest.TestCase):
         with self.assertRaises(DatasetValidationError):
             normalize_dataframe(frame().drop(columns=["Case reference"]))
 
+    def test_summary_distinguishes_tuple_and_exact_content_duplicates(self):
+        from scripts.import_lawyer_review import build_summary
+        records = normalize_dataframe(pd.concat([frame(), frame()], ignore_index=True))
+        records[1]["source_row_number"] = 2
+        records[1]["annotation_id"] = "LR-0002"
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.xlsx"
+            source.write_bytes(b"fixture")
+            summary = build_summary(records, source)
+        self.assertEqual(summary["num_duplicate_case_statement_provision_groups"], 1)
+        self.assertEqual(summary["num_exact_content_duplicate_groups"], 1)
+
+    def test_summary_detects_row_cross_references(self):
+        from scripts.import_lawyer_review import build_summary
+        records = normalize_dataframe(frame())
+        records[0]["correction_or_clarification"] = "As row 5, see correction."
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.xlsx"
+            source.write_bytes(b"fixture")
+            summary = build_summary(records, source)
+        self.assertEqual(summary["cross_reference_diagnostics"]["count"], 1)
+
     def test_rejects_duplicate_source_ids(self):
         with self.assertRaises(DatasetValidationError):
             normalize_dataframe(pd.concat([frame(), frame()], ignore_index=True))
