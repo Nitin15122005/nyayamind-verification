@@ -189,6 +189,8 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
         "rows_with_exact_statement_match": sum(r["exact_statement_match"] for r in rows),
         "rows_with_exact_statement_and_reference_match": sum(r["exact_statement_and_reference_match"] for r in rows),
         "rows_with_ambiguous_multiple_statement_matches": sum(r["num_distinct_statement_matches"] > 1 for r in rows),
+        "rows_with_ambiguous_reference_alignment": sum(r["num_reference_aligned_matches"] > 1 for r in rows),
+        "rows_with_unique_reference_alignment": sum(r["num_reference_aligned_matches"] == 1 for r in rows),
         "row_coverage": {
             "case_found": sum(r["case_found_in_model_outputs"] for r in rows) / n if n else 0.0,
             "exact_statement_match": sum(r["exact_statement_match"] for r in rows) / n if n else 0.0,
