@@ -62,6 +62,18 @@ class TestLawyerReviewImport(unittest.TestCase):
             summary = build_summary(records, source)
         self.assertEqual(summary["cross_reference_diagnostics"]["count"], 1)
 
+    def test_rejects_fractional_source_ids(self):
+        invalid = frame()
+        invalid.loc[0, "No."] = 1.5
+        with self.assertRaisesRegex(DatasetValidationError, "positive integer"):
+            normalize_dataframe(invalid)
+
+    def test_rejects_nonpositive_source_ids(self):
+        invalid = frame()
+        invalid.loc[0, "No."] = 0
+        with self.assertRaisesRegex(DatasetValidationError, "positive integer"):
+            normalize_dataframe(invalid)
+
     def test_rejects_duplicate_source_ids(self):
         with self.assertRaises(DatasetValidationError):
             normalize_dataframe(pd.concat([frame(), frame()], ignore_index=True))
