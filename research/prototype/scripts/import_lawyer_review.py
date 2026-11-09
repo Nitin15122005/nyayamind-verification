@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -105,11 +106,26 @@ def build_summary(records: list[dict[str, Any]], source_path: Path) -> dict[str,
         (row["case_reference"], row["legal_statement"], row["legal_reference"])
         for row in records
     }
-    exact_keys = [
-        (row["case_reference"], row["legal_statement"], row["legal_reference"],
-         row["statement_correctness"], row["reference_correctness"])
-        for row in records
-    ]
+    tuple_groups: dict[tuple[Any, ...], list[str]] = {}
+    semantic_groups: dict[tuple[Any, ...], list[str]] = {}
+    semantic_fields = ("case_reference", "legal_statement", "legal_reference",
+                       "statement_correctness", "reference_correctness",
+                       "correction_or_clarification", "supporting_legal_authority")
+    for row in records:
+        tuple_key = (row["case_reference"], row["legal_statement"], row["legal_reference"])
+        semantic_key = tuple(row[field] for field in semantic_fields)
+        tuple_groups.setdefault(tuple_key, []).append(row["annotation_id"])
+        semantic_groups.setdefault(semantic_key, []).append(row["annotation_id"])
+    duplicate_tuple_groups = [ids for ids in tuple_groups.values() if len(ids) > 1]
+    exact_content_groups = [ids for ids in semantic_groups.values() if len(ids) > 1]
+    pattern = re.compile(r"\\b(?:as\\s+)?(?:row|no\\.?)\\s*#?\\s*(\\d+)\\b", re.IGNORECASE)
+    cross_references = []
+    for row in records:
+        for field in ("correction_or_clarification", "supporting_legal_authority"):
+            for match in pattern.finditer(row[field] or ""):
+                cross_references.append({"annotation_id": row["annotation_id"],
+                    "field": field, "referenced_source_row_number": int(match.group(1)),
+                    "text": match.group(0)})
     return {
         "dataset_name": "NyayaMind Lawyer-Reviewed Statutory Claim Dataset",
         "schema_version": "1.0.0",
@@ -121,7 +137,14 @@ def build_summary(records: list[dict[str, Any]], source_path: Path) -> dict[str,
         "num_unique_cases": len(cases),
         "num_unique_legal_statements": len(statements),
         "num_unique_case_statement_provision_tuples": len(case_statement_provision),
-        "num_exact_annotation_duplicates": len(exact_keys) - len(set(exact_keys)),
+        "num_duplicate_case_statement_provision_groups": len(duplicate_tuple_groups),
+        "num_rows_in_duplicate_case_statement_provision_groups": sum(map(len, duplicate_tuple_groups)),
+        "duplicate_case_statement_provision_groups": duplicate_tuple_groups,
+        "num_exact_content_duplicate_groups": len(exact_content_groups),
+        "exact_content_duplicate_groups": exact_content_groups,
+        "cross_reference_diagnostics": {"count": len(cross_references),
+            "references": cross_references,
+            "note": "Resolve source-row references before treating correction or authority text as standalone evidence."},
         "statement_correctness_counts": {
             label: statement_counts.get(label, 0) for label in ("Yes", "No", "Partially")
         },
