@@ -48,8 +48,8 @@ Bootstrap intervals use 2,000 case-cluster percentile replicates (seed 20261109)
 
 | Target | Model accuracy (95% CI) | Model macro-F1 (95% CI) | Same-subset majority accuracy | Same-subset majority macro-F1 | Paired accuracy difference (95% CI) | Paired macro-F1 difference (95% CI) |
 |---|---:|---:|---:|---:|---:|---:|
-| Statement correctness | 0.4227 [0.3452, 0.5388] | 0.4016 [0.3298, 0.5029] | 0.5818 | 0.2452 | -0.2919 [-0.2919, -0.0209] | +0.1564 [+0.0538, +0.2593] |
-| Legal-reference correctness | 0.4500 [0.3110, 0.5377] | 0.4212 [0.2898, 0.5051] | 0.6000 | 0.2500 | -0.1577 [-0.3010, -0.0238] | +0.1659 [+0.0702, +0.2598] |
+| Statement correctness | 0.4227 [0.3452, 0.5388] | 0.4016 [0.3298, 0.5029] | 0.5818 | 0.2452 | -0.1591 [-0.2919, -0.0209] | +0.1564 [+0.0538, +0.2593] |
+| Legal-reference correctness | 0.4500 [0.3110, 0.5377] | 0.4212 [0.2898, 0.5051] | 0.6000 | 0.2500 | -0.1500 [-0.3010, -0.0238] | +0.1712 [+0.0702, +0.2598] |
 
 Paired differences are model minus same-fold majority baseline. The interval for accuracy difference is entirely below zero for both targets; the macro-F1 difference interval is entirely above zero. Thus, on this selected subset and these OOF predictions, the model trades lower accuracy for higher macro-F1. This is a class-balance trade-off, not an overall win or evidence of legal accuracy.
 
