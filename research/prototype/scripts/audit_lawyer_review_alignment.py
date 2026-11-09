@@ -68,11 +68,11 @@ def act_name_match(reference_act: str, candidate_act: Any) -> str:
         reference_act = re.sub(rf"\b{alias}\b", expansion, reference_act)
         candidate = re.sub(rf"\b{alias}\b", expansion, candidate)
     def core(value: str) -> str:
-        value = re.sub(r"^the\\s+", "", value.strip())
-        value = re.sub(r"^part\\s+[ivxlcdm]+\\s+of\\s+", "", value)
+        value = re.sub(r"^the\s+", "", value.strip())
+        value = re.sub(r"^part\s+[ivxlcdm]+\s+of\s+", "", value)
         return " ".join(
             token for token in value.split()
-            if not re.fullmatch(r"(?:18|19|20)\\d{2}", token)
+            if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
         )
     reference_core = core(reference_act)
     candidate_core = core(candidate)
