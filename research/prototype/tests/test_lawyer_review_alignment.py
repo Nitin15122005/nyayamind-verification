@@ -93,6 +93,26 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
             ["match", "mismatch"],
         )
 
+    def test_compact_summary_explains_unmatched_rows(self):
+        from scripts.audit_lawyer_review_alignment import compact_summary
+        annotation = {
+            "annotation_id": "LR-DIAG", "case_reference": "case-A",
+            "legal_statement": "Section 3 applies.", "legal_reference": "POTA Section 3",
+        }
+        claim = {
+            "document_id": "case-A", "source_file": "run.jsonl", "claim_id": "c1",
+            "claim_text": "Section 3 applies.", "assertion_text": "",
+            "provision_type": "Section", "provision_number": "3",
+            "act_raw": "Code of Criminal Procedure", "act_norm": "code of criminal procedure",
+            "provision_identifier_match": True, "reference_text_match": False,
+            "act_match": "mismatch",
+        }
+        result = audit([annotation], {"case-A": [claim]})
+        summary = compact_summary(result)
+        self.assertEqual(summary["row_counts"]["unmatched_reference_alignment"], 1)
+        self.assertEqual(summary["unmatched_diagnostics"][0]["reason"], "act_name_incompatible_or_unresolved")
+        self.assertEqual(summary["unmatched_diagnostics"][0]["candidate_claims"][0]["act_match"], "mismatch")
+
     def test_missing_case_is_not_a_negative_prediction(self):
         result = audit([{
             "annotation_id": "LR-0003", "case_reference": "case-missing",
