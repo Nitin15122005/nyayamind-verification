@@ -43,9 +43,21 @@ jobs:
         run: python research/prototype/scripts/import_lawyer_review.py
       - name: Regenerate compact alignment audit
         run: python research/prototype/scripts/audit_lawyer_review_alignment.py
-      - name: Upload compact alignment summary
+      - name: Generate case-grouped out-of-fold majority baseline
+        run: python research/prototype/scripts/generate_lawyer_review_baseline.py
+      - name: Evaluate majority baseline against separate lawyer labels
+        run: |
+          python research/prototype/scripts/evaluate_lawyer_review.py \
+            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
+            --predictions research/data/lawyer-review/processed/majority_baseline.oof.csv \
+            --output research/data/lawyer-review/processed/majority_baseline.metrics.json
+      - name: Upload alignment and baseline artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: lawyer-review-alignment-summary
-          path: research/data/lawyer-review/processed/alignment_audit.summary.json
+          name: lawyer-review-alignment-and-baseline
+          path: |
+            research/data/lawyer-review/processed/alignment_audit.summary.json
+            research/data/lawyer-review/processed/majority_baseline.oof.csv
+            research/data/lawyer-review/processed/majority_baseline.oof.json
+            research/data/lawyer-review/processed/majority_baseline.metrics.json
           if-no-files-found: error
