@@ -114,7 +114,7 @@ def collect_model_claims(outputs_dir: Path) -> dict[str, list[dict[str, Any]]]:
                     "act_raw": citation.get("act_raw"), "act_norm": citation.get("act_norm"),
                     "evidence_id": claim.get("evidence_id"),
                     "evidence_match_method": claim.get("evidence_match_method"),
-                    "verdict": claim.get("verdict"), "confidence": claim.get("confidence"),
+                    "verdict": claim.get("verdict"), "confidence": claim.get("confidence"),\n                    "verifier_model": claim.get("verifier_model"),
                 })
     return by_case
 
