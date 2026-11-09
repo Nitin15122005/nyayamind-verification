@@ -54,7 +54,7 @@ class TestLawyerReviewFeatureEvaluation(unittest.TestCase):
                 "annotation_id": f"LR-{i:04d}", "case_reference": f"case-{i:04d}",
                 "statement_correctness": label, "reference_correctness": label,
                 "provision_type": "Section" if i % 2 else "Article",
-                "act_match": "match", "evidence_match_method": "exact_normalized",
+                "act_match": "match", "evidence_match_method": "exact_normalized",\n                "provision_identifier_match": "True", "reference_text_match": "False",
                 "verdict": ["ENTAILED", "CONTRADICTED", "NO_EVIDENCE"][i % 3],
                 "verifier_model": "deberta", "evidence_present": "yes",
                 "confidence": 0.7 + (i % 3) * 0.1, "candidate_count": 1.0,
