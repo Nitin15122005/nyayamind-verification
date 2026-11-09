@@ -17,7 +17,14 @@ section number is rejected; references such as "the same Act" remain provisional
 A statement match can still be ambiguous when one generated statement expands into several
 provision-level claims. The audit reports statement-level ambiguity separately from
 provision-alignment ambiguity. Repeated outputs for the same claim are counted once for
-alignment while source filenames and run-specific verdicts remain traceable.
+alignment while source filenames and run-specific verdicts remain traceable. Same-Act,
+same-number Section/Rule conflicts are surfaced as `resolved_typed_provision_mismatch`:
+they are not silently coerced into exact matches, but they are distinguished from missing
+records. LR-0232 is the current example: the source statement says CrPC Rule 3, whereas
+the lawyer reference says CrPC Section 3. The lawyer correction and the Code text establish
+that Section 3 is “Construction of references”; charge-framing provisions include Section 228.
+The row therefore remains a confirmed incorrect-citation example, not an exact alignment.
+See the [official Code of Criminal Procedure, 1973](https://upload.indiacode.nic.in/showfile?actid=AC_CEN_5_23_000010_197402_1517807320555&filename=a1974-02.pdf&type=actfile).
 
 ## Critical evaluation boundary
 
@@ -35,9 +42,9 @@ applicability. Do not claim legal correctness beyond the annotated task.
 
 ## Next gate
 
-Inspect the revised audit's `num_reference_aligned_matches` and
-`act_match` for each row. Only unambiguous statement-plus-provision pairs with compatible
-Act names may enter a paired evaluation, and only after a target-specific
+Inspect the revised audit's `num_reference_aligned_matches`,
+`num_typed_provision_mismatch_matches`, and `act_match` for each row. Only unambiguous
+statement-plus-provision pairs with compatible Act names may enter a paired evaluation, and only after a target-specific
 prediction rule has been defined and frozen. Statement correctness and reference correctness
 must be scored separately. Keep Partially as a distinct class; do not map NLI labels directly
 to Yes/No/Partially. Use case-grouped splits and case-clustered confidence intervals.
