@@ -199,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
             confidence_level=args.confidence_level,
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(result, indent=2) + "\\n", encoding="utf-8")
+        args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         print(f"ERROR: evaluation failed: {exc}", file=sys.stderr)
         return 2
