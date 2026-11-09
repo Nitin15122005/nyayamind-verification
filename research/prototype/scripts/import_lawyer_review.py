@@ -118,7 +118,7 @@ def build_summary(records: list[dict[str, Any]], source_path: Path) -> dict[str,
         semantic_groups.setdefault(semantic_key, []).append(row["annotation_id"])
     duplicate_tuple_groups = [ids for ids in tuple_groups.values() if len(ids) > 1]
     exact_content_groups = [ids for ids in semantic_groups.values() if len(ids) > 1]
-    pattern = re.compile(r"\\b(?:as\\s+)?(?:row|no\\.?)\\s*#?\\s*(\\d+)\\b", re.IGNORECASE)
+    pattern = re.compile(r"\b(?:as\s+)?(?:row|no\.?)\s*#?\s*(\d+)\b", re.IGNORECASE)
     cross_references = []
     for row in records:
         for field in ("correction_or_clarification", "supporting_legal_authority"):
