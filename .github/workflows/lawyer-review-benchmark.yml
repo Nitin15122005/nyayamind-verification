@@ -1,0 +1,41 @@
+name: Lawyer-review benchmark checks
+
+on:
+  pull_request:
+    paths:
+      - "research/data/lawyer-review/**"
+      - "research/prototype/scripts/import_lawyer_review.py"
+      - "research/prototype/scripts/evaluate_lawyer_review.py"
+      - "research/prototype/tests/test_lawyer_review_*.py"
+      - ".github/workflows/lawyer-review-benchmark.yml"
+  push:
+    branches:
+      - "research/lawyer-annotation-benchmark"
+    paths:
+      - "research/data/lawyer-review/**"
+      - "research/prototype/scripts/import_lawyer_review.py"
+      - "research/prototype/scripts/evaluate_lawyer_review.py"
+      - "research/prototype/tests/test_lawyer_review_*.py"
+      - ".github/workflows/lawyer-review-benchmark.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install minimal benchmark dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas==2.2.2 openpyxl==3.1.5 scikit-learn==1.4.2 pytest==9.1.1
+      - name: Run lawyer-review benchmark unit tests
+        run: |
+          python -m pytest \
+            research/prototype/tests/test_lawyer_review_import.py \
+            research/prototype/tests/test_lawyer_review_evaluation.py -q
