@@ -115,4 +115,4 @@ def collect_model_claims(outputs_dir: Path) -> dict[str, list[dict[str, Any]]]:
                     "evidence_id": claim.get("evidence_id"),
                     "evidence_match_method": claim.get("evidence_match_method"),
                     "verdict": claim.get("verdict"), "confidence": claim.get("confidence"),
-                    "verifier_model": claim.get("verifier_model"),
+                    "verifier_model": claim.get("verifier_model"),\n                })
