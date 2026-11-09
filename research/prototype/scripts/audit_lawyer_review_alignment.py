@@ -83,6 +83,7 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
         statement = norm_text(annotation.get("legal_statement"))
         reference = norm_text(annotation.get("legal_reference"))
         keys = provision_keys(annotation.get("legal_reference"))
+        reference_act = extract_reference_act(annotation.get("legal_reference"))
         candidates = by_case.get(case_id, [])
         statement_matches = [
             candidate for candidate in candidates
@@ -108,7 +109,11 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             elif candidate["source_file"] not in unique[key]["source_files"]:
                 unique[key]["source_files"].append(candidate["source_file"])
         matches = list(unique.values())
-        reference_matches = [m for m in matches if m["provision_identifier_match"] or m["reference_text_match"]]
+        reference_matches = [
+            m for m in matches
+            if (m["provision_identifier_match"] or m["reference_text_match"])
+            and m.get("act_match") != "mismatch"
+        ]
         rows.append({
             "annotation_id": annotation.get("annotation_id"),
             "case_reference": case_id,
