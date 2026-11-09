@@ -163,6 +163,34 @@ def _cluster_bootstrap(frame: pd.DataFrame, y_col: str, pred_col: str, *, reps: 
     }
 
 
+def _paired_cluster_difference_bootstrap(
+    frame: pd.DataFrame, y_col: str, model_col: str, baseline_col: str,
+    *, reps: int, seed: int,
+) -> dict[str, Any]:
+    """Paired case-cluster bootstrap of model-minus-baseline OOF metrics."""
+    groups = {case: group for case, group in frame.groupby("case_reference", sort=True)}
+    cases = list(groups)
+    if len(cases) < 2:
+        raise ValueError("At least two eligible cases are required for paired bootstrap")
+    rng = np.random.default_rng(seed)
+    accuracy_diff, macro_f1_diff = [], []
+    for _ in range(reps):
+        sampled = rng.choice(cases, size=len(cases), replace=True)
+        draw = pd.concat([groups[case] for case in sampled], ignore_index=True)
+        gold = draw[y_col].astype(str).tolist()
+        model = _scores(gold, draw[model_col].astype(str).tolist())
+        baseline = _scores(gold, draw[baseline_col].astype(str).tolist())
+        accuracy_diff.append(model["accuracy"] - baseline["accuracy"])
+        macro_f1_diff.append(model["macro_f1"] - baseline["macro_f1"])
+    return {
+        "method": "paired case_reference cluster percentile bootstrap",
+        "difference": "model minus same-fold majority baseline",
+        "replicates": reps, "seed": seed, "confidence_level": 0.95,
+        "accuracy_difference_interval": [float(x) for x in np.quantile(accuracy_diff, [0.025, 0.975])],
+        "macro_f1_difference_interval": [float(x) for x in np.quantile(macro_f1_diff, [0.025, 0.975])],
+    }
+
+
 def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, bootstrap_reps: int = 2000) -> tuple[pd.DataFrame, dict[str, Any]]:
     if frame.empty:
         raise ValueError("No uniquely aligned rows are eligible")
@@ -218,6 +246,10 @@ def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, boots
             "majority_baseline": majority_scores,
             "majority_case_cluster_bootstrap": _cluster_bootstrap(
                 majority_for_boot, "gold", "prediction", reps=bootstrap_reps, seed=seed
+            ),
+            "paired_model_minus_majority_bootstrap": _paired_cluster_difference_bootstrap(
+                result_frame, target, f"predicted_{target}_model",
+                f"predicted_{target}_majority", reps=bootstrap_reps, seed=seed
             ),
             "folds": fold_info,
         }
