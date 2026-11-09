@@ -13,7 +13,7 @@ from typing import Any
 
 PROVISION_RE = re.compile(
     r"\b(section|sections|article|articles|rule|rules|regulation|regulations)\s+"
-    r"([0-9]+[A-Za-z]?(?:\([^)]+\))*(?:\s*(?:,|and|&)\s*[0-9]+[A-Za-z]?(?:\([^)]+\))*)*)",
+    r"([0-9]+(?:-[A-Za-z0-9]+)?[A-Za-z]?(?:\([^)]+\))*(?:\s*(?:,|and|&)\s*[0-9]+(?:-[A-Za-z0-9]+)?[A-Za-z]?(?:\([^)]+\))*)*)",
     re.IGNORECASE,
 )
 
@@ -26,16 +26,53 @@ def norm_reference(value: Any) -> str:
     return re.sub(r"[^a-z0-9]+", "", norm_text(value))
 
 
+def normalize_provision_number(value: Any) -> str:
+    """Normalize typographic variants such as 295-A and 295A to one identifier."""
+    return re.sub(r"[^a-z0-9()]", "", norm_text(value))
+
+
 def provision_keys(value: Any) -> set[tuple[str, str]]:
     """Extract typed provision identifiers without guessing an Act or legal meaning."""
     result: set[tuple[str, str]] = set()
-    text = norm_text(value)
-    for match in PROVISION_RE.finditer(text):
+    for match in PROVISION_RE.finditer(norm_text(value)):
         kind = match.group(1).rstrip("s")
-        for number in re.findall(r"[0-9]+[a-z]?(?:\([^)]+\))*", match.group(2)):
-            result.add((kind, re.sub(r"\s+", "", number)))
+        for number in re.findall(r"[0-9]+(?:-[a-z0-9]+)?[a-z]?(?:\([^)]+\))*", match.group(2)):
+            result.add((kind, normalize_provision_number(number)))
     return result
 
+
+def extract_reference_act(value: Any) -> str:
+    """Remove provision locators and subsection qualifiers from a lawyer reference."""
+    text = PROVISION_RE.sub(" ", norm_text(value))
+    text = re.sub(r"\bsub[- ]?sections?\s+[0-9a-z()]+", " ", text)
+    text = re.sub(r"\b(?:the|of|and)\b", " ", text)
+    text = re.sub(r"\([^)]*\)", " ", text)
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
+def act_name_match(reference_act: str, candidate_act: Any) -> str:
+    """Return match/mismatch/unspecified; never infer an Act from a bare section number."""
+    if not reference_act:
+        return "unspecified"
+    candidate = norm_text(candidate_act)
+    if not candidate or candidate in {"same act", "ibid"}:
+        return "unspecified"
+    aliases = {
+        "ipc": "indian penal code",
+        "crpc": "code of criminal procedure",
+        "pota": "prevention of terrorism act",
+    }
+    for alias, expansion in aliases.items():
+        reference_act = re.sub(rf"\b{alias}\b", expansion, reference_act)
+        candidate = re.sub(rf"\b{alias}\b", expansion, candidate)
+    reference_core = reference_act.strip()
+    candidate_core = " ".join(
+        token for token in candidate.split()
+        if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
+    )
+    if reference_core == candidate_core or reference_core in candidate_core or candidate_core in reference_core:
+        return "match"
+    return "mismatch"
 
 def read_jsonl(path: Path):
     with path.open(encoding="utf-8") as handle:
@@ -99,8 +136,9 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             if key not in unique:
                 item = dict(candidate, source_files=[candidate["source_file"]])
                 ctype = norm_text(candidate.get("provision_type")).rstrip("s")
-                cnum = re.sub(r"\s+", "", norm_text(candidate.get("provision_number")))
+                cnum = normalize_provision_number(candidate.get("provision_number"))
                 item["provision_identifier_match"] = bool(keys and (ctype, cnum) in keys)
+                item["act_match"] = act_name_match(reference_act, candidate.get("act_norm") or candidate.get("act_raw"))
                 item["reference_text_match"] = bool(reference and reference in {
                     norm_text(candidate.get("act_raw")), norm_text(candidate.get("evidence_id")),
                     norm_text(f"{candidate.get('provision_type') or ''} {candidate.get('provision_number') or ''} {candidate.get('act_raw') or ''}")
@@ -151,8 +189,8 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
         },
         "rows": rows,
         "interpretation": (
-            "Provision alignment is based only on typed provision identifiers parsed from the lawyer's "
-            "reference field or exact normalized reference text. Multiple matching claims remain ambiguous. "
+            "Provision alignment requires a typed provision identifier and compatible Act name where supplied; "
+            "unspecified Act names remain provisional. Multiple matching claims remain ambiguous. "
             "No NLI verdict is mapped to Yes/No/Partially and no model accuracy is computed."
         ),
     }
