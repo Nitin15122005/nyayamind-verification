@@ -108,16 +108,18 @@ def build_feature_frame(annotations: list[dict[str, Any]], audit: dict[str, Any]
     return frame, diagnostics
 
 
-def _pipeline() -> Pipeline:
+def _pipeline(categorical: list[str] | None = None, numeric: list[str] | None = None) -> Pipeline:
+    categorical = CATEGORICAL if categorical is None else categorical
+    numeric = NUMERIC if numeric is None else numeric
     prep = ColumnTransformer([
         ("categorical", Pipeline([
             ("impute", SimpleImputer(strategy="constant", fill_value="MISSING")),
             ("onehot", OneHotEncoder(handle_unknown="ignore")),
-        ]), CATEGORICAL),
+         ]), categorical),
         ("numeric", Pipeline([
             ("impute", SimpleImputer(strategy="median")),
             ("scale", StandardScaler()),
-        ]), NUMERIC),
+         ]), numeric),
     ])
     return Pipeline([
         ("features", prep),
@@ -191,6 +193,30 @@ def _paired_cluster_difference_bootstrap(
     }
 
 
+ABLATION_FEATURES = {
+    "without_provision_identity": {
+        "categorical": ["act_match", "provision_identifier_match"],
+        "numeric": [],
+        "remove": ["provision_type", "act_match", "provision_identifier_match"],
+    },
+    "without_retrieval_evidence": {
+        "categorical": ["evidence_match_method", "evidence_present", "reference_text_match"],
+        "numeric": [],
+        "remove": ["evidence_match_method", "evidence_present", "reference_text_match"],
+    },
+    "without_nli_signal": {
+        "categorical": ["verdict"],
+        "numeric": ["confidence"],
+        "remove": ["verdict", "confidence"],
+    },
+    "without_model_metadata": {
+        "categorical": ["verifier_model"],
+        "numeric": ["candidate_count"],
+        "remove": ["verifier_model", "candidate_count"],
+    },
+}
+
+
 def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, bootstrap_reps: int = 2000) -> tuple[pd.DataFrame, dict[str, Any]]:
     if frame.empty:
         raise ValueError("No uniquely aligned rows are eligible")
@@ -229,6 +255,32 @@ def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, boots
         result_frame[f"predicted_{target}_model"] = model_pred
         result_frame[f"predicted_{target}_majority"] = majority_pred
         all_predictions.append(result_frame)
+        ablation_results = {}
+        for ablation_name, spec in ABLATION_FEATURES.items():
+            cat_cols = [col for col in CATEGORICAL if col not in spec["remove"]]
+            num_cols = [col for col in NUMERIC if col not in spec["remove"]]
+            ablation_pred = pd.Series(index=frame.index, dtype="object")
+            for fold, (train_idx, test_idx) in enumerate(
+                splitter.split(frame, y, groups=frame["case_reference"]), start=1
+            ):
+                train = frame.iloc[train_idx]
+                test = frame.iloc[test_idx]
+                ablation_model = _pipeline(cat_cols, num_cols)
+                ablation_model.fit(train[cat_cols + num_cols], train[target])
+                ablation_pred.iloc[test_idx] = ablation_model.predict(test[cat_cols + num_cols])
+            if ablation_pred.isna().any():
+                raise RuntimeError(f"{target}/{ablation_name}: missing OOF predictions")
+            ablation_frame = frame[["case_reference", target]].copy()
+            ablation_frame["prediction"] = ablation_pred
+            ablation_results[ablation_name] = {
+                "removed_features": spec["remove"],
+                "remaining_features": cat_cols + num_cols,
+                "scores": _scores(y.tolist(), ablation_pred.tolist()),
+                "case_cluster_bootstrap": _cluster_bootstrap(
+                    ablation_frame.rename(columns={target: "gold"}),
+                    "gold", "prediction", reps=bootstrap_reps, seed=seed
+                ),
+            }
         model_scores = _scores(y.tolist(), model_pred.tolist())
         majority_scores = _scores(y.tolist(), majority_pred.tolist())
         model_for_boot = result_frame.rename(columns={
@@ -251,7 +303,7 @@ def evaluate(frame: pd.DataFrame, *, folds: int = 5, seed: int = 20261109, boots
                 result_frame, target, f"predicted_{target}_model",
                 f"predicted_{target}_majority", reps=bootstrap_reps, seed=seed
             ),
-            "folds": fold_info,
+            "folds": fold_info,\n            "feature_ablations": ablation_results,
         }
     predictions = all_predictions[0][["annotation_id", "case_reference"]].copy()
     for result_frame in all_predictions:
