@@ -36,9 +36,6 @@ accelerate==0.29.3
 # SentencePiece-based; transformers cannot load it without this package.
 sentencepiece==0.2.2
 
-# Excel workbook ingestion for the lawyer-reviewed benchmark.
-openpyxl==3.1.5
-
 # PyYAML was already present in the venv (pulled in transitively); pinning
 # it explicitly here since research/prototype/config/prototype.yaml depends
 # on it directly via PyYAML's `yaml` module.
