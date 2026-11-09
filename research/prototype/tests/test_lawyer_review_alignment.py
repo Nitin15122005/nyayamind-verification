@@ -64,6 +64,20 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
             {("section", "295a"), ("section", "120b")},
         )
 
+    def test_act_name_matching_preserves_internal_articles_and_conjunctions(self):
+        from scripts.audit_lawyer_review_alignment import act_name_match, extract_reference_act
+        cases = [
+            ("the Constitution of India ensures equality before the law, Section 14, Article 14",
+             "the Constitution of India ensures equality before the law", "match"),
+            ("the Employees Provident Fund and Miscellaneous Provisions Act, 1952, Section 12",
+             "the Employees Provident Fund and Miscellaneous Provisions Act, 1952", "match"),
+            ("Part II of the Indian Penal Code, Section 34",
+             "the Indian Penal Code 1860", "match"),
+        ]
+        for reference, candidate, expected in cases:
+            with self.subTest(reference=reference):
+                self.assertEqual(act_name_match(extract_reference_act(reference), candidate), expected)
+
     def test_act_name_disambiguates_same_section_number(self):
         annotation = {
             "annotation_id": "LR-ACT", "case_reference": "case-A",
