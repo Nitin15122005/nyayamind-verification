@@ -167,6 +167,8 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             and any(number == normalize_provision_number(m.get("provision_number"))
                     and kind != norm_text(m.get("provision_type")).rstrip("s")
                     for kind, number in keys)
+            and (norm_text(m.get("provision_type")).rstrip("s"),
+                 normalize_provision_number(m.get("provision_number"))) not in keys
             and m.get("act_match") == "match"
         ]
         rows.append({
