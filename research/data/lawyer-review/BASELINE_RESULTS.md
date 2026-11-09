@@ -17,9 +17,10 @@ The regenerated identity/provision audit reports:
 
 - 45/45 annotated cases present in model outputs.
 - 251/251 exact legal-statement text matches.
-- 250/251 rows have a unique provision/Act-aligned candidate (99.60%).
+- 250/251 rows have an exact provision/Act-aligned candidate (99.60%).
 - 0 ambiguous provision alignments.
-- 1 unmatched provision alignment: **LR-0232**. The lawyer reference identifies CrPC Section 3, while the aligned model candidate is parsed as Rule 3 of the CrPC. This is a provision-type mismatch and should remain unmatched until the source claim/parser representation is reviewed.
+- **LR-0232 is a confirmed typed-provision discrepancy, not a missing record.** The lawyer annotation identifies CrPC Section 3, while the generated statement says Rule 3. The lawyer's correction note says no such CrPC Rule 3 exists and identifies Section 3 as “Construction of references”; the official Code likewise titles Section 3 “Construction of references”, while Section 228 is “Framing of charge”. The audit now records this as `resolved_typed_provision_mismatch` rather than an unresolved/unmatched row. It does not coerce Rule 3 into Section 3 or count it as an exact reference match. The underlying statement/reference error remains visible and `reference_correctness=No` is preserved. ([India Code: Code of Criminal Procedure, 1973](https://upload.indiacode.nic.in/showfile?actid=AC_CEN_5_23_000010_197402_1517807320555&filename=a1974-02.pdf&type=actfile); see also [Section 228, Framing of charge](https://indiacode.ecourtsindia.com/crpc/section/228/)).
+- 1 resolved typed-provision discrepancy; 0 unresolved reference-alignment rows.
 - 224/251 rows have multiple statement matches. The statement text is repeated across multiple claim records, so statement identity alone is not sufficient; the typed provision and Act filter is necessary.
 
 Alignment is an identity/record-linkage audit, not an evaluation of NLI or legal correctness.
