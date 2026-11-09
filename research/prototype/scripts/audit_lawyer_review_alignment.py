@@ -310,12 +310,10 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("normalized annotation file contains no rows")
         result = audit(annotations, collect_model_claims(args.outputs_dir))
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "
-", encoding="utf-8")
+        args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         summary = compact_summary(result)
         args.summary_output.parent.mkdir(parents=True, exist_ok=True)
-        args.summary_output.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "
-", encoding="utf-8")
+        args.summary_output.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         print(f"ERROR: alignment audit failed: {exc}", file=sys.stderr)
         return 2
