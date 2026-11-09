@@ -207,11 +207,32 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
     }
 
 
+def compact_summary(result: dict[str, Any]) -> dict[str, Any]:
+    """Small alignment report suitable for CI artifacts and manual review."""
+    rows = result["rows"]
+    def ids(predicate):
+        return [row["annotation_id"] for row in rows if predicate(row)]
+    return {key: value for key, value in result.items() if key != "rows"} | {
+        "row_counts": {
+            "unique_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] == 1)),
+            "ambiguous_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] > 1)),
+            "unmatched_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] == 0)),
+        },
+        "annotation_ids": {
+            "unique_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 1),
+            "ambiguous_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] > 1),
+            "unmatched_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 0),
+        },
+        "interpretation": "Identity/provision alignment only; not model evaluation and no NLI-to-lawyer-label mapping.",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--annotations", type=Path, default=Path("research/data/lawyer-review/processed/lawyer_review.normalized.jsonl"))
     parser.add_argument("--outputs-dir", type=Path, default=Path("research/prototype/outputs"))
     parser.add_argument("--output", type=Path, default=Path("research/data/lawyer-review/processed/alignment_audit.json"))
+    parser.add_argument("--summary-output", type=Path, default=Path("research/data/lawyer-review/processed/alignment_audit.summary.json"))
     args = parser.parse_args(argv)
     if not args.annotations.is_file():
         print(f"ERROR: normalized annotations not found: {args.annotations}", file=sys.stderr)
@@ -226,10 +247,13 @@ def main(argv: list[str] | None = None) -> int:
         result = audit(annotations, collect_model_claims(args.outputs_dir))
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        summary = compact_summary(result)
+        args.summary_output.parent.mkdir(parents=True, exist_ok=True)
+        args.summary_output.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         print(f"ERROR: alignment audit failed: {exc}", file=sys.stderr)
         return 2
-    print(json.dumps({k: v for k, v in result.items() if k != "rows"}, indent=2))
+    print(json.dumps(compact_summary(result), indent=2))
     return 0
 
 
