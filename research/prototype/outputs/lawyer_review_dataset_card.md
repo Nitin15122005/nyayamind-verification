@@ -38,6 +38,7 @@ obtained from the project team and reported only when verified.
 
 ## Release restrictions
 
-Do not publish the raw workbook or derived annotations until permission to redistribute
-the annotations and all supporting legal material has been confirmed. Remove reviewer
-identifiers or confidential notes if present and permitted/required by the data owner.
+The dataset owner has confirmed permission to redistribute the workbook and its
+annotations in this repository. This permission confirmation does not establish that
+reviewer identifiers or confidential comments are absent; inspect these before wider
+reuse and honor any later withdrawal or scope limitation.
