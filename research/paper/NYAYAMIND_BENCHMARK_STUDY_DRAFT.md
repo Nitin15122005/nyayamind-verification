@@ -84,7 +84,11 @@ A separate three-class logistic-regression model is trained for each target usin
 
 The feature set excludes case identifiers, annotation identifiers, raw legal-statement text, correction/clarification text, supporting legal authority, and annotation-derived audit conclusions. Evaluation uses five-fold StratifiedGroupKFold grouped by case. The same eligible rows and fold policy are used for both targets. A same-fold majority comparator is evaluated on the same subset.
 
-### 5.3 Metrics and uncertainty
+### 5.3 Pre-specified feature ablations
+
+The structured-signal evaluator also runs four grouped ablations under the same case-grouped folds: removal of provision-identity features (provision type, Act match, and provision-identifier match); retrieval/evidence features (matching method, evidence presence, and reference-text match); NLI features (verdict and confidence); and model/candidate metadata (verifier model and distinct statement-match count). Each ablation is refit within each training fold and evaluated on the same held-out cases. These analyses are exploratory diagnostics of feature-group contribution, not causal estimates of feature importance.
+
+### 5.4 Metrics and uncertainty
 
 We report accuracy, macro-F1, and per-class precision, recall, F1, and support. Confidence intervals are case-cluster percentile bootstrap intervals (2,000 replicates; seed 20261109). Paired bootstrap intervals resample the same cases for the structured model and majority comparator and report model-minus-majority differences. The paired bootstrap is conditional on fixed out-of-fold predictions; it does not retrain the models inside each replicate.
 
@@ -136,7 +140,7 @@ NyayaMind addresses a narrower operational problem: checking the statutory groun
 6. No lawyer-target fine-tuning was performed.
 7. NLI outputs are not legal truth labels. Annotation agreement is not legal accuracy.
 8. The correction component has not demonstrated reliable scalable correction and should not be represented as an autonomous legal editor.
-9. The system is a research prototype, not a substitute for legal research, professional judgment, or review by a qualified lawyer.
+10. The system is a research prototype, not a substitute for legal research, professional judgment, or review by a qualified lawyer.
 
 ## 10. Conclusion
 
