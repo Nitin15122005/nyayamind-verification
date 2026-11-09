@@ -161,7 +161,7 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
             "provision_type": "Rule", "provision_number": "3",
             "act_raw": "Code of Criminal Procedure 1973",
             "act_norm": "code of criminal procedure 1973",
-            "evidence_id": "Code of Criminal Procedure 1973 Section 3",
+            "evidence_id": "Code of Criminal Procedure 1973, Section 3",
             "verdict": "CONTRADICTED",
         }
         row = audit([annotation], {"case-A": [claim]})["rows"][0]
