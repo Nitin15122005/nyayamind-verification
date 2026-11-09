@@ -62,6 +62,9 @@ The importer does not create a split or imply that the workbook is training data
 
 ## Evaluation rules
 
+The executable scoring contract, metric definitions, case-cluster bootstrap procedure, and publication reporting requirements are specified in [`EVALUATION_PROTOCOL.md`](EVALUATION_PROTOCOL.md). Read and follow that protocol before producing or reporting any model score.
+
+
 - Report statement correctness and legal-reference correctness separately.
 - Preserve the three-way labels. If a binary analysis is later justified, document the
   mapping and report the original three-way results as the primary analysis.
