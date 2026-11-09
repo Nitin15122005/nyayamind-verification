@@ -82,6 +82,15 @@ class TestLawyerReviewFeatureEvaluation(unittest.TestCase):
             self.assertIn(f"predicted_{target}_model", predictions.columns)
             self.assertIn(f"predicted_{target}_majority", predictions.columns)
             self.assertEqual(metrics["targets"][target]["n"], 30)
+            ablations = metrics["targets"][target]["feature_ablations"]
+            self.assertEqual(set(ablations), {
+                "without_provision_identity", "without_retrieval_evidence",
+                "without_nli_signal", "without_model_metadata",
+            })
+            for ablation in ablations.values():
+                self.assertEqual(ablation["scores"]["n"], 30)
+                self.assertTrue(ablation["removed_features"])
+
             paired = metrics["targets"][target]["paired_model_minus_majority_bootstrap"]
             self.assertEqual(paired["replicates"], 100)
             self.assertEqual(len(paired["accuracy_difference_interval"]), 2)
