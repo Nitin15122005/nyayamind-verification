@@ -67,6 +67,7 @@ jobs:
         with:
           name: lawyer-review-alignment-and-baseline
           path: |
+            research/data/lawyer-review/processed/lawyer_review.summary.json
             research/data/lawyer-review/processed/alignment_audit.summary.json
             research/data/lawyer-review/processed/majority_baseline.oof.csv
             research/data/lawyer-review/processed/majority_baseline.oof.json
