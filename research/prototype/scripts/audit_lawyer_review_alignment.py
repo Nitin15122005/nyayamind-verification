@@ -158,6 +158,17 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             if (m["provision_identifier_match"] or m["reference_text_match"])
             and m.get("act_match") != "mismatch"
         ]
+        # A same-Act, same-number Section/Rule disagreement is a confirmed citation
+        # discrepancy, not a missing record. Preserve it as an explicit error state;
+        # never coerce the provision type or count it as an exact reference match.
+        typed_provision_mismatches = [
+            m for m in matches
+            if keys
+            and any(number == normalize_provision_number(m.get("provision_number"))
+                    and kind != norm_text(m.get("provision_type")).rstrip("s")
+                    for kind, number in keys)
+            and m.get("act_match") == "match"
+        ]
         rows.append({
             "annotation_id": annotation.get("annotation_id"),
             "case_reference": case_id,
@@ -172,6 +183,12 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             "exact_statement_match": bool(matches),
             "exact_statement_and_reference_match": bool(reference_matches),
             "num_distinct_statement_matches": len(matches),
+            "num_typed_provision_mismatch_matches": len({
+                (m.get("document_id"), m.get("claim_id"), m.get("provision_type"),
+                 normalize_provision_number(m.get("provision_number")), norm_text(m.get("act_norm")))
+                for m in typed_provision_mismatches
+            }),
+            "typed_provision_mismatch_claims": typed_provision_mismatches,
             "num_reference_aligned_matches": len({
                 (m.get("document_id"), m.get("claim_id"), m.get("provision_type"),
                  normalize_provision_number(m.get("provision_number")), norm_text(m.get("act_norm")))
@@ -194,6 +211,7 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
         "rows_with_ambiguous_multiple_statement_matches": sum(r["num_distinct_statement_matches"] > 1 for r in rows),
         "rows_with_ambiguous_reference_alignment": sum(r["num_reference_aligned_matches"] > 1 for r in rows),
         "rows_with_unique_reference_alignment": sum(r["num_reference_aligned_matches"] == 1 for r in rows),
+        "rows_with_typed_provision_mismatch": sum(r["num_typed_provision_mismatch_matches"] > 0 for r in rows),
         "row_coverage": {
             "case_found": sum(r["case_found_in_model_outputs"] for r in rows) / n if n else 0.0,
             "exact_statement_match": sum(r["exact_statement_match"] for r in rows) / n if n else 0.0,
@@ -213,7 +231,9 @@ def compact_summary(result: dict[str, Any]) -> dict[str, Any]:
     rows = result["rows"]
     def ids(predicate):
         return [row["annotation_id"] for row in rows if predicate(row)]
-    unmatched = [row for row in rows if row["num_reference_aligned_matches"] == 0]
+    resolved_type_mismatches = [row for row in rows if row["num_typed_provision_mismatch_matches"] > 0]
+    unmatched = [row for row in rows if row["num_reference_aligned_matches"] == 0
+                 and row["num_typed_provision_mismatch_matches"] == 0]
     unmatched_diagnostics = []
     for row in unmatched:
         candidates = row["matched_model_claims"]
@@ -246,13 +266,23 @@ def compact_summary(result: dict[str, Any]) -> dict[str, Any]:
         "row_counts": {
             "unique_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] == 1)),
             "ambiguous_reference_alignment": len(ids(lambda r: r["num_reference_aligned_matches"] > 1)),
+            "resolved_typed_provision_mismatch": len(resolved_type_mismatches),
             "unmatched_reference_alignment": len(unmatched),
         },
         "annotation_ids": {
             "unique_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 1),
             "ambiguous_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] > 1),
-            "unmatched_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 0),
+            "resolved_typed_provision_mismatch": ids(lambda r: r["num_typed_provision_mismatch_matches"] > 0),
+            "unmatched_reference_alignment": ids(lambda r: r["num_reference_aligned_matches"] == 0 and r["num_typed_provision_mismatch_matches"] == 0),
         },
+        "resolved_typed_provision_mismatch_diagnostics": [{
+            "annotation_id": row["annotation_id"],
+            "legal_reference": row["legal_reference"],
+            "candidate_claims": [{
+                "claim_id": m.get("claim_id"), "provision_type": m.get("provision_type"),
+                "provision_number": m.get("provision_number"), "act_raw": m.get("act_raw"),
+            } for m in row["typed_provision_mismatch_claims"]],
+        } for row in resolved_type_mismatches],
         "unmatched_diagnostics": unmatched_diagnostics,
         "interpretation": "Identity/provision alignment only; not model evaluation and no NLI-to-lawyer-label mapping.",
     }
