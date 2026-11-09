@@ -127,6 +127,28 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
         self.assertEqual(summary["unmatched_diagnostics"][0]["reason"], "act_name_incompatible_or_unresolved")
         self.assertEqual(summary["unmatched_diagnostics"][0]["candidate_claims"][0]["act_match"], "mismatch")
 
+    def test_same_act_same_number_type_error_is_resolved_not_silently_matched(self):
+        annotation = {
+            "annotation_id": "LR-TYPE", "case_reference": "case-A",
+            "legal_statement": "Rule 3 of the CrPC governs charge framing.",
+            "legal_reference": "Code of Criminal Procedure 1973, Section 3",
+        }
+        claim = {
+            "document_id": "case-A", "source_file": "run.jsonl", "claim_id": "c1",
+            "claim_text": annotation["legal_statement"], "assertion_text": "",
+            "provision_type": "Rule", "provision_number": "3",
+            "act_raw": "Code of Criminal Procedure 1973",
+            "act_norm": "code of criminal procedure 1973", "verdict": "CONTRADICTED",
+        }
+        result = audit([annotation], {"case-A": [claim]})
+        row = result["rows"][0]
+        self.assertEqual(row["num_reference_aligned_matches"], 0)
+        self.assertEqual(row["num_typed_provision_mismatch_matches"], 1)
+        from scripts.audit_lawyer_review_alignment import compact_summary
+        summary = compact_summary(result)
+        self.assertEqual(summary["row_counts"]["resolved_typed_provision_mismatch"], 1)
+        self.assertEqual(summary["row_counts"]["unmatched_reference_alignment"], 0)
+
     def test_missing_case_is_not_a_negative_prediction(self):
         result = audit([{
             "annotation_id": "LR-0003", "case_reference": "case-missing",
