@@ -44,8 +44,10 @@ def provision_keys(value: Any) -> set[tuple[str, str]]:
 def extract_reference_act(value: Any) -> str:
     """Remove provision locators and subsection qualifiers from a lawyer reference."""
     text = PROVISION_RE.sub(" ", norm_text(value))
+    text = re.sub(r"\b(?:sub[- ]?section|subsection|clause|paragraph)\s+[0-9]+[a-z]?(?:\([^)]+\))*", " ", text)
     text = re.sub(r"\b(?:the|and)\b", " ", text)
     text = re.sub(r"\([^)]*\)", " ", text)
+    text = re.sub(r"\b(?:18|19|20)\d{2}\b", " ", text)
     normalized = re.sub(r"[^a-z0-9]+", " ", text).strip()
     return "" if normalized in {"same act", "ibid"} else normalized
 
