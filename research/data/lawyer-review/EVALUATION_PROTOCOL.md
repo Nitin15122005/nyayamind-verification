@@ -72,7 +72,18 @@ The predeclared eligibility rule is an exact legal-statement match and exactly o
 
 Use five-fold StratifiedGroupKFold with `case_reference` as the group, and compare against a training-fold majority baseline on the exact same eligible rows and folds. Report both targets separately, including per-class metrics, confusion matrices, and 95% case-cluster bootstrap intervals. The eligibility subset and exclusions must be reported alongside every result. These are exploratory annotation-agreement results; they are not legal accuracy, and improvement in macro-F1 alone does not establish overall superiority if accuracy falls or intervals overlap.
 
-## 7. Alignment is not evaluation
+## 7. Pre-specified feature ablations
+
+The structured-signal evaluator additionally runs four grouped ablations using the same case-grouped folds, labels, training partitions, and model class as the full feature model:
+
+- **Without provision identity:** remove provision type, Act match, and provision-identifier match.
+- **Without retrieval/evidence signals:** remove evidence matching method, evidence presence, and reference-text match.
+- **Without NLI signals:** remove NLI verdict and confidence.
+- **Without model/candidate metadata:** remove verifier model and distinct statement-match count.
+
+Each ablation is trained independently inside each training fold and evaluated only on that fold's held-out cases. It reports accuracy, macro-F1, per-class metrics, confusion matrix, and case-cluster bootstrap intervals. These are exploratory feature-contribution diagnostics, not causal feature-importance estimates. Because the ablations are evaluated on the same small dataset and fixed split design, interpret differences cautiously; do not claim statistical superiority from overlapping or unpaired intervals.
+
+## 8. Alignment is not evaluation
 
 The alignment audit establishes whether lawyer rows can be linked to model-generated claim records. It does not establish prediction correctness. Report separately:
 
@@ -84,7 +95,7 @@ The alignment audit establishes whether lawyer rows can be linked to model-gener
 
 Do not silently discard ambiguous or unmatched rows. Publish their counts and a prespecified inclusion rule. Do not use a stale audit after changing the alignment script.
 
-## 8. Reproduction
+## 9. Reproduction
 
 From the repository root, after importing the authorized workbook and producing an explicit prediction CSV:
 
@@ -100,6 +111,6 @@ python research/prototype/scripts/evaluate_lawyer_review.py \
 
 The audit command additionally requires the frozen model output JSONL files in `research/prototype/outputs/`. Keep raw workbook, private predictions, and generated audit artifacts out of public Git unless redistribution and disclosure are authorized.
 
-## 9. Minimum reporting language
+## 10. Minimum reporting language
 
 Describe scores as **agreement with the supplied lawyer annotations**, not legal accuracy or universal legal truth. State the number of annotation rows and unique cases, the two target definitions, label distribution, case-cluster bootstrap method, and dataset limitations. Do not claim inter-annotator agreement, adjudication, reviewer representativeness, or external validity unless independently documented.
