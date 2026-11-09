@@ -7,7 +7,8 @@ on:
       - "research/prototype/scripts/import_lawyer_review.py"
       - "research/prototype/scripts/evaluate_lawyer_review.py"
       - "research/prototype/scripts/audit_lawyer_review_alignment.py"
-      - "research/prototype/scripts/generate_lawyer_review_baseline.py"\n      - "research/prototype/scripts/evaluate_lawyer_review_features.py"
+      - "research/prototype/scripts/generate_lawyer_review_baseline.py"
+      - "research/prototype/scripts/evaluate_lawyer_review_features.py"
       - "research/prototype/tests/test_lawyer_review_*.py"
       - ".github/workflows/lawyer-review-benchmark.yml"
   push:
@@ -18,6 +19,7 @@ on:
       - "research/prototype/scripts/import_lawyer_review.py"
       - "research/prototype/scripts/evaluate_lawyer_review.py"
       - "research/prototype/scripts/audit_lawyer_review_alignment.py"
+      - "research/prototype/scripts/evaluate_lawyer_review_features.py"
       - "research/prototype/tests/test_lawyer_review_*.py"
       - ".github/workflows/lawyer-review-benchmark.yml"
 
@@ -52,7 +54,14 @@ jobs:
             --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
             --predictions research/data/lawyer-review/processed/majority_baseline.oof.csv \
             --output research/data/lawyer-review/processed/majority_baseline.metrics.json
-      - name: Evaluate structured verifier signals against lawyer labels\n        run: |\n          python research/prototype/scripts/evaluate_lawyer_review_features.py \\\n            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \\\n            --audit research/data/lawyer-review/processed/alignment_audit.json \\\n            --predictions research/data/lawyer-review/processed/structured_signals.oof.csv \\\n            --metrics research/data/lawyer-review/processed/structured_signals.metrics.json\n      - name: Upload alignment and baseline artifacts
+      - name: Evaluate structured verifier signals against lawyer labels
+        run: |
+          python research/prototype/scripts/evaluate_lawyer_review_features.py \\
+            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \\
+            --audit research/data/lawyer-review/processed/alignment_audit.json \\
+            --predictions research/data/lawyer-review/processed/structured_signals.oof.csv \\
+            --metrics research/data/lawyer-review/processed/structured_signals.metrics.json
+      - name: Upload alignment and baseline artifacts
         uses: actions/upload-artifact@v4
         with:
           name: lawyer-review-alignment-and-baseline
@@ -60,5 +69,7 @@ jobs:
             research/data/lawyer-review/processed/alignment_audit.summary.json
             research/data/lawyer-review/processed/majority_baseline.oof.csv
             research/data/lawyer-review/processed/majority_baseline.oof.json
-            research/data/lawyer-review/processed/majority_baseline.metrics.json\n            research/data/lawyer-review/processed/structured_signals.oof.csv\n            research/data/lawyer-review/processed/structured_signals.metrics.json
+            research/data/lawyer-review/processed/majority_baseline.metrics.json
+            research/data/lawyer-review/processed/structured_signals.oof.csv
+            research/data/lawyer-review/processed/structured_signals.metrics.json
           if-no-files-found: error
