@@ -40,6 +40,8 @@ The bootstrap resamples unique `case_reference` clusters with replacement and re
 
 The intervals quantify bootstrap sampling variability only. They do not correct annotation noise, reviewer disagreement, selection bias, or systematic dataset limitations. With only 45 unique cases, uncertainty may remain substantial; interpret intervals cautiously.
 
+For the structured-signal experiment, also report a paired case-cluster bootstrap of the out-of-fold model-minus-same-fold-majority metric difference. Resample the same `case_reference` clusters for both prediction sets so the comparison remains paired. These intervals are conditional on the fixed out-of-fold predictions; they do not include model refitting inside each bootstrap replicate and must not be described as full training-procedure uncertainty.
+
 ## 4. Leakage and split policy
 
 The annotation row is not an independent case. Any future train/dev/test split or cross-validation must group by `case_reference`. Never randomly partition rows from the same case across partitions.
