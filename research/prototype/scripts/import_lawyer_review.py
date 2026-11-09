@@ -92,12 +92,14 @@ def normalize_dataframe(frame: pd.DataFrame) -> list[dict[str, Any]]:
             raise DatasetValidationError(f"Excel row {excel_row}: missing legal reference")
 
         row["statement_correctness"] = normalize_label(
-            source["Is the legal statement correct? (Yes / No/ Partially)",
-                   field="statement_correctness", row_number=excel_row
+            source["Is the legal statement correct? (Yes / No/ Partially)"],
+            field="statement_correctness",
+            row_number=excel_row,
         )
         row["reference_correctness"] = normalize_label(
-            source["Is the legal reference correct?  (Yes / No/ Partially)",
-                   field="reference_correctness", row_number=excel_row
+            source["Is the legal reference correct?  (Yes / No/ Partially)"],
+            field="reference_correctness",
+            row_number=excel_row,
         )
         row["annotation_id"] = f"LR-{int(float(row['source_row_number'])):04d}"
         row["source_excel_row"] = excel_row
