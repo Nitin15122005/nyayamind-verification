@@ -65,7 +65,10 @@ def act_name_match(reference_act: str, candidate_act: Any) -> str:
     for alias, expansion in aliases.items():
         reference_act = re.sub(rf"\b{alias}\b", expansion, reference_act)
         candidate = re.sub(rf"\b{alias}\b", expansion, candidate)
-    reference_core = reference_act.strip()
+    reference_core = " ".join(
+        token for token in reference_act.split()
+        if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
+    )
     candidate_core = " ".join(
         token for token in candidate.split()
         if not re.fullmatch(r"(?:18|19|20)\d{2}", token)
@@ -166,7 +169,11 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             "exact_statement_match": bool(matches),
             "exact_statement_and_reference_match": bool(reference_matches),
             "num_distinct_statement_matches": len(matches),
-            "num_reference_aligned_matches": len(reference_matches),
+            "num_reference_aligned_matches": len({
+                (m.get("document_id"), m.get("claim_id"), m.get("provision_type"),
+                 normalize_provision_number(m.get("provision_number")), norm_text(m.get("act_norm")))
+                for m in reference_matches
+            }),
             "matched_model_claims": matches,
         })
 
