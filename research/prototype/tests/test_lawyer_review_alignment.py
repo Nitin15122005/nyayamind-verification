@@ -58,6 +58,41 @@ class TestLawyerReviewAlignmentAudit(unittest.TestCase):
         self.assertEqual(row["num_distinct_statement_matches"], 3)
         self.assertEqual(row["num_reference_aligned_matches"], 1)
 
+    def test_hyphenated_provision_identifiers(self):
+        self.assertEqual(
+            provision_keys("The Indian Penal Code 1860, Section 295-A and Section 120-B"),
+            {("section", "295a"), ("section", "120b")},
+        )
+
+    def test_act_name_disambiguates_same_section_number(self):
+        annotation = {
+            "annotation_id": "LR-ACT", "case_reference": "case-A",
+            "legal_statement": "Section 3 applies to this case.",
+            "legal_reference": "The Prevention of Terrorism Act (POTA), Section 3, Sub-section 2",
+        }
+        claims = [
+            {
+                "document_id": "case-A", "source_file": "run.jsonl", "claim_id": "c1",
+                "claim_text": "Section 3 applies to this case.", "assertion_text": "",
+                "provision_type": "Section", "provision_number": "3",
+                "act_raw": "The Prevention of Terrorism Act (POTA)",
+                "act_norm": "prevention of terrorism act", "verdict": "NO_EVIDENCE",
+            },
+            {
+                "document_id": "case-A", "source_file": "run.jsonl", "claim_id": "c2",
+                "claim_text": "Section 3 applies to this case.", "assertion_text": "",
+                "provision_type": "Section", "provision_number": "3",
+                "act_raw": "The Code of Criminal Procedure (CrPC), 1973",
+                "act_norm": "code of criminal procedure 1973", "verdict": "NO_EVIDENCE",
+            },
+        ]
+        row = audit([annotation], {"case-A": claims})["rows"][0]
+        self.assertEqual(row["num_reference_aligned_matches"], 1)
+        self.assertEqual(
+            [c["act_match"] for c in row["matched_model_claims"]],
+            ["match", "mismatch"],
+        )
+
     def test_missing_case_is_not_a_negative_prediction(self):
         result = audit([{
             "annotation_id": "LR-0003", "case_reference": "case-missing",
