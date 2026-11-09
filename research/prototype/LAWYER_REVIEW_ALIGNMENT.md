@@ -9,14 +9,15 @@ python research/prototype/scripts/audit_lawyer_review_alignment.py
 The audit compares normalized workbook rows with committed model-output JSONL files under
 `research/prototype/outputs/`. It exports the lawyer's statement, provision reference,
 both independent labels, correction/authority fields, and candidate model claims. Candidate
-claims are annotated with a typed provision-identifier match where the reference field
-contains parseable Section/Article/Rule/Regulation identifiers. Exact normalized reference
-text is a secondary match signal.
+claims are annotated with typed provision-identifier and Act-name compatibility checks.
+Hyphenated provision identifiers (for example, 295-A and 120-B) are normalized for
+comparison. Where the lawyer reference names an Act, a different Act with the same
+section number is rejected; references such as "the same Act" remain provisional.
 
 A statement match can still be ambiguous when one generated statement expands into several
-provision-level claims. The audit reports the number of candidates and the subset aligned to
-the provision identifier; it does not silently choose one. Repeated runs are deduplicated by
-claim content while source filenames remain traceable.
+provision-level claims. The audit reports statement-level ambiguity separately from
+provision-alignment ambiguity. Repeated outputs for the same claim are counted once for
+alignment while source filenames and run-specific verdicts remain traceable.
 
 ## Critical evaluation boundary
 
@@ -34,8 +35,9 @@ applicability. Do not claim legal correctness beyond the annotated task.
 
 ## Next gate
 
-Inspect the revised audit's `num_reference_aligned_matches` for each row. Only unambiguous
-statement-plus-provision pairs may enter a paired evaluation, and only after a target-specific
+Inspect the revised audit's `num_reference_aligned_matches` and
+`act_match` for each row. Only unambiguous statement-plus-provision pairs with compatible
+Act names may enter a paired evaluation, and only after a target-specific
 prediction rule has been defined and frozen. Statement correctness and reference correctness
 must be scored separately. Keep Partially as a distinct class; do not map NLI labels directly
 to Yes/No/Partially. Use case-grouped splits and case-clustered confidence intervals.
