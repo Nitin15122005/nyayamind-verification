@@ -1,0 +1,79 @@
+# Lawyer-review evaluation protocol
+
+**Status:** protocol specification; no model performance result is implied by this document.
+
+## 1. Intended construct
+
+The lawyer-reviewed workbook supplies two independent claim-level targets:
+
+- `statement_correctness`: whether the proposition in the supplied legal statement is correct.
+- `reference_correctness`: whether the Act/provision cited for that statement is correct.
+
+Each target has three labels: `Yes`, `No`, and `Partially`. The targets must be evaluated and reported separately. Do not combine them into one score.
+
+The source workbook's instructions state that the underlying judgments and judgment dates were not supplied. Therefore, the annotations do not establish case-specific relevance, historical applicability on a judgment date, factual accuracy of a case summary, or correctness of a judgment outcome.
+
+## 2. Prediction contract
+
+The evaluation script accepts a prediction CSV with exactly one row per annotation ID and these columns:
+
+- `annotation_id`
+- `predicted_statement_correctness`
+- `predicted_reference_correctness`
+
+Predictions must use the same three labels as the annotations. The script rejects missing/extra IDs, duplicate IDs, null IDs, and unknown labels. It never maps NLI outputs to lawyer labels.
+
+**Important:** the current NLI classes (`ENTAILED`, `CONTRADICTED`, `NOT_ENOUGH_INFORMATION`, and `NO_EVIDENCE`) are not equivalent to the lawyer labels. In particular, neither `NOT_ENOUGH_INFORMATION` nor `NO_EVIDENCE` is a synonym for `Partially` or `No`. A prediction file must come from a separately specified, construct-valid decision rule or a model explicitly trained to predict these lawyer targets. Do not create a score by renaming NLI labels.
+
+## 3. Required metrics
+
+For each target independently, report:
+
+- sample size (annotation rows) and number of unique cases;
+- accuracy;
+- macro precision, macro recall, and macro F1;
+- per-class precision, recall, F1, and support;
+- confusion matrix with the fixed order `Yes`, `No`, `Partially`;
+- 95% case-cluster bootstrap percentile intervals for accuracy and macro F1.
+
+The bootstrap resamples unique `case_reference` clusters with replacement and retains all annotation rows belonging to each sampled case. This accounts for within-case clustering better than treating all annotation rows as independent. The default is 2,000 replicates and seed 20261109. Report the replicate count and seed for reproducibility.
+
+The intervals quantify bootstrap sampling variability only. They do not correct annotation noise, reviewer disagreement, selection bias, or systematic dataset limitations. With only 45 unique cases, uncertainty may remain substantial; interpret intervals cautiously.
+
+## 4. Leakage and split policy
+
+The annotation row is not an independent case. Any future train/dev/test split or cross-validation must group by `case_reference`. Never randomly partition rows from the same case across partitions.
+
+Do not use lawyer correction text, supporting authorities, or post-hoc audit findings as model input when evaluating predictions unless the experiment explicitly studies that information and prevents target leakage. Freeze model versions, prompts, thresholds, evidence corpus, retrieval configuration, and prediction-generation code before scoring.
+
+## 5. Alignment is not evaluation
+
+The alignment audit establishes whether lawyer rows can be linked to model-generated claim records. It does not establish prediction correctness. Report separately:
+
+1. case-level presence in model outputs;
+2. exact statement alignment;
+3. provision/Act candidate alignment;
+4. ambiguous and unmatched rows;
+5. model metrics on a predeclared eligible set, if a valid prediction target and prediction file exist.
+
+Do not silently discard ambiguous or unmatched rows. Publish their counts and a prespecified inclusion rule. Do not use a stale audit after changing the alignment script.
+
+## 6. Reproduction
+
+From the repository root, after importing the authorized workbook and producing an explicit prediction CSV:
+
+```bash
+python research/prototype/scripts/import_lawyer_review.py
+python research/prototype/scripts/audit_lawyer_review_alignment.py
+python research/prototype/scripts/evaluate_lawyer_review.py \
+  --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
+  --predictions PATH/TO/FROZEN_PREDICTIONS.csv \
+  --output research/data/lawyer-review/processed/evaluation_metrics.json \
+  --bootstrap-replicates 2000 --seed 20261109 --confidence-level 0.95
+```
+
+The audit command additionally requires the frozen model output JSONL files in `research/prototype/outputs/`. Keep raw workbook, private predictions, and generated audit artifacts out of public Git unless redistribution and disclosure are authorized.
+
+## 7. Minimum reporting language
+
+Describe scores as **agreement with the supplied lawyer annotations**, not legal accuracy or universal legal truth. State the number of annotation rows and unique cases, the two target definitions, label distribution, case-cluster bootstrap method, and dataset limitations. Do not claim inter-annotator agreement, adjudication, reviewer representativeness, or external validity unless independently documented.
