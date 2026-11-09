@@ -4,10 +4,10 @@ on:
   pull_request:
     paths:
       - "research/data/lawyer-review/**"
+      - "research/paper/**"
       - "research/prototype/scripts/import_lawyer_review.py"
       - "research/prototype/scripts/evaluate_lawyer_review.py"
       - "research/prototype/scripts/audit_lawyer_review_alignment.py"
-      - "research/prototype/scripts/generate_lawyer_review_baseline.py"
       - "research/prototype/scripts/generate_lawyer_review_baseline.py"
       - "research/prototype/scripts/evaluate_lawyer_review_features.py"
       - "research/prototype/tests/test_lawyer_review_*.py"
