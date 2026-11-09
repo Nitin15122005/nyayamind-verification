@@ -27,7 +27,7 @@ LABELS = ["Yes", "No", "Partially"]
 TARGETS = ["statement_correctness", "reference_correctness"]
 CATEGORICAL = [
     "provision_type", "act_match", "evidence_match_method", "verdict",
-    "verifier_model", "evidence_present",
+    "verifier_model", "evidence_present", "provision_identifier_match", "reference_text_match",
 ]
 NUMERIC = ["confidence", "candidate_count"]
 
@@ -85,9 +85,9 @@ def build_feature_frame(annotations: list[dict[str, Any]], audit: dict[str, Any]
             "evidence_match_method": claim.get("evidence_match_method") or "MISSING",
             "verdict": claim.get("verdict") or "MISSING",
             "verifier_model": claim.get("verifier_model") or "MISSING",
-            "evidence_present": "yes" if claim.get("evidence_id") and claim.get("evidence_text") else "no",
+            "evidence_present": "yes" if claim.get("evidence_id") and claim.get("evidence_text") else "no",\n            "provision_identifier_match": str(bool(claim.get("provision_identifier_match"))),\n            "reference_text_match": str(bool(claim.get("reference_text_match")),
             "confidence": confidence,
-            "candidate_count": float(row.get("num_candidate_claims_for_case", 0)),
+            "candidate_count": float(row.get("num_distinct_statement_matches", 0)),
         })
     frame = pd.DataFrame(records)
     if not frame.empty:
