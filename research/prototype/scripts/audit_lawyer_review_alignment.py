@@ -12,14 +12,14 @@ from typing import Any
 
 
 PROVISION_RE = re.compile(
-    r"\\b(section|sections|article|articles|rule|rules|regulation|regulations)\\s+"
-    r"([0-9]+[A-Za-z]?(?:\\([^)]+\\))*(?:\\s*(?:,|and|&)\\s*[0-9]+[A-Za-z]?(?:\\([^)]+\\))*)*)",
+    r"\b(section|sections|article|articles|rule|rules|regulation|regulations)\s+"
+    r"([0-9]+[A-Za-z]?(?:\([^)]+\))*(?:\s*(?:,|and|&)\s*[0-9]+[A-Za-z]?(?:\([^)]+\))*)*)",
     re.IGNORECASE,
 )
 
 
 def norm_text(value: Any) -> str:
-    return re.sub(r"\\s+", " ", str(value or "").casefold()).strip()
+    return re.sub(r"\s+", " ", str(value or "").casefold()).strip()
 
 
 def norm_reference(value: Any) -> str:
@@ -32,8 +32,8 @@ def provision_keys(value: Any) -> set[tuple[str, str]]:
     text = norm_text(value)
     for match in PROVISION_RE.finditer(text):
         kind = match.group(1).rstrip("s")
-        for number in re.findall(r"[0-9]+[a-z]?(?:\\([^)]+\\))*", match.group(2)):
-            result.add((kind, re.sub(r"\\s+", "", number)))
+        for number in re.findall(r"[0-9]+[a-z]?(?:\([^)]+\))*", match.group(2)):
+            result.add((kind, re.sub(r"\s+", "", number)))
     return result
 
 
@@ -98,7 +98,7 @@ def audit(annotations: list[dict[str, Any]], by_case: dict[str, list[dict[str, A
             if key not in unique:
                 item = dict(candidate, source_files=[candidate["source_file"]])
                 ctype = norm_text(candidate.get("provision_type")).rstrip("s")
-                cnum = re.sub(r"\\s+", "", norm_text(candidate.get("provision_number")))
+                cnum = re.sub(r"\s+", "", norm_text(candidate.get("provision_number")))
                 item["provision_identifier_match"] = bool(keys and (ctype, cnum) in keys)
                 item["reference_text_match"] = bool(reference and reference in {
                     norm_text(candidate.get("act_raw")), norm_text(candidate.get("evidence_id")),
