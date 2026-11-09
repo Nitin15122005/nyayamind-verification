@@ -81,10 +81,13 @@ def normalize_dataframe(frame: pd.DataFrame) -> list[dict[str, Any]]:
             row_number=excel_row,
         )
         try:
-            source_number = int(float(record["source_row_number"]))
+            numeric_source_number = float(record["source_row_number"])
+            if not numeric_source_number.is_integer() or numeric_source_number <= 0:
+                raise ValueError("No. must be a positive integer")
+            source_number = int(numeric_source_number)
         except (TypeError, ValueError) as exc:
             raise DatasetValidationError(
-                f"Excel row {excel_row}: No. must be an integer"
+                f"Excel row {excel_row}: No. must be a positive integer"
             ) from exc
         record["source_row_number"] = source_number
         record["annotation_id"] = f"LR-{source_number:04d}"
