@@ -16,8 +16,9 @@ section number is rejected; references such as "the same Act" remain provisional
 
 A statement match can still be ambiguous when one generated statement expands into several
 provision-level claims. The audit reports statement-level ambiguity separately from
-provision-alignment ambiguity. Repeated outputs for the same claim are counted once for
-alignment while source filenames and run-specific verdicts remain traceable. Same-Act,
+provision-alignment ambiguity. Repeated executions are grouped by stable claim/provision/model identity. Source filenames
+are retained; if verdict or evidence-match method differs across repeated runs, the
+aggregated field is marked `VARIANT` rather than arbitrarily selecting one run's value. Same-Act,
 same-number Section/Rule conflicts are surfaced as `resolved_typed_provision_mismatch`:
 they are not silently coerced into exact matches, but they are distinguished from missing
 records. LR-0232 is the current example: the source statement says CrPC Rule 3, whereas
