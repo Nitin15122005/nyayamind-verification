@@ -16,6 +16,7 @@ on:
       - "research/data/lawyer-review/**"
       - "research/prototype/scripts/import_lawyer_review.py"
       - "research/prototype/scripts/evaluate_lawyer_review.py"
+      - "research/prototype/scripts/audit_lawyer_review_alignment.py"
       - "research/prototype/tests/test_lawyer_review_*.py"
       - ".github/workflows/lawyer-review-benchmark.yml"
 
@@ -38,6 +39,8 @@ jobs:
       - name: Run lawyer-review benchmark unit tests
         run: |
           python -m pytest research/prototype/tests/test_lawyer_review_import.py research/prototype/tests/test_lawyer_review_evaluation.py research/prototype/tests/test_lawyer_review_alignment.py -q
+      - name: Regenerate normalized lawyer-review dataset
+        run: python research/prototype/scripts/import_lawyer_review.py
       - name: Regenerate compact alignment audit
         run: python research/prototype/scripts/audit_lawyer_review_alignment.py
       - name: Upload compact alignment summary
