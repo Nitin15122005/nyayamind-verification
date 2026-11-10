@@ -659,6 +659,29 @@ def _citation_identity(citation) -> Optional[tuple]:
     )
 
 
+def _citation_identity_sequence(claims) -> list[tuple]:
+    """Return the ordered, occurrence-preserving statutory citation identities.
+
+    A set comparison is insufficient: it silently accepts deleted or
+    duplicated citations whenever another occurrence of the same identity
+    remains, and it cannot detect citation reordering. Correction is allowed
+    to change the assertion content, never the citation structure. Keep this
+    sequence check independent of verifier scores and apply it before any
+    corrected claim is re-verified.
+    """
+    identities = []
+    for claim in claims:
+        citation = (
+            claim.get("citation_extracted")
+            if isinstance(claim, dict)
+            else getattr(claim, "citation_extracted", None)
+        )
+        identity = _citation_identity(citation)
+        if identity is not None:
+            identities.append(identity)
+    return identities
+
+
 def _reverify_sibling_regressions(
     baseline: dict, corrected_text: str, target_claim_id: str, config: dict,
 ) -> list[dict]:
@@ -963,22 +986,14 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     # same priority as a scope violation, since this is scope enforcement
     # too — just for additions rather than alterations/removals.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _citation_identity_sequence(baseline["claims"]) != _citation_identity_sequence(reverify_claims):
         if on_event:
-            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("safety", "completed", {"passed": False, "gate": "citation_identity"})
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_unauthorized_addition",
+            "status": "correction_citation_identity_changed",
             "regenerated_text": corrected_text,
             "original_field_text": original_field_text,
             "reverification": None,
@@ -1578,15 +1593,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     # verifies existing unflagged claims survive; it does not forbid a NEW
     # hallucinated citation appearing inside the corrected fragment itself.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _citation_identity_sequence(baseline["claims"]) != _citation_identity_sequence(reverify_claims):
         if on_event:
             on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
             on_event("recheck", "skipped", {})
