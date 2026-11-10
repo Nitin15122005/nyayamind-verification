@@ -247,7 +247,7 @@ class SelectiveCorrector:
         generated_ids = output_ids[0][inputs["input_ids"].shape[1]:]
         raw = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
         if raw.startswith("```"):
-            raw = raw.split("\\n", 1)[-1].removesuffix("```").strip()
+            raw = raw.split("\n", 1)[-1].removesuffix("```").strip()
         patch = {"original_span": "", "replacement_span": ""}
         try:
             parsed = json.loads(raw)
