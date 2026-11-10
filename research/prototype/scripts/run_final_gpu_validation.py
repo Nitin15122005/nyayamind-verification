@@ -161,6 +161,8 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
         return "reverification_not_entailed"
     if status in (
         "correction_scope_violation", "correction_sibling_regression",
+        "correction_splice_unavailable", "correction_structural_span_lost",
+        "correction_span_invalid", "correction_unauthorized_addition",
         "correction_ordinal_ambiguous", "correction_unauthorized_addition",
         "not_triggered",
     ):
@@ -194,6 +196,7 @@ def main() -> int:
     arm_config["A"]["verification"]["premise_framing"] = "bare"
     arm_config["A"]["verification"]["confidence_threshold"] = 0.70
     arm_config["A"]["correction"]["atomic_scope_check"] = False
+    arm_config["A"]["correction"]["assertion_aware"] = False
     arm_config["A"]["correction"]["narrow_reverification_hypothesis"] = False
 
     arm_config["B"] = copy.deepcopy(base_config)
@@ -202,11 +205,14 @@ def main() -> int:
     arm_config["B"]["verification"]["confidence_threshold"] = 0.70
     arm_config["B"]["correction"]["atomic_scope_check"] = "assertion_spans"
     arm_config["B"]["correction"]["narrow_reverification_hypothesis"] = True
+    # Treatment arm uses deterministic assertion-span splicing; the legacy
+    # whole-sentence path remains the untouched baseline in Arm A.
+    arm_config["B"]["correction"]["assertion_aware"] = True
 
     print("On-disk config/prototype.yaml is not modified; both arms are in-memory deep "
           "copies. Arm A = unmodified production defaults. Arm B = use_evidence_v1=true, "
-          "atomic_scope_check=assertion_spans, narrow_reverification_hypothesis=true, "
-          "premise_framing=bare, confidence_threshold=0.70.", flush=True)
+          "atomic_scope_check=assertion_spans, assertion_aware=true, "
+          "narrow_reverification_hypothesis=true, premise_framing=bare, confidence_threshold=0.70.", flush=True)
 
     exact_index: dict[str, dict] = {}
     all_usable: dict[str, list] = {}
@@ -307,7 +313,11 @@ def main() -> int:
             )
             correction_summary = None
             if doc_triggered:
-                correction_summary = pipeline.apply_selective_correction(baseline, case, corrector, cfg)
+                correction_summary = (
+                    pipeline.apply_selective_correction_assertion_aware(baseline, case, corrector, cfg)
+                    if cfg["correction"].get("assertion_aware", False)
+                    else pipeline.apply_selective_correction(baseline, case, corrector, cfg)
+                )
                 rv = correction_summary.get("reverification") or {}
                 target_id = correction_summary["triggered_for_claim_id"]
                 unflagged_checked = unflagged_claimtext_preserved = unflagged_assertion_preserved = 0
@@ -354,6 +364,7 @@ def main() -> int:
                     "premise_framing": cfg["verification"]["premise_framing"],
                     "atomic_scope_check": cfg["correction"]["atomic_scope_check"],
                     "narrow_reverification_hypothesis": cfg["correction"]["narrow_reverification_hypothesis"],
+                    "assertion_aware_correction": cfg["correction"].get("assertion_aware", False),
                     "evidence_pool_size": len(all_usable[arm]),
                     "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 },
@@ -420,7 +431,7 @@ def main() -> int:
         }
 
     result = {
-        "experiment": "final_gpu_validation_A_vs_B",
+        "experiment": "final_gpu_validation_A_vs_assertion_aware_B",
         "data": "50 deterministically-selected, NEVER-before-evaluated NyayaRAG cases "
                 "(outputs/natural_candidate_selected_ids_50_final_validation.json), disjoint "
                 "from all 130 document_ids used in run_A_n30/run_natural_targeted/"
@@ -435,9 +446,11 @@ def main() -> int:
                   "use_evidence_v1": False, "premise_framing": "bare",
                   "atomic_scope_check": False, "narrow_reverification_hypothesis": False,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["A"])},
-            "B": {"label": "improved (all validated improvements enabled)",
+            "B": {"label": "treatment (evidence-v1 + assertion-span correction; experimental)",
                   "use_evidence_v1": True, "premise_framing": "bare",
                   "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
+                  "assertion_aware_correction": True,
+                  "assertion_aware_correction": True,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["B"])},
         },
         "per_arm": per_arm_metrics,
