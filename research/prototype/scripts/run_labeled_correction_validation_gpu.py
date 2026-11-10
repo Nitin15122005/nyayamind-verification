@@ -35,6 +35,7 @@ Nothing overwritten; new, distinctly-named output files only.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -58,6 +59,19 @@ def triggers(verdict, sub_reason):
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description="Replay labeled-framing correction on a selected GPU validation output.")
+    ap.add_argument("--input-prefix", default="final_gpu_validation",
+                    help="Input prefix; reads <prefix>_B.jsonl.")
+    ap.add_argument("--labeled-claims-file", default="final_validation_bare_vs_labeled_cpu_claims.jsonl",
+                    help="CPU labeled-verdict JSONL filename under research/prototype/outputs/.")
+    ap.add_argument("--out-prefix", default="labeled_correction_validation_gpu",
+                    help="Output prefix for metrics/detail files.")
+    ap.add_argument("--correction-max-new-tokens", type=int, default=220,
+                    help="Explicit fragment-generation budget; default 220 avoids the prior 60-token cap.")
+    args = ap.parse_args()
+    if args.correction_max_new_tokens < 1:
+        ap.error("--correction-max-new-tokens must be positive")
+
     import torch
     if not torch.cuda.is_available():
         print("ERROR: CUDA not available.", file=sys.stderr)
@@ -78,13 +92,14 @@ def main() -> int:
     # This is an explicit assertion-only correction experiment. Keep the
     # shipped prototype.yaml default unchanged until this treatment passes.
     arm_config["correction"]["assertion_aware"] = True
+    arm_config["correction"]["assertion_span_max_new_tokens"] = args.correction_max_new_tokens
 
     exact_index, all_usable = load_usable_evidence_from_config(arm_config, repo_root)
     by_key = {e.dataset_citation_key: e for e in all_usable}
     print(f"v0+v1 usable pool: {len(all_usable)} records.", flush=True)
 
-    rows = [json.loads(l) for l in (outputs / "final_gpu_validation_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
-    cpu_labeled = [json.loads(l) for l in (outputs / "final_validation_bare_vs_labeled_cpu_claims.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    rows = [json.loads(l) for l in (outputs / f"{args.input_prefix}_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    cpu_labeled = [json.loads(l) for l in (outputs / args.labeled_claims_file).read_text(encoding="utf-8").splitlines() if l.strip()]
     labeled_by_key = {(r["document_id"], r["claim_id"]): r for r in cpu_labeled}
     print(f"Loaded {len(rows)} cases; {len(cpu_labeled)} claims with pre-computed labeled verdicts.", flush=True)
 
@@ -124,7 +139,7 @@ def main() -> int:
         seed=config["seed"],
     )
     generator.load()
-    corr_cfg = config["correction"]
+    corr_cfg = arm_config["correction"]
     corrector = SelectiveCorrector(
         generator=generator, max_new_tokens=corr_cfg["max_new_tokens"], do_sample=corr_cfg["do_sample"],
         system_prompt=corr_cfg["system_prompt"],
@@ -207,8 +222,11 @@ def main() -> int:
             "note": "from final_gpu_validation_metrics.json, per_arm.B (bare framing, same 50 cases, same improved config except framing)",
         },
     }
-    (outputs / "labeled_correction_validation_gpu_metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    with (outputs / "labeled_correction_validation_gpu_corrections_detail.jsonl").open("w", encoding="utf-8") as f:
+    result["input_prefix"] = args.input_prefix
+    result["labeled_claims_file"] = args.labeled_claims_file
+    result["correction_max_new_tokens"] = args.correction_max_new_tokens
+    (outputs / f"{args.out_prefix}_metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    with (outputs / f"{args.out_prefix}_corrections_detail.jsonl").open("w", encoding="utf-8") as f:
         for r in correction_rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
@@ -217,8 +235,8 @@ def main() -> int:
     print(f"Status counts: {dict(status_counts)}")
     print(f"Shipped: {status_counts.get('corrected', 0)}  Unsafe shipped: {unsafe}")
     print(f"Runtime: {run_elapsed:.1f}s")
-    print(f"\nWrote {outputs / 'labeled_correction_validation_gpu_metrics.json'}")
-    print(f"Wrote {outputs / 'labeled_correction_validation_gpu_corrections_detail.jsonl'}")
+    print(f"\nWrote {outputs / (args.out_prefix + '_metrics.json')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_corrections_detail.jsonl')}")
     return 0
 
 
