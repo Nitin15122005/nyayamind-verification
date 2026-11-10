@@ -70,7 +70,7 @@ def main() -> int:
     print("Loading DeBERTa verifier on CPU...", flush=True)
     verifier = NLIVerifier(
         model_id=config["verification"]["model_id"],
-        confidence_threshold=0.70,
+        confidence_threshold=config["verification"]["confidence_threshold"],
         max_sequence_length=config["verification"]["max_sequence_length"],
         device="cpu",
     )
@@ -105,7 +105,11 @@ def main() -> int:
                 ev.canonical_text, framing=PREMISE_FRAMING_LABELED,
                 provision_type=ev.provision_type, provision_number=ev.provision_number, act=ev.act,
             )
-            result = verifier.verify(premise=premise, hypothesis=c["claim_text"])
+            # Reuse the exact hypothesis used by the stored bare verdict so
+            # this remains a premise-framing-only comparison. Older outputs
+            # without the field safely fall back to the historical full claim.
+            hypothesis = c.get("verified_hypothesis") or c["claim_text"]
+            result = verifier.verify(premise=premise, hypothesis=hypothesis)
             n_verified += 1
             labeled_verdicts[result.label] += 1
             triggered = triggers_correction(result.label, result.sub_reason)
