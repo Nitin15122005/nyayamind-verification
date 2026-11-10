@@ -614,6 +614,53 @@ def _splice_assertion_correction(
     return original_field_text.replace(target_claim_text, corrected_claim_text, 1)
 
 
+
+def _splice_assertion_patch(
+    original_field_text: str,
+    target_claim_text: str,
+    target_span: str,
+    original_span: str,
+    replacement_span: str,
+) -> Optional[str]:
+    """Apply one validated minimal edit inside the target assertion only.
+
+    The model cannot rewrite the full assertion: it must nominate one exact,
+    unique source substring and a replacement. Citation-like material is
+    immutable and forbidden in either patch span. Ambiguous, empty, broad,
+    or citation-bearing patches fail closed.
+    """
+    import re
+
+    if not all(isinstance(v, str) and v.strip() for v in (
+        target_span, original_span, replacement_span
+    )):
+        return None
+    original_span = original_span.strip()
+    replacement_span = replacement_span.strip()
+    if target_claim_text.count(target_span) != 1 or target_span not in target_claim_text:
+        return None
+    if target_span.count(original_span) != 1:
+        return None
+    # A patch may not replace the entire assertion. That would merely
+    # reintroduce free-form sentence rewriting under a different name.
+    if original_span == target_span:
+        return None
+    citation_pattern = re.compile(
+        r"\\b(?:sections?|articles?|rules?|orders?|regulations?|clauses?|schedules?)\\s+"
+        r"\\d+[A-Za-z0-9]*(?:\\s*\\([^)]+\\))?",
+        re.IGNORECASE,
+    )
+    if citation_pattern.search(original_span) or citation_pattern.search(replacement_span):
+        return None
+    if len(original_span) > 180 or len(replacement_span) > 240:
+        return None
+    corrected_claim = target_claim_text.replace(original_span, replacement_span, 1)
+    if original_field_text.count(target_claim_text) != 1:
+        return None
+    return original_field_text.replace(target_claim_text, corrected_claim, 1)
+
+
+
 def _splice_flagged_sentence(
     original_field_text: str,
     target_claim_text: str,
@@ -1490,13 +1537,28 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
 
     if on_event:
         on_event("correction", "started", {})
-    corrected_fragment, corr_meta = corrector.correct_assertion_span(
-        case_text=case.case_text,
-        target_span=target_content_fragment,
-        evidence_text=target["evidence_text"],
-        assertion_span_system_prompt=assertion_span_prompt,
-        max_new_tokens=assertion_span_max_new_tokens,
-    )
+    patch_mode = callable(getattr(corrector, "correct_assertion_patch", None))
+    if patch_mode:
+        correction_patch, corr_meta = corrector.correct_assertion_patch(
+            case_text=case.case_text,
+            target_span=target_content_fragment,
+            evidence_text=target["evidence_text"],
+            assertion_span_system_prompt=assertion_span_prompt,
+            max_new_tokens=assertion_span_max_new_tokens,
+        )
+        corrected_fragment = None
+    else:
+        # Compatibility for deterministic test doubles and historical
+        # correctors only. Production SelectiveCorrector implements the
+        # structured minimal-patch contract above.
+        corrected_fragment, corr_meta = corrector.correct_assertion_span(
+            case_text=case.case_text,
+            target_span=target_content_fragment,
+            evidence_text=target["evidence_text"],
+            assertion_span_system_prompt=assertion_span_prompt,
+            max_new_tokens=assertion_span_max_new_tokens,
+        )
+        correction_patch = None
     corr_meta_dict = {
         "model": corr_meta.model_id,
         "max_new_tokens": corr_meta.max_new_tokens,
@@ -1515,8 +1577,17 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     if on_event:
         on_event("safety", "started", {})
 
-    corrected_text = _splice_assertion_correction(
-        original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
+    corrected_text = (
+        _splice_assertion_patch(
+            original_field_text, target["claim_text"], target_content_fragment,
+            correction_patch.get("original_span", ""),
+            correction_patch.get("replacement_span", ""),
+        )
+        if patch_mode and isinstance(correction_patch, dict)
+        else None if patch_mode
+        else _splice_assertion_correction(
+            original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
+        )
     )
     if corrected_text is None:
         if on_event:
@@ -1525,8 +1596,8 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_splice_unavailable",
-            "regenerated_text": corrected_fragment,
+            "status": "correction_patch_invalid" if patch_mode else "correction_splice_unavailable",
+            "regenerated_text": correction_patch if patch_mode else corrected_fragment,
             "original_field_text": original_field_text,
             "reverification": None,
             "corr_meta": corr_meta_dict,
