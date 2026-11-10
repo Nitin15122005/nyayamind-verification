@@ -1533,7 +1533,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     assertion_span_prompt = corr_config.get(
         "assertion_span_system_prompt", _DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT
     )
-    assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 60))
+    assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 100))
 
     if on_event:
         on_event("correction", "started", {})
@@ -1568,10 +1568,10 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     }
     if on_event:
         on_event("correction", "completed", {
-            "regenerated_text": corrected_fragment,
+            "regenerated_text": correction_patch if patch_mode else corrected_fragment,
             "original_fragment": target_content_fragment,
             "corr_meta": corr_meta_dict,
-            "fragment_only": True,
+            "minimal_patch": patch_mode,
         })
 
     if on_event:
