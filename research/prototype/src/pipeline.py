@@ -646,8 +646,8 @@ def _splice_assertion_patch(
     if original_span == target_span:
         return None
     citation_pattern = re.compile(
-        r"\\b(?:sections?|articles?|rules?|orders?|regulations?|clauses?|schedules?)\\s+"
-        r"\\d+[A-Za-z0-9]*(?:\\s*\\([^)]+\\))?",
+        r"\b(?:sections?|articles?|rules?|orders?|regulations?|clauses?|schedules?)\s+"
+        r"\d+[A-Za-z0-9]*(?:\s*\([^)]+\))?",
         re.IGNORECASE,
     )
     if citation_pattern.search(original_span) or citation_pattern.search(replacement_span):
