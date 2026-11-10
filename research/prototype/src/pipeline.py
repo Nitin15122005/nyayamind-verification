@@ -1916,6 +1916,14 @@ def run_case(
             # ship a "confirmation" that may have been computed against the
             # wrong (untouched) sibling's text instead of the real edit.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_ordinal_ambiguous"}
+        elif correction_summary["status"] in ("correction_citation_identity_changed", "correction_patch_invalid"):
+            # A correction must preserve every citation occurrence and may
+            # only apply a validated minimal text patch. Invalid or citation-
+            # changing model output always falls back to the original field.
+            final_field = {
+                "text": baseline["generated_field"]["text"],
+                "source": correction_summary["status"],
+            }
         elif correction_summary["status"] == "correction_unauthorized_addition":
             # The corrected text contains a citation identity with no
             # counterpart anywhere in the original field — either a brand
