@@ -132,7 +132,8 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
         return "reverification_not_entailed"
     if status in (
         "correction_scope_violation", "correction_sibling_regression",
-        "correction_splice_unavailable", "correction_structural_span_lost",
+        "correction_splice_unavailable", "correction_patch_invalid",
+        "correction_citation_identity_changed", "correction_structural_span_lost",
         "correction_span_invalid", "correction_unauthorized_addition",
         "correction_ordinal_ambiguous",
         "not_triggered",
