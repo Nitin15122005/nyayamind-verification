@@ -15,11 +15,12 @@ pool nor any verification/correction config, so calling it twice would be
 redundant, not more rigorous, exactly as run_natural_candidates_50_gpu.py
 already established):
 
-  Arm A ("baseline") — config/prototype.yaml's own on-disk defaults,
-    completely unmodified: use_evidence_v1=false (59-record v0 pool),
-    premise_framing=bare, correction.atomic_scope_check=false,
-    correction.narrow_reverification_hypothesis=false,
-    verification.confidence_threshold=0.70.
+  Arm A ("legacy baseline") — historical bare-framing / sentence-level correction
+    comparison: use_evidence_v1=false (59-record v0 pool), premise_framing=bare,
+    correction.atomic_scope_check=false, correction.narrow_reverification_hypothesis=false,
+    correction.assertion_aware=false, verification.confidence_threshold=0.70.
+    This is NOT the current on-disk production configuration; it is retained
+    to compare against the historical baseline.
 
   Arm B ("improved") — every validated improvement from this project's prior
     diagnosis work enabled together: use_evidence_v1=true (138-record v0+v1
@@ -210,7 +211,8 @@ def main() -> int:
     arm_config["B"]["correction"]["assertion_aware"] = True
 
     print("On-disk config/prototype.yaml is not modified; both arms are in-memory deep "
-          "copies. Arm A = unmodified production defaults. Arm B = use_evidence_v1=true, "
+          "copies. Arm A = historical legacy baseline (not current production defaults). "
+          "Arm B = use_evidence_v1=true, "
           "atomic_scope_check=assertion_spans, assertion_aware=true, "
           "narrow_reverification_hypothesis=true, premise_framing=bare, confidence_threshold=0.70.", flush=True)
 
@@ -442,7 +444,7 @@ def main() -> int:
         "n_cases": len(cases), "seed": base_config["seed"],
         "generation_model": gen_cfg["model_id"], "verification_model": ver_cfg["model_id"],
         "arm_definitions": {
-            "A": {"label": "baseline (production defaults, unmodified)",
+            "A": {"label": "historical legacy baseline (not current production defaults)",
                   "use_evidence_v1": False, "premise_framing": "bare",
                   "atomic_scope_check": False, "narrow_reverification_hypothesis": False,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["A"])},
