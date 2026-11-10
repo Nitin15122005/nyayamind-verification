@@ -13,6 +13,7 @@ import hashlib
 import json
 import platform
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -87,10 +88,21 @@ def main() -> int:
     }
     selected = model_configs if args.model == "all" else {args.model: model_configs[args.model]}
 
+    try:
+        repository_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        repository_commit = None
+
     manifest = {
         "manifest_schema_version": 1,
         "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-        "repository_commit": None,
+        "repository_commit": repository_commit,
         "python_version": sys.version,
         "platform": platform.platform(),
         "huggingface_hub_version": hf_hub_version,
