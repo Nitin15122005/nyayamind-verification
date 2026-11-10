@@ -21,6 +21,7 @@ import sys
 import time
 from collections import Counter
 from pathlib import Path
+from statistics import median
 
 _PROTOTYPE_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROTOTYPE_ROOT.parent.parent))
@@ -271,6 +272,7 @@ def main() -> int:
             cfg = arm_config[arm]
             baseline = {
                 "document_id": case.document_id, "case_text": case.case_text,
+                "judgment_date": getattr(case, "judgment_date", None),
                 "generated_field": generated_field,
                 "judgment_date": getattr(case, "judgment_date", None),
                 "claims": build_arm_claim_records(
@@ -394,7 +396,7 @@ def main() -> int:
             "confidence_summary": {
                 "n": n_conf,
                 "mean": (sum(confidences) / n_conf) if n_conf else None,
-                "median": (confidences[n_conf // 2] if n_conf else None),
+                "median": (median(confidences) if n_conf else None),
                 "min": (confidences[0] if n_conf else None),
                 "max": (confidences[-1] if n_conf else None),
             },
