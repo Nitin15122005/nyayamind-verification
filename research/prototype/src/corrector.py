@@ -195,3 +195,71 @@ class SelectiveCorrector:
             seed=self._generator.seed,
         )
         return corrected_fragment, metadata
+
+
+    def correct_assertion_patch(
+        self,
+        case_text: str,
+        target_span: str,
+        evidence_text: Optional[str],
+        assertion_span_system_prompt: str,
+        max_new_tokens: int,
+    ) -> tuple[dict, CorrectionMetadata]:
+        """Generate a minimal exact-substring edit; malformed output fails closed."""
+        if not self._generator.is_loaded():
+            raise RuntimeError("The generator passed to SelectiveCorrector must already be loaded.")
+
+        import json
+        import torch
+
+        tokenizer = self._generator._tokenizer
+        model = self._generator._model
+        evidence_block = (
+            f"Audited statute text:\\n{evidence_text}\\n"
+            if evidence_text
+            else "No audited statute text is available. Do not propose a correction.\\n"
+        )
+        user_prompt = (
+            f"Case context (for interpretation only):\\n{case_text}\\n\\n"
+            f"Original assertion fragment (immutable except for one minimal patch):\\n{target_span}\\n\\n"
+            f"{evidence_block}\\n"
+            "Return JSON with exactly two string keys: original_span and replacement_span. "
+            "original_span MUST be copied verbatim from the original assertion fragment, be the "
+            "smallest contiguous phrase demonstrably wrong under the audited statute, and occur "
+            "exactly once. replacement_span replaces only that phrase. Preserve all other words, "
+            "citations, provision numbers, Act names, actors, conditions, exceptions, negations, "
+            "modalities, tense, and qualifications. Do not quote or reproduce statute text wholesale. "
+            "Do not add citations, provision numbers, Act names, legal elements, facts, or explanations. "
+            "If no safe minimal edit is supported, return "
+            '{"original_span":"","replacement_span":""}. Output JSON only."
+        )
+        messages = [
+            {"role": "system", "content": assertion_span_system_prompt.strip()},
+            {"role": "user", "content": user_prompt},
+        ]
+        prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        torch.manual_seed(self._generator.seed)
+        with torch.no_grad():
+            output_ids = model.generate(
+                **inputs, max_new_tokens=max_new_tokens, do_sample=self.do_sample
+            )
+        generated_ids = output_ids[0][inputs["input_ids"].shape[1]:]
+        raw = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
+        if raw.startswith("```"):
+            raw = raw.split("\\n", 1)[-1].removesuffix("```").strip()
+        patch = {"original_span": "", "replacement_span": ""}
+        try:
+            parsed = json.loads(raw)
+            if isinstance(parsed, dict) and set(parsed) == {"original_span", "replacement_span"}:
+                if all(isinstance(parsed[k], str) for k in parsed):
+                    patch = {k: parsed[k].strip() for k in ("original_span", "replacement_span")}
+        except (json.JSONDecodeError, TypeError, ValueError):
+            pass
+        metadata = CorrectionMetadata(
+            model_id=self._generator.model_id,
+            max_new_tokens=max_new_tokens,
+            do_sample=self.do_sample,
+            seed=self._generator.seed,
+        )
+        return patch, metadata
