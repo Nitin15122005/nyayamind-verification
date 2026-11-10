@@ -25,7 +25,7 @@ This programme separates implemented engineering work from work that requires in
 ### 3. Model revision and runtime manifest wiring
 - Added optional Hugging Face `revision` configuration for generator and verifier and passed it through the CLI to both tokenizer/model loaders.
 - Added model revision fields to generation metadata and each output reproducibility record. After loading, the generator and verifier capture Hugging Face’s resolved `_commit_hash` when available, so outputs record the actual resolved revision even when the config used a mutable alias.
-- Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The release config now pins Qwen/Qwen2.5-7B-Instruct to `a09a35458c702b33eeacc393d103063234e8bc28` and MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli to `6f5cf0a2b59cabb106aca4c287eed12e357e90eb`; these are immutable Hub commit IDs.
+- Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The release config now pins Qwen/Qwen2.5-7B-Instruct to `a09a35458c702b33eeacc393d103063234e8bc28` and MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli to `6f5cf0a2b59cabb106aca4c287eed12e357e90eb`; these are configured full 40-character commit-SHA pins. The artifact-manifest run must still confirm that each Hub snapshot resolves to the requested SHA.
 
 ### 4. Subsection-safe evidence lookup
 - Removed the fallback that matched a subsection citation to a base-section record (or vice versa) without proof that the exact subsection was covered.
