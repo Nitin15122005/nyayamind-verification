@@ -47,7 +47,8 @@ Multi-candidate generation/reranking remains a future proposal, not an implement
 ## Validation status
 
 - Code change and deterministic regression tests are committed to the experimental branch.
-- CI result for the new head must be checked before treating tests as passed.
-- No fresh GPU rerun has been performed for this patch.
+- Local Windows/Python 3.11.9 validation on commit `d01b44dc9560411559e5695cdf3b544a5ece930f`: `compileall` passed; focused regression tests 2/2 passed; deterministic non-integration suite 446 passed, 6 deselected, 0 failed.
+- GitHub Actions run [42856964994](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42856964994) passed all four jobs, including real DeBERTa model integration.
+- No fresh GPU rerun has been performed for this minimal-patch implementation; the prior hardened baseline results are not post-patch efficacy evidence.
 - No claim of improved correction acceptance, legal correctness, production readiness, or publication readiness is made.
 - Production configuration remains unchanged.
