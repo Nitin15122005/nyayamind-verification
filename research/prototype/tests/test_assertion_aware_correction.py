@@ -423,9 +423,9 @@ def test_unauthorized_citation_injected_inside_fragment_is_rejected(evidence_poo
     )
     record = run_case(case, "C", FakeGenerator(original_text), verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
-    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["correction"]["status"] == "correction_citation_identity_changed"
     assert record["correction"]["reverification"] is None
-    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["source"] == "correction_citation_identity_changed"
     assert record["final_field"]["text"] == original_text
 
 
