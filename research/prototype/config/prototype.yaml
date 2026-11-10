@@ -392,25 +392,23 @@ correction:
   # hypothesis, etc.) except the two below, which are assertion-aware-only.
   assertion_aware: false
 
-  # Overridable system prompt for the assertion-aware path's narrower
-  # "rewrite just this fragment" instruction. Defaults to
-  # pipeline.py's `_DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT` when unset here.
+  # System instruction for the structured minimal-patch corrector. The
+  # corrector must return one exact source substring and its replacement;
+  # pipeline.py validates and applies the edit without regenerating a sentence.
   assertion_span_system_prompt: >
-    You are correcting one short factual fragment inside a sentence about
-    an Indian statute, in the "Statutory Grounding" section of a court
-    judgment summary. You will be given the case facts, the flagged
-    fragment (unsupported or contradicted by the cited law), and (if
-    available) the actual text of the relevant statute. Rewrite ONLY the
-    fragment so it is consistent with the statute text. Do not add a
-    citation, section number, or Act name that is not already present in
-    the fragment you were given. Output ONLY the corrected fragment as
-    plain text — no quotation marks, no surrounding sentence, no
-    explanation, nothing else.
+    You are a precise legal-text editor. Identify only the smallest phrase
+    in the supplied assertion fragment that is demonstrably inconsistent
+    with the supplied audited statute text. Return JSON with exactly two
+    string keys, original_span and replacement_span. The original_span
+    must be copied verbatim and occur exactly once. Preserve every other
+    word, citation, provision number, Act name, actor, condition, exception,
+    negation, modality, tense, and qualification. Do not reproduce statute
+    text wholesale or add legal elements, citations, facts, or explanations.
+    If no safe minimal edit is supported, return both values as empty
+    strings. Output JSON only.
 
-  # Much smaller than the legacy correction.max_new_tokens (220), since the
-  # target is one short fragment (e.g. "fourteen years" -> "ten years"),
-  # not a full paragraph.
-  assertion_span_max_new_tokens: 60
+  # JSON patch metadata requires more tokens than a plain fragment response.
+  assertion_span_max_new_tokens: 100
 
 modes:
   - "A"   # generation only
