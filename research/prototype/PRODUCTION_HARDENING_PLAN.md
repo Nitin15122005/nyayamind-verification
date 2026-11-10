@@ -54,7 +54,7 @@ This programme separates implemented engineering work from work that requires in
 - Review every place that compares citation identity; use Act, provision type, provision number, subsection, and occurrence order where applicable.
 - Curate source-backed effective-date intervals and populate explicit `judgment_date` values for the target case corpus; the date-aware code is fail-closed but the required legal metadata is not currently present.
 - Audit all correction paths for full-field preservation, repeated-citation ordering, and post-correction re-extraction.
-- Archive model/tokenizer artifact hashes for the now-pinned Qwen and DeBERTa revisions.
+- Execute `research/prototype/scripts/archive_model_artifact_hashes.py` on a machine with Hugging Face access and archive its SHA-256 manifest for the pinned Qwen and DeBERTa snapshots. The hashing utility is implemented; the manifest is not yet generated.
 
 ### P1 — evidence and runtime integrity
 - Add temporal applicability metadata to evidence records: enactment, commencement, amendment, repeal, and historical version.
@@ -90,11 +90,11 @@ This programme separates implemented engineering work from work that requires in
 
 ## Validation record
 
-- Repository writes in this branch are confirmed by GitHub commit responses.
+- Repository writes in this branch are confirmed by GitHub commit responses. A streaming SHA-256 artifact-manifest utility has been added at `research/prototype/scripts/archive_model_artifact_hashes.py`; its output still needs to be generated from the pinned Hub snapshots.
 - GitHub Actions on the hardening branch passed: **415 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
 - Frontend tests and production build passed; server compilation and test discovery passed.
 - `run_mvp.py --check` passed in CI, including configuration parsing and loading the merged 136-record usable evidence pool without loading models.
 - Evidence integrity audit completed with `PASS_WITH_WARNINGS`, 0 errors and 3 existing warnings. This is structural/provenance auditing, not legal validation.
-- Real DeBERTa integration is now configured to run on PR #8 (CPU-capable test path); its result is pending. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
+- Real DeBERTa CPU integration passed **6/6 tests** in GitHub Actions run [#142](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42784509007) on commit `61ad5e8b4fb2cd6437dce491e2518160e697609e`. The integration uses real DeBERTa inference/re-verification but a scripted corrector; it does not validate Qwen correction generation. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
 - Date-aware retrieval code is tested, but current canonical records do not have independently verified effective-date intervals and the source case records have not been shown to supply `judgment_date`; dated cases therefore correctly fail closed until those data are curated.
 - No independent GOLD-03 legal annotation or adjudication has been performed.
