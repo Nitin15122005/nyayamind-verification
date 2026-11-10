@@ -215,14 +215,14 @@ class SelectiveCorrector:
         tokenizer = self._generator._tokenizer
         model = self._generator._model
         evidence_block = (
-            f"Audited statute text:\\n{evidence_text}\\n"
+            f"Audited statute text:\n{evidence_text}\n"
             if evidence_text
-            else "No audited statute text is available. Do not propose a correction.\\n"
+            else "No audited statute text is available. Do not propose a correction.\n"
         )
         user_prompt = (
-            f"Case context (for interpretation only):\\n{case_text}\\n\\n"
-            f"Original assertion fragment (immutable except for one minimal patch):\\n{target_span}\\n\\n"
-            f"{evidence_block}\\n"
+            f"Case context (for interpretation only):\n{case_text}\n\n"
+            f"Original assertion fragment (immutable except for one minimal patch):\n{target_span}\n\n"
+            f"{evidence_block}\n"
             "Return JSON with exactly two string keys: original_span and replacement_span. "
             "original_span MUST be copied verbatim from the original assertion fragment, be the "
             "smallest contiguous phrase demonstrably wrong under the audited statute, and occur "
@@ -231,7 +231,7 @@ class SelectiveCorrector:
             "modalities, tense, and qualifications. Do not quote or reproduce statute text wholesale. "
             "Do not add citations, provision numbers, Act names, legal elements, facts, or explanations. "
             "If no safe minimal edit is supported, return "
-            '{"original_span":"","replacement_span":""}. Output JSON only."
+            "{\"original_span\":\"\",\"replacement_span\":\"\"}. Output JSON only."
         )
         messages = [
             {"role": "system", "content": assertion_span_system_prompt.strip()},
