@@ -120,6 +120,26 @@ research/.venv/Scripts/python.exe research/prototype/scripts/run_final_gpu_valid
 research/.venv/Scripts/python.exe research/prototype/scripts/run_labeled_correction_validation_gpu.py
 ```
 
+# ~62 min on the RTX 4050: paired correction-mechanism ablation.
+# Both arms share one generation per case; only assertion_aware differs.
+# The driver reproduces the selector's v0-only variant tie-break, applies
+# case-date-aware evidence matching, and passes production primary-hypothesis
+# settings explicitly. It writes four files under outputs/.
+research/.venv/Scripts/python.exe research/prototype/scripts/run_controlled_assertion_ablation_gpu.py --device cuda
+
+# CPU-only paired integrity/statistical analysis (no model loads).
+research/.venv/Scripts/python.exe research/prototype/scripts/audit_assertion_aware_gpu_outputs.py \
+  --metrics research/prototype/outputs/controlled_assertion_ablation_gpu_metrics.json \
+  --details research/prototype/outputs/controlled_assertion_ablation_gpu_corrections_detail.jsonl
+research/.venv/Scripts/python.exe research/prototype/scripts/analyze_controlled_assertion_ablation.py \
+  --metrics research/prototype/outputs/controlled_assertion_ablation_gpu_metrics.json \
+  --details research/prototype/outputs/controlled_assertion_ablation_gpu_corrections_detail.jsonl \
+  --output research/prototype/outputs/controlled_assertion_ablation_gpu_paired_analysis.json
+```
+
+**Interpretation constraint:** the paired analysis uses correction-triggered cases as the unit of comparison and reports an exact two-sided McNemar/binomial test. With small trigger counts, its result is descriptive only. It does not establish legal correctness; every shipped correction still requires independent review against the authoritative statute and case record. Preserve all four raw GPU outputs and the paired-analysis JSON as experiment artifacts. Do not overwrite earlier runs; use a distinct `--out-prefix` for each rerun.
+
+
 ### Selecting a fresh, disjoint natural-case batch (CPU-only, no GPU, no generation)
 
 ```
