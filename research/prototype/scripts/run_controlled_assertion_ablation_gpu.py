@@ -274,7 +274,6 @@ def main() -> int:
                 "document_id": case.document_id, "case_text": case.case_text,
                 "judgment_date": getattr(case, "judgment_date", None),
                 "generated_field": generated_field,
-                "judgment_date": getattr(case, "judgment_date", None),
                 "claims": build_arm_claim_records(
                     claims, exact_index[arm], all_usable[arm], fuzzy_threshold,
                     case_date=getattr(case, "judgment_date", None),
@@ -330,6 +329,7 @@ def main() -> int:
 
             record = {
                 "document_id": case.document_id, "case_text": case.case_text,
+                "judgment_date": getattr(case, "judgment_date", None),
                 "generated_field": generated_field,
                 "claims": [{k: v for k, v in c.items() if not k.startswith("_")} for c in baseline["claims"]],
                 "correction": (
