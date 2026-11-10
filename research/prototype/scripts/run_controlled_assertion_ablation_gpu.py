@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Controlled GPU ablation: legacy sentence correction vs assertion-span correction.
 
