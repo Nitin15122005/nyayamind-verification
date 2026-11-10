@@ -124,7 +124,7 @@ def main() -> int:
                 })
             labeled_claims_out.append({
                 "document_id": rec["document_id"], "claim_id": c["claim_id"],
-                "evidence_id": c["evidence_id"],
+                "evidence_id": c["evidence_id"], "verification_hypothesis": hypothesis,
                 "bare_verdict": c["verdict"], "bare_confidence": c["confidence"], "bare_sub_reason": c.get("sub_reason"),
                 "labeled_verdict": result.label, "labeled_confidence": result.confidence, "labeled_sub_reason": result.sub_reason,
             })
@@ -144,6 +144,8 @@ def main() -> int:
                  "correction; actual shipped-correction rate under labeled+all-improvements is "
                  "NOT measured here.",
         "n_claims_with_evidence": n_verified,
+        "confidence_threshold": config["verification"]["confidence_threshold"],
+        "hypothesis_policy": "reuse each stored claim.verified_hypothesis; fallback to claim_text for historical records",
         "bare_verdict_counts": dict(bare_verdicts),
         "labeled_verdict_counts": dict(labeled_verdicts),
         "bare_correction_triggers": bare_triggers,
