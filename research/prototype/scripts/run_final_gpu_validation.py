@@ -163,7 +163,7 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
         "correction_scope_violation", "correction_sibling_regression",
         "correction_splice_unavailable", "correction_structural_span_lost",
         "correction_span_invalid", "correction_unauthorized_addition",
-        "correction_ordinal_ambiguous", "correction_unauthorized_addition",
+        "correction_ordinal_ambiguous",
         "not_triggered",
     ):
         return status
@@ -449,7 +449,6 @@ def main() -> int:
             "B": {"label": "treatment (evidence-v1 + assertion-span correction; experimental)",
                   "use_evidence_v1": True, "premise_framing": "bare",
                   "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
-                  "assertion_aware_correction": True,
                   "assertion_aware_correction": True,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["B"])},
         },
