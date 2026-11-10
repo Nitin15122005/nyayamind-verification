@@ -120,7 +120,7 @@ def main() -> int:
     )
     print("Loading DeBERTa verifier on CPU (reverification only, few calls)...", flush=True)
     verifier = NLIVerifier(
-        model_id=config["verification"]["model_id"], model_revision=config["verification"].get("revision"), confidence_threshold=0.70,
+        model_id=config["verification"]["model_id"], model_revision=config["verification"].get("revision"), confidence_threshold=config["verification"]["confidence_threshold"],
         max_sequence_length=config["verification"]["max_sequence_length"], device="cpu",
     )
     verifier.load()
@@ -151,9 +151,11 @@ def main() -> int:
         class _Case:
             document_id = rec["document_id"]
             case_text = rec["case_text"]
+            judgment_date = rec.get("judgment_date")
 
         baseline = {
             "document_id": rec["document_id"], "case_text": rec["case_text"],
+            "judgment_date": rec.get("judgment_date"),
             "generated_field": rec["generated_field"], "claims": baseline_claims,
             "_exact_index": exact_index, "_all_usable": all_usable, "_verifier": verifier,
         }
