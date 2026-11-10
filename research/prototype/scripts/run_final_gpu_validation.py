@@ -54,6 +54,7 @@ import sys
 import time
 from collections import Counter
 from pathlib import Path
+from statistics import median
 
 _PROTOTYPE_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROTOTYPE_ROOT.parent.parent))
@@ -109,14 +110,16 @@ def triggers_correction(rec: dict) -> bool:
     return rec["verdict"] == CONTRADICTED or rec.get("sub_reason") == "low_confidence"
 
 
-def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float) -> list[dict]:
+def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float, case_date=None) -> list[dict]:
     """Re-implements the claim-record-building half of pipeline.generate_and_parse
     (evidence matching + record shape), applied to an ALREADY-extracted claims
     list, so the same parsed claims can be matched against two different
     evidence pools without calling the generator or the parser twice."""
     claim_records = []
     for claim in claims:
-        match = match_evidence(claim.citation_extracted, exact_index, all_usable, fuzzy_threshold)
+        match = match_evidence(
+            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold, case_date=case_date
+        )
         claim_records.append({
             "claim_id": claim.claim_id,
             "claim_text": claim.claim_text,
@@ -265,7 +268,7 @@ def main() -> int:
     verifier = NLIVerifier(
         model_id=ver_cfg["model_id"],
         model_revision=ver_cfg.get("revision"),
-        confidence_threshold=0.70,
+        confidence_threshold=ver_cfg["confidence_threshold"],
         max_sequence_length=ver_cfg["max_sequence_length"],
         device="cuda",
     )
@@ -302,13 +305,21 @@ def main() -> int:
             baseline = {
                 "document_id": case.document_id, "case_text": case.case_text,
                 "generated_field": generated_field,
-                "claims": build_arm_claim_records(claims, exact_index[arm], all_usable[arm], fuzzy_threshold),
+                "judgment_date": getattr(case, "judgment_date", None),
+                "claims": build_arm_claim_records(
+                    claims, exact_index[arm], all_usable[arm], fuzzy_threshold,
+                    case_date=getattr(case, "judgment_date", None),
+                ),
             }
             baseline["_exact_index"] = exact_index[arm]
             baseline["_all_usable"] = all_usable[arm]
             baseline["_verifier"] = verifier
 
-            pipeline.apply_verification(baseline, verifier, pipeline.resolve_premise_framing(cfg))
+            pipeline.apply_verification(
+                baseline, verifier, pipeline.resolve_premise_framing(cfg),
+                narrow_primary_hypothesis=cfg["verification"].get("narrow_primary_hypothesis", False),
+                assertion_span_primary_hypothesis=cfg["verification"].get("assertion_span_primary_hypothesis", False),
+            )
 
             doc_triggered = any(
                 rec["evidence_text"] is not None and triggers_correction(rec) for rec in baseline["claims"]
@@ -350,6 +361,7 @@ def main() -> int:
 
             record = {
                 "document_id": case.document_id, "case_text": case.case_text,
+                "judgment_date": getattr(case, "judgment_date", None),
                 "generated_field": generated_field,
                 "claims": [{k: v for k, v in c.items() if not k.startswith("_")} for c in baseline["claims"]],
                 "correction": (
@@ -413,7 +425,7 @@ def main() -> int:
             "confidence_summary": {
                 "n": n_conf,
                 "mean": (sum(confidences) / n_conf) if n_conf else None,
-                "median": (confidences[n_conf // 2] if n_conf else None),
+                "median": (median(confidences) if n_conf else None),
                 "min": (confidences[0] if n_conf else None),
                 "max": (confidences[-1] if n_conf else None),
             },
