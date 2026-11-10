@@ -30,7 +30,7 @@ sys.path.insert(0, str(_PROTOTYPE_ROOT / "scripts"))
 import yaml
 
 from src import claim_parser, pipeline
-from src.data_loader import load_nyayarag_cases, load_usable_evidence_from_config
+from src.data_loader import load_nyayarag_cases, load_usable_evidence, load_usable_evidence_from_config
 from src.evidence_matcher import match_evidence, NO_EVIDENCE
 from src.verifier import ENTAILED, CONTRADICTED, NOT_ENOUGH_INFORMATION, PREMISE_FRAMING_BARE
 from select_natural_candidates import score_case  # exact same scoring/tie-break used for selection
@@ -76,14 +76,16 @@ def triggers_correction(rec: dict) -> bool:
     return rec["verdict"] == CONTRADICTED or rec.get("sub_reason") == "low_confidence"
 
 
-def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float) -> list[dict]:
+def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float, case_date=None) -> list[dict]:
     """Re-implements the claim-record-building half of pipeline.generate_and_parse
     (evidence matching + record shape), applied to an ALREADY-extracted claims
     list, so the same parsed claims can be matched against two different
     evidence pools without calling the generator or the parser twice."""
     claim_records = []
     for claim in claims:
-        match = match_evidence(claim.citation_extracted, exact_index, all_usable, fuzzy_threshold)
+        match = match_evidence(
+            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold, case_date=case_date
+        )
         claim_records.append({
             "claim_id": claim.claim_id,
             "claim_text": claim.claim_text,
@@ -187,10 +189,16 @@ def main() -> int:
 
     fuzzy_threshold = base_config["evidence_matching"]["fuzzy_token_overlap_threshold"]
 
-    # Selection-time variant tie-break always uses the v0-only pool (arm A),
-    # matching what select_natural_candidates.py itself used.
-    cases = load_selected_cases(outputs, repo_root, base_config, exact_index["A"], all_usable["A"],
-                                 args.candidate_file)
+    # Reproduce the selector's v0-only multi/single variant tie-break, separately
+    # from the v0+v1 evidence pools used by both experimental arms.
+    selection_exact_index, selection_usable = load_usable_evidence(
+        repo_root / base_config["paths"]["canonical_statutes"],
+        repo_root / base_config["paths"]["evidence_audit"],
+        set(base_config["usable_evidence_verdicts"]),
+    )
+    cases = load_selected_cases(
+        outputs, repo_root, base_config, selection_exact_index, selection_usable, args.candidate_file
+    )
     print(f"Loaded {len(cases)} selected cases (from {args.candidate_file}).", flush=True)
 
     torch.cuda.reset_peak_memory_stats()
@@ -227,7 +235,7 @@ def main() -> int:
     verifier = NLIVerifier(
         model_id=ver_cfg["model_id"],
         model_revision=ver_cfg.get("revision"),
-        confidence_threshold=0.70,
+        confidence_threshold=ver_cfg["confidence_threshold"],
         max_sequence_length=ver_cfg["max_sequence_length"],
         device="cuda",
     )
@@ -264,13 +272,21 @@ def main() -> int:
             baseline = {
                 "document_id": case.document_id, "case_text": case.case_text,
                 "generated_field": generated_field,
-                "claims": build_arm_claim_records(claims, exact_index[arm], all_usable[arm], fuzzy_threshold),
+                "judgment_date": getattr(case, "judgment_date", None),
+                "claims": build_arm_claim_records(
+                    claims, exact_index[arm], all_usable[arm], fuzzy_threshold,
+                    case_date=getattr(case, "judgment_date", None),
+                ),
             }
             baseline["_exact_index"] = exact_index[arm]
             baseline["_all_usable"] = all_usable[arm]
             baseline["_verifier"] = verifier
 
-            pipeline.apply_verification(baseline, verifier, pipeline.resolve_premise_framing(cfg))
+            pipeline.apply_verification(
+                baseline, verifier, pipeline.resolve_premise_framing(cfg),
+                narrow_primary_hypothesis=cfg["verification"].get("narrow_primary_hypothesis", False),
+                assertion_span_primary_hypothesis=cfg["verification"].get("assertion_span_primary_hypothesis", False),
+            )
 
             doc_triggered = any(
                 rec["evidence_text"] is not None and triggers_correction(rec) for rec in baseline["claims"]
@@ -324,7 +340,10 @@ def main() -> int:
                 "reproducibility": {
                     "arm": arm, "seed": base_config["seed"],
                     "generation_model": gen_cfg["model_id"], "verification_model": ver_cfg["model_id"],
-                    "confidence_threshold": 0.70, "use_evidence_v1": cfg["use_evidence_v1"],
+                    "confidence_threshold": cfg["verification"]["confidence_threshold"],
+                    "narrow_primary_hypothesis": cfg["verification"].get("narrow_primary_hypothesis", False),
+                    "assertion_span_primary_hypothesis": cfg["verification"].get("assertion_span_primary_hypothesis", False),
+                    "use_evidence_v1": cfg["use_evidence_v1"],
                     "premise_framing": cfg["verification"]["premise_framing"],
                     "atomic_scope_check": cfg["correction"]["atomic_scope_check"],
                     "narrow_reverification_hypothesis": cfg["correction"]["narrow_reverification_hypothesis"],
@@ -396,7 +415,7 @@ def main() -> int:
 
     result = {
         "experiment": "controlled_assertion_ablation_legacy_vs_assertion_aware",
-        "data": "Controlled paired ablation on 50 deterministically-selected NyayaRAG cases; "
+        "data": "Controlled paired ablation on deterministically-selected NyayaRAG cases; "
                 "(outputs/natural_candidate_selected_ids_50_final_validation.json), disjoint "
                 "selected from the held-out final-validation case pool; "
                 "both arms receive the same generated text. Genuine fresh Qwen "
@@ -410,11 +429,15 @@ def main() -> int:
                   "use_evidence_v1": True, "premise_framing": base_config["verification"]["premise_framing"],
                   "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
                   "confidence_threshold": base_config["verification"]["confidence_threshold"],
+                  "narrow_primary_hypothesis": base_config["verification"].get("narrow_primary_hypothesis", False),
+                  "assertion_span_primary_hypothesis": base_config["verification"].get("assertion_span_primary_hypothesis", False),
                   "correction_max_new_tokens": 220, "evidence_pool_size": len(all_usable["A"])},
             "B": {"label": "assertion-span correction", "assertion_aware_correction": True,
                   "use_evidence_v1": True, "premise_framing": base_config["verification"]["premise_framing"],
                   "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
                   "confidence_threshold": base_config["verification"]["confidence_threshold"],
+                  "narrow_primary_hypothesis": base_config["verification"].get("narrow_primary_hypothesis", False),
+                  "assertion_span_primary_hypothesis": base_config["verification"].get("assertion_span_primary_hypothesis", False),
                   "correction_max_new_tokens": 220, "evidence_pool_size": len(all_usable["B"])},
         },
         "per_arm": per_arm_metrics,
