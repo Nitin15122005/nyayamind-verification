@@ -36,7 +36,7 @@ Accordingly, candidate future architecture:
 9. Select a candidate only if all gates pass; otherwise preserve original text and abstain.
 10. Evaluate on a new locked case-disjoint holdout with independent legal adjudication.
 
-Candidate generation/reranking is a proposal, not an implemented or validated capability in this commit.
+Multi-candidate generation/reranking remains a future proposal, not an implemented or validated capability.
 
 ## Evidence and citations
 
