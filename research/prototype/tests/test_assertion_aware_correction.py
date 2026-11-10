@@ -745,7 +745,7 @@ def test_run_case_final_field_source_for_new_fail_closed_statuses(evidence_pool,
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     verifier = ScriptedVerifier({text: _vr(CONTRADICTED, confidence=0.88)})
 
-    for forced_status in ("correction_span_invalid", "correction_structural_span_lost"):
+    for forced_status in ("correction_span_invalid", "correction_structural_span_lost", "correction_patch_invalid", "correction_citation_identity_changed"):
         def fake_correction(baseline, case, corrector, config, _status=forced_status):
             return {
                 "triggered_for_claim_id": "c1", "attempts": 0,
