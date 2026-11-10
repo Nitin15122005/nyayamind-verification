@@ -1,37 +1,11 @@
 #!/usr/bin/env python3
 """
-Small, targeted GPU validation: does labeled framing + the full improved
-config (use_evidence_v1, atomic_scope_check=assertion_spans,
-narrow_reverification_hypothesis) actually SHIP more corrections on real
-natural data than bare, once real Qwen correction calls are involved?
-
-This is the one open question the CPU-only verification comparison
-(compare_final_validation_labeled_cpu.py) could not answer: labeled framing
-roughly doubled claim-level correction-trigger eligibility (9 -> 19 claims)
-on the final_gpu_validation batch, but whether the corrector actually
-produces a shippable fix is a real-Qwen-generation question, not a
-verification-only one.
-
-Scope, deliberately minimal to respect "small targeted run, not another
-large GPU experiment":
-  - NO new Qwen generation -- reuses final_gpu_validation_B.jsonl's already
-    generated text (50 cases, shared with Arm A/B).
-  - NO new bulk verification -- reuses the CPU-only labeled verdicts already
-    computed in final_validation_bare_vs_labeled_cpu_claims.jsonl for every
-    claim; only the FIRST-per-case triggering claim (pipeline.py's own
-    "at most one correction attempt per case" contract) drives an actual
-    genuine Qwen correction call.
-  - The DeBERTa reverification step inside apply_selective_correction runs
-    on CPU (fast, a handful of calls) -- only the corrector's Qwen calls
-    need the GPU.
-
-Config: use_evidence_v1=true, premise_framing=labeled,
-atomic_scope_check="assertion_spans", narrow_reverification_hypothesis=true,
-confidence_threshold=0.70 -- i.e. every validated improvement PLUS labeled
-framing, the one combination no prior experiment in this project has run
-through real correction.
-
-Nothing overwritten; new, distinctly-named output files only.
+Targeted GPU replay of labeled-framing correction using existing generated
+claims and precomputed CPU labeled verdicts. Input/output prefixes are
+configurable so this can consume the latest assertion-aware validation
+without overwriting prior results. The assertion-span correction budget is
+explicitly set to 220 by default to avoid the previously observed 60-token
+truncation; the chosen budget is recorded in output metadata.
 """
 from __future__ import annotations
 
