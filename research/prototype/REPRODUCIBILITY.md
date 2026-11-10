@@ -69,12 +69,7 @@ as the interpreter (Windows; substitute `research/.venv/bin/python` on Linux/mac
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 ```
 
-Expected result: all selected tests pass. The 2026-11-10 GitHub Actions run on
-commit `61ad5e8b4fb2cd6437dce491e2518160e697609e` reported **415 passed, 1 skipped,
-6 deselected** for the deterministic suite. The skip is the optional
-`sentence_transformers` retrieval test because that dependency is not installed in the CI
-test environment. This is a recorded CI result, not a promise about future commits. Record
-actual counts, interpreter version, operating system, and commit SHA for each new run.
+Expected result: all selected tests pass. Historical CI counts below describe their specific commits and must not be treated as current results. For the correction-hardening head `d01b44dc9560411559e5695cdf3b544a5ece930f`, local Windows/Python 3.11.9 validation on 2026-11-10 reported `446 passed, 6 deselected, 0 failed` for `pytest research/prototype/tests -m "not integration"`; `compileall` also passed. GitHub Actions run [42856964994](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42856964994) passed all four jobs: web tests/build, Python prototype/evidence integrity, real DeBERTa integration, and server syntax/test discovery. Record actual counts, interpreter version, operating system, and commit SHA for each new run.
 
 ### Config/import check (no model loaded)
 
@@ -215,10 +210,7 @@ pins that this combination still resolves correctly through the current code.
   performed by any committed script. If missing in a new environment, re-obtain
   `3.CaseText_Statutes.zip` from `L-NLProc/NyayaRAG` on Hugging Face (see `README.md` §"Data
   sources"). No committed script downloads it automatically.
-- **Model artifact hashes are not yet archived** — full commit-SHA revisions are configured (§1),
-  and `scripts/archive_model_artifact_hashes.py` now downloads those exact snapshots and writes a
-  per-file SHA-256 manifest. Run it before the release candidate; until its output is archived,
-  the artifact-integrity gate remains open. GPU outputs can still vary across hardware and library versions.
+- **Model artifact hash archive must be verified and retained with the release artifacts** — full commit-SHA revisions are configured (§1), and `scripts/archive_model_artifact_hashes.py` downloads those exact snapshots and writes a per-file SHA-256 manifest. A manifest must be checked for both expected model revisions, retained with the experiment/release record, and reviewed before closing the artifact-integrity gate. GPU outputs can still vary across hardware and library versions.
 - **`baseline/LegalSeg`** is a separate git submodule (the RhetoricLLaMA baseline reproduction)
   with its own, independent reproducibility story documented in `research/baseline/BASELINE.md` —
   out of scope for this document, which covers `research/prototype/` only.
