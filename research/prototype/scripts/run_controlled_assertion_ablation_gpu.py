@@ -2,62 +2,14 @@
 """
 Controlled GPU ablation: legacy sentence correction vs assertion-span correction.
 
-Both arms use the SAME 50 selected cases, shared Qwen generation, identical
-v0+v1 evidence pool, production premise framing, confidence threshold,
-atomic_scope_check, narrow re-verification setting, and 220-token correction
-budget. The ONLY treatment variable is correction.assertion_aware.
+Both arms use identical cases, evidence, verification settings, and correction
+token budgets. The only treatment variable is correction.assertion_aware.
 
-Arm A: legacy sentence-level corrector.
-Arm B: assertion-span corrector with deterministic splice.
+Arm A: legacy sentence-level correction.
+Arm B: assertion-span correction with deterministic splicing.
 
-The 220-token cap is explicitly applied to BOTH methods to remove the
-60-vs-220 token-budget confound in the prior experiment. This is still a
-mechanism ablation, not legal validation. Production config is read-only.
-Outputs use a distinct prefix and do not overwrite prior runs.
-"""
-Final pre-paper GPU validation: two-arm natural-data experiment on the
-deterministic 50-case pool selected by
-select_natural_candidates.py --out-suffix _final_validation
-(outputs/natural_candidate_selected_ids_50_final_validation.json), which is
-disjoint from every document_id used in any prior natural-data GPU
-experiment (run_A/B/C_n30, run_natural_targeted, natural_candidates_50_gpu,
-natural_candidates_batch2_gpu — 130 document_ids total, see
-select_natural_candidates.py's PREVIOUSLY_EVALUATED_SOURCES).
-
-Two arms, run over the SAME 50 cases with the SAME generation (Qwen is
-called exactly once per case — generation depends on neither the evidence
-pool nor any verification/correction config, so calling it twice would be
-redundant, not more rigorous, exactly as run_natural_candidates_50_gpu.py
-already established):
-
-  Arm A ("legacy baseline") — historical bare-framing / sentence-level correction
-    comparison: use_evidence_v1=false (59-record v0 pool), premise_framing=bare,
-    correction.atomic_scope_check=false, correction.narrow_reverification_hypothesis=false,
-    correction.assertion_aware=false, verification.confidence_threshold=0.70.
-    This is NOT the current on-disk production configuration; it is retained
-    to compare against the historical baseline.
-
-  Arm B ("improved") — every validated improvement from this project's prior
-    diagnosis work enabled together: use_evidence_v1=true (138-record v0+v1
-    pool), premise_framing=bare, correction.atomic_scope_check=
-    "assertion_spans", correction.narrow_reverification_hypothesis=true,
-    verification.confidence_threshold=0.70 (unchanged).
-
-Both arms are built as deepcopy()s of the SAME config object loaded from
-config/prototype.yaml; the file on disk is never written to, so production
-defaults are untouched by this script by construction.
-
-Because Arm B changes the EVIDENCE POOL itself (not just premise_framing,
-which run_natural_candidates_50_gpu.py varied), evidence matching cannot be
-shared between arms the way it was there — claim extraction (parsing) is
-shared (it depends on generated text only), but evidence matching,
-verification, and correction are run independently per arm against that
-arm's own (exact_index, all_usable).
-
-Nothing previously committed is read for its CONTENT here except the
-selected-ID list itself (read-only) and the two NyayaRAG source JSON files
-(read-only, never written). No prior output file is overwritten — every
-output of this script uses the new "final_gpu_validation" prefix.
+This is an experimental comparison, not legal validation. Production
+configuration is not modified.
 """
 from __future__ import annotations
 
