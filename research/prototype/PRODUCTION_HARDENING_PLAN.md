@@ -91,10 +91,10 @@ This programme separates implemented engineering work from work that requires in
 ## Validation record
 
 - Repository writes in this branch are confirmed by GitHub commit responses. A streaming SHA-256 artifact-manifest utility has been added at `research/prototype/scripts/archive_model_artifact_hashes.py`; its output still needs to be generated from the pinned Hub snapshots.
-- GitHub Actions on the hardening branch passed: **415 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
+- GitHub Actions on the hardening branch passed: **416 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
 - Frontend tests and production build passed; server compilation and test discovery passed.
 - `run_mvp.py --check` passed in CI, including configuration parsing and loading the merged 136-record usable evidence pool without loading models.
 - Evidence integrity audit completed with `PASS_WITH_WARNINGS`, 0 errors and 3 existing warnings. This is structural/provenance auditing, not legal validation.
-- Real DeBERTa CPU integration passed **6/6 tests** in GitHub Actions run [#142](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42784509007) on commit `61ad5e8b4fb2cd6437dce491e2518160e697609e`. The integration uses real DeBERTa inference/re-verification but a scripted corrector; it does not validate Qwen correction generation. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
+- Real DeBERTa CPU integration passed **6/6 tests** in GitHub Actions run [#154](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42785104269) on commit `86af95c00a407e5b555d62c9de30815581d740fe`. The integration uses real DeBERTa inference/re-verification but a scripted corrector; it does not validate Qwen correction generation. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
 - Date-aware retrieval code is tested, but current canonical records do not have independently verified effective-date intervals and the source case records have not been shown to supply `judgment_date`; dated cases therefore correctly fail closed until those data are curated.
 - No independent GOLD-03 legal annotation or adjudication has been performed.
