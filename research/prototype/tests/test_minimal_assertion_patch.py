@@ -18,7 +18,7 @@ def test_minimal_patch_changes_only_the_exact_target_phrase():
 
 
 def test_patch_rejects_non_unique_original_span():
-    claim = "The act causes harm and the act causes harm."
+    claim = "Here the act causes harm and the act causes harm."
     assert _splice_assertion_patch(
         claim, claim, claim, "the act", "the conduct"
     ) is None
