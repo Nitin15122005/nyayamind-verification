@@ -38,7 +38,7 @@ each claim's own citation, so the reason for any repeated text is visible
 instead of hidden.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/01_claim_parser_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/01_claim_parser_demo.py
 """
 from __future__ import annotations
 

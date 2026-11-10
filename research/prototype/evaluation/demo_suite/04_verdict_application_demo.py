@@ -36,7 +36,7 @@ evidence (Sections 302, 304 [cited in two separate sentences each], and
 production pool at all — a real, not staged, no-evidence claim.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/04_verdict_application_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/04_verdict_application_demo.py
 """
 from __future__ import annotations
 
@@ -59,7 +59,7 @@ SOURCE_FILE = "research/prototype/outputs/final_gpu_validation_B.jsonl"
 def build_claim_records(generated_text: str, exact_index, all_usable, fuzzy_threshold: float) -> list[dict]:
     """Live parse + live evidence match, producing the exact claim-record
     dict shape src.pipeline.apply_verification()/_premise_for_claim()
-    expect — the same shape research/prototype/evaluation/live_demo/run_demo.py's
+    expect — the same shape research/prototype/evaluation/demo_suite/run_demo.py's
     own stage [3] builds (that file is not modified by this one)."""
     claims = claim_parser.extract_claims(generated_text)
     claim_records = []

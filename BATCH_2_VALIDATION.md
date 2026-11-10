@@ -28,14 +28,14 @@ Batch 2 is layered directly on the current `main`. It does not duplicate Batch 1
 Run from the repository root on the project environment:
 
 ```powershell
-research/.venv/Scripts/python.exe -m unittest discover -s live_demo_v2/server/tests -v
+research/.venv/Scripts/python.exe -m unittest discover -s live_demo/server/tests -v
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 ```
 
 Run the frontend checks:
 
 ```powershell
-cd live_demo_v2/web
+cd live_demo/web
 npm test
 npm run build
 ```

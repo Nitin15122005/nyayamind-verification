@@ -38,7 +38,7 @@ mode, by design (src.pipeline._should_trigger_correction only fires for
 CONTRADICTED or low-confidence NEI).
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/07_full_pipeline/entailed_outcome.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/07_full_pipeline/entailed_outcome.py
 """
 from __future__ import annotations
 

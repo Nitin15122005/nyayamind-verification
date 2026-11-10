@@ -26,7 +26,7 @@ disk, not recomputed against the real production pool):
     recomputed, and labeled accordingly.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/02_evidence_retrieval_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/02_evidence_retrieval_demo.py
 """
 from __future__ import annotations
 

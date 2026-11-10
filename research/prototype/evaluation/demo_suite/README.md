@@ -14,7 +14,7 @@ Every script here is read-only against those paths.
 ## Directory structure
 
 ```
-live_demo/
+demo_suite/
 ├── README.md                          — this file
 ├── run_demo.py                        — original combined walkthrough (3 full
 │                                          real cases, stages 1–7 end to end)
@@ -88,7 +88,7 @@ already-audited expected result.
 All commands below are run from the repository root:
 
 ```
-research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/<script>.py
+research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/<script>.py
 ```
 
 | # | Script | GPU needed? | What it shows |
@@ -165,7 +165,7 @@ redesign, every self-check passes.
 `../components/0N_*/` holds this project's per-pipeline-stage *test
 inventory and evidence* (which real `tests/` files exercise each stage,
 plus curated `demo_examples.json` fixtures) — the audit trail. This
-directory (`live_demo/`) is the *presentation layer* built on top of some
+directory (`demo_suite/`) is the *presentation layer* built on top of some
 of that same real data: several demos here read a `demo_examples.json` file
 directly (always labeled `STATIC` when doing so, or used as a live
 self-check target) rather than duplicating its content by hand.

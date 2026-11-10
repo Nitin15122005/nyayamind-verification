@@ -232,3 +232,26 @@ a methodology record, not a runnable pipeline step) and was not introduced or al
   content inside the submodule checkout) from before this pass began — not touched, per this task's
   explicit instructions.
 - All research methodology, model choices, thresholds, and evaluation results — unchanged.
+
+
+---
+
+## 0.1 Update — 2026-11-10 (single live-demo consolidation)
+
+The maintained browser application is now consolidated at the single repository
+directory `live_demo/` (React + Vite in `web/`, streaming backend in `server/`).
+The former `live_demo_v2/` path has been retired. Its Stitch-generated HTML and
+screenshots remain under `live_demo/stitch_nyayamind_legal_verification_platform/`
+as design references only; the old nested `nyayamind_live_demo/` export is now
+named `legacy-demo-export/` to avoid presenting it as a second application.
+
+The Python walkthrough scripts formerly at
+`research/prototype/evaluation/live_demo/` have been moved to
+`research/prototype/evaluation/demo_suite/`. They remain research/evaluation
+scripts that exercise the pipeline; they are not a browser frontend. Their
+run commands, backend import path, README, and references in the current
+evaluation/status documentation have been aligned.
+
+The root `README.md` now documents the one browser-demo workflow. The historical
+sections above remain as dated records and should not be interpreted as the
+current frontend layout.

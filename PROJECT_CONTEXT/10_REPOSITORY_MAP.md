@@ -93,3 +93,19 @@ nyayamind-verification/                    repo root
   moved into an `archive/` directory with a dated name (if genuinely superseded), following the
   convention already established by `archive/2026-08-27_presentation/` and
   `archive/2026-09-06_output_phase_3_vedant/`.
+
+
+## Browser application
+
+The only maintained browser application is at repository root `live_demo/`:
+
+- `live_demo/web/` — React 18 + Vite frontend (Home and interactive `/demo` routes).
+- `live_demo/server/` — Python standard-library HTTP streaming adapter to the real
+  `research/prototype/src/` pipeline.
+- `live_demo/stitch_nyayamind_legal_verification_platform/` — preserved design
+  exports only; not a runtime or deploy target.
+- `research/prototype/evaluation/demo_suite/` — CPU-safe Python presentation and
+  evaluation scripts, not a second web application.
+
+Run instructions are in the root `README.md` and
+`live_demo/stitch_nyayamind_legal_verification_platform/README.md`.

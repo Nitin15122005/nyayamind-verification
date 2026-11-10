@@ -44,7 +44,7 @@ QC'd (margins fixed to scale with the taller 13-row figure).
 
 ## Demo
 
-`research/prototype/evaluation/live_demo/run_demo.py` runs against the real production config
+`research/prototype/evaluation/demo_suite/run_demo.py` runs against the real production config
 and prints it explicitly (including `correction.assertion_aware`, which stays `false` — the
 demo's replay logic has not been extended to assertion-aware records, matching production
 default behavior byte-for-byte).
@@ -96,3 +96,13 @@ notebook — append, never rewrite), `research/prototype/archive/` (both archive
 None of the above is currently in progress. Do not describe any of it as "pending" work
 blocking a release — it is future-work, clearly separated from the frozen, complete current
 state.
+
+
+## Browser demo
+
+The single maintained web demo is `live_demo/`: React + Vite under
+`live_demo/web/` and the streaming API under `live_demo/server/`. It is
+the only browser frontend in this repository. Historical Stitch exports are
+kept as non-runnable visual references. The CPU-safe Python walkthroughs
+remain in `research/prototype/evaluation/demo_suite/` and are not a second
+web demo.

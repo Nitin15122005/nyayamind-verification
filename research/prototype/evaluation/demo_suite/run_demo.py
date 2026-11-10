@@ -50,7 +50,7 @@ research/prototype/scripts/run_mvp.py --mode C --num-cases 1 --output <path> -- 
 demo intentionally does not duplicate that code path.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/run_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/run_demo.py
 """
 from __future__ import annotations
 

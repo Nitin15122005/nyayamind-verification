@@ -18,7 +18,7 @@ narrative, and were promoted to the live workspace instead of archived:
 
 | Original location | New location | Why promoted |
 |---|---|---|
-| `final_demo_pack/live_demo/` | `research/prototype/evaluation/live_demo/` | A real, GPU-free, code-path-verifying demo script (`run_demo.py`) that calls `src/*` directly — reusable tooling, not a historical artifact. Referenced by `evaluation/integration_tests/README.md` as the strongest existing asset for future integration-test work. |
+| `final_demo_pack/live_demo/` | `research/prototype/evaluation/demo_suite/` | A real, GPU-free, code-path-verifying demo script (`run_demo.py`) that calls `src/*` directly — reusable tooling, not a historical artifact. Referenced by `evaluation/integration_tests/README.md` as the strongest existing asset for future integration-test work. |
 | `final_demo_pack/examples/` | `research/prototype/evaluation/examples/` | Eight audited, real-case worked examples plus their reproducible selection scripts (`find_candidates.py`, `build_cases_json.py`) — a reusable, re-runnable methodology, not a frozen snapshot. |
 
 Both promoted directories had their own internal self-references (comments/docstrings
@@ -27,7 +27,7 @@ else in this archive was moved with its internal content untouched — cross-ref
 inside these archived files that still say `final_demo_pack/...` or `final_comparison/...`
 refer to sibling files that moved with them and remain valid as relative citations within
 this archive folder; any such reference to `live_demo/` or `examples/` specifically means
-the promoted copy now at `evaluation/live_demo/` or `evaluation/examples/`.
+the promoted copy now at `evaluation/demo_suite/` or `evaluation/examples/`.
 
 ## What's here
 

@@ -41,7 +41,7 @@ documents as being built from that same real record (see that test file for
 the full provenance note) -- not invented for this demo.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/03_nli_verification_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/03_nli_verification_demo.py
 """
 from __future__ import annotations
 
