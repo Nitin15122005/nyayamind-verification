@@ -195,8 +195,10 @@ pins that this combination still resolves correctly through the current code.
   performed by any committed script. If missing in a new environment, re-obtain
   `3.CaseText_Statutes.zip` from `L-NLProc/NyayaRAG` on Hugging Face (see `README.md` §"Data
   sources"). No committed script downloads it automatically.
-- **Model weights are not hash-pinned** (§1) — real-GPU reruns are expected to be behaviorally
-  close to, but not guaranteed byte-identical to, the committed results.
+- **Model artifact hashes are not yet archived** — full commit-SHA revisions are configured (§1),
+  and `scripts/archive_model_artifact_hashes.py` now downloads those exact snapshots and writes a
+  per-file SHA-256 manifest. Run it before the release candidate; until its output is archived,
+  the artifact-integrity gate remains open. GPU outputs can still vary across hardware and library versions.
 - **`baseline/LegalSeg`** is a separate git submodule (the RhetoricLLaMA baseline reproduction)
   with its own, independent reproducibility story documented in `research/baseline/BASELINE.md` —
   out of scope for this document, which covers `research/prototype/` only.
