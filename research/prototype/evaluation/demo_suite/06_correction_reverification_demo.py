@@ -39,7 +39,7 @@ What is SCRIPTED (substituted, not fabricated):
     can be exercised live on a machine with no GPU.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/06_correction_reverification_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/06_correction_reverification_demo.py
 """
 from __future__ import annotations
 

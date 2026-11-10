@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-NyayaMind Live Demo v2 -- streaming JSON API over the REAL, unmodified
+NyayaMind Live Demo -- streaming JSON API over the REAL, unmodified
 research/prototype/src/* pipeline.
 
 Wraps src.pipeline's own public, composable stage functions
@@ -16,7 +16,7 @@ both honest about which they are:
   * Curated examples (EXAMPLE_SPECS below) replay an already-committed,
     real Qwen2.5-7B-Instruct correction from research/prototype/outputs/ --
     the exact "LIVE vs REPLAYED vs SCRIPTED" convention this project's own
-    research/prototype/evaluation/live_demo/ already established. No text
+    research/prototype/evaluation/demo_suite/ already established. No text
     is invented anywhere in this file.
 
   * Custom user text has no pre-existing committed correction to replay,
@@ -36,7 +36,7 @@ internal flag name.
 
 Run (from repo root):
 
-    research/.venv/Scripts/python.exe live_demo_v2/server/app.py
+    research/.venv/Scripts/python.exe live_demo/server/app.py
 """
 
 from __future__ import annotations
@@ -74,7 +74,7 @@ if hasattr(sys.stderr, "reconfigure"):
 # CURRENT DIRECTORY STRUCTURE:
 #
 #   repository-root/
-#   ├── live_demo_v2/
+#   ├── live_demo/
 #   │   ├── server/
 #   │   │   └── app.py
 #   │   └── web/
@@ -84,7 +84,7 @@ if hasattr(sys.stderr, "reconfigure"):
 #
 # Previously app.py lived one level deeper:
 #
-#   live_demo_v2/
+#   live_demo/
 #       stitch_nyayamind_legal_verification_platform/
 #           server/
 #
@@ -94,24 +94,24 @@ if hasattr(sys.stderr, "reconfigure"):
 
 SERVER_ROOT = Path(__file__).resolve().parent
 
-# live_demo_v2/
-LIVE_DEMO_V2_DIR = SERVER_ROOT.parent
+# live_demo/
+LIVE_DEMO_DIR = SERVER_ROOT.parent
 
 # repository root/
-REPO_ROOT = LIVE_DEMO_V2_DIR.parent
+REPO_ROOT = LIVE_DEMO_DIR.parent
 
 # research/prototype/
 PROTOTYPE_ROOT = REPO_ROOT / "research" / "prototype"
 
 # Existing real evaluation helpers.
-EVAL_LIVE_DEMO_DIR = PROTOTYPE_ROOT / "evaluation" / "live_demo"
+EVAL_DEMO_SUITE_DIR = PROTOTYPE_ROOT / "evaluation" / "demo_suite"
 
 
 # Add the actual repository locations to Python's import path.
 for _p in (
     REPO_ROOT,
     PROTOTYPE_ROOT,
-    EVAL_LIVE_DEMO_DIR,
+    EVAL_DEMO_SUITE_DIR,
 ):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))

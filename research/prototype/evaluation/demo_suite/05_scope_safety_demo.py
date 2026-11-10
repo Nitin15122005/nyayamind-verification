@@ -34,7 +34,7 @@ verbatim from the real generated field in
 (`research/prototype/config/prototype.yaml`), never hardcoded.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/05_scope_safety_demo.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/05_scope_safety_demo.py
 """
 from __future__ import annotations
 

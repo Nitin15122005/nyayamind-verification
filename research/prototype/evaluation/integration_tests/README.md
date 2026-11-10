@@ -31,7 +31,7 @@ against the real 59-record v0 evidence pool, running the genuine
 re-verify → ship/reject. It requires no GPU (DeBERTa is CPU-capable) and no network
 beyond the one-time model download. This is the template to build on, not replace.
 
-`research/prototype/evaluation/live_demo/run_demo.py` (promoted here from
+`research/prototype/evaluation/demo_suite/run_demo.py` (promoted here from
 `final_demo_pack/live_demo/` in PASS 3B) is the other strong existing asset: a real,
 GPU-free, code-path-verifying demo built for presentation purposes, against
 already-generated text. It should be referenced (and, when this workspace is ready,

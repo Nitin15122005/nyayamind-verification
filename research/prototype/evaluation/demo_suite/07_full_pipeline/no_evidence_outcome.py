@@ -30,7 +30,7 @@ What is REPLAYED (not re-run): generation, substituted with the real,
 already-committed generated text via ph.FakeGenerator.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/07_full_pipeline/no_evidence_outcome.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/07_full_pipeline/no_evidence_outcome.py
 """
 from __future__ import annotations
 

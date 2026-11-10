@@ -1,4 +1,4 @@
-"""Shared helpers for research/prototype/evaluation/live_demo/*.
+"""Shared helpers for research/prototype/evaluation/demo_suite/*.
 
 Every demo script in this directory (and in 07_full_pipeline/) imports from
 here for path setup, config/evidence/verifier loading, and consistent

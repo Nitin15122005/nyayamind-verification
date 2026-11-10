@@ -438,7 +438,7 @@ cd research/prototype && ../.venv/Scripts/python.exe -m pytest tests/ -q
 ../.venv/Scripts/python.exe scripts/run_narrow_primary_hypothesis_gpu_ablation.py --device cuda --n-cases 50 --out-prefix narrow_primary_hypothesis_gpu_ablation_n50
 
 # Live demo (real code, real DeBERTa, CPU or CUDA)
-../.venv/Scripts/python.exe evaluation/live_demo/run_demo.py
+../.venv/Scripts/python.exe evaluation/demo_suite/run_demo.py
 
 # Demo pack validation
 ../.venv/Scripts/python.exe archive/2026-08-27_presentation/final_demo_pack/metadata/validate_pack.py
@@ -462,7 +462,7 @@ verification. Evidence pool: 136 records (`use_evidence_v1: true`).
 - `research/prototype/tests/test_assertion_span_primary_hypothesis.py` (19 tests: 14 original + 5 new adversarial, this recovery pass)
 - `FINAL_PRODUCTION_CONFIG.md` (§5a added, + implementation-audit subsection this pass)
 - `research/prototype/archive/2026-08-27_presentation/final_demo_pack/` (6 files corrected; `metadata/validate_pack.py` additionally fixed this pass to append rather than overwrite its own log)
-- `research/prototype/evaluation/live_demo/run_demo.py` (real bug fixed)
+- `research/prototype/evaluation/demo_suite/run_demo.py` (real bug fixed)
 
 ## R. Professor-facing final summary
 
@@ -513,7 +513,7 @@ reproducible host memory constraint (documented with exact free-memory
 figures across a total of six independent check/attempt cycles across two
 sessions), not a methodology failure.
 
-**What can be demonstrated live?** `research/prototype/evaluation/live_demo/run_demo.py`
+**What can be demonstrated live?** `research/prototype/evaluation/demo_suite/run_demo.py`
 — real claim parsing, real evidence retrieval against the production
 136-record pool, real DeBERTa verification (CPU, no GPU needed, under a
 minute), real programmatic safety-gate evaluation, on 3 real cases (one

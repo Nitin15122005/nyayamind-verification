@@ -133,7 +133,7 @@ pass) incorrectly claimed `live_demo/` and `examples/` were deleted by commit
 `git show -M --name-status 61b240a` shows these paths were **renamed** (94-100%
 content similarity), not deleted: `final_demo_pack/examples/*` →
 `research/prototype/evaluation/examples/*` and `final_demo_pack/live_demo/*` →
-`research/prototype/evaluation/live_demo/*`. Both are fully intact there today,
+`research/prototype/evaluation/demo_suite/*`. Both are fully intact there today,
 and `live_demo/` was actively extended afterward (commit `b83bb6b` added
 `common/` helpers and 6 more numbered per-stage demo scripts). The 8 example
 case studies, `cases.json`, `candidate_pool.json`, and `run_demo.py` (already

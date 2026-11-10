@@ -34,7 +34,7 @@ real fixture) in ../06_correction_reverification_demo.py; it is not
 repeated here.
 
 Run:
-  research/.venv/Scripts/python.exe research/prototype/evaluation/live_demo/07_full_pipeline/contradicted_outcome.py
+  research/.venv/Scripts/python.exe research/prototype/evaluation/demo_suite/07_full_pipeline/contradicted_outcome.py
 """
 from __future__ import annotations
 

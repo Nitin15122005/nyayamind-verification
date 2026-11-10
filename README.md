@@ -235,3 +235,29 @@ provenance, and caveats: [`research/data/evidence/README.md`](research/data/evid
 - Generation model: `Qwen/Qwen2.5-7B-Instruct` (Qwen team).
 - Verification model: `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`
   (Moritz Laurer).
+
+
+## Browser demo
+
+The maintained browser application lives in `live_demo/` (React + Vite frontend and
+Python standard-library streaming backend). It runs against the real research pipeline; the older
+Stitch HTML exports are retained only as visual references.
+
+Start the backend from the repository root:
+
+```bash
+research/.venv/Scripts/python.exe live_demo/server/app.py
+```
+
+In a second terminal:
+
+```bash
+cd live_demo/web
+npm ci
+npm run dev
+```
+
+Open `http://localhost:5174`. The Vite development server proxies API requests to
+the backend at `http://127.0.0.1:8421`. The Python evaluation walkthroughs are
+maintained separately as a research script suite in
+`research/prototype/evaluation/demo_suite/`; they are not another browser app.

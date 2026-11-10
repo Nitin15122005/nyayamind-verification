@@ -1,7 +1,7 @@
 """
 Path setup + shared loaders for every live_demo script.
 
-Importing this module (from any demo script, at any depth under live_demo/)
+Importing this module (from any demo script, at any depth under demo_suite/)
 makes `research/prototype/src/*` importable and exposes the loaders every
 demo needs: production config, the real 136-record evidence pool, the real
 DeBERTa verifier (auto CPU/GPU), and lookup helpers over the real, already-
@@ -16,9 +16,9 @@ import json
 import sys
 from pathlib import Path
 
-# This file always lives at research/prototype/evaluation/live_demo/common/
+# This file always lives at research/prototype/evaluation/demo_suite/common/
 # pipeline_helpers.py, five directories below the repo root, regardless of
-# which demo script (at any depth under live_demo/) imports it -- so path
+# which demo script (at any depth under demo_suite/) imports it -- so path
 # computation here is depth-independent for callers.
 _THIS_FILE = Path(__file__).resolve()
 LIVE_DEMO_ROOT = _THIS_FILE.parent.parent
@@ -127,7 +127,7 @@ class FakeGenerator:
     """Supplies a pre-existing, already-committed real generated field
     directly -- never invokes the real 7B Qwen model. Identical pattern to
     tests/test_correction_path_real_integration.py's own FakeGenerator
-    (reused here, not reinvented), used throughout live_demo/ so that
+    (reused here, not reinvented), used throughout demo_suite/ so that
     src.pipeline.run_case() -- the REAL, unmodified orchestration function
     -- can be exercised end-to-end on a GPU-free machine, substituting only
     the one stage (text generation) that genuinely requires a GPU.

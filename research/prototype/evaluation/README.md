@@ -166,7 +166,7 @@ The following are **frozen, read-only sources** for this entire workspace. Nothi
 - `research/data/` (evidence corpora, NyayaRAG source case files)
 - `research/prototype/outputs/` (122-file experimental record)
 - `research/prototype/archive/2026-08-27_presentation/final_demo_pack/` (archived in
-  PASS 3B; `live_demo/` and `examples/` were promoted into this workspace instead — see
+  PASS 3B; `demo_suite/` and `examples/` were promoted into this workspace instead — see
   below)
 - `research/prototype/archive/2026-08-27_presentation/final_comparison/` (archived in
   PASS 3B)
@@ -174,7 +174,7 @@ The following are **frozen, read-only sources** for this entire workspace. Nothi
 - `research/prototype/src/` (production implementation)
 - `research/prototype/config/prototype.yaml` (production configuration)
 
-`evaluation/live_demo/` and `evaluation/examples/` (promoted from `final_demo_pack/` in
+`evaluation/demo_suite/` and `evaluation/examples/` (promoted from `final_demo_pack/` in
 PASS 3B) are part of this workspace, not frozen external sources, but they too only read
 from `src/`, `config/`, and `outputs/` — they write nothing back into any of the above.
 
@@ -198,5 +198,5 @@ writes its output under `evaluation/`, never back into them.
 | `figures/` | Chart categories and their generation/audit scripts |
 | `reports/` | Faculty/reviewer-facing final reports |
 | `scripts/` | Every `run_*`/`build_*`/`validate_*` reproduction and validation script (moved here from the workspace root in PASS 3A) |
-| `live_demo/` | Presentation-quality demo suite (11 independently-runnable, code-path-verifying scripts, one per pipeline stage plus 4 full-pipeline outcomes, all CPU-safe) built on `run_demo.py`, promoted from `final_demo_pack/live_demo/` in PASS 3B — see `live_demo/README.md` |
+| `demo_suite/` | Presentation-quality demo suite (11 independently-runnable, code-path-verifying scripts, one per pipeline stage plus 4 full-pipeline outcomes, all CPU-safe) built on `run_demo.py`, promoted from `final_demo_pack/live_demo/` in PASS 3B — see `demo_suite/README.md` |
 | `examples/` | 8 audited real-case worked examples plus their selection scripts, promoted from `final_demo_pack/examples/` in PASS 3B |

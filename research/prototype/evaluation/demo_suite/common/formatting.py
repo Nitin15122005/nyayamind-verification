@@ -3,7 +3,7 @@ Shared terminal-output formatting for every live_demo script, so all of
 A-G read as one consistent presentation rather than seven differently
 styled scripts.
 
-Conventions used throughout live_demo/:
+Conventions used throughout demo_suite/:
   - section(title)     -- a top-level demo/case banner
   - stage(n, name, tag) -- a numbered pipeline-stage header, tagged LIVE /
                            REPLAYED / SCRIPTED so a reader always knows
@@ -12,7 +12,7 @@ Conventions used throughout live_demo/:
   - kv(label, value)   -- one aligned "label: value" line
   - trunc(text, n)     -- consistent truncation for long generated text
   - claim_overview(...) -- THE shared fix for the "repeated claims" demo
-                           presentation problem (see live_demo/README.md
+                           presentation problem (see demo_suite/README.md
                            "Why claims repeat" section): groups atomic
                            claims by their originating sentence and by
                            evidence key instead of printing N look-alike
@@ -80,7 +80,7 @@ def claim_overview(claim_records: list[dict]) -> None:
          own citation/evidence/verdict -- see
          src/claim_parser.py::extract_claims's own docstring. Confirmed
          legitimate atomic decomposition, not duplicate parsing -- see
-         live_demo/README.md "Why claims repeat").
+         demo_suite/README.md "Why claims repeat").
       2. A compact claim -> citation -> evidence -> verdict mapping table,
          one row per claim, so each atomic claim's own distinguishing
          information (not just its shared parent sentence) is visible.
