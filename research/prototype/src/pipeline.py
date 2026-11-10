@@ -1595,12 +1595,12 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     reverify_claims = claim_parser.extract_claims(corrected_text)
     if _citation_identity_sequence(baseline["claims"]) != _citation_identity_sequence(reverify_claims):
         if on_event:
-            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("safety", "completed", {"passed": False, "gate": "citation_identity"})
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_unauthorized_addition",
+            "status": "correction_citation_identity_changed",
             "regenerated_text": corrected_text,
             "original_field_text": original_field_text,
             "reverification": None,
