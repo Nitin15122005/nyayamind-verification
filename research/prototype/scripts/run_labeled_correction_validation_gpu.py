@@ -75,6 +75,9 @@ def main() -> int:
     arm_config["correction"] = dict(config["correction"])
     arm_config["correction"]["atomic_scope_check"] = "assertion_spans"
     arm_config["correction"]["narrow_reverification_hypothesis"] = True
+    # This is an explicit assertion-only correction experiment. Keep the
+    # shipped prototype.yaml default unchanged until this treatment passes.
+    arm_config["correction"]["assertion_aware"] = True
 
     exact_index, all_usable = load_usable_evidence_from_config(arm_config, repo_root)
     by_key = {e.dataset_citation_key: e for e in all_usable}
@@ -166,7 +169,9 @@ def main() -> int:
             "_exact_index": exact_index, "_all_usable": all_usable, "_verifier": verifier,
         }
         t_c0 = time.time()
-        summary = pipeline.apply_selective_correction(baseline, _Case(), corrector, arm_config)
+        summary = pipeline.apply_selective_correction_assertion_aware(
+            baseline, _Case(), corrector, arm_config
+        )
         elapsed = time.time() - t_c0
         rv = summary.get("reverification") or {}
         print(f"[{i}/{len(cases_to_correct)}] {rec['document_id']} claim={target_id} "
@@ -184,12 +189,13 @@ def main() -> int:
                  and (r["reverification"] or {}).get("verdict") != ENTAILED)
 
     result = {
-        "experiment": "labeled_framing_all_improvements_correction_validation_gpu",
+        "experiment": "labeled_framing_assertion_aware_correction_validation_gpu",
         "scope": "Targeted: reuses Arm B's already-generated text + CPU-computed labeled verdicts; "
                  "only genuine NEW work is the Qwen correction call + CPU DeBERTa reverification for "
                  "each case with >=1 labeled-framing correction trigger.",
         "config": {"use_evidence_v1": True, "premise_framing": "labeled",
                    "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
+                   "assertion_aware_correction": True,
                    "confidence_threshold": 0.70},
         "n_cases_triggered": len(cases_to_correct),
         "status_counts": dict(status_counts),
