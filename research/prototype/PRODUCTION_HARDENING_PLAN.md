@@ -25,7 +25,7 @@ This programme separates implemented engineering work from work that requires in
 ### 3. Model revision and runtime manifest wiring
 - Added optional Hugging Face `revision` configuration for generator and verifier and passed it through the CLI to both tokenizer/model loaders.
 - Added model revision fields to generation metadata and each output reproducibility record. After loading, the generator and verifier capture Hugging Face’s resolved `_commit_hash` when available, so outputs record the actual resolved revision even when the config used a mutable alias.
-- Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The default revisions remain null; no unverified commit hashes were invented.
+- Extended the run manifest with both configured revisions, an explicit immutable-pin status, CUDA availability, and subsection-aware evidence fingerprints. The release config now pins Qwen/Qwen2.5-7B-Instruct to `a09a35458c702b33eeacc393d103063234e8bc28` and MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli to `6f5cf0a2b59cabb106aca4c287eed12e357e90eb`; these are immutable Hub commit IDs.
 
 ### 4. Subsection-safe evidence lookup
 - Removed the fallback that matched a subsection citation to a base-section record (or vice versa) without proof that the exact subsection was covered.
@@ -54,7 +54,7 @@ This programme separates implemented engineering work from work that requires in
 - Review every place that compares citation identity; use Act, provision type, provision number, subsection, and occurrence order where applicable.
 - Curate source-backed effective-date intervals and populate explicit `judgment_date` values for the target case corpus; the date-aware code is fail-closed but the required legal metadata is not currently present.
 - Audit all correction paths for full-field preservation, repeated-citation ordering, and post-correction re-extraction.
-- Supply verified immutable model commit SHAs and archive model/tokenizer artifact hashes; configuration plumbing and manifest fields are implemented, but defaults remain intentionally unpinned.
+- Archive model/tokenizer artifact hashes for the now-pinned Qwen and DeBERTa revisions.
 
 ### P1 — evidence and runtime integrity
 - Add temporal applicability metadata to evidence records: enactment, commencement, amendment, repeal, and historical version.
@@ -91,10 +91,10 @@ This programme separates implemented engineering work from work that requires in
 ## Validation record
 
 - Repository writes in this branch are confirmed by GitHub commit responses.
-- GitHub Actions on the hardening branch passed: **405 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
+- GitHub Actions on the hardening branch passed: **415 passed, 1 skipped, 6 deselected** in the deterministic Python suite; the one skip is the optional `sentence_transformers` retrieval test because that dependency is not installed in the CI test environment.
 - Frontend tests and production build passed; server compilation and test discovery passed.
 - `run_mvp.py --check` passed in CI, including configuration parsing and loading the merged 136-record usable evidence pool without loading models.
 - Evidence integrity audit completed with `PASS_WITH_WARNINGS`, 0 errors and 3 existing warnings. This is structural/provenance auditing, not legal validation.
-- Real DeBERTa/GPU integration remains a manual skipped job. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
+- Real DeBERTa integration is now configured to run on PR #8 (CPU-capable test path); its result is pending. No Qwen generation, GPU correction, or clean-machine full model run has been performed in this branch.
 - Date-aware retrieval code is tested, but current canonical records do not have independently verified effective-date intervals and the source case records have not been shown to supply `judgment_date`; dated cases therefore correctly fail closed until those data are curated.
 - No independent GOLD-03 legal annotation or adjudication has been performed.
