@@ -81,7 +81,7 @@ def test_structured_patch_parser_rejects_extra_keys():
 
 def test_structured_patch_parser_accepts_fenced_json():
     patch, _ = _corrector(
-        ' ```json\\n{"original_span":"wrong","replacement_span":"right"}\\n``` '
+        ' ```json\n{"original_span":"wrong","replacement_span":"right"}\n``` '
     ).correct_assertion_patch(
         case_text="facts", target_span="wrong claim", evidence_text="law",
         assertion_span_system_prompt="system", max_new_tokens=100,
