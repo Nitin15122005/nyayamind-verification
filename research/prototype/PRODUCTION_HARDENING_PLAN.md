@@ -48,8 +48,9 @@ This programme separates implemented engineering work from work that requires in
 ## Remaining implementation work
 
 ### P0 — before calling the software publication-ready
-- Run the complete deterministic test suite and resolve every failure.
-- Run real-model integration tests and a clean-checkout reproduction.
+- [x] Run the deterministic suite: **416 passed, 1 skipped, 6 deselected** in GitHub Actions run [#154](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42785104269).
+- [x] Run real DeBERTa CPU integration: **6/6 passed** in the same run; correction generation remains scripted in this test.
+- [ ] Complete a clean-checkout reproduction of the full prototype, including model downloads and GPU generation/correction.
 - Add occurrence-aware parser tests against the real natural-data failure cases, including `1979_201`, `1972_254`, and `1996_119`.
 - Review every place that compares citation identity; use Act, provision type, provision number, subsection, and occurrence order where applicable.
 - Curate source-backed effective-date intervals and populate explicit `judgment_date` values for the target case corpus; the date-aware code is fail-closed but the required legal metadata is not currently present.
