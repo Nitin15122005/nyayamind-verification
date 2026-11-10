@@ -20,6 +20,8 @@ from typing import Optional
 
 @dataclass
 class CorrectionMetadata:
+
+
     model_id: str
     max_new_tokens: int
     do_sample: bool
