@@ -26,6 +26,7 @@ Nothing in outputs/ is overwritten -- new, distinctly-named output files.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from collections import Counter
@@ -46,6 +47,13 @@ def triggers_correction(verdict: str, sub_reason) -> bool:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description="CPU-only labeled re-verification for an existing GPU validation output.")
+    ap.add_argument("--input-prefix", default="final_gpu_validation",
+                    help="Input prefix; reads <prefix>_B.jsonl.")
+    ap.add_argument("--out-prefix", default="final_validation_bare_vs_labeled_cpu",
+                    help="Output prefix for metrics and claim-level labeled verdicts.")
+    args = ap.parse_args()
+
     outputs = _PROTOTYPE_ROOT / "outputs"
     config = yaml.safe_load((_PROTOTYPE_ROOT / "config" / "prototype.yaml").read_text(encoding="utf-8"))
     repo_root = _PROTOTYPE_ROOT.parent.parent
@@ -56,8 +64,8 @@ def main() -> int:
     by_key = {e.dataset_citation_key: e for e in all_usable}
     print(f"v0+v1 usable pool: {len(all_usable)} records (post-audit-fix).", flush=True)
 
-    rows = [json.loads(l) for l in (outputs / "final_gpu_validation_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
-    print(f"Loaded {len(rows)} cases from final_gpu_validation_B.jsonl (Arm B, v1 pool, bare framing already computed).", flush=True)
+    rows = [json.loads(l) for l in (outputs / f"{args.input_prefix}_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    print(f"Loaded {len(rows)} cases from {args.input_prefix}_B.jsonl (Arm B, v1 pool, bare framing already computed).", flush=True)
 
     print("Loading DeBERTa verifier on CPU...", flush=True)
     verifier = NLIVerifier(
@@ -125,7 +133,7 @@ def main() -> int:
     print(f"Verdict flips: {len(flips)}")
 
     result_out = {
-        "experiment": "final_validation_bare_vs_labeled_cpu_verification_only",
+        "experiment": "bare_vs_labeled_cpu_verification_only",
         "scope": "VERIFICATION-ONLY. Reuses Arm B's already-generated text and already-matched "
                  "v0+v1 evidence (post-audit-fix, 136 records); only a second CPU DeBERTa "
                  "verification pass under labeled framing is new. No new Qwen generation or "
@@ -139,14 +147,14 @@ def main() -> int:
         "n_verdict_flips": len(flips),
         "flips": flips,
     }
-    (outputs / "final_validation_bare_vs_labeled_cpu_metrics.json").write_text(
+    (outputs / f"{args.out_prefix}_metrics.json").write_text(
         json.dumps(result_out, indent=2), encoding="utf-8")
-    with (outputs / "final_validation_bare_vs_labeled_cpu_claims.jsonl").open("w", encoding="utf-8") as f:
+    with (outputs / f"{args.out_prefix}_claims.jsonl").open("w", encoding="utf-8") as f:
         for row in labeled_claims_out:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
-    print(f"\nWrote {outputs / 'final_validation_bare_vs_labeled_cpu_metrics.json'}")
-    print(f"Wrote {outputs / 'final_validation_bare_vs_labeled_cpu_claims.jsonl'}")
+    print(f"\nWrote {outputs / (args.out_prefix + '_metrics.json')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_claims.jsonl')}")
     return 0
 
 
