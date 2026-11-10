@@ -341,7 +341,11 @@ def main() -> int:
                 ),
                 "reproducibility": {
                     "arm": arm, "seed": base_config["seed"],
-                    "generation_model": gen_cfg["model_id"], "verification_model": ver_cfg["model_id"],
+                    "generation_model": gen_cfg["model_id"],
+                    "generation_model_revision": gen_cfg.get("revision"),
+                    "verification_model": ver_cfg["model_id"],
+                    "verification_model_revision": ver_cfg.get("revision"),
+                    "judgment_date": getattr(case, "judgment_date", None),
                     "confidence_threshold": cfg["verification"]["confidence_threshold"],
                     "narrow_primary_hypothesis": cfg["verification"].get("narrow_primary_hypothesis", False),
                     "assertion_span_primary_hypothesis": cfg["verification"].get("assertion_span_primary_hypothesis", False),
@@ -425,7 +429,23 @@ def main() -> int:
                 "and Qwen correction, run independently per arm against that arm's own "
                 "evidence pool.",
         "n_cases": len(cases), "seed": base_config["seed"],
-        "generation_model": gen_cfg["model_id"], "verification_model": ver_cfg["model_id"],
+        "candidate_file": args.candidate_file,
+        "selection_variant_evidence_pool": "v0_only",
+        "case_date_aware_matching": True,
+        "primary_hypothesis_policy": {
+            "narrow_primary_hypothesis": base_config["verification"].get("narrow_primary_hypothesis", False),
+            "assertion_span_primary_hypothesis": base_config["verification"].get("assertion_span_primary_hypothesis", False),
+        },
+        "generation_model": gen_cfg["model_id"],
+        "generation_model_revision": gen_cfg.get("revision"),
+        "verification_model": ver_cfg["model_id"],
+        "verification_model_revision": ver_cfg.get("revision"),
+        "runtime_environment": {
+            "python": sys.version.split()[0],
+            "torch": torch.__version__,
+            "cuda_runtime": torch.version.cuda,
+            "gpu_name": torch.cuda.get_device_name(),
+        },
         "arm_definitions": {
             "A": {"label": "legacy sentence-level correction", "assertion_aware_correction": False,
                   "use_evidence_v1": True, "premise_framing": base_config["verification"]["premise_framing"],
