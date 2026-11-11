@@ -546,9 +546,9 @@ def test_correction_that_changes_the_citation_itself_is_rejected_not_shipped(evi
     record = run_case(case, "C", generator, verifier, corrector,
                        exact_index=exact_index_with_304, all_usable=all_usable_with_304, config=config)
 
-    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["correction"]["status"] == "correction_citation_identity_changed"
     assert record["correction"]["reverification"] is None
-    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["source"] == "correction_citation_identity_changed"
     assert record["final_field"]["text"] == original_text
 
 
@@ -593,9 +593,9 @@ def test_correction_hallucinating_an_extra_new_citation_is_rejected_not_shipped(
     record = run_case(case, "C", generator, verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
 
-    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["correction"]["status"] == "correction_citation_identity_changed"
     assert record["correction"]["reverification"] is None
-    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["source"] == "correction_citation_identity_changed"
     assert record["final_field"]["text"] == original_text
 
 

@@ -26,6 +26,7 @@ Nothing in outputs/ is overwritten -- new, distinctly-named output files.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from collections import Counter
@@ -46,6 +47,13 @@ def triggers_correction(verdict: str, sub_reason) -> bool:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description="CPU-only labeled re-verification for an existing GPU validation output.")
+    ap.add_argument("--input-prefix", default="final_gpu_validation",
+                    help="Input prefix; reads <prefix>_B.jsonl.")
+    ap.add_argument("--out-prefix", default="final_validation_bare_vs_labeled_cpu",
+                    help="Output prefix for metrics and claim-level labeled verdicts.")
+    args = ap.parse_args()
+
     outputs = _PROTOTYPE_ROOT / "outputs"
     config = yaml.safe_load((_PROTOTYPE_ROOT / "config" / "prototype.yaml").read_text(encoding="utf-8"))
     repo_root = _PROTOTYPE_ROOT.parent.parent
@@ -56,13 +64,13 @@ def main() -> int:
     by_key = {e.dataset_citation_key: e for e in all_usable}
     print(f"v0+v1 usable pool: {len(all_usable)} records (post-audit-fix).", flush=True)
 
-    rows = [json.loads(l) for l in (outputs / "final_gpu_validation_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
-    print(f"Loaded {len(rows)} cases from final_gpu_validation_B.jsonl (Arm B, v1 pool, bare framing already computed).", flush=True)
+    rows = [json.loads(l) for l in (outputs / f"{args.input_prefix}_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    print(f"Loaded {len(rows)} cases from {args.input_prefix}_B.jsonl (Arm B, v1 pool, bare framing already computed).", flush=True)
 
     print("Loading DeBERTa verifier on CPU...", flush=True)
     verifier = NLIVerifier(
         model_id=config["verification"]["model_id"],
-        confidence_threshold=0.70,
+        confidence_threshold=config["verification"]["confidence_threshold"],
         max_sequence_length=config["verification"]["max_sequence_length"],
         device="cpu",
     )
@@ -97,7 +105,11 @@ def main() -> int:
                 ev.canonical_text, framing=PREMISE_FRAMING_LABELED,
                 provision_type=ev.provision_type, provision_number=ev.provision_number, act=ev.act,
             )
-            result = verifier.verify(premise=premise, hypothesis=c["claim_text"])
+            # Reuse the exact hypothesis used by the stored bare verdict so
+            # this remains a premise-framing-only comparison. Older outputs
+            # without the field safely fall back to the historical full claim.
+            hypothesis = c.get("verified_hypothesis") or c["claim_text"]
+            result = verifier.verify(premise=premise, hypothesis=hypothesis)
             n_verified += 1
             labeled_verdicts[result.label] += 1
             triggered = triggers_correction(result.label, result.sub_reason)
@@ -112,7 +124,7 @@ def main() -> int:
                 })
             labeled_claims_out.append({
                 "document_id": rec["document_id"], "claim_id": c["claim_id"],
-                "evidence_id": c["evidence_id"],
+                "evidence_id": c["evidence_id"], "verification_hypothesis": hypothesis,
                 "bare_verdict": c["verdict"], "bare_confidence": c["confidence"], "bare_sub_reason": c.get("sub_reason"),
                 "labeled_verdict": result.label, "labeled_confidence": result.confidence, "labeled_sub_reason": result.sub_reason,
             })
@@ -125,13 +137,15 @@ def main() -> int:
     print(f"Verdict flips: {len(flips)}")
 
     result_out = {
-        "experiment": "final_validation_bare_vs_labeled_cpu_verification_only",
+        "experiment": "bare_vs_labeled_cpu_verification_only",
         "scope": "VERIFICATION-ONLY. Reuses Arm B's already-generated text and already-matched "
                  "v0+v1 evidence (post-audit-fix, 136 records); only a second CPU DeBERTa "
                  "verification pass under labeled framing is new. No new Qwen generation or "
                  "correction; actual shipped-correction rate under labeled+all-improvements is "
                  "NOT measured here.",
         "n_claims_with_evidence": n_verified,
+        "confidence_threshold": config["verification"]["confidence_threshold"],
+        "hypothesis_policy": "reuse each stored claim.verified_hypothesis; fallback to claim_text for historical records",
         "bare_verdict_counts": dict(bare_verdicts),
         "labeled_verdict_counts": dict(labeled_verdicts),
         "bare_correction_triggers": bare_triggers,
@@ -139,14 +153,14 @@ def main() -> int:
         "n_verdict_flips": len(flips),
         "flips": flips,
     }
-    (outputs / "final_validation_bare_vs_labeled_cpu_metrics.json").write_text(
+    (outputs / f"{args.out_prefix}_metrics.json").write_text(
         json.dumps(result_out, indent=2), encoding="utf-8")
-    with (outputs / "final_validation_bare_vs_labeled_cpu_claims.jsonl").open("w", encoding="utf-8") as f:
+    with (outputs / f"{args.out_prefix}_claims.jsonl").open("w", encoding="utf-8") as f:
         for row in labeled_claims_out:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
-    print(f"\nWrote {outputs / 'final_validation_bare_vs_labeled_cpu_metrics.json'}")
-    print(f"Wrote {outputs / 'final_validation_bare_vs_labeled_cpu_claims.jsonl'}")
+    print(f"\nWrote {outputs / (args.out_prefix + '_metrics.json')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_claims.jsonl')}")
     return 0
 
 

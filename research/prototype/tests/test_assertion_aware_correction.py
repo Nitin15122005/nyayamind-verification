@@ -423,9 +423,9 @@ def test_unauthorized_citation_injected_inside_fragment_is_rejected(evidence_poo
     )
     record = run_case(case, "C", FakeGenerator(original_text), verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
-    assert record["correction"]["status"] == "correction_unauthorized_addition"
+    assert record["correction"]["status"] == "correction_citation_identity_changed"
     assert record["correction"]["reverification"] is None
-    assert record["final_field"]["source"] == "correction_unauthorized_addition"
+    assert record["final_field"]["source"] == "correction_citation_identity_changed"
     assert record["final_field"]["text"] == original_text
 
 
@@ -445,8 +445,8 @@ def test_correction_failed_when_reverification_stays_not_entailed(evidence_pool,
     corrector = ScriptedAssertionSpanCorrector("prescribes a small fine only")
     record = run_case(case, "C", FakeGenerator(original_text), verifier, corrector,
                        exact_index=exact_index, all_usable=all_usable, config=config)
-    assert record["correction"]["status"] == "correction_failed"
-    assert record["final_field"]["source"] == "correction_failed"
+    assert record["correction"]["status"] == "correction_citation_identity_changed"
+    assert record["final_field"]["source"] == "correction_citation_identity_changed"
     assert record["final_field"]["text"] == original_text
 
 
@@ -745,7 +745,7 @@ def test_run_case_final_field_source_for_new_fail_closed_statuses(evidence_pool,
     case = Case(document_id="doc1", case_text="facts...", raw_citation_keys=[])
     verifier = ScriptedVerifier({text: _vr(CONTRADICTED, confidence=0.88)})
 
-    for forced_status in ("correction_span_invalid", "correction_structural_span_lost"):
+    for forced_status in ("correction_span_invalid", "correction_structural_span_lost", "correction_patch_invalid", "correction_citation_identity_changed"):
         def fake_correction(baseline, case, corrector, config, _status=forced_status):
             return {
                 "triggered_for_claim_id": "c1", "attempts": 0,

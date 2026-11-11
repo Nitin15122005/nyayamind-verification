@@ -74,6 +74,13 @@ PREVIOUSLY_EVALUATED_SOURCES = [
     "natural_candidates_batch2_gpu_bare.jsonl",
 ]
 
+# This exact 50-case selection was used by the Nov 10 final-validation GPU
+# pilot and must be excluded even though the experiment was rerun more than
+# once. Candidate-selection JSON is not JSONL, so it is loaded separately.
+PREVIOUSLY_EVALUATED_CANDIDATE_FILES = [
+    "natural_candidate_selected_ids_50_final_validation.json",
+]
+
 
 def load_previously_evaluated_ids(outputs: Path) -> set[str]:
     ids = set()
@@ -85,7 +92,24 @@ def load_previously_evaluated_ids(outputs: Path) -> set[str]:
             if not line.strip():
                 continue
             ids.add(json.loads(line)["document_id"])
+    for fname in PREVIOUSLY_EVALUATED_CANDIDATE_FILES:
+        path = outputs / fname
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Required historical holdout list is missing: {path}; "
+                "refusing to claim a disjoint candidate selection."
+            )
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        selected = payload.get("document_ids")
+        if not isinstance(selected, list) or not selected or any(
+            not isinstance(doc_id, str) or not doc_id.strip() for doc_id in selected
+        ):
+            raise ValueError(f"Malformed historical candidate list: {path}")
+        if len(selected) != len(set(selected)):
+            raise ValueError(f"Duplicate document_ids in historical candidate list: {path}")
+        ids.update(selected)
     return ids
+
 
 
 def score_case(

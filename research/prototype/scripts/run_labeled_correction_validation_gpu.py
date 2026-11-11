@@ -1,40 +1,15 @@
 #!/usr/bin/env python3
 """
-Small, targeted GPU validation: does labeled framing + the full improved
-config (use_evidence_v1, atomic_scope_check=assertion_spans,
-narrow_reverification_hypothesis) actually SHIP more corrections on real
-natural data than bare, once real Qwen correction calls are involved?
-
-This is the one open question the CPU-only verification comparison
-(compare_final_validation_labeled_cpu.py) could not answer: labeled framing
-roughly doubled claim-level correction-trigger eligibility (9 -> 19 claims)
-on the final_gpu_validation batch, but whether the corrector actually
-produces a shippable fix is a real-Qwen-generation question, not a
-verification-only one.
-
-Scope, deliberately minimal to respect "small targeted run, not another
-large GPU experiment":
-  - NO new Qwen generation -- reuses final_gpu_validation_B.jsonl's already
-    generated text (50 cases, shared with Arm A/B).
-  - NO new bulk verification -- reuses the CPU-only labeled verdicts already
-    computed in final_validation_bare_vs_labeled_cpu_claims.jsonl for every
-    claim; only the FIRST-per-case triggering claim (pipeline.py's own
-    "at most one correction attempt per case" contract) drives an actual
-    genuine Qwen correction call.
-  - The DeBERTa reverification step inside apply_selective_correction runs
-    on CPU (fast, a handful of calls) -- only the corrector's Qwen calls
-    need the GPU.
-
-Config: use_evidence_v1=true, premise_framing=labeled,
-atomic_scope_check="assertion_spans", narrow_reverification_hypothesis=true,
-confidence_threshold=0.70 -- i.e. every validated improvement PLUS labeled
-framing, the one combination no prior experiment in this project has run
-through real correction.
-
-Nothing overwritten; new, distinctly-named output files only.
+Targeted GPU replay of labeled-framing correction using existing generated
+claims and precomputed CPU labeled verdicts. Input/output prefixes are
+configurable so this can consume the latest assertion-aware validation
+without overwriting prior results. The assertion-span correction budget is
+explicitly set to 220 by default to avoid the previously observed 60-token
+truncation; the chosen budget is recorded in output metadata.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -58,6 +33,19 @@ def triggers(verdict, sub_reason):
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description="Replay labeled-framing correction on a selected GPU validation output.")
+    ap.add_argument("--input-prefix", default="final_gpu_validation",
+                    help="Input prefix; reads <prefix>_B.jsonl.")
+    ap.add_argument("--labeled-claims-file", default="final_validation_bare_vs_labeled_cpu_claims.jsonl",
+                    help="CPU labeled-verdict JSONL filename under research/prototype/outputs/.")
+    ap.add_argument("--out-prefix", default="labeled_correction_validation_gpu",
+                    help="Output prefix for metrics/detail files.")
+    ap.add_argument("--correction-max-new-tokens", type=int, default=220,
+                    help="Explicit fragment-generation budget; default 220 avoids the prior 60-token cap.")
+    args = ap.parse_args()
+    if args.correction_max_new_tokens < 1:
+        ap.error("--correction-max-new-tokens must be positive")
+
     import torch
     if not torch.cuda.is_available():
         print("ERROR: CUDA not available.", file=sys.stderr)
@@ -75,13 +63,17 @@ def main() -> int:
     arm_config["correction"] = dict(config["correction"])
     arm_config["correction"]["atomic_scope_check"] = "assertion_spans"
     arm_config["correction"]["narrow_reverification_hypothesis"] = True
+    # This is an explicit assertion-only correction experiment. Keep the
+    # shipped prototype.yaml default unchanged until this treatment passes.
+    arm_config["correction"]["assertion_aware"] = True
+    arm_config["correction"]["assertion_span_max_new_tokens"] = args.correction_max_new_tokens
 
     exact_index, all_usable = load_usable_evidence_from_config(arm_config, repo_root)
     by_key = {e.dataset_citation_key: e for e in all_usable}
     print(f"v0+v1 usable pool: {len(all_usable)} records.", flush=True)
 
-    rows = [json.loads(l) for l in (outputs / "final_gpu_validation_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
-    cpu_labeled = [json.loads(l) for l in (outputs / "final_validation_bare_vs_labeled_cpu_claims.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    rows = [json.loads(l) for l in (outputs / f"{args.input_prefix}_B.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    cpu_labeled = [json.loads(l) for l in (outputs / args.labeled_claims_file).read_text(encoding="utf-8").splitlines() if l.strip()]
     labeled_by_key = {(r["document_id"], r["claim_id"]): r for r in cpu_labeled}
     print(f"Loaded {len(rows)} cases; {len(cpu_labeled)} claims with pre-computed labeled verdicts.", flush=True)
 
@@ -121,14 +113,14 @@ def main() -> int:
         seed=config["seed"],
     )
     generator.load()
-    corr_cfg = config["correction"]
+    corr_cfg = arm_config["correction"]
     corrector = SelectiveCorrector(
         generator=generator, max_new_tokens=corr_cfg["max_new_tokens"], do_sample=corr_cfg["do_sample"],
         system_prompt=corr_cfg["system_prompt"],
     )
     print("Loading DeBERTa verifier on CPU (reverification only, few calls)...", flush=True)
     verifier = NLIVerifier(
-        model_id=config["verification"]["model_id"], model_revision=config["verification"].get("revision"), confidence_threshold=0.70,
+        model_id=config["verification"]["model_id"], model_revision=config["verification"].get("revision"), confidence_threshold=config["verification"]["confidence_threshold"],
         max_sequence_length=config["verification"]["max_sequence_length"], device="cpu",
     )
     verifier.load()
@@ -159,14 +151,18 @@ def main() -> int:
         class _Case:
             document_id = rec["document_id"]
             case_text = rec["case_text"]
+            judgment_date = rec.get("judgment_date")
 
         baseline = {
             "document_id": rec["document_id"], "case_text": rec["case_text"],
+            "judgment_date": rec.get("judgment_date"),
             "generated_field": rec["generated_field"], "claims": baseline_claims,
             "_exact_index": exact_index, "_all_usable": all_usable, "_verifier": verifier,
         }
         t_c0 = time.time()
-        summary = pipeline.apply_selective_correction(baseline, _Case(), corrector, arm_config)
+        summary = pipeline.apply_selective_correction_assertion_aware(
+            baseline, _Case(), corrector, arm_config
+        )
         elapsed = time.time() - t_c0
         rv = summary.get("reverification") or {}
         print(f"[{i}/{len(cases_to_correct)}] {rec['document_id']} claim={target_id} "
@@ -184,12 +180,13 @@ def main() -> int:
                  and (r["reverification"] or {}).get("verdict") != ENTAILED)
 
     result = {
-        "experiment": "labeled_framing_all_improvements_correction_validation_gpu",
+        "experiment": "labeled_framing_assertion_aware_correction_validation_gpu",
         "scope": "Targeted: reuses Arm B's already-generated text + CPU-computed labeled verdicts; "
                  "only genuine NEW work is the Qwen correction call + CPU DeBERTa reverification for "
                  "each case with >=1 labeled-framing correction trigger.",
         "config": {"use_evidence_v1": True, "premise_framing": "labeled",
                    "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
+                   "assertion_aware_correction": True,
                    "confidence_threshold": 0.70},
         "n_cases_triggered": len(cases_to_correct),
         "status_counts": dict(status_counts),
@@ -201,8 +198,11 @@ def main() -> int:
             "note": "from final_gpu_validation_metrics.json, per_arm.B (bare framing, same 50 cases, same improved config except framing)",
         },
     }
-    (outputs / "labeled_correction_validation_gpu_metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    with (outputs / "labeled_correction_validation_gpu_corrections_detail.jsonl").open("w", encoding="utf-8") as f:
+    result["input_prefix"] = args.input_prefix
+    result["labeled_claims_file"] = args.labeled_claims_file
+    result["correction_max_new_tokens"] = args.correction_max_new_tokens
+    (outputs / f"{args.out_prefix}_metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    with (outputs / f"{args.out_prefix}_corrections_detail.jsonl").open("w", encoding="utf-8") as f:
         for r in correction_rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
@@ -211,8 +211,8 @@ def main() -> int:
     print(f"Status counts: {dict(status_counts)}")
     print(f"Shipped: {status_counts.get('corrected', 0)}  Unsafe shipped: {unsafe}")
     print(f"Runtime: {run_elapsed:.1f}s")
-    print(f"\nWrote {outputs / 'labeled_correction_validation_gpu_metrics.json'}")
-    print(f"Wrote {outputs / 'labeled_correction_validation_gpu_corrections_detail.jsonl'}")
+    print(f"\nWrote {outputs / (args.out_prefix + '_metrics.json')}")
+    print(f"Wrote {outputs / (args.out_prefix + '_corrections_detail.jsonl')}")
     return 0
 
 

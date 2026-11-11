@@ -69,12 +69,7 @@ as the interpreter (Windows; substitute `research/.venv/bin/python` on Linux/mac
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 ```
 
-Expected result: all selected tests pass. The 2026-11-10 GitHub Actions run on
-commit `61ad5e8b4fb2cd6437dce491e2518160e697609e` reported **415 passed, 1 skipped,
-6 deselected** for the deterministic suite. The skip is the optional
-`sentence_transformers` retrieval test because that dependency is not installed in the CI
-test environment. This is a recorded CI result, not a promise about future commits. Record
-actual counts, interpreter version, operating system, and commit SHA for each new run.
+Expected result: all selected tests pass. Historical CI counts below describe their specific commits and must not be treated as current results. For the correction-hardening head `d01b44dc9560411559e5695cdf3b544a5ece930f`, local Windows/Python 3.11.9 validation on 2026-11-10 reported `446 passed, 6 deselected, 0 failed` for `pytest research/prototype/tests -m "not integration"`; `compileall` also passed. GitHub Actions run [42856964994](https://github.com/Nitin15122005/nyayamind-verification/actions/runs/42856964994) passed all four jobs: web tests/build, Python prototype/evidence integrity, real DeBERTa integration, and server syntax/test discovery. Record actual counts, interpreter version, operating system, and commit SHA for each new run.
 
 ### Config/import check (no model loaded)
 
@@ -119,6 +114,32 @@ research/.venv/Scripts/python.exe research/prototype/scripts/run_final_gpu_valid
 # ~2 min: targeted correction-only validation under labeled framing (reuses Arm B's generated text)
 research/.venv/Scripts/python.exe research/prototype/scripts/run_labeled_correction_validation_gpu.py
 ```
+
+# ~62 min on the RTX 4050: paired correction-mechanism ablation.
+# Both arms share one generation per case; only assertion_aware differs.
+# The driver reproduces the selector's v0-only variant tie-break, applies
+# case-date-aware evidence matching, and passes production primary-hypothesis
+# settings explicitly. It writes four files under outputs/.
+# First select a genuinely fresh 50-case holdout. The selector excludes
+# prior GPU batches AND the Nov 10 final-validation candidate list.
+research/.venv/Scripts/python.exe research/prototype/scripts/select_natural_candidates.py --out-suffix _fresh_gpu_20261111
+
+# Run the paired legacy-vs-structured-minimal-patch GPU ablation.
+# Preserve this exact candidate file and use a unique output prefix.
+research/.venv/Scripts/python.exe research/prototype/scripts/run_controlled_assertion_ablation_gpu.py --device cuda --candidate-file natural_candidate_selected_ids_50_fresh_gpu_20261111.json --out-prefix controlled_assertion_ablation_gpu_fresh_20261111
+
+# CPU-only paired integrity/statistical analysis (no model loads).
+research/.venv/Scripts/python.exe research/prototype/scripts/audit_assertion_aware_gpu_outputs.py \
+  --metrics research/prototype/outputs/controlled_assertion_ablation_gpu_metrics.json \
+  --details research/prototype/outputs/controlled_assertion_ablation_gpu_corrections_detail.jsonl
+research/.venv/Scripts/python.exe research/prototype/scripts/analyze_controlled_assertion_ablation.py \
+  --metrics research/prototype/outputs/controlled_assertion_ablation_gpu_metrics.json \
+  --details research/prototype/outputs/controlled_assertion_ablation_gpu_corrections_detail.jsonl \
+  --output research/prototype/outputs/controlled_assertion_ablation_gpu_paired_analysis.json
+```
+
+**Interpretation constraint:** the paired analysis uses correction-triggered cases as the unit of comparison and reports an exact two-sided McNemar/binomial test. With small trigger counts, its result is descriptive only. It does not establish legal correctness; every shipped correction still requires independent review against the authoritative statute and case record. Preserve all four raw GPU outputs and the paired-analysis JSON as experiment artifacts. Do not overwrite earlier runs; use a distinct `--out-prefix` for each rerun.
+
 
 ### Selecting a fresh, disjoint natural-case batch (CPU-only, no GPU, no generation)
 
@@ -195,10 +216,7 @@ pins that this combination still resolves correctly through the current code.
   performed by any committed script. If missing in a new environment, re-obtain
   `3.CaseText_Statutes.zip` from `L-NLProc/NyayaRAG` on Hugging Face (see `README.md` §"Data
   sources"). No committed script downloads it automatically.
-- **Model artifact hashes are not yet archived** — full commit-SHA revisions are configured (§1),
-  and `scripts/archive_model_artifact_hashes.py` now downloads those exact snapshots and writes a
-  per-file SHA-256 manifest. Run it before the release candidate; until its output is archived,
-  the artifact-integrity gate remains open. GPU outputs can still vary across hardware and library versions.
+- **Model artifact hash archive must be verified and retained with the release artifacts** — full commit-SHA revisions are configured (§1), and `scripts/archive_model_artifact_hashes.py` downloads those exact snapshots and writes a per-file SHA-256 manifest. A manifest must be checked for both expected model revisions, retained with the experiment/release record, and reviewed before closing the artifact-integrity gate. GPU outputs can still vary across hardware and library versions.
 - **`baseline/LegalSeg`** is a separate git submodule (the RhetoricLLaMA baseline reproduction)
   with its own, independent reproducibility story documented in `research/baseline/BASELINE.md` —
   out of scope for this document, which covers `research/prototype/` only.

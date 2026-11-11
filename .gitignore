@@ -1,6 +1,7 @@
 # Local Python virtualenv — reinstalled from research/requirements.txt,
 # never committed (5GB+, platform-specific).
 research/.venv/
+.venv/
 
 # Python bytecode / test caches.
 **/__pycache__/

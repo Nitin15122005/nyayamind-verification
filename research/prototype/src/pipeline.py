@@ -614,6 +614,53 @@ def _splice_assertion_correction(
     return original_field_text.replace(target_claim_text, corrected_claim_text, 1)
 
 
+
+def _splice_assertion_patch(
+    original_field_text: str,
+    target_claim_text: str,
+    target_span: str,
+    original_span: str,
+    replacement_span: str,
+) -> Optional[str]:
+    """Apply one validated minimal edit inside the target assertion only.
+
+    The model cannot rewrite the full assertion: it must nominate one exact,
+    unique source substring and a replacement. Citation-like material is
+    immutable and forbidden in either patch span. Ambiguous, empty, broad,
+    or citation-bearing patches fail closed.
+    """
+    import re
+
+    if not all(isinstance(v, str) and v.strip() for v in (
+        target_span, original_span, replacement_span
+    )):
+        return None
+    original_span = original_span.strip()
+    replacement_span = replacement_span.strip()
+    if target_claim_text.count(target_span) != 1 or target_span not in target_claim_text:
+        return None
+    if target_span.count(original_span) != 1:
+        return None
+    # A patch may not replace the entire assertion. That would merely
+    # reintroduce free-form sentence rewriting under a different name.
+    if original_span == target_span:
+        return None
+    citation_pattern = re.compile(
+        r"\b(?:sections?|articles?|rules?|orders?|regulations?|clauses?|schedules?)\s+"
+        r"\d+[A-Za-z0-9]*(?:\s*\([^)]+\))?",
+        re.IGNORECASE,
+    )
+    if citation_pattern.search(original_span) or citation_pattern.search(replacement_span):
+        return None
+    if len(original_span) > 180 or len(replacement_span) > 240:
+        return None
+    corrected_claim = target_claim_text.replace(original_span, replacement_span, 1)
+    if original_field_text.count(target_claim_text) != 1:
+        return None
+    return original_field_text.replace(target_claim_text, corrected_claim, 1)
+
+
+
 def _splice_flagged_sentence(
     original_field_text: str,
     target_claim_text: str,
@@ -657,6 +704,29 @@ def _citation_identity(citation) -> Optional[tuple]:
         citation.provision_type, citation.provision_number,
         citation.subsection, citation.act_norm,
     )
+
+
+def _citation_identity_sequence(claims) -> list[tuple]:
+    """Return the ordered, occurrence-preserving statutory citation identities.
+
+    A set comparison is insufficient: it silently accepts deleted or
+    duplicated citations whenever another occurrence of the same identity
+    remains, and it cannot detect citation reordering. Correction is allowed
+    to change the assertion content, never the citation structure. Keep this
+    sequence check independent of verifier scores and apply it before any
+    corrected claim is re-verified.
+    """
+    identities = []
+    for claim in claims:
+        citation = (
+            claim.get("citation_extracted")
+            if isinstance(claim, dict)
+            else getattr(claim, "citation_extracted", None)
+        )
+        identity = _citation_identity(citation)
+        if identity is not None:
+            identities.append(identity)
+    return identities
 
 
 def _reverify_sibling_regressions(
@@ -891,6 +961,7 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
         "do_sample": corr_meta.do_sample,
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
+        "raw_model_output": getattr(corr_meta, "raw_model_output", None),
     }
     if on_event:
         on_event("correction", "completed", {
@@ -963,22 +1034,14 @@ def apply_selective_correction(baseline: dict, case, corrector, config: dict, on
     # same priority as a scope violation, since this is scope enforcement
     # too — just for additions rather than alterations/removals.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _citation_identity_sequence(baseline["claims"]) != _citation_identity_sequence(reverify_claims):
         if on_event:
-            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("safety", "completed", {"passed": False, "gate": "citation_identity"})
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_unauthorized_addition",
+            "status": "correction_citation_identity_changed",
             "regenerated_text": corrected_text,
             "original_field_text": original_field_text,
             "reverification": None,
@@ -1444,6 +1507,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "original_field_text": original_field_text,
             "reverification": None,
             "correction_mode": "assertion_aware",
+            "correction_method": "not_invoked",
         }
 
     target = flagged[0]
@@ -1463,6 +1527,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "original_field_text": original_field_text,
             "reverification": None,
             "correction_mode": "assertion_aware",
+            "correction_method": "not_invoked",
         }
     target_spans, target_content_fragment = resolved
     structural_spans = target_spans[:-1]  # e.g. a "respectively" claim's own bare number; [] for ordinary claims
@@ -1471,37 +1536,62 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     assertion_span_prompt = corr_config.get(
         "assertion_span_system_prompt", _DEFAULT_ASSERTION_SPAN_SYSTEM_PROMPT
     )
-    assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 60))
+    assertion_span_max_new_tokens = int(corr_config.get("assertion_span_max_new_tokens", 100))
 
     if on_event:
         on_event("correction", "started", {})
-    corrected_fragment, corr_meta = corrector.correct_assertion_span(
-        case_text=case.case_text,
-        target_span=target_content_fragment,
-        evidence_text=target["evidence_text"],
-        assertion_span_system_prompt=assertion_span_prompt,
-        max_new_tokens=assertion_span_max_new_tokens,
-    )
+    patch_mode = callable(getattr(corrector, "correct_assertion_patch", None))
+    if patch_mode:
+        correction_patch, corr_meta = corrector.correct_assertion_patch(
+            case_text=case.case_text,
+            target_span=target_content_fragment,
+            evidence_text=target["evidence_text"],
+            assertion_span_system_prompt=assertion_span_prompt,
+            max_new_tokens=assertion_span_max_new_tokens,
+        )
+        corrected_fragment = None
+    else:
+        # Compatibility for deterministic test doubles and historical
+        # correctors only. Production SelectiveCorrector implements the
+        # structured minimal-patch contract above.
+        corrected_fragment, corr_meta = corrector.correct_assertion_span(
+            case_text=case.case_text,
+            target_span=target_content_fragment,
+            evidence_text=target["evidence_text"],
+            assertion_span_system_prompt=assertion_span_prompt,
+            max_new_tokens=assertion_span_max_new_tokens,
+        )
+        correction_patch = None
     corr_meta_dict = {
         "model": corr_meta.model_id,
         "max_new_tokens": corr_meta.max_new_tokens,
         "do_sample": corr_meta.do_sample,
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
+        "raw_model_output": getattr(corr_meta, "raw_model_output", None),
     }
     if on_event:
         on_event("correction", "completed", {
-            "regenerated_text": corrected_fragment,
+            "regenerated_text": correction_patch if patch_mode else corrected_fragment,
             "original_fragment": target_content_fragment,
             "corr_meta": corr_meta_dict,
-            "fragment_only": True,
+            "minimal_patch": patch_mode,
         })
 
     if on_event:
         on_event("safety", "started", {})
 
-    corrected_text = _splice_assertion_correction(
-        original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
+    corrected_text = (
+        _splice_assertion_patch(
+            original_field_text, target["claim_text"], target_content_fragment,
+            correction_patch.get("original_span", ""),
+            correction_patch.get("replacement_span", ""),
+        )
+        if patch_mode and isinstance(correction_patch, dict)
+        else None if patch_mode
+        else _splice_assertion_correction(
+            original_field_text, target["claim_text"], target_content_fragment, corrected_fragment,
+        )
     )
     if corrected_text is None:
         if on_event:
@@ -1510,12 +1600,14 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_splice_unavailable",
-            "regenerated_text": corrected_fragment,
+            "status": "correction_patch_invalid" if patch_mode else "correction_splice_unavailable",
+            "regenerated_text": correction_patch if patch_mode else corrected_fragment,
             "original_field_text": original_field_text,
             "reverification": None,
             "corr_meta": corr_meta_dict,
             "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
             "target_assertion_spans": target_spans,
             "target_content_fragment": target_content_fragment,
         }
@@ -1541,6 +1633,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "reverification": None,
             "corr_meta": corr_meta_dict,
             "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
             "target_assertion_spans": target_spans,
             "target_content_fragment": target_content_fragment,
             "corrected_fragment": corrected_fragment,
@@ -1568,6 +1661,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "reverification": None,
             "corr_meta": corr_meta_dict,
             "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
             "target_assertion_spans": target_spans,
             "target_content_fragment": target_content_fragment,
             "corrected_fragment": corrected_fragment,
@@ -1578,27 +1672,20 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
     # verifies existing unflagged claims survive; it does not forbid a NEW
     # hallucinated citation appearing inside the corrected fragment itself.
     reverify_claims = claim_parser.extract_claims(corrected_text)
-    baseline_identities = {
-        _citation_identity(rec["citation_extracted"]) for rec in baseline["claims"]
-    }
-    baseline_identities.discard(None)
-    if any(
-        _citation_identity(c.citation_extracted) is not None
-        and _citation_identity(c.citation_extracted) not in baseline_identities
-        for c in reverify_claims
-    ):
+    if _citation_identity_sequence(baseline["claims"]) != _citation_identity_sequence(reverify_claims):
         if on_event:
-            on_event("safety", "completed", {"passed": False, "gate": "unauthorized_addition"})
+            on_event("safety", "completed", {"passed": False, "gate": "citation_identity"})
             on_event("recheck", "skipped", {})
         return {
             "triggered_for_claim_id": target["claim_id"],
             "attempts": 1,
-            "status": "correction_unauthorized_addition",
+            "status": "correction_citation_identity_changed",
             "regenerated_text": corrected_text,
             "original_field_text": original_field_text,
             "reverification": None,
             "corr_meta": corr_meta_dict,
             "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
             "target_assertion_spans": target_spans,
             "target_content_fragment": target_content_fragment,
             "corrected_fragment": corrected_fragment,
@@ -1642,6 +1729,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
                 "reverification": None,
                 "corr_meta": corr_meta_dict,
                 "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
                 "target_assertion_spans": target_spans,
                 "target_content_fragment": target_content_fragment,
                 "corrected_fragment": corrected_fragment,
@@ -1730,6 +1818,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         "sibling_regressions": sibling_regressions,
         "corr_meta": corr_meta_dict,
         "correction_mode": "assertion_aware",
+            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
         "target_assertion_spans": target_spans,
         "target_content_fragment": target_content_fragment,
         "corrected_fragment": corrected_fragment,
@@ -1838,6 +1927,14 @@ def run_case(
             # ship a "confirmation" that may have been computed against the
             # wrong (untouched) sibling's text instead of the real edit.
             final_field = {"text": baseline["generated_field"]["text"], "source": "correction_ordinal_ambiguous"}
+        elif correction_summary["status"] in ("correction_citation_identity_changed", "correction_patch_invalid"):
+            # A correction must preserve every citation occurrence and may
+            # only apply a validated minimal text patch. Invalid or citation-
+            # changing model output always falls back to the original field.
+            final_field = {
+                "text": baseline["generated_field"]["text"],
+                "source": correction_summary["status"],
+            }
         elif correction_summary["status"] == "correction_unauthorized_addition":
             # The corrected text contains a citation identity with no
             # counterpart anywhere in the original field — either a brand

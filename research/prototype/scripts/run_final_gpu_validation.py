@@ -15,11 +15,12 @@ pool nor any verification/correction config, so calling it twice would be
 redundant, not more rigorous, exactly as run_natural_candidates_50_gpu.py
 already established):
 
-  Arm A ("baseline") — config/prototype.yaml's own on-disk defaults,
-    completely unmodified: use_evidence_v1=false (59-record v0 pool),
-    premise_framing=bare, correction.atomic_scope_check=false,
-    correction.narrow_reverification_hypothesis=false,
-    verification.confidence_threshold=0.70.
+  Arm A ("legacy baseline") — historical bare-framing / sentence-level correction
+    comparison: use_evidence_v1=false (59-record v0 pool), premise_framing=bare,
+    correction.atomic_scope_check=false, correction.narrow_reverification_hypothesis=false,
+    correction.assertion_aware=false, verification.confidence_threshold=0.70.
+    This is NOT the current on-disk production configuration; it is retained
+    to compare against the historical baseline.
 
   Arm B ("improved") — every validated improvement from this project's prior
     diagnosis work enabled together: use_evidence_v1=true (138-record v0+v1
@@ -53,6 +54,7 @@ import sys
 import time
 from collections import Counter
 from pathlib import Path
+from statistics import median
 
 _PROTOTYPE_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROTOTYPE_ROOT.parent.parent))
@@ -108,14 +110,16 @@ def triggers_correction(rec: dict) -> bool:
     return rec["verdict"] == CONTRADICTED or rec.get("sub_reason") == "low_confidence"
 
 
-def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float) -> list[dict]:
+def build_arm_claim_records(claims, exact_index, all_usable, fuzzy_threshold: float, case_date=None) -> list[dict]:
     """Re-implements the claim-record-building half of pipeline.generate_and_parse
     (evidence matching + record shape), applied to an ALREADY-extracted claims
     list, so the same parsed claims can be matched against two different
     evidence pools without calling the generator or the parser twice."""
     claim_records = []
     for claim in claims:
-        match = match_evidence(claim.citation_extracted, exact_index, all_usable, fuzzy_threshold)
+        match = match_evidence(
+            claim.citation_extracted, exact_index, all_usable, fuzzy_threshold, case_date=case_date
+        )
         claim_records.append({
             "claim_id": claim.claim_id,
             "claim_text": claim.claim_text,
@@ -161,7 +165,9 @@ def classify_failure(status: str, reverification: dict | None) -> str | None:
         return "reverification_not_entailed"
     if status in (
         "correction_scope_violation", "correction_sibling_regression",
-        "correction_ordinal_ambiguous", "correction_unauthorized_addition",
+        "correction_splice_unavailable", "correction_structural_span_lost",
+        "correction_span_invalid", "correction_unauthorized_addition",
+        "correction_ordinal_ambiguous",
         "not_triggered",
     ):
         return status
@@ -194,6 +200,7 @@ def main() -> int:
     arm_config["A"]["verification"]["premise_framing"] = "bare"
     arm_config["A"]["verification"]["confidence_threshold"] = 0.70
     arm_config["A"]["correction"]["atomic_scope_check"] = False
+    arm_config["A"]["correction"]["assertion_aware"] = False
     arm_config["A"]["correction"]["narrow_reverification_hypothesis"] = False
 
     arm_config["B"] = copy.deepcopy(base_config)
@@ -202,11 +209,15 @@ def main() -> int:
     arm_config["B"]["verification"]["confidence_threshold"] = 0.70
     arm_config["B"]["correction"]["atomic_scope_check"] = "assertion_spans"
     arm_config["B"]["correction"]["narrow_reverification_hypothesis"] = True
+    # Treatment arm uses deterministic assertion-span splicing; the legacy
+    # whole-sentence path remains the untouched baseline in Arm A.
+    arm_config["B"]["correction"]["assertion_aware"] = True
 
     print("On-disk config/prototype.yaml is not modified; both arms are in-memory deep "
-          "copies. Arm A = unmodified production defaults. Arm B = use_evidence_v1=true, "
-          "atomic_scope_check=assertion_spans, narrow_reverification_hypothesis=true, "
-          "premise_framing=bare, confidence_threshold=0.70.", flush=True)
+          "copies. Arm A = historical legacy baseline (not current production defaults). "
+          "Arm B = use_evidence_v1=true, "
+          "atomic_scope_check=assertion_spans, assertion_aware=true, "
+          "narrow_reverification_hypothesis=true, premise_framing=bare, confidence_threshold=0.70.", flush=True)
 
     exact_index: dict[str, dict] = {}
     all_usable: dict[str, list] = {}
@@ -257,7 +268,7 @@ def main() -> int:
     verifier = NLIVerifier(
         model_id=ver_cfg["model_id"],
         model_revision=ver_cfg.get("revision"),
-        confidence_threshold=0.70,
+        confidence_threshold=ver_cfg["confidence_threshold"],
         max_sequence_length=ver_cfg["max_sequence_length"],
         device="cuda",
     )
@@ -294,20 +305,32 @@ def main() -> int:
             baseline = {
                 "document_id": case.document_id, "case_text": case.case_text,
                 "generated_field": generated_field,
-                "claims": build_arm_claim_records(claims, exact_index[arm], all_usable[arm], fuzzy_threshold),
+                "judgment_date": getattr(case, "judgment_date", None),
+                "claims": build_arm_claim_records(
+                    claims, exact_index[arm], all_usable[arm], fuzzy_threshold,
+                    case_date=getattr(case, "judgment_date", None),
+                ),
             }
             baseline["_exact_index"] = exact_index[arm]
             baseline["_all_usable"] = all_usable[arm]
             baseline["_verifier"] = verifier
 
-            pipeline.apply_verification(baseline, verifier, pipeline.resolve_premise_framing(cfg))
+            pipeline.apply_verification(
+                baseline, verifier, pipeline.resolve_premise_framing(cfg),
+                narrow_primary_hypothesis=cfg["verification"].get("narrow_primary_hypothesis", False),
+                assertion_span_primary_hypothesis=cfg["verification"].get("assertion_span_primary_hypothesis", False),
+            )
 
             doc_triggered = any(
                 rec["evidence_text"] is not None and triggers_correction(rec) for rec in baseline["claims"]
             )
             correction_summary = None
             if doc_triggered:
-                correction_summary = pipeline.apply_selective_correction(baseline, case, corrector, cfg)
+                correction_summary = (
+                    pipeline.apply_selective_correction_assertion_aware(baseline, case, corrector, cfg)
+                    if cfg["correction"].get("assertion_aware", False)
+                    else pipeline.apply_selective_correction(baseline, case, corrector, cfg)
+                )
                 rv = correction_summary.get("reverification") or {}
                 target_id = correction_summary["triggered_for_claim_id"]
                 unflagged_checked = unflagged_claimtext_preserved = unflagged_assertion_preserved = 0
@@ -338,6 +361,7 @@ def main() -> int:
 
             record = {
                 "document_id": case.document_id, "case_text": case.case_text,
+                "judgment_date": getattr(case, "judgment_date", None),
                 "generated_field": generated_field,
                 "claims": [{k: v for k, v in c.items() if not k.startswith("_")} for c in baseline["claims"]],
                 "correction": (
@@ -354,6 +378,7 @@ def main() -> int:
                     "premise_framing": cfg["verification"]["premise_framing"],
                     "atomic_scope_check": cfg["correction"]["atomic_scope_check"],
                     "narrow_reverification_hypothesis": cfg["correction"]["narrow_reverification_hypothesis"],
+                    "assertion_aware_correction": cfg["correction"].get("assertion_aware", False),
                     "evidence_pool_size": len(all_usable[arm]),
                     "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 },
@@ -400,7 +425,7 @@ def main() -> int:
             "confidence_summary": {
                 "n": n_conf,
                 "mean": (sum(confidences) / n_conf) if n_conf else None,
-                "median": (confidences[n_conf // 2] if n_conf else None),
+                "median": (median(confidences) if n_conf else None),
                 "min": (confidences[0] if n_conf else None),
                 "max": (confidences[-1] if n_conf else None),
             },
@@ -420,7 +445,7 @@ def main() -> int:
         }
 
     result = {
-        "experiment": "final_gpu_validation_A_vs_B",
+        "experiment": "final_gpu_validation_A_vs_assertion_aware_B",
         "data": "50 deterministically-selected, NEVER-before-evaluated NyayaRAG cases "
                 "(outputs/natural_candidate_selected_ids_50_final_validation.json), disjoint "
                 "from all 130 document_ids used in run_A_n30/run_natural_targeted/"
@@ -431,13 +456,14 @@ def main() -> int:
         "n_cases": len(cases), "seed": base_config["seed"],
         "generation_model": gen_cfg["model_id"], "verification_model": ver_cfg["model_id"],
         "arm_definitions": {
-            "A": {"label": "baseline (production defaults, unmodified)",
+            "A": {"label": "historical legacy baseline (not current production defaults)",
                   "use_evidence_v1": False, "premise_framing": "bare",
                   "atomic_scope_check": False, "narrow_reverification_hypothesis": False,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["A"])},
-            "B": {"label": "improved (all validated improvements enabled)",
+            "B": {"label": "treatment (evidence-v1 + assertion-span correction; experimental)",
                   "use_evidence_v1": True, "premise_framing": "bare",
                   "atomic_scope_check": "assertion_spans", "narrow_reverification_hypothesis": True,
+                  "assertion_aware_correction": True,
                   "confidence_threshold": 0.70, "evidence_pool_size": len(all_usable["B"])},
         },
         "per_arm": per_arm_metrics,
