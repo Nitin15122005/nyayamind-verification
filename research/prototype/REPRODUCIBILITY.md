@@ -120,7 +120,13 @@ research/.venv/Scripts/python.exe research/prototype/scripts/run_labeled_correct
 # The driver reproduces the selector's v0-only variant tie-break, applies
 # case-date-aware evidence matching, and passes production primary-hypothesis
 # settings explicitly. It writes four files under outputs/.
-research/.venv/Scripts/python.exe research/prototype/scripts/run_controlled_assertion_ablation_gpu.py --device cuda
+# First select a genuinely fresh 50-case holdout. The selector excludes
+# prior GPU batches AND the Nov 10 final-validation candidate list.
+research/.venv/Scripts/python.exe research/prototype/scripts/select_natural_candidates.py --out-suffix _fresh_gpu_20261111
+
+# Run the paired legacy-vs-structured-minimal-patch GPU ablation.
+# Preserve this exact candidate file and use a unique output prefix.
+research/.venv/Scripts/python.exe research/prototype/scripts/run_controlled_assertion_ablation_gpu.py --device cuda --candidate-file natural_candidate_selected_ids_50_fresh_gpu_20261111.json --out-prefix controlled_assertion_ablation_gpu_fresh_20261111
 
 # CPU-only paired integrity/statistical analysis (no model loads).
 research/.venv/Scripts/python.exe research/prototype/scripts/audit_assertion_aware_gpu_outputs.py \

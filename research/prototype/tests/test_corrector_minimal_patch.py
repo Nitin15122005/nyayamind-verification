@@ -67,16 +67,20 @@ def test_structured_patch_parser_accepts_exact_schema():
         "replacement_span": "imprisonment and fine",
     }
     assert meta.model_id == "mock-generator"
+    assert meta.raw_model_output == (
+        '{"original_span":"a fine only","replacement_span":"imprisonment and fine"}'
+    )
 
 
 def test_structured_patch_parser_rejects_extra_keys():
-    patch, _ = _corrector(
+    patch, meta = _corrector(
         '{"original_span":"wrong","replacement_span":"right","explanation":"x"}'
     ).correct_assertion_patch(
         case_text="facts", target_span="wrong claim", evidence_text="law",
         assertion_span_system_prompt="system", max_new_tokens=100,
     )
     assert patch == {"original_span": "", "replacement_span": ""}
+    assert meta.raw_model_output.startswith('{"original_span":"wrong"')
 
 
 def test_structured_patch_parser_accepts_fenced_json():
