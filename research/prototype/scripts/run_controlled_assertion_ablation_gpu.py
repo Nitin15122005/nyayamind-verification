@@ -49,6 +49,12 @@ def load_selected_cases(outputs: Path, repo_root: Path, config: dict, exact_inde
     of which arm's evidence pool is later used for matching/verification."""
     selected_path = outputs / candidate_file
     selected_ids = json.loads(selected_path.read_text(encoding="utf-8"))["document_ids"]
+    if not isinstance(selected_ids, list) or not selected_ids:
+        raise ValueError("Candidate file must contain a non-empty document_ids list.")
+    if any(not isinstance(doc_id, str) or not doc_id.strip() for doc_id in selected_ids):
+        raise ValueError("Candidate document_ids must be non-empty strings.")
+    if len(selected_ids) != len(set(selected_ids)):
+        raise ValueError("Candidate file contains duplicate document_ids; refusing a non-independent sample.")
     selected_set = set(selected_ids)
 
     case_paths = [repo_root / p for p in config["paths"]["nyayarag_case_files"]]
@@ -146,7 +152,10 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
     ap.add_argument("--out-prefix", default="controlled_assertion_ablation_gpu")
-    ap.add_argument("--candidate-file", default="natural_candidate_selected_ids_50_final_validation.json")
+    ap.add_argument(
+        "--candidate-file", required=True,
+        help="Explicitly locked candidate-ID JSON in outputs/. No historical holdout default is used.",
+    )
     args = ap.parse_args()
 
     if args.device != "cuda":
