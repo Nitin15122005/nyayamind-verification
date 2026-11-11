@@ -1527,7 +1527,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "original_field_text": original_field_text,
             "reverification": None,
             "correction_mode": "assertion_aware",
-            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
+            "correction_method": "not_invoked",
         }
     target_spans, target_content_fragment = resolved
     structural_spans = target_spans[:-1]  # e.g. a "respectively" claim's own bare number; [] for ordinary claims
