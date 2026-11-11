@@ -27,6 +27,7 @@ class CorrectionMetadata:
     do_sample: bool
     seed: int
     corrected_at: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"))
+    raw_model_output: Optional[str] = None
 
 
 class SelectiveCorrector:
@@ -105,6 +106,7 @@ class SelectiveCorrector:
             max_new_tokens=self.max_new_tokens,
             do_sample=self.do_sample,
             seed=self._generator.seed,
+            raw_model_output=corrected_text,
         )
         return corrected_text, metadata
 
@@ -193,6 +195,7 @@ class SelectiveCorrector:
             max_new_tokens=max_new_tokens,
             do_sample=self.do_sample,
             seed=self._generator.seed,
+            raw_model_output=corrected_fragment,
         )
         return corrected_fragment, metadata
 
@@ -261,5 +264,6 @@ class SelectiveCorrector:
             max_new_tokens=max_new_tokens,
             do_sample=self.do_sample,
             seed=self._generator.seed,
+            raw_model_output=raw,
         )
         return patch, metadata
