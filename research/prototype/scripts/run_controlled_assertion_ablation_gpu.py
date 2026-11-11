@@ -198,6 +198,25 @@ def main() -> int:
         repo_root / base_config["paths"]["evidence_audit"],
         set(base_config["usable_evidence_verdicts"]),
     )
+    candidate_path = outputs / args.candidate_file
+    candidate_sha256 = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+    base_config_path = _PROTOTYPE_ROOT / "config" / "prototype.yaml"
+    base_config_sha256 = hashlib.sha256(base_config_path.read_bytes()).hexdigest()
+    arm_config_sha256 = {
+        arm: hashlib.sha256(json.dumps(arm_config[arm], sort_keys=True, default=str).encode("utf-8")).hexdigest()
+        for arm in ARMS
+    }
+    try:
+        git_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=repo_root, text=True
+        ).strip()
+        git_worktree_dirty = bool(subprocess.check_output(
+            ["git", "status", "--porcelain"], cwd=repo_root, text=True
+        ).strip())
+    except (OSError, subprocess.CalledProcessError):
+        git_commit = None
+        git_worktree_dirty = None
+
     cases = load_selected_cases(
         outputs, repo_root, base_config, selection_exact_index, selection_usable, args.candidate_file
     )
@@ -318,6 +337,10 @@ def main() -> int:
                     "arm": arm, "document_id": case.document_id,
                     "triggered_for_claim_id": target_id, "status": correction_summary["status"],
                     "failure_category": classify_failure(correction_summary["status"], rv or None),
+                    "correction_method": correction_summary.get("correction_method", "legacy_sentence"),
+                    "target_assertion_spans": correction_summary.get("target_assertion_spans"),
+                    "target_content_fragment": correction_summary.get("target_content_fragment"),
+                    "corrected_fragment": correction_summary.get("corrected_fragment"),
                     "original_field_text": correction_summary["original_field_text"],
                     "regenerated_text": correction_summary["regenerated_text"],
                     "reverification": rv or None,
@@ -355,6 +378,13 @@ def main() -> int:
                     "atomic_scope_check": cfg["correction"]["atomic_scope_check"],
                     "narrow_reverification_hypothesis": cfg["correction"]["narrow_reverification_hypothesis"],
                     "assertion_aware_correction": cfg["correction"].get("assertion_aware", False),
+                    "correction_method_expected": "minimal_patch" if cfg["correction"].get("assertion_aware", False) else "legacy_sentence",
+                    "git_commit": git_commit,
+                    "git_worktree_dirty": git_worktree_dirty,
+                    "candidate_file": args.candidate_file,
+                    "candidate_file_sha256": candidate_sha256,
+                    "base_config_sha256": base_config_sha256,
+                    "arm_config_sha256": arm_config_sha256[arm],
                     "evidence_pool_size": len(all_usable[arm]),
                     "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 },
@@ -431,6 +461,11 @@ def main() -> int:
                 "evidence pool.",
         "n_cases": len(cases), "seed": base_config["seed"],
         "candidate_file": args.candidate_file,
+        "candidate_file_sha256": candidate_sha256,
+        "base_config_sha256": base_config_sha256,
+        "arm_config_sha256": arm_config_sha256,
+        "git_commit": git_commit,
+        "git_worktree_dirty": git_worktree_dirty,
         "selection_variant_evidence_pool": "v0_only",
         "case_date_aware_matching": True,
         "primary_hypothesis_policy": {
