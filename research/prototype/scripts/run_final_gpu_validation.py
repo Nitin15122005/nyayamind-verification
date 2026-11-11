@@ -232,6 +232,7 @@ def main() -> int:
     print(f"Loading generator {gen_cfg['model_id']} (4-bit, CUDA)...", flush=True)
     generator = StatuteGroundingGenerator(
         model_id=gen_cfg["model_id"],
+        model_revision=gen_cfg.get("revision"),
         quantization=gen_cfg["quantization"],
         device_map=gen_cfg["device_map"],
         max_new_tokens=gen_cfg["max_new_tokens"],
@@ -255,6 +256,7 @@ def main() -> int:
     print(f"Loading verifier {ver_cfg['model_id']} (CUDA)...", flush=True)
     verifier = NLIVerifier(
         model_id=ver_cfg["model_id"],
+        model_revision=ver_cfg.get("revision"),
         confidence_threshold=0.70,
         max_sequence_length=ver_cfg["max_sequence_length"],
         device="cuda",

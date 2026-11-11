@@ -1632,8 +1632,9 @@ def test_narrow_reverification_never_synthesizes_text(ipc_148_evidence_pool, con
     assert target.assertion_text in corrected_text  # genuine substring, not synthesized
 
 
+@pytest.mark.parametrize("sibling_recheck", [CONTRADICTED, NOT_ENOUGH_INFORMATION])
 def test_sibling_regression_check_rejects_a_genuine_regression(
-    respectively_evidence_pool, config
+    respectively_evidence_pool, config, sibling_recheck
 ):
     """If a sibling's own required assertion fragments survive, but its
     independently checked, citation-specific assertion is now genuinely
@@ -1666,7 +1667,7 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
         ("unlawful assembly", corrected_text): _vr(ENTAILED, confidence=0.9),  # 149 target: passes
         # Sibling-regression re-checks use citation-specific hypotheses,
         # not the shared full sentence.
-        ("murder", "Section 302 murder but never manslaughter"): _vr(CONTRADICTED, confidence=0.85),  # 302: genuine regression
+        ("murder", "Section 302 murder but never manslaughter"): _vr(sibling_recheck, confidence=0.85),  # 302: no longer ENTAILED
         ("voluntarily causes hurt", "Section 323 voluntarily causing hurt"): _vr(ENTAILED, confidence=0.93),  # 323: fine
         ("common intention", "Section 34 abetting the commission of a non-cognizable offense"): _vr(NOT_ENOUGH_INFORMATION, confidence=0.9),  # 34: fine
     })
@@ -1677,7 +1678,7 @@ def test_sibling_regression_check_rejects_a_genuine_regression(
 
     assert record["correction"]["status"] == "correction_sibling_regression"
     assert len(record["correction"]["sibling_regressions"]) == 1
-    assert record["correction"]["sibling_regressions"][0]["verdict"] == CONTRADICTED
+    assert record["correction"]["sibling_regressions"][0]["verdict"] == sibling_recheck
     # Never shipped: final field reverts to the original, untouched text.
     assert record["final_field"]["source"] == "correction_sibling_regression"
     assert record["final_field"]["text"] == original_text
@@ -1909,3 +1910,61 @@ def test_sibling_reverification_uses_its_own_assertion_in_a_bundled_sentence(
     ]
     assert sibling_rechecks == [sibling_corrected.assertion_text]
 
+
+
+def test_claim_output_exposes_canonical_evidence_provenance(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(document_id="doc-provenance", case_text="facts...", raw_citation_keys=[])
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_source_url"] == "https://example.invalid/1"
+    assert claim["evidence_audit_verdict"] == "VERIFIED_EXACT"
+    assert claim["citation_extracted"]["start_char"] is not None
+    assert claim["citation_extracted"]["end_char"] > claim["citation_extracted"]["start_char"]
+    start = claim["citation_extracted"]["start_char"]
+    end = claim["citation_extracted"]["end_char"]
+    assert text[start:end] == "302"
+
+
+def test_dated_case_does_not_treat_undated_statute_record_as_verified(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(
+        document_id="dated-doc", case_text="facts...", raw_citation_keys=[],
+        judgment_date="1982-01-01",
+    )
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_id"] is None
+    assert claim["evidence_match_method"] == "temporal_unverified"
+    assert claim["no_evidence_category"] == "temporal_applicability_unverified"
+    assert claim["temporal_applicability"] == "unverified_no_temporal_metadata"
+    assert record["judgment_date"] == "1982-01-01"
+
+
+def test_case_date_before_statute_interval_is_reported_as_temporal_mismatch(evidence_pool, config):
+    exact_index, all_usable = evidence_pool
+    evidence = all_usable[0]
+    evidence.effective_from = "2000-01-01"
+    evidence.effective_to = None
+    text = "Section 302 of the Indian Penal Code, 1860 prescribes punishment for murder."
+    case = Case(
+        document_id="pre-commencement", case_text="facts...", raw_citation_keys=[],
+        judgment_date="1982-01-01",
+    )
+    record = run_case(
+        case, "A", FakeGenerator(text), verifier=None, corrector=None,
+        exact_index=exact_index, all_usable=all_usable, config=config,
+    )
+    claim = record["claims"][0]
+    assert claim["evidence_id"] is None
+    assert claim["evidence_match_method"] == "temporal_out_of_range"
+    assert claim["no_evidence_category"] == "statutory_text_not_effective_on_case_date"
+    assert claim["temporal_applicability"] == "not_effective_on_case_date"

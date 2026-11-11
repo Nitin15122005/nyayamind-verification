@@ -159,6 +159,7 @@ def cmd_run(args: argparse.Namespace) -> int:
           f"this downloads/loads a 7B model and will take a while.")
     gen = StatuteGroundingGenerator(
         model_id=config["generation"]["model_id"],
+        model_revision=config["generation"].get("revision"),
         quantization=config["generation"]["quantization"],
         device_map=config["generation"]["device_map"],
         max_new_tokens=config["generation"]["max_new_tokens"],
@@ -177,6 +178,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"Loading verifier ({config['verification']['model_id']})...")
         verifier = NLIVerifier(
             model_id=config["verification"]["model_id"],
+            model_revision=config["verification"].get("revision"),
             confidence_threshold=config["verification"]["confidence_threshold"],
             max_sequence_length=config["verification"]["max_sequence_length"],
         )

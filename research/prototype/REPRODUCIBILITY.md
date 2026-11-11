@@ -20,11 +20,24 @@ number.
 | Setup | `pip install -r research/requirements.txt` into a venv at `research/.venv` (the path every command below assumes — adjust if yours differs) |
 | Docker alternative | `docker-compose.yml` + `Dockerfile` — `gpus: all` requires the NVIDIA Container Toolkit; only used for `run_mvp.py --check` by default, see the file's own comments |
 
-**This project does not pin exact model-weight versions** — `Qwen/Qwen2.5-7B-Instruct` and
-`MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli` are pulled from the Hugging Face Hub at whatever
-revision is current when first loaded (no `revision=` pin in `src/generator.py`/`src/verifier.py`).
-A future upstream weight update could in principle shift generation/verification output slightly;
-this has not been a problem in practice across this project's history but is not hash-pinned.
+**Model revisions are pinned in the production prototype configuration**:
+- Qwen/Qwen2.5-7B-Instruct: `a09a35458c702b33eeacc393d103063234e8bc28`
+- MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli: `6f5cf0a2b59cabb106aca4c287eed12e357e90eb`
+
+The generator, verifier, and GPU validation scripts pass these configured revisions to the
+Hugging Face loaders. Runtime manifests record the configured and resolved commit where the
+loaded model exposes it. Revision pinning identifies the Hub snapshot; it is not a substitute
+for archiving file-level hashes. Generate that archive with:
+
+```bash
+python research/prototype/scripts/archive_model_artifact_hashes.py
+```
+
+The command downloads both exact snapshots, verifies that each resolves to the requested
+40-character commit, hashes every snapshot file with SHA-256, and writes
+`research/prototype/outputs/model_artifact_manifest.json`. It does not load model weights
+or perform inference. Keep the manifest with the experiment/release artifacts; do not commit
+the multi-gigabyte model weights.
 
 ---
 
@@ -56,10 +69,12 @@ as the interpreter (Windows; substitute `research/.venv/bin/python` on Linux/mac
 research/.venv/Scripts/python.exe -m pytest research/prototype/tests/ -q
 ```
 
-Expected result: all tests pass. **205 passed** is a historical count from 2026-08-27,
-not a current expectation. Record the actual pass/fail/skip/error counts, interpreter
-version, operating system, and commit SHA from each publication-readiness run; do not
-report the historical count as a fresh test result.
+Expected result: all selected tests pass. The 2026-11-10 GitHub Actions run on
+commit `61ad5e8b4fb2cd6437dce491e2518160e697609e` reported **415 passed, 1 skipped,
+6 deselected** for the deterministic suite. The skip is the optional
+`sentence_transformers` retrieval test because that dependency is not installed in the CI
+test environment. This is a recorded CI result, not a promise about future commits. Record
+actual counts, interpreter version, operating system, and commit SHA for each new run.
 
 ### Config/import check (no model loaded)
 
@@ -180,8 +195,10 @@ pins that this combination still resolves correctly through the current code.
   performed by any committed script. If missing in a new environment, re-obtain
   `3.CaseText_Statutes.zip` from `L-NLProc/NyayaRAG` on Hugging Face (see `README.md` §"Data
   sources"). No committed script downloads it automatically.
-- **Model weights are not hash-pinned** (§1) — real-GPU reruns are expected to be behaviorally
-  close to, but not guaranteed byte-identical to, the committed results.
+- **Model artifact hashes are not yet archived** — full commit-SHA revisions are configured (§1),
+  and `scripts/archive_model_artifact_hashes.py` now downloads those exact snapshots and writes a
+  per-file SHA-256 manifest. Run it before the release candidate; until its output is archived,
+  the artifact-integrity gate remains open. GPU outputs can still vary across hardware and library versions.
 - **`baseline/LegalSeg`** is a separate git submodule (the RhetoricLLaMA baseline reproduction)
   with its own, independent reproducibility story documented in `research/baseline/BASELINE.md` —
   out of scope for this document, which covers `research/prototype/` only.

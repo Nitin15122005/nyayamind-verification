@@ -133,6 +133,7 @@ def real_verifier(real_config):
     torch = pytest.importorskip("torch")
     v = NLIVerifier(
         model_id=real_config["verification"]["model_id"],
+        model_revision=real_config["verification"].get("revision"),
         confidence_threshold=real_config["verification"]["confidence_threshold"],
         max_sequence_length=real_config["verification"]["max_sequence_length"],
         device="cuda" if torch.cuda.is_available() else "cpu",

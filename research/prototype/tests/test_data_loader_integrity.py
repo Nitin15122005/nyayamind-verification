@@ -156,3 +156,70 @@ def test_loader_rejects_conflicting_audit_identity_metadata(tmp_path, field, val
 
     with pytest.raises(ValueError, match=f"Canonical/audit {field} mismatch"):
         load_usable_evidence(cpath, apath, USABLE)
+
+
+def test_effective_date_metadata_is_loaded_and_validated(tmp_path):
+    row = canonical()
+    row["effective_from"] = "2000-01-01"
+    row["effective_to"] = "2010-12-31"
+    cpath, apath = write_pair(tmp_path, [row], [audit()])
+    _index, records = load_usable_evidence(cpath, apath, USABLE)
+    assert records[0].effective_from == "2000-01-01"
+    assert records[0].effective_to == "2010-12-31"
+
+
+@pytest.mark.parametrize("effective_from,effective_to", [
+    ("01-01-2000", "2010-12-31"),
+    ("2010-01-01", "2009-12-31"),
+    (None, "2010-12-31"),
+])
+def test_invalid_effective_date_intervals_are_rejected(tmp_path, effective_from, effective_to):
+    row = canonical()
+    row["effective_from"] = effective_from
+    row["effective_to"] = effective_to
+    cpath, apath = write_pair(tmp_path, [row], [audit()])
+    with pytest.raises(ValueError):
+        load_usable_evidence(cpath, apath, USABLE)
+
+
+def test_case_loader_reads_only_explicit_judgment_date(tmp_path):
+    from src.data_loader import load_nyayarag_cases
+
+    path = tmp_path / "cases.json"
+    path.write_text(json.dumps([{
+        "document_id": "case-1",
+        "summarized_text": "A case summary.",
+        "sections": {"Section 1 in Example Act": "ignored text"},
+        "judgment_date": "2005-06-30",
+    }]), encoding="utf-8")
+    cases = load_nyayarag_cases([path])
+    assert cases[0].judgment_date == "2005-06-30"
+
+
+def test_case_loader_rejects_invalid_judgment_date(tmp_path):
+    from src.data_loader import load_nyayarag_cases
+
+    path = tmp_path / "cases.json"
+    path.write_text(json.dumps([{
+        "document_id": "case-2",
+        "summarized_text": "A case summary.",
+        "sections": {},
+        "judgment_date": "30-06-2005",
+    }]), encoding="utf-8")
+    with pytest.raises(ValueError, match="judgment_date"):
+        load_nyayarag_cases([path])
+
+
+@pytest.mark.parametrize("field,value", [
+    ("effective_from", "2001-01-01"),
+    ("effective_to", "2011-01-01"),
+])
+def test_loader_rejects_audit_effective_date_disagreement(tmp_path, field, value):
+    row = canonical()
+    row["effective_from"] = "2000-01-01"
+    row["effective_to"] = "2010-12-31"
+    audit_row = audit()
+    audit_row[field] = value
+    cpath, apath = write_pair(tmp_path, [row], [audit_row])
+    with pytest.raises(ValueError, match=f"Canonical/audit {field} mismatch"):
+        load_usable_evidence(cpath, apath, USABLE)

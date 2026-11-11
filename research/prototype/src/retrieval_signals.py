@@ -127,6 +127,7 @@ class ScoredMatch:
     evidence: Optional[EvidenceRecord]
     score: float  # method-specific normalization; never compared across methods
     method: str  # "bm25" | "embedding"
+    ambiguous: bool = False
 
 
 def best_match_among(
@@ -166,8 +167,11 @@ def best_match_among(
     cand_scores = [(ev, all_scores.get(ev.act_norm, 0.0)) for ev in candidates]
 
     if method == "embedding":
-        best_ev, best_raw = max(cand_scores, key=lambda t: t[1])
-        return ScoredMatch(evidence=best_ev, score=best_raw, method=method)
+        best_raw = max(score for _ev, score in cand_scores)
+        best = [ev for ev, score in cand_scores if abs(score - best_raw) <= 1e-12]
+        if len(best) != 1:
+            return ScoredMatch(evidence=None, score=best_raw, method=method, ambiguous=True)
+        return ScoredMatch(evidence=best[0], score=best_raw, method=method)
 
     # bm25: normalize each candidate's score against its OWN self-score
     # (absolute, per-candidate -- never relative to sibling candidates).
@@ -177,8 +181,11 @@ def best_match_among(
         self_score = self_scores.get(ev.act_norm, 0.0)
         norm = (raw / self_score) if self_score > 0 else 0.0
         normalized.append((ev, min(norm, 1.0)))
-    best_ev, best_norm = max(normalized, key=lambda t: t[1])
-    return ScoredMatch(evidence=best_ev, score=best_norm, method=method)
+    best_norm = max(score for _ev, score in normalized)
+    best = [ev for ev, score in normalized if abs(score - best_norm) <= 1e-12]
+    if len(best) != 1:
+        return ScoredMatch(evidence=None, score=best_norm, method=method, ambiguous=True)
+    return ScoredMatch(evidence=best[0], score=best_norm, method=method)
 
 
 def suggest_candidates_bm25(

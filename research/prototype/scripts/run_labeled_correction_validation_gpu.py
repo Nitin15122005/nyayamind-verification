@@ -115,7 +115,7 @@ def main() -> int:
     gen_cfg = config["generation"]
     print(f"\nLoading generator {gen_cfg['model_id']} (4-bit, CUDA) -- correction calls only, no generation...", flush=True)
     generator = StatuteGroundingGenerator(
-        model_id=gen_cfg["model_id"], quantization=gen_cfg["quantization"], device_map=gen_cfg["device_map"],
+        model_id=gen_cfg["model_id"], model_revision=gen_cfg.get("revision"), quantization=gen_cfg["quantization"], device_map=gen_cfg["device_map"],
         max_new_tokens=gen_cfg["max_new_tokens"], do_sample=gen_cfg["do_sample"], temperature=gen_cfg["temperature"],
         top_p=gen_cfg["top_p"], system_prompt=gen_cfg["system_prompt"], user_prompt_template=gen_cfg["user_prompt_template"],
         seed=config["seed"],
@@ -128,7 +128,7 @@ def main() -> int:
     )
     print("Loading DeBERTa verifier on CPU (reverification only, few calls)...", flush=True)
     verifier = NLIVerifier(
-        model_id=config["verification"]["model_id"], confidence_threshold=0.70,
+        model_id=config["verification"]["model_id"], model_revision=config["verification"].get("revision"), confidence_threshold=0.70,
         max_sequence_length=config["verification"]["max_sequence_length"], device="cpu",
     )
     verifier.load()

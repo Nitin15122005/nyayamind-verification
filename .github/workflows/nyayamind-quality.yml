@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - publication/readiness-engineering
+      - production-hardening-2026-11-04
   pull_request:
     branches:
       - main
@@ -21,7 +22,7 @@ permissions:
 
 concurrency:
   group: nyayamind-quality-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   python-tests:
@@ -50,6 +51,8 @@ jobs:
         env:
           PYTHONPATH: research/prototype
         run: python -m pytest research/prototype/tests -m 'not integration' -ra
+      - name: Run model-free CLI and evidence-pool smoke check
+        run: python research/prototype/scripts/run_mvp.py --check
       - name: Audit statutory evidence structure (read-only)
         run: |
           python research/prototype/scripts/audit_evidence_integrity.py \
@@ -58,7 +61,7 @@ jobs:
 
   real-model-integration:
     name: Real DeBERTa model integration (manual)
-    if: github.event_name == 'workflow_dispatch' && inputs.run_model_integration
+    if: (github.event_name == 'workflow_dispatch' && inputs.run_model_integration) || (github.event_name == 'pull_request' && github.event.pull_request.number == 8) || (github.event_name == 'push' && github.ref == 'refs/heads/production-hardening-2026-11-04')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

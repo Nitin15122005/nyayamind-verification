@@ -412,6 +412,10 @@ class ExtractedCitation:
     # naturally falls through to NO_EVIDENCE without any special-casing.
     act_raw: Optional[str]       # as written in the generated text, or None
     act_norm: str                # normalized for matching, or "" if unresolved
+    # Exact occurrence offsets within the source sentence (end-exclusive).
+    # Optional defaults preserve compatibility with manually-built records.
+    start_char: Optional[int] = None
+    end_char: Optional[int] = None
 
     def as_dict(self) -> dict:
         return {
@@ -420,6 +424,8 @@ class ExtractedCitation:
             "subsection": self.subsection,
             "act_raw": self.act_raw,
             "act_norm": self.act_norm,
+            "start_char": self.start_char,
+            "end_char": self.end_char,
         }
 
 
@@ -486,7 +492,10 @@ def split_sentences(text: str) -> list[str]:
     return parts
 
 
-def _citations_from_numbers(ptype: str, numbers_text: str, act_raw_clean: Optional[str], act_norm: str) -> list[ExtractedCitation]:
+def _citations_from_numbers(
+    ptype: str, numbers_text: str, act_raw_clean: Optional[str], act_norm: str,
+    numbers_start: Optional[int] = None,
+) -> list[ExtractedCitation]:
     citations: list[ExtractedCitation] = []
     for item_m in _NUMBER_ITEM_RE.finditer(numbers_text):
         split = _NUMBER_ITEM_SPLIT_RE.match(item_m.group(0).strip())
@@ -500,6 +509,8 @@ def _citations_from_numbers(ptype: str, numbers_text: str, act_raw_clean: Option
                 subsection=subsection.strip() if subsection else None,
                 act_raw=act_raw_clean,
                 act_norm=act_norm,
+                start_char=(numbers_start + item_m.start()) if numbers_start is not None else None,
+                end_char=(numbers_start + item_m.end()) if numbers_start is not None else None,
             )
         )
     return citations
@@ -626,7 +637,11 @@ def extract_citations(sentence: str) -> list[ExtractedCitation]:
 
     for start, end, ptype, numbers_text, part_designation, act_raw_clean, act_norm in _iter_full_form_matches(sentence):
         full_spans.append((start, end))
-        citations = _citations_from_numbers(ptype, numbers_text, act_raw_clean, act_norm)
+        numbers_start = sentence.find(numbers_text, start, end)
+        citations = _citations_from_numbers(
+            ptype, numbers_text, act_raw_clean, act_norm,
+            numbers_start=numbers_start if numbers_start >= 0 else None,
+        )
         # Only attach a "Part <roman>" qualifier when it unambiguously
         # belongs to a single provision number — a bundled list ("Sections
         # 302, 304, Part II of the IPC") never lets the qualifier be safely
@@ -674,10 +689,17 @@ def extract_citations(sentence: str) -> list[ExtractedCitation]:
                     subsection=subsection.strip() if subsection else None,
                     act_raw=sentence_act_raw,
                     act_norm=sentence_act_norm,
+                    start_char=m.start("numbers") + item_m.start(),
+                    end_char=m.start("numbers") + item_m.end(),
                 ),
             ))
 
-    results.sort(key=lambda pair: pair[0])
+    # Sort by each individual citation occurrence, not only by the start
+    # of its enclosing citation group. This preserves exact reading order
+    # for plural citation lists and repeated provision mentions.
+    results.sort(key=lambda pair: (
+        pair[1].start_char if pair[1].start_char is not None else pair[0]
+    ))
     return [c for _, c in results]
 
 
@@ -732,7 +754,16 @@ def _citation_mentioned_in(clause: str, citation: ExtractedCitation) -> bool:
     "Sections 3 and 482" — is still recognized; a naive adjacency regex
     would only ever match the FIRST number in such a list."""
     for c in extract_citations(clause):
-        if c.provision_type == citation.provision_type and c.provision_number == citation.provision_number:
+        if (
+            c.provision_type == citation.provision_type
+            and c.provision_number == citation.provision_number
+            and c.subsection == citation.subsection
+            and (
+                not c.act_norm
+                or not citation.act_norm
+                or c.act_norm == citation.act_norm
+            )
+        ):
             return True
     return False
 

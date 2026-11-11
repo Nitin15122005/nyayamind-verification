@@ -62,6 +62,9 @@ use_evidence_v1: true
 
 generation:
   model_id: "Qwen/Qwen2.5-7B-Instruct"
+  # Optional immutable Hugging Face commit SHA. Null means the upstream
+  # model revision is not pinned; set only after verifying the exact commit.
+  revision: "a09a35458c702b33eeacc393d103063234e8bc28"
   quantization:
     load_in_4bit: true
     bnb_4bit_use_double_quant: true
@@ -134,6 +137,8 @@ evidence_matching:
 
 verification:
   model_id: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+  # Optional immutable Hugging Face commit SHA; null is explicitly unpinned.
+  revision: "6f5cf0a2b59cabb106aca4c287eed12e357e90eb"
   # UNCHANGED 2026-08-27 review: outputs/threshold_sensitivity_analysis.md's
   # deterministic sweep (0.50-0.95) over the 420-item controlled benchmark
   # shows 0.70 sits within 0.002 macro-F1 of the empirical optimum under
