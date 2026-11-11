@@ -1,0 +1,57 @@
+{
+  "audit_scope": "structural integrity only; not legal validation",
+  "repo_root": "D:\\Programs\\nyayamind-verification",
+  "pools": [
+    {
+      "pool": "v0",
+      "canonical_records": 63,
+      "audit_records": 63,
+      "usable_records": 59,
+      "verdict_counts": {
+        "VERIFIED_EXACT": 25,
+        "VERIFIED_CONTENT": 34,
+        "INVALID": 1,
+        "SOURCE_ONLY": 2,
+        "UNRESOLVED": 1
+      },
+      "canonical_audit_key_sets_match": true,
+      "canonical_audit_key_order_matches": true
+    },
+    {
+      "pool": "v1",
+      "canonical_records": 82,
+      "audit_records": 82,
+      "usable_records": 78,
+      "verdict_counts": {
+        "VERIFIED_EXACT": 78,
+        "SOURCE_ONLY": 4
+      },
+      "canonical_audit_key_sets_match": true,
+      "canonical_audit_key_order_matches": true
+    }
+  ],
+  "merged_usable_record_count": 136,
+  "merged_exact_index_collision_count": 0,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "REVIEW_HISTORICAL_STATUS",
+      "pool": "v0",
+      "key": "Section 27 in The Indian Evidence Act, 1872",
+      "detail": "Legacy enactment marked in_force; confirm applicable date/version and statutory transition."
+    },
+    {
+      "code": "REVIEW_HISTORICAL_STATUS",
+      "pool": "v0",
+      "key": "Section 114 in The Indian Evidence Act, 1872",
+      "detail": "Legacy enactment marked in_force; confirm applicable date/version and statutory transition."
+    },
+    {
+      "code": "REVIEW_HISTORICAL_STATUS",
+      "pool": "v0",
+      "key": "Section 304B in The Indian Penal Code, 1860",
+      "detail": "Legacy enactment marked in_force; confirm applicable date/version and statutory transition."
+    }
+  ],
+  "status": "PASS_WITH_WARNINGS"
+}

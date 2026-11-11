@@ -1,0 +1,77 @@
+name: Lawyer-review benchmark checks
+
+on:
+  pull_request:
+    paths:
+      - "research/data/lawyer-review/**"
+      - "research/paper/**"
+      - "research/prototype/scripts/import_lawyer_review.py"
+      - "research/prototype/scripts/evaluate_lawyer_review.py"
+      - "research/prototype/scripts/audit_lawyer_review_alignment.py"
+      - "research/prototype/scripts/generate_lawyer_review_baseline.py"
+      - "research/prototype/scripts/evaluate_lawyer_review_features.py"
+      - "research/prototype/tests/test_lawyer_review_*.py"
+      - ".github/workflows/lawyer-review-benchmark.yml"
+  push:
+    branches:
+      - "research/lawyer-annotation-benchmark"
+    paths:
+      - "research/data/lawyer-review/**"
+      - "research/prototype/scripts/import_lawyer_review.py"
+      - "research/prototype/scripts/evaluate_lawyer_review.py"
+      - "research/prototype/scripts/audit_lawyer_review_alignment.py"
+      - "research/prototype/scripts/evaluate_lawyer_review_features.py"
+      - "research/prototype/tests/test_lawyer_review_*.py"
+      - ".github/workflows/lawyer-review-benchmark.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install minimal benchmark dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas==2.2.2 openpyxl==3.1.5 scikit-learn==1.4.2 pytest==9.1.1
+      - name: Run lawyer-review benchmark unit tests
+        run: |
+          python -m pytest research/prototype/tests/test_lawyer_review_import.py research/prototype/tests/test_lawyer_review_evaluation.py research/prototype/tests/test_lawyer_review_alignment.py research/prototype/tests/test_lawyer_review_baseline.py research/prototype/tests/test_lawyer_review_features.py -q
+      - name: Regenerate normalized lawyer-review dataset
+        run: python research/prototype/scripts/import_lawyer_review.py
+      - name: Regenerate compact alignment audit
+        run: python research/prototype/scripts/audit_lawyer_review_alignment.py
+      - name: Generate case-grouped out-of-fold majority baseline
+        run: python research/prototype/scripts/generate_lawyer_review_baseline.py
+      - name: Evaluate majority baseline against separate lawyer labels
+        run: |
+          python research/prototype/scripts/evaluate_lawyer_review.py \
+            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
+            --predictions research/data/lawyer-review/processed/majority_baseline.oof.csv \
+            --output research/data/lawyer-review/processed/majority_baseline.metrics.json
+      - name: Evaluate structured verifier signals against lawyer labels
+        run: |
+          python research/prototype/scripts/evaluate_lawyer_review_features.py \
+            --annotations research/data/lawyer-review/processed/lawyer_review.normalized.jsonl \
+            --audit research/data/lawyer-review/processed/alignment_audit.json \
+            --predictions research/data/lawyer-review/processed/structured_signals.oof.csv \
+            --metrics research/data/lawyer-review/processed/structured_signals.metrics.json
+      - name: Upload alignment and baseline artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lawyer-review-alignment-and-baseline
+          path: |
+            research/data/lawyer-review/processed/lawyer_review.summary.json
+            research/data/lawyer-review/processed/alignment_audit.summary.json
+            research/data/lawyer-review/processed/majority_baseline.oof.csv
+            research/data/lawyer-review/processed/majority_baseline.oof.json
+            research/data/lawyer-review/processed/majority_baseline.metrics.json
+            research/data/lawyer-review/processed/structured_signals.oof.csv
+            research/data/lawyer-review/processed/structured_signals.metrics.json
+          if-no-files-found: error

@@ -1,0 +1,2036 @@
+{
+  "dataset_name": "NyayaMind Lawyer-Reviewed Statutory Claim Dataset",
+  "schema_version": "1.0.0",
+  "source_file": "NyayaMind_Lawyer_Review_Final_Columns.xlsx",
+  "source_sha256": "7daca97c77f58d2e2d2c9806458de1632d5ea7cf3e8afdfa8aa9b7d753d48c",
+  "worksheet": "Legal Review",
+  "unit_of_analysis": "claim-provision assessment row",
+  "num_rows": 251,
+  "num_unique_cases": 45,
+  "num_unique_legal_statements": 81,
+  "num_unique_case_statement_provision_tuples": 241,
+  "num_duplicate_case_statement_provision_groups": 10,
+  "num_rows_in_duplicate_case_statement_provision_groups": 20,
+  "duplicate_case_statement_provision_groups": [
+    [
+      "LR-0005",
+      "LR-0017"
+    ],
+    [
+      "LR-0006",
+      "LR-0012"
+    ],
+    [
+      "LR-0007",
+      "LR-0013"
+    ],
+    [
+      "LR-0008",
+      "LR-0014"
+    ],
+    [
+      "LR-0009",
+      "LR-0015"
+    ],
+    [
+      "LR-0010",
+      "LR-0016"
+    ],
+    [
+      "LR-0011",
+      "LR-0018"
+    ],
+    [
+      "LR-0171",
+      "LR-0173"
+    ],
+    [
+      "LR-0175",
+      "LR-0176"
+    ],
+    [
+      "LR-0191",
+      "LR-0192"
+    ]
+  ],
+  "num_exact_content_duplicate_groups": 2,
+  "exact_content_duplicate_groups": [
+    [
+      "LR-0171",
+      "LR-0173"
+    ],
+    [
+      "LR-0175",
+      "LR-0176"
+    ]
+  ],
+  "cross_reference_diagnostics": {
+    "count": 316,
+    "references": [
+      {
+        "annotation_id": "LR-0002",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 1,
+        "text": "As row 1"
+      },
+      {
+        "annotation_id": "LR-0002",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 1,
+        "text": "As row 1"
+      },
+      {
+        "annotation_id": "LR-0006",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0006",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0007",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0007",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0008",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0008",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0009",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0009",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0010",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0010",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0011",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0011",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0012",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 6,
+        "text": "As row 6"
+      },
+      {
+        "annotation_id": "LR-0012",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 6,
+        "text": "As row 6"
+      },
+      {
+        "annotation_id": "LR-0013",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 7,
+        "text": "As row 7"
+      },
+      {
+        "annotation_id": "LR-0013",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 7,
+        "text": "As row 7"
+      },
+      {
+        "annotation_id": "LR-0014",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 8,
+        "text": "As row 8"
+      },
+      {
+        "annotation_id": "LR-0014",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 8,
+        "text": "As row 8"
+      },
+      {
+        "annotation_id": "LR-0015",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 9,
+        "text": "As row 9"
+      },
+      {
+        "annotation_id": "LR-0015",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 9,
+        "text": "As row 9"
+      },
+      {
+        "annotation_id": "LR-0016",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 10,
+        "text": "As row 10"
+      },
+      {
+        "annotation_id": "LR-0016",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 10,
+        "text": "As row 10"
+      },
+      {
+        "annotation_id": "LR-0017",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0017",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 5,
+        "text": "As row 5"
+      },
+      {
+        "annotation_id": "LR-0018",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 11,
+        "text": "As row 11"
+      },
+      {
+        "annotation_id": "LR-0018",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 11,
+        "text": "As row 11"
+      },
+      {
+        "annotation_id": "LR-0023",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0023",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0024",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0024",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0025",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0025",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0026",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0026",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0033",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0033",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0034",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0034",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 22,
+        "text": "As row 22"
+      },
+      {
+        "annotation_id": "LR-0036",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0036",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0037",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0037",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0038",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0038",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0039",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0039",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 35,
+        "text": "As row 35"
+      },
+      {
+        "annotation_id": "LR-0041",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0041",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0042",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0042",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0043",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0043",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0044",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0044",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0045",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0045",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0046",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0046",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0047",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0047",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0048",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0048",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 40,
+        "text": "As row 40"
+      },
+      {
+        "annotation_id": "LR-0050",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 49,
+        "text": "As row 49"
+      },
+      {
+        "annotation_id": "LR-0050",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 49,
+        "text": "As row 49"
+      },
+      {
+        "annotation_id": "LR-0054",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 53,
+        "text": "As row 53"
+      },
+      {
+        "annotation_id": "LR-0054",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 53,
+        "text": "As row 53"
+      },
+      {
+        "annotation_id": "LR-0055",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 53,
+        "text": "As row 53"
+      },
+      {
+        "annotation_id": "LR-0056",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 55,
+        "text": "As row 55"
+      },
+      {
+        "annotation_id": "LR-0056",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 55,
+        "text": "As row 55"
+      },
+      {
+        "annotation_id": "LR-0058",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0058",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0059",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0059",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0060",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0060",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 57,
+        "text": "As row 57"
+      },
+      {
+        "annotation_id": "LR-0064",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0064",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0065",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0065",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0066",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0066",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 63,
+        "text": "As row 63"
+      },
+      {
+        "annotation_id": "LR-0070",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 20,
+        "text": "As row 20"
+      },
+      {
+        "annotation_id": "LR-0072",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 71,
+        "text": "As row 71"
+      },
+      {
+        "annotation_id": "LR-0072",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 71,
+        "text": "As row 71"
+      },
+      {
+        "annotation_id": "LR-0076",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0076",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0077",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0077",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0078",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0078",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0081",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 75,
+        "text": "row 75"
+      },
+      {
+        "annotation_id": "LR-0081",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0082",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 81,
+        "text": "As row 81"
+      },
+      {
+        "annotation_id": "LR-0082",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 75,
+        "text": "As row 75"
+      },
+      {
+        "annotation_id": "LR-0084",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0084",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0085",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0085",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0086",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0086",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0087",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0087",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 83,
+        "text": "As row 83"
+      },
+      {
+        "annotation_id": "LR-0089",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0089",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0090",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0090",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0091",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0091",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0092",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0092",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0093",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0093",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 88,
+        "text": "As row 88"
+      },
+      {
+        "annotation_id": "LR-0096",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0096",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0097",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0097",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0098",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0098",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0099",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0099",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 94,
+        "text": "As row 94"
+      },
+      {
+        "annotation_id": "LR-0102",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 101,
+        "text": "row 101"
+      },
+      {
+        "annotation_id": "LR-0102",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 101,
+        "text": "As row 101"
+      },
+      {
+        "annotation_id": "LR-0103",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 95,
+        "text": "As row 95"
+      },
+      {
+        "annotation_id": "LR-0103",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 95,
+        "text": "As row 95"
+      },
+      {
+        "annotation_id": "LR-0110",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0110",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0111",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0111",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0112",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0112",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0113",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0113",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 105,
+        "text": "As row 105"
+      },
+      {
+        "annotation_id": "LR-0116",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0116",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0117",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0117",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0118",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0118",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0119",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0119",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 115,
+        "text": "As row 115"
+      },
+      {
+        "annotation_id": "LR-0121",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 120,
+        "text": "As row 120"
+      },
+      {
+        "annotation_id": "LR-0121",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 120,
+        "text": "As row 120"
+      },
+      {
+        "annotation_id": "LR-0122",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 120,
+        "text": "As row 120"
+      },
+      {
+        "annotation_id": "LR-0122",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 120,
+        "text": "As row 120"
+      },
+      {
+        "annotation_id": "LR-0124",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0124",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0125",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0125",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0126",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0126",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0127",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0127",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 123,
+        "text": "As row 123"
+      },
+      {
+        "annotation_id": "LR-0129",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 128,
+        "text": "As row 128"
+      },
+      {
+        "annotation_id": "LR-0129",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 128,
+        "text": "As row 128"
+      },
+      {
+        "annotation_id": "LR-0130",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 128,
+        "text": "As row 128"
+      },
+      {
+        "annotation_id": "LR-0130",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 128,
+        "text": "As row 128"
+      },
+      {
+        "annotation_id": "LR-0134",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0134",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0135",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0135",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0136",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0136",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0137",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0137",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0144",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0144",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0145",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0145",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 133,
+        "text": "As row 133"
+      },
+      {
+        "annotation_id": "LR-0152",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0152",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0153",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0153",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0154",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0154",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0155",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0155",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0156",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0156",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 150,
+        "text": "As row 150"
+      },
+      {
+        "annotation_id": "LR-0157",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0157",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0158",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0158",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0159",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0159",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 151,
+        "text": "As row 151"
+      },
+      {
+        "annotation_id": "LR-0161",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0161",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0162",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0162",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0163",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0163",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0164",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0164",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 160,
+        "text": "As row 160"
+      },
+      {
+        "annotation_id": "LR-0166",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 165,
+        "text": "As row 165"
+      },
+      {
+        "annotation_id": "LR-0166",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 165,
+        "text": "As row 165"
+      },
+      {
+        "annotation_id": "LR-0167",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 165,
+        "text": "As row 165"
+      },
+      {
+        "annotation_id": "LR-0167",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 165,
+        "text": "As row 165"
+      },
+      {
+        "annotation_id": "LR-0169",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 168,
+        "text": "As row 168"
+      },
+      {
+        "annotation_id": "LR-0169",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 168,
+        "text": "As row 168"
+      },
+      {
+        "annotation_id": "LR-0171",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0171",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0172",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0172",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0173",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0173",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 170,
+        "text": "As row 170"
+      },
+      {
+        "annotation_id": "LR-0175",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0175",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0176",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0176",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0177",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0177",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0178",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0178",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0179",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0179",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0180",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0180",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0181",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0181",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0182",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0182",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0183",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0183",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 174,
+        "text": "As row 174"
+      },
+      {
+        "annotation_id": "LR-0185",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 184,
+        "text": "As row 184"
+      },
+      {
+        "annotation_id": "LR-0185",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 184,
+        "text": "As row 184"
+      },
+      {
+        "annotation_id": "LR-0187",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 186,
+        "text": "As row 186"
+      },
+      {
+        "annotation_id": "LR-0187",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 186,
+        "text": "As row 186"
+      },
+      {
+        "annotation_id": "LR-0190",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 189,
+        "text": "As row 189"
+      },
+      {
+        "annotation_id": "LR-0190",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 189,
+        "text": "As row 189"
+      },
+      {
+        "annotation_id": "LR-0191",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 189,
+        "text": "As row 189"
+      },
+      {
+        "annotation_id": "LR-0191",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 189,
+        "text": "As row 189"
+      },
+      {
+        "annotation_id": "LR-0192",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 191,
+        "text": "As row 191"
+      },
+      {
+        "annotation_id": "LR-0192",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 189,
+        "text": "As row 189"
+      },
+      {
+        "annotation_id": "LR-0194",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 193,
+        "text": "As row 193"
+      },
+      {
+        "annotation_id": "LR-0194",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 193,
+        "text": "As row 193"
+      },
+      {
+        "annotation_id": "LR-0195",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 193,
+        "text": "As row 193"
+      },
+      {
+        "annotation_id": "LR-0195",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 193,
+        "text": "As row 193"
+      },
+      {
+        "annotation_id": "LR-0199",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 198,
+        "text": "As row 198"
+      },
+      {
+        "annotation_id": "LR-0199",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 198,
+        "text": "As row 198"
+      },
+      {
+        "annotation_id": "LR-0200",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 198,
+        "text": "As row 198"
+      },
+      {
+        "annotation_id": "LR-0200",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 198,
+        "text": "As row 198"
+      },
+      {
+        "annotation_id": "LR-0205",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 148,
+        "text": "As row 148"
+      },
+      {
+        "annotation_id": "LR-0205",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 148,
+        "text": "As row 148"
+      },
+      {
+        "annotation_id": "LR-0207",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0207",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0208",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0208",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0209",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0209",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0210",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0210",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0211",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0211",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0212",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0212",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0213",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0213",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0214",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0214",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0215",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0215",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0216",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0216",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 206,
+        "text": "As row 206"
+      },
+      {
+        "annotation_id": "LR-0219",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0219",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0220",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0220",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0221",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0221",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0222",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0222",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0223",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0223",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0224",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0224",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0225",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0225",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0226",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0226",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 217,
+        "text": "As row 217"
+      },
+      {
+        "annotation_id": "LR-0228",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0228",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0229",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0229",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0230",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0230",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0231",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0231",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0232",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0232",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 227,
+        "text": "As row 227"
+      },
+      {
+        "annotation_id": "LR-0234",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 233,
+        "text": "As row 233"
+      },
+      {
+        "annotation_id": "LR-0234",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 233,
+        "text": "As row 233"
+      },
+      {
+        "annotation_id": "LR-0237",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 236,
+        "text": "As row 236"
+      },
+      {
+        "annotation_id": "LR-0237",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 236,
+        "text": "As row 236"
+      },
+      {
+        "annotation_id": "LR-0238",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 236,
+        "text": "As row 236"
+      },
+      {
+        "annotation_id": "LR-0238",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 236,
+        "text": "As row 236"
+      },
+      {
+        "annotation_id": "LR-0240",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 239,
+        "text": "As row 239"
+      },
+      {
+        "annotation_id": "LR-0240",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 239,
+        "text": "As row 239"
+      },
+      {
+        "annotation_id": "LR-0242",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0242",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0243",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0243",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0244",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0244",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0245",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0245",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 241,
+        "text": "As row 241"
+      },
+      {
+        "annotation_id": "LR-0247",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0247",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0248",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0248",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0249",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0249",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0250",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0250",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0251",
+        "field": "correction_or_clarification",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      },
+      {
+        "annotation_id": "LR-0251",
+        "field": "supporting_legal_authority",
+        "referenced_source_row_number": 246,
+        "text": "As row 246"
+      }
+    ],
+    "note": "Resolve source-row references before treating correction or authority text as standalone evidence."
+  },
+  "statement_correctness_counts": {
+    "Yes": 43,
+    "No": 73,
+    "Partially": 135
+  },
+  "reference_correctness_counts": {
+    "Yes": 150,
+    "No": 26,
+    "Partially": 75
+  },
+  "case_references": [
+    "1956_41",
+    "1962_348",
+    "1963_18",
+    "1969_420",
+    "1975_506",
+    "1977_51",
+    "1978_196",
+    "1980_424",
+    "1982_49",
+    "1985_364",
+    "1985_367",
+    "1991_110",
+    "1997_1212",
+    "2000_584",
+    "2000_811",
+    "2000_862",
+    "2001_386",
+    "2001_502",
+    "2002_444",
+    "2002_528",
+    "2002_587",
+    "2003_924",
+    "2005_441",
+    "2006_48",
+    "2007_1002",
+    "2007_1006",
+    "2007_200",
+    "2007_299",
+    "2008_131",
+    "2008_99",
+    "2009_2145",
+    "2009_431",
+    "2009_865",
+    "2010_1270",
+    "2010_720",
+    "2012_506",
+    "2014_176",
+    "2017_768",
+    "2019_544",
+    "2020_379",
+    "2020_51",
+    "2021_211",
+    "2022_1043",
+    "2023_885",
+    "2024_299"
+  ],
+  "missing_optional_fields": {
+    "correction_or_clarification": 4,
+    "supporting_legal_authority": 0
+  },
+  "split_policy": "No split generated; all future partitions must group by case_reference.",
+  "limitations": [
+    "Original judgments and judgment dates were not supplied with the workbook.",
+    "Annotations do not independently establish case-specific relevance or historical applicability.",
+    "Partially is retained as a distinct class."
+  ]
+}
