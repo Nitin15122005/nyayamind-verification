@@ -1507,7 +1507,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
             "original_field_text": original_field_text,
             "reverification": None,
             "correction_mode": "assertion_aware",
-            "correction_method": "minimal_patch" if patch_mode else "assertion_span",
+            "correction_method": "not_invoked",
         }
 
     target = flagged[0]
@@ -1568,6 +1568,7 @@ def apply_selective_correction_assertion_aware(baseline: dict, case, corrector, 
         "do_sample": corr_meta.do_sample,
         "seed": corr_meta.seed,
         "corrected_at": corr_meta.corrected_at,
+        "raw_model_output": getattr(corr_meta, "raw_model_output", None),
     }
     if on_event:
         on_event("correction", "completed", {
