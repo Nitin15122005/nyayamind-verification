@@ -73,7 +73,7 @@ def test_structured_patch_parser_accepts_exact_schema():
 
 
 def test_structured_patch_parser_rejects_extra_keys():
-    patch, _ = _corrector(
+    patch, meta = _corrector(
         '{"original_span":"wrong","replacement_span":"right","explanation":"x"}'
     ).correct_assertion_patch(
         case_text="facts", target_span="wrong claim", evidence_text="law",
